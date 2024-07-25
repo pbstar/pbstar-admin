@@ -1,0 +1,21 @@
+{
+  "name": "pbstar-admin",
+  "version": "1.0.0",
+  "type": "module",
+  "workspaces": [
+    "packages/*",
+    "main"
+  ],
+  "scripts": {
+    "create": "node ./cli/index.js",
+    "dev": "echo \"Error: 请选择启动模块\" && exit 1",
+    "dev:main": "npm run dev --workspace=main",
+    "dev:test": "npm run dev --workspace=test",
+    "build": "echo \"Error: 请选择构建模块\" && exit 1",
+    "build:main": "npm run build --workspace=main",
+    "build:test": "npm run build --workspace=test"
+  },
+  "dependencies": {
+    "inquirer": "^10.1.2"
+  }
+}
