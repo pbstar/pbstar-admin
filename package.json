@@ -16,6 +16,8 @@
     "build:test": "npm run build --workspace=test"
   },
   "dependencies": {
-    "inquirer": "^10.1.2"
+    "@micro-zoe/micro-app": "^1.0.0-rc.10",
+    "inquirer": "^10.1.2",
+    "tdesign-vue-next": "^1.10.1"
   }
 }
