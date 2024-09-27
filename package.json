@@ -18,6 +18,7 @@
   "dependencies": {
     "@micro-zoe/micro-app": "^1.0.0-rc.10",
     "inquirer": "^10.1.2",
+    "sass": "^1.78.0",
     "tdesign-vue-next": "^1.10.1"
   }
 }

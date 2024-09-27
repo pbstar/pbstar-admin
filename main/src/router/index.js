@@ -22,9 +22,14 @@ const router = createRouter({
         {
           path: 'app_test',
           name: 'adminAppTest',
-          component: () => import('@/views/admin/packages/test.vue')
+          component: () => import('@/views/admin/apps/test.vue')
         }
       ]
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: () => import('@/views/login/index.vue')
     }
   ]
 })

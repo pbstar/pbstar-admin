@@ -1,10 +1,10 @@
 <template>
-  <t-button v-bind="$attrs">
+  <t-dropdown v-bind="$attrs">
     <template #[item]="data" v-for="item in Object.keys($slots)">
       <slot :name="item" v-bind="data || {}"></slot>
     </template>
-  </t-button>
+  </t-dropdown>
 </template>
 <script setup>
-import { Button as TButton } from "tdesign-vue-next";
+import { Dropdown as TDropdown } from "tdesign-vue-next";
 </script>
