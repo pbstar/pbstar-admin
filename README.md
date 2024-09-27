@@ -11,6 +11,8 @@ git clone https://github.com/pbstar/pbstar-admin.git
 cd pbstar-admin
 # 安装依赖
 npm install
-# 本地开发 启动项目
+# 创建业务包
+npm run create
+# 启动主包
 npm run dev:main
 ```

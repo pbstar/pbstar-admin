@@ -6,9 +6,9 @@ const __dirname = path.resolve();
 inquirer.prompt([
   {
     type: 'list',
-    name: 'template',
+    name: 'templateName',
     message: 'Choose a template:',
-    choices: ['默认模板']
+    choices: ['vue', 'react']
   },
   {
     type: 'input',
@@ -25,12 +25,12 @@ inquirer.prompt([
     }
   }
 ]).then((res) => {
-  toCreateProject(res.projectName);
+  toCreateProject(res.templateName, res.projectName);
 }).catch((error) => {
   console.error(error);
 });
-function toCreateProject(folderName) {
-  copyDirectory('/cli/template/', `/packages/${folderName}/`)
+function toCreateProject(templateName, projectName) {
+  copyDirectory(`/cli/template/${templateName}/`, `/packages/${projectName}/`)
 }
 function copyDirectory(src, dest) {
   const originPath = __dirname + src;
