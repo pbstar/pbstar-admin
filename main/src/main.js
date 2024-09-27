@@ -7,9 +7,9 @@ import paComponentsInstall from '../../components/vue'
 import App from './App.vue'
 import router from './router'
 
-microApp.start()
-const app = createApp(App)
 
+const app = createApp(App)
+microApp.start()
 app.use(createPinia())
 app.use(router)
 paComponentsInstall(app)
