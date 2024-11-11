@@ -30,7 +30,7 @@ inquirer.prompt([
   console.error(error);
 });
 function toCreateProject(templateName, projectName) {
-  copyDirectory(`/cli/template/${templateName}/`, `/packages/${projectName}/`)
+  copyDirectory(`/templates/${templateName}/`, `/packages/${projectName}/`)
 }
 function copyDirectory(src, dest) {
   const originPath = __dirname + src;
