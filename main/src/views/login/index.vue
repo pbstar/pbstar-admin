@@ -3,41 +3,41 @@
     <div class="login-form-wrapper">
       <h3 class="title">{{ title }}</h3>
       <div class="formBox">
-        <pa-input
+        <t-input
           size="large"
           v-model="loginForm.username"
           placeholder="请输入用户名"
         >
           <template #prefix-icon>
-            <pa-icon name="user"/>
+            <t-icon name="user"/>
           </template>
-        </pa-input>
-        <pa-input
+        </t-input>
+        <t-input
           size="large"
           type="password"
           v-model="loginForm.password"
           placeholder="请输入密码"
         >
           <template #prefix-icon>
-            <pa-icon name="lock-on"/>
+            <t-icon name="lock-on"/>
           </template>
-        </pa-input>
-        <pa-input
+        </t-input>
+        <t-input
           size="large"
           v-model="loginForm.captcha"
           placeholder="请输入验证码"
         >
           <template #suffix-icon>
-            <pa-verification-code
+            <p-verification-code
               :contentHeight="32"
               identifyCodes="23456789"
               @changeCode="changeCode"
             >
-            </pa-verification-code>
+            </p-verification-code>
           </template>
-        </pa-input>
-        <pa-button size="large" theme="primary" block @click="handleSubmit()"
-          >登录</pa-button
+        </t-input>
+        <t-button size="large" theme="primary" block @click="handleSubmit()"
+          >登录</t-button
         >
       </div>
     </div>

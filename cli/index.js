@@ -4,12 +4,12 @@ import fs from 'fs';
 import path from 'path';
 const __dirname = path.resolve();
 inquirer.prompt([
-  {
-    type: 'list',
-    name: 'templateName',
-    message: 'Choose a template:',
-    choices: ['vue', 'react']
-  },
+  // {
+  //   type: 'list',
+  //   name: 'templateName',
+  //   message: 'Choose a template:',
+  //   choices: ['vue', 'react']
+  // },
   {
     type: 'input',
     name: 'projectName',
@@ -25,12 +25,12 @@ inquirer.prompt([
     }
   }
 ]).then((res) => {
-  toCreateProject(res.templateName, res.projectName);
+  toCreateProject(res.projectName);
 }).catch((error) => {
   console.error(error);
 });
-function toCreateProject(templateName, projectName) {
-  copyDirectory(`/templates/${templateName}/`, `/packages/${projectName}/`)
+function toCreateProject(projectName) {
+  copyDirectory(`/template/`, `/packages/${projectName}/`)
 }
 function copyDirectory(src, dest) {
   const originPath = __dirname + src;

@@ -1,8 +1,10 @@
 import './assets/main.css'
 import microApp from '@micro-zoe/micro-app'
+import TDesign from 'tdesign-vue-next';
+import 'tdesign-vue-next/es/style/index.css';
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
-import paComponentsInstall from '../../components/vue'
+import pComponents from '../../components'
 
 import App from './App.vue'
 import router from './router'
@@ -12,5 +14,6 @@ const app = createApp(App)
 microApp.start()
 app.use(createPinia())
 app.use(router)
-paComponentsInstall(app)
+app.use(TDesign)
+app.use(pComponents)
 app.mount('#app')

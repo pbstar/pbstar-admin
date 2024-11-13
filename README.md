@@ -2,7 +2,7 @@
 
 ## 简介
 
-Pbstar-admin 是一套后台管理系统解决方案。
+Pbstar-admin 是一套后台管理系统解决方案。提供[脚手架](./cli/README.md)和[组件库](./components/README.md)，帮助开发者快速搭建后台管理系统。
 
 ## 快速开始
 
@@ -24,9 +24,15 @@ npm run dev:main
 ```
 ├── cli              # 脚手架
 ├── components       # 组件
+├── config           # 配置
 ├── main             # 主包
 ├── packages         # 业务包
+├── utils            # 工具函数
 ├── .gitignore       # git忽略
 ├── package.json     # 依赖
 └── README.md        # 说明
 ```
+
+## 注意事项
+
+1. 指定 sass 版本为 `sass@1.78.0`，请勿升级。

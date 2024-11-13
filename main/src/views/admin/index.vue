@@ -1,7 +1,7 @@
 <template>
   <div class="page">
     <div class="left">
-      <pa-menu
+      <t-menu
         theme="light"
         :width="['230px', '60px']"
         :value="menuValue"
@@ -14,57 +14,57 @@
         </template>
         <div v-for="(item, index) in leftList" :key="index">
           <div v-show="!item.children">
-            <pa-menu-item :value="item.path">
+            <t-menu-item :value="item.path">
               <template #icon>
-                <pa-icon :name="item.icon" />
+                <t-icon :name="item.icon" />
               </template>
               <span>{{ item.name }}</span>
-            </pa-menu-item>
+            </t-menu-item>
           </div>
           <div v-show="item.children">
-            <pa-submenu :value="item.name" mode="popup">
+            <t-submenu :value="item.name" mode="popup">
               <template #icon>
-                <pa-icon :name="item.icon" />
+                <t-icon :name="item.icon" />
               </template>
               <template #title>
                 <span>{{ item.name }}</span>
               </template>
-              <pa-menu-item
+              <t-menu-item
                 v-for="(items, indexs) in item.children"
                 :key="indexs + 's'"
                 :value="items.path"
-                >{{ items.name }}</pa-menu-item
+                >{{ items.name }}</t-menu-item
               >
-            </pa-submenu>
+            </t-submenu>
           </div>
         </div>
-      </pa-menu>
+      </t-menu>
     </div>
     <div class="right">
       <div class="r_top">
         <div class="r_t_left">
-          <pa-button variant="text" shape="square" @click="changeCollapsed">
+          <t-button variant="text" shape="square" @click="changeCollapsed">
             <template #icon>
-              <pa-icon :name="collapsed ? 'menu-fold' : 'menu-unfold'" />
+              <t-icon :name="collapsed ? 'menu-fold' : 'menu-unfold'" />
             </template>
-          </pa-button>
+          </t-button>
           <span class="pageName">{{ pageName }}</span>
         </div>
         <div class="r_t_right">
-          <pa-dropdown
+          <t-dropdown
             :options="options"
             placement="bottom"
             trigger="click"
             @click="clickHandler"
           >
-            <pa-button variant="text">
-              <template #icon> <pa-icon name="user" size="16" /></template>
+            <t-button variant="text">
+              <template #icon> <t-icon name="user" size="16" /></template>
               <span>小明</span>
               <template #suffix>
-                <pa-icon name="chevron-down" size="16"
+                <t-icon name="chevron-down" size="16"
               /></template>
-            </pa-button>
-          </pa-dropdown>
+            </t-button>
+          </t-dropdown>
         </div>
       </div>
       <div class="r_bottom">

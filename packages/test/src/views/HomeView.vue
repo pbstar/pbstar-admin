@@ -4,6 +4,6 @@
 <template>
   <main>
     home
-    <pa-button>按钮</pa-button>
+    <t-button>按钮</t-button>
   </main>
 </template>
