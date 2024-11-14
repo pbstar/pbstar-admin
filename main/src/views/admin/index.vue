@@ -114,14 +114,6 @@ const clickHandler = (e) => {
   }
 };
 const changeMenu = (e) => {
-  // 处理同一个页面刷新问题
-  if (e.indexOf("?") !== -1 && menuValue.value.indexOf("?") !== -1) {
-    if (e.split("?")[0] === menuValue.value.split("?")[0]) {
-      setTimeout(() => {
-        router.go(0);
-      }, 50);
-    }
-  }
   menuValue.value = e;
   router.push(e);
 };

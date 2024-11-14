@@ -17,10 +17,11 @@
   },
   "dependencies": {
     "@micro-zoe/micro-app": "^1.0.0-rc.13",
+    "es-toolkit": "^1.27.0",
     "inquirer": "^12.1.0",
     "tdesign-vue-next": "^1.10.3"
   },
   "devDependencies": {
-    "sass": "^1.78.0"
+    "sass-embedded": "^1.80.7"
   }
 }

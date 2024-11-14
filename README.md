@@ -33,6 +33,3 @@ npm run dev:main
 └── README.md        # 说明
 ```
 
-## 注意事项
-
-1. 指定 sass 版本为 `sass@1.78.0`，请勿升级。
