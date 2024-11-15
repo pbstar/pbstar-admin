@@ -9,11 +9,13 @@
   "scripts": {
     "create": "node ./cli/index.js",
     "dev": "echo \"Error: 请选择启动模块\" && exit 1",
-    "dev:main": "npm run dev --workspace=main",
-    "dev:test": "npm run dev --workspace=test",
     "build": "echo \"Error: 请选择构建模块\" && exit 1",
+    "deploy": "echo \"Error: 请选择部署模块\" && exit 1",
+    "dev:main": "npm run dev --workspace=main",
     "build:main": "npm run build --workspace=main",
-    "build:test": "npm run build --workspace=test"
+    "deploy:main": "npm run build --workspace=main && node ./deploy/main.js",
+    "dev:template": "npm run dev --workspace=template",
+    "build:template": "npm run build --workspace=template"
   },
   "dependencies": {
     "@micro-zoe/micro-app": "^1.0.0-rc.13",

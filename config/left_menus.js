@@ -4,16 +4,16 @@ export default [
     path: '/admin/home',
     icon: 'home'
   }, {
-    name: '子应用管理',
+    name: '模板管理',
     icon: 'user',
     roles: [],
     children: [{
       name: '页面一',
-      path: '/admin/app_test?test=/about',
+      path: '/admin/app_template?template=/about',
       roles: []
     },{
       name: '页面二',
-      path: '/admin/app_test?test=/',
+      path: '/admin/app_template?template=/',
       roles: []
     }]
   }, {
@@ -21,33 +21,6 @@ export default [
     path: '/admin/role',
     icon: 'user-safety',
     roles: []
-  }, {
-    name: '店铺管理',
-    icon: 'store',
-    roles: [],
-    children: [{
-      name: '店铺列表',
-      path: '/admin/shop',
-      roles: []
-    }]
-  }, {
-    name: '商品管理',
-    icon: 'shop',
-    roles: [],
-    children: [{
-      name: '商品列表',
-      path: '/admin/goods',
-      roles: []
-    }]
-  }, {
-    name: '订单管理',
-    icon: 'article',
-    roles: [],
-    children: [{
-      name: '订单列表',
-      path: '/admin/order',
-      roles: []
-    }]
   }, {
     name: '系统管理',
     icon: 'system-setting',
@@ -79,19 +52,6 @@ export default [
     }, {
       name: '帖子管理',
       path: '/admin/posts',
-      roles: []
-    }]
-  }, {
-    name: '金融管理',
-    icon: 'money',
-    roles: [],
-    children: [{
-      name: '余额管理',
-      path: '/admin/balance',
-      roles: []
-    }, {
-      name: '提现管理',
-      path: '/admin/withdraw',
       roles: []
     }]
   }

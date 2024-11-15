@@ -1,7 +1,7 @@
 .DS_Store
 node_modules
-/dist
-/package-lock.json
+dist
+package-lock.json
 
 # local env files
 .env.local
@@ -25,4 +25,3 @@ pnpm-debug.log*
 docs/.vitepress/dist
 docs/.vitepress/cache
 docs/.vitepress/p-seamless-scroll
-package-lock.json

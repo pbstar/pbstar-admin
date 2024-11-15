@@ -2,6 +2,7 @@
 import inquirer from 'inquirer';
 import fs from 'fs';
 import path from 'path';
+import apps from "../config/apps.js";
 const __dirname = path.resolve();
 inquirer.prompt([
   // {
@@ -13,23 +14,34 @@ inquirer.prompt([
   {
     type: 'input',
     name: 'projectName',
-    message: 'Enter the project name:',
+    message: '请输入项目名称：',
     validate(input) {
-      if (!input) return 'Please enter a project name';
-      //验证文件名是否合法
-      if (!/^[a-zA-Z0-9_-]+$/.test(input)) return 'Please enter a valid project name';
-      if (input == 'main') return 'main is a reserved word';
-      //验证文件夹是否存在
-      if (fs.existsSync(`${__dirname}/packages/${input}`)) return 'Project already exists';
+      if (!input) return '请输入项目名称';
+      if (!/^[a-zA-Z0-9_-]+$/.test(input)) return '请输入合法的项目名称';
+      if (input == 'main') return '请输入关键字main以外的项目名称';
+      if (isHasApp(input)) return '子模块' + input + '已存在';
+      if (fs.existsSync(`${__dirname}/packages/${input}`)) return '文件夹' + input + '已存在';
+      return true;
+    }
+  },
+  {
+    type: 'input',
+    name: 'projectPort',
+    message: '请输入项目启动端口：',
+    validate(input) {
+      if (!input) return '请输入项目启动端口';
+      if (!/^\d+$/.test(input)) return '请输入合法的项目启动端口';
+      if (input < 3000 || input > 65535) return '项目启动端口要在3000-65535之间';
+      if (isPortUsed(input)) return '项目启动端口' + input + '已存在';
       return true;
     }
   }
 ]).then((res) => {
-  toCreateProject(res.projectName);
+  toCreateProject(res.projectName, res.projectPort);
 }).catch((error) => {
   console.error(error);
 });
-function toCreateProject(projectName) {
+function toCreateProject(projectName, projectPort) {
   copyDirectory(`/template/`, `/packages/${projectName}/`)
 }
 function copyDirectory(src, dest) {
@@ -57,4 +69,22 @@ function copyDirectory(src, dest) {
       });
     }
   })
+}
+//验证端口是否被占用
+function isPortUsed(port) {
+  apps.forEach(app => {
+    if (app.port == port) {
+      return true;
+    }
+  })
+  return false;
+}
+//验证子模块是否存在
+function isHasApp(appName) {
+  apps.forEach(app => {
+    if (app.name == appName) {
+      return true;
+    }
+  })
+  return false;
 }

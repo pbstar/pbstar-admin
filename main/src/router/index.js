@@ -22,9 +22,9 @@ const router = createRouter({
           component: () => import('@/views/admin/home/index.vue')
         },
         {
-          path: 'app_test',
-          name: 'adminAppTest',
-          component: () => import('@/views/admin/apps/test.vue')
+          path: 'app_template',
+          name: 'adminAppTemplate',
+          component: () => import('@/views/admin/apps/template.vue')
         }
       ]
     },
