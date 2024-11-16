@@ -89,11 +89,13 @@ const pageName = ref("");
 const options = ref([{ content: "退出登录", value: 2 }]);
 const leftList = ref([]);
 const menuValue = ref("");
+leftList.value = user.getLeftNav();
 watch(
   () => router.currentRoute.value,
   (newValue, oldValue) => {
+    let url = newValue.fullPath.replace("%2F", "/");
     pageName.value = newValue.meta.title || "";
-    menuValue.value = newValue.fullPath.replace("%2F", "/");
+    menuValue.value = url;
   },
   { immediate: true }
 );
@@ -101,12 +103,6 @@ const changeCollapsed = () => {
   collapsed.value = !collapsed.value;
 };
 
-onMounted(() => {
-  getLeftNavData();
-});
-const getLeftNavData = () => {
-  leftList.value = user.getLeftNav();
-};
 const clickHandler = (e) => {
   if (e.value === 2) {
     localStorage.clear();

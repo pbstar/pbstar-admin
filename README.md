@@ -52,9 +52,10 @@ pnpm remove <依赖名> --filter <包名>
 ├── config           # 配置
 ├── deploy           # 部署
 ├── main             # main包
-├── packages         # 其他包
+├── packages         # 模块包
 │ ├── example        # 示例包
 │ └── template       # 模板包
+├── server           # 虚拟接口
 ├── utils            # 工具
 ├── package.json     # 依赖
 └── README.md        # 说明

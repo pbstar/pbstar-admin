@@ -14,8 +14,8 @@ export default defineConfig({
   },
   plugins: [
     vue({
-      template:{
-        compilerOptions:{
+      template: {
+        compilerOptions: {
           isCustomElement: tag => tag === 'micro-app'
         }
       }
@@ -25,6 +25,9 @@ export default defineConfig({
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
       '@config': fileURLToPath(new URL('../config', import.meta.url)),
+      '@utils': fileURLToPath(new URL('../utils', import.meta.url)),
+      '@components': fileURLToPath(new URL('../components', import.meta.url)),
+      '@server': fileURLToPath(new URL('../server', import.meta.url)),
     }
   },
   server: {

@@ -1,6 +1,7 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import leftNavListAll from '@config/left_menus'
+import http from '@utils/http'
 
 export default defineStore('user', () => {
   let info = ref(null)
@@ -12,6 +13,10 @@ export default defineStore('user', () => {
     info.value = e
   }
   function getLeftNav() {
+    http.get('/api/getLeftNav').then(res => {
+      console.log(res);
+      
+    })
     let role = localStorage.getItem("role") || ''
     let arr = []
     if (role) {

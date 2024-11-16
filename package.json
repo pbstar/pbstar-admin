@@ -15,8 +15,10 @@
   },
   "dependencies": {
     "@micro-zoe/micro-app": "^1.0.0-rc.13",
+    "axios": "^1.7.7",
     "es-toolkit": "^1.27.0",
     "inquirer": "^12.1.0",
+    "nprogress": "^0.2.0",
     "tdesign-vue-next": "^1.10.3"
   },
   "devDependencies": {
