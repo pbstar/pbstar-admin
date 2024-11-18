@@ -1,46 +1,30 @@
-import { ref } from 'vue'
-import { defineStore } from 'pinia'
-import leftNavListAll from '@config/left_menus'
-import http from '@utils/http'
+import { ref } from "vue";
+import { defineStore } from "pinia";
+import http from "@utils/http";
 
-export default defineStore('user', () => {
-  let info = ref(null)
+export default defineStore("user", () => {
+  let info = ref(null);
+  const menuList = ref([]);
 
   function getInfo() {
-    return info.value
+    return info.value;
   }
   function changeInfo(e) {
-    info.value = e
+    info.value = e;
   }
-  function getLeftNav() {
-    http.get('/api/getLeftNav').then(res => {
-      console.log(res);
-      
-    })
-    let role = localStorage.getItem("role") || ''
-    let arr = []
-    if (role) {
-      leftNavListAll.forEach((item) => {
-        if (!item.roles || item.roles.length == 0 || item.roles.indexOf(role) !== -1) {
-          if (item.children && item.children.length > 0) {
-            let i_arr = []
-            item.children.forEach((item1) => {
-              if (!item1.roles || item1.roles.length == 0 || item1.roles.indexOf(role) !== -1) {
-                i_arr.push(item1)
-              }
-            })
-            if (i_arr.length > 0) {
-              item.children = i_arr
-              arr.push(item)
-            }
-          } else {
-            arr.push(item)
-          }
+  function getMenuList() {
+    return new Promise((resolve) => {
+      if (menuList.value.length) {
+        resolve(menuList.value);
+        return;
+      }
+      http.get("/api/getMenuList").then((res) => {
+        if (res.code === 200) {
+          menuList.value = res.data || [];
+          resolve(menuList.value);
         }
-      })
-    }
-    return arr
+      });
+    });
   }
-
-  return { getInfo, changeInfo, getLeftNav }
-})
+  return { getInfo, changeInfo, getMenuList };
+});

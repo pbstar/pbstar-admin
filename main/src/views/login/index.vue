@@ -146,9 +146,9 @@ const handleSubmit = () => {
     return;
   }
   toLoginOk({
-    token: "123",
+    token: "1",
     role: "admin",
-    user_id: "123",
+    user_id: "1",
     user_info: {
       name: "admin",
     },

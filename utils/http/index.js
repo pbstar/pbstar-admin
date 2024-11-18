@@ -60,9 +60,6 @@ http.interceptors.response.use(
       router.replace('/login')
       return Promise.reject(new Error('token失效'))
     }
-
-
-
     NProgress.done()
     return response
   },
@@ -77,15 +74,21 @@ http.interceptors.response.use(
 
 const request = (config) => {
   return new Promise((resolve, reject) => {
-    if(PConfig.isServer){
+    if (PConfig.isSimulateServer) {
+      const token = localStorage.getItem('token')
+      if (token) {
+        if (!config.headers) {
+          config.headers = {}
+        }
+        config.headers.token = token
+      }
       PServer(config).then(res => resolve(res)).catch(err => reject(err))
-    }else{
+    } else {
       http
-      .request(config)
-      .then((res) => resolve(res.data))
-      .catch((err) => reject(err))
+        .request(config)
+        .then((res) => resolve(res.data))
+        .catch((err) => reject(err))
     }
-    
   })
 }
 

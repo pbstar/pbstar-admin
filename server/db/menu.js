@@ -1,4 +1,4 @@
-const menu = [
+export default [
   {
     id: 1,
     parentId: 0,
@@ -48,6 +48,3 @@ const menu = [
     path: '/admin/menu',
   }
 ]
-export default {
-  menu
-}

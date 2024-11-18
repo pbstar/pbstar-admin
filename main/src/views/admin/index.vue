@@ -14,7 +14,7 @@
         </template>
         <div v-for="(item, index) in leftList" :key="index">
           <div v-show="!item.children">
-            <t-menu-item :value="item.path">
+            <t-menu-item :value="item.id">
               <template #icon>
                 <t-icon :name="item.icon" />
               </template>
@@ -22,7 +22,7 @@
             </t-menu-item>
           </div>
           <div v-show="item.children">
-            <t-submenu :value="item.name" mode="popup">
+            <t-submenu :value="item.id" mode="popup">
               <template #icon>
                 <t-icon :name="item.icon" />
               </template>
@@ -32,7 +32,7 @@
               <t-menu-item
                 v-for="(items, indexs) in item.children"
                 :key="indexs + 's'"
-                :value="items.path"
+                :value="items.id"
                 >{{ items.name }}</t-menu-item
               >
             </t-submenu>
@@ -76,7 +76,7 @@
   </div>
 </template>
 <script setup>
-import { ref, onMounted, watch } from "vue";
+import { ref, watch, nextTick } from "vue";
 import { RouterView, useRouter } from "vue-router";
 import config from "@config";
 import useUserStore from "@/stores/user";
@@ -88,14 +88,28 @@ const collapsed = ref(false);
 const pageName = ref("");
 const options = ref([{ content: "退出登录", value: 2 }]);
 const leftList = ref([]);
+const menuList = ref([]);
 const menuValue = ref("");
-leftList.value = user.getLeftNav();
+user.getMenuList().then((res) => {
+  menuList.value = JSON.parse(JSON.stringify(res));
+  leftList.value = buildStructuredMenu(menuList.value);
+  changeMenuValue();
+});
+
+const changeMenuValue = () => {
+  nextTick(() => {
+    let path = router.currentRoute.value.fullPath.replace("%2F", "/");
+    pageName.value = router.currentRoute.value.meta.title || "";
+    let id = menuList.value.find((item) => item.path === path)?.id || "";
+    if (menuValue.value != id && id) {
+      menuValue.value = id;
+    }
+  });
+};
 watch(
   () => router.currentRoute.value,
   (newValue, oldValue) => {
-    let url = newValue.fullPath.replace("%2F", "/");
-    pageName.value = newValue.meta.title || "";
-    menuValue.value = url;
+    changeMenuValue();
   },
   { immediate: true }
 );
@@ -110,9 +124,26 @@ const clickHandler = (e) => {
   }
 };
 const changeMenu = (e) => {
+  let path = menuList.value.find((item) => item.id == e)?.path;
+  if (!path) return;
   menuValue.value = e;
-  router.push(e);
+  router.push(path);
 };
+function buildStructuredMenu(flatMenu) {
+  let structuredMenu = [];
+  flatMenu.forEach((item) => {
+    if (item.parentId == 0) {
+      structuredMenu.push(item);
+    } else {
+      let parent = structuredMenu.find((i) => i.id == item.parentId);
+      if (parent) {
+        parent.children = parent.children || [];
+        parent.children.push(item);
+      }
+    }
+  });
+  return structuredMenu;
+}
 </script>
 <style scoped lang="scss">
 .page {
