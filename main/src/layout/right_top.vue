@@ -27,6 +27,8 @@
 <script setup>
 import useUserStore from "@/stores/user";
 import { ref } from "vue";
+import { useRouter } from "vue-router";
+const router = useRouter();
 const props = defineProps({
   collapsed: {
     type: Boolean,
@@ -40,7 +42,7 @@ const props = defineProps({
 const emits = defineEmits(["collapsedChange"]);
 const user = useUserStore();
 const userInfo = user.getInfo();
-const name = ref(userInfo.user_info.name);
+const name = ref(userInfo?.user_info?.name);
 const options = ref([{ content: "退出登录", value: 2 }]);
 const changeCollapsed = () => {
   emits("collapsedChange", !props.collapsed);

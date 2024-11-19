@@ -48,8 +48,8 @@ export default defineStore("user", () => {
       http.get("/api/getMenuList").then((res) => {
         if (res.code === 200) {
           menuList.value = res.data || [];
-          resolve(menuList.value);
         }
+        resolve(menuList.value);
       });
     });
   }
