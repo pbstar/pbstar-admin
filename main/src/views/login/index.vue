@@ -109,12 +109,16 @@
 import { ref, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { MessagePlugin } from "tdesign-vue-next";
-import config from "@config";
+import PConfig from "@PConfig";
+import http from "@PUtils/http";
+import useUserStore from "@/stores/user";
+
+const user = useUserStore();
 
 const router = useRouter();
 const route = useRoute();
 
-let title = ref(config.title);
+let title = ref(PConfig.title);
 let redirect_path = "/";
 onMounted(() => {
   if (route.query.redirect_path) redirect_path = route.query.redirect_path;
@@ -145,20 +149,16 @@ const handleSubmit = () => {
     MessagePlugin.error("验证码错误");
     return;
   }
-  toLoginOk({
-    token: "1",
-    role: "admin",
-    user_id: "1",
-    user_info: {
-      name: "admin",
-    },
+  http.post("/api/login", loginForm.value).then((res) => {
+    if (res.code == 200) {
+      toLoginOk(res.data);
+    } else {
+      MessagePlugin.error(res.msg);
+    }
   });
 };
 const toLoginOk = (e) => {
-  localStorage.setItem("token", e.token);
-  localStorage.setItem("role", e.role);
-  localStorage.setItem("user_id", e.user_id);
-  localStorage.setItem("user_info", JSON.stringify(e.user_info));
+  user.setInfo(e);
   router.push({ path: redirect_path });
   MessagePlugin.success("登录成功");
 };

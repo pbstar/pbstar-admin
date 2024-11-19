@@ -2,11 +2,14 @@
 
 ## 快速开始
 
-### 全局引入
+### 引入
 
 ```javaScript
+// 全局引入并注册
 import pComponents from '../../components';
 app.use(pComponents);
+// 页面按需引入
+import pVerificationCode from '@PComponents/verificationCode';
 ```
 
 ### 使用组件

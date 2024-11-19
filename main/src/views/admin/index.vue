@@ -59,7 +59,7 @@
           >
             <t-button variant="text">
               <template #icon> <t-icon name="user" size="16" /></template>
-              <span>小明</span>
+              <span>{{ name }}</span>
               <template #suffix>
                 <t-icon name="chevron-down" size="16"
               /></template>
@@ -78,20 +78,24 @@
 <script setup>
 import { ref, watch, nextTick } from "vue";
 import { RouterView, useRouter } from "vue-router";
-import config from "@config";
+import { cloneDeep } from "es-toolkit/object";
+import PConfig from "@PConfig";
 import useUserStore from "@/stores/user";
 
 const user = useUserStore();
 const router = useRouter();
-let title = ref(config.title);
+let title = ref(PConfig.title);
 const collapsed = ref(false);
 const pageName = ref("");
 const options = ref([{ content: "退出登录", value: 2 }]);
 const leftList = ref([]);
 const menuList = ref([]);
 const menuValue = ref("");
+const userInfo = user.getInfo();
+const name = ref(userInfo.user_info.name);
+
 user.getMenuList().then((res) => {
-  menuList.value = JSON.parse(JSON.stringify(res));
+  menuList.value = cloneDeep(res);
   leftList.value = buildStructuredMenu(menuList.value);
   changeMenuValue();
 });
@@ -119,7 +123,7 @@ const changeCollapsed = () => {
 
 const clickHandler = (e) => {
   if (e.value === 2) {
-    localStorage.clear();
+    user.clearInfo();
     router.push({ path: "/login" });
   }
 };

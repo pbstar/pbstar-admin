@@ -1,18 +1,26 @@
 import menu from "./controller/menu";
+import user from "./controller/user";
+const getMap = {
+  "/api/getMenuList": menu.getMenuList,
+};
+const postMap = {
+  "/api/login": user.login,
+};
 const request = (e) => {
-  let userId = e.headers.token || "";
+  let userId = e.headers?.token || "";
   let param = null;
+  let apifunc = null;
   if (e.method === "get") {
     param = e.params || null;
+    apifunc = getMap[e.url] || null;
   } else if (e.method === "post") {
     param = e.data || null;
+    apifunc = postMap[e.url] || null;
   }
   return new Promise((resolve, reject) => {
-    if (e.url === "/api/getMenuList" && e.method === "get") {
-      menu.getMenuList(userId, param).then((res) => {
-        resolve(res);
-      });
-    }
+    apifunc(userId, param).then((res) => {
+      resolve(res);
+    });
   });
 };
 export default request;

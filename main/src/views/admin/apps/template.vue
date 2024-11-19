@@ -11,7 +11,7 @@
 import { ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import microApp from "@micro-zoe/micro-app";
-import apps from "@config/apps";
+import apps from "@PConfig/apps";
 const route = useRoute();
 const name = ref("template");
 const url = ref("");

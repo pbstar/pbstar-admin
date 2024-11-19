@@ -18,10 +18,10 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
-      '@config': fileURLToPath(new URL('../../config', import.meta.url)),
-      '@utils': fileURLToPath(new URL('../../utils', import.meta.url)),
-      '@components': fileURLToPath(new URL('../../components', import.meta.url)),
-      '@server': fileURLToPath(new URL('../../server', import.meta.url)),
+      '@PConfig': fileURLToPath(new URL('../../config', import.meta.url)),
+      '@PUtils': fileURLToPath(new URL('../../utils', import.meta.url)),
+      '@PComponents': fileURLToPath(new URL('../../components', import.meta.url)),
+      '@PServer': fileURLToPath(new URL('../../server', import.meta.url)),
     }
   },
   server: {
