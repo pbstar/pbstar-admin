@@ -44,6 +44,8 @@ const router = createRouter({
           meta: {
             title: "模板管理",
             isAuth: true,
+            isApp: true,
+            appName: "template",
           },
           component: () => import("@/views/apps/template.vue"),
         },
@@ -57,18 +59,19 @@ const router = createRouter({
   ],
 });
 
-router.beforeEach((to, from, next) => {
-  const user = useUserStore();
-  user.getMenuList().then((res) => {
-    let menuList = res || [];
-    let path = to.fullPath.replace("%2F", "/");
-    let id = menuList.find((item) => item.path === path)?.id || "";
-    if (!id && to.meta.isAuth) {
-      next("/403");
-      return;
-    }
-    next();
-  });
-});
+// router.beforeEach((to, from, next) => {
+//   console.log(to, from,"beforeEach");
+  
+//   const user = useUserStore();
+//   user.getMenuList().then((res) => {
+//     let menuList = res || [];
+//     let id = menuList.find((item) => item.path === to.fullPath)?.id || "";
+//     // if (!id && to.meta.isAuth) {
+//     //   next("/403");
+//     // } else {
+//       next();
+//     // }
+//   });
+// });
 
 export default router;

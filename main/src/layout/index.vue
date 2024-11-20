@@ -1,16 +1,8 @@
 <template>
   <div class="page">
-    <Left
-      :pageName="pageName"
-      :collapsed="collapsed"
-      @pageNameChange="pageNameChange"
-    />
+    <Left :collapsed="collapsed" />
     <div class="right">
-      <RightTop
-        :pageName="pageName"
-        :collapsed="collapsed"
-        @collapsedChange="collapsedChange"
-      />
+      <RightTop :collapsed="collapsed" @collapsedChange="collapsedChange" />
       <div class="r_bottom">
         <div class="r_b_box">
           <RouterView />
@@ -25,12 +17,8 @@ import { RouterView } from "vue-router";
 import Left from "./left.vue";
 import RightTop from "./right_top.vue";
 const collapsed = ref(false);
-const pageName = ref("");
 const collapsedChange = (val) => {
   collapsed.value = val;
-};
-const pageNameChange = (val) => {
-  pageName.value = val;
 };
 </script>
 <style scoped lang="scss">

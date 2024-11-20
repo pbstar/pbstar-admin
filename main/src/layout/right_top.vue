@@ -6,7 +6,7 @@
           <t-icon :name="props.collapsed ? 'menu-fold' : 'menu-unfold'" />
         </template>
       </t-button>
-      <span class="pageName">{{ props.pageName }}</span>
+      <span class="pageName">{{ pageName }}</span>
     </div>
     <div class="r_t_right">
       <t-dropdown
@@ -27,16 +27,13 @@
 <script setup>
 import useUserStore from "@/stores/user";
 import { ref } from "vue";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 const router = useRouter();
+const route = useRoute();
 const props = defineProps({
   collapsed: {
     type: Boolean,
     default: false,
-  },
-  pageName: {
-    type: String,
-    default: "",
   },
 });
 const emits = defineEmits(["collapsedChange"]);
@@ -44,6 +41,7 @@ const user = useUserStore();
 const userInfo = user.getInfo();
 const name = ref(userInfo?.user_info?.name);
 const options = ref([{ content: "退出登录", value: 2 }]);
+const pageName = ref(route.meta.title || "");
 const changeCollapsed = () => {
   emits("collapsedChange", !props.collapsed);
 };
@@ -53,6 +51,9 @@ const clickHandler = (e) => {
     router.push({ path: "/login" });
   }
 };
+router.afterEach((to) => {
+  pageName.value = to.meta.title || "";
+});
 </script>
 <style scoped lang="scss">
 .r_top {

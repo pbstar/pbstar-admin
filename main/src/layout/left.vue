@@ -41,8 +41,8 @@
   </div>
 </template>
 <script setup>
-import { ref, watch, nextTick } from "vue";
-import { useRouter } from "vue-router";
+import { ref, nextTick } from "vue";
+import { useRouter, useRoute } from "vue-router";
 import PConfig from "@PConfig";
 import useUserStore from "@/stores/user";
 import { cloneDeep } from "es-toolkit/object";
@@ -51,13 +51,9 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-  pageName: {
-    type: String,
-    default: "",
-  },
 });
-const emits = defineEmits(["pageNameChange"]);
 const router = useRouter();
+const route = useRoute();
 const user = useUserStore();
 const title = ref(PConfig.title);
 const leftList = ref([]);
@@ -67,27 +63,14 @@ const menuValue = ref("");
 user.getMenuList().then((res) => {
   menuList.value = cloneDeep(res);
   leftList.value = buildStructuredMenu(menuList.value);
-  changeMenuValue();
-});
-
-const changeMenuValue = () => {
   nextTick(() => {
-    let path = router.currentRoute.value.fullPath.replace("%2F", "/");
-    emits("pageNameChange", router.currentRoute.value.meta.title || "");
-    let id = menuList.value.find((item) => item.path === path)?.id || "";
+    let id =
+      menuList.value.find((item) => item.path === route.fullPath)?.id || "";
     if (menuValue.value != id && id) {
       menuValue.value = id;
     }
   });
-};
-watch(
-  () => router.currentRoute.value,
-  (newValue, oldValue) => {
-    changeMenuValue();
-  },
-  { immediate: true }
-);
-
+});
 const changeMenu = (e) => {
   let path = menuList.value.find((item) => item.id == e)?.path;
   if (!path) return;

@@ -8,11 +8,10 @@
   ></micro-app>
 </template>
 <script setup>
-import { ref, watch } from "vue";
-import { useRoute } from "vue-router";
+import { ref } from "vue";
+import { onBeforeRouteUpdate } from "vue-router";
 import microApp from "@micro-zoe/micro-app";
 import apps from "@PConfig/apps";
-const route = useRoute();
 const name = ref("template");
 const url = ref("");
 const data = ref({
@@ -20,16 +19,10 @@ const data = ref({
 });
 const app = apps.find((item) => item.name === name.value);
 url.value = app.url;
-watch(
-  route,
-  (newRoute) => {
-    microApp.router.push({
-      name: name.value,
-      path: newRoute.query[name.value],
-    });
-  },
-  {
-    deep: true,
-  }
-);
+onBeforeRouteUpdate((to, from) => {
+  microApp.router.push({
+    name: name.value,
+    path: to.query[name.value],
+  });
+});
 </script>

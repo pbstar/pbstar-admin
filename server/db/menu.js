@@ -15,13 +15,13 @@ export default [
     id: 3,
     parentId: 2,
     name: '页面一',
-    path: '/admin/app_template?template=/about',
+    path: '/admin/app_template?template=%2Fabout',
   },
   {
     id: 4,
     parentId: 2,
     name: '页面二',
-    path: '/admin/app_template?template=/',
+    path: '/admin/app_template?template=%2F',
   },
   {
     id: 5,

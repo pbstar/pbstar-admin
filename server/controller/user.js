@@ -1,4 +1,3 @@
-import db_menu from "../db/menu";
 import db_user from "../db/user";
 import db_role from "../db/role";
 const login = (userId, param) => {
