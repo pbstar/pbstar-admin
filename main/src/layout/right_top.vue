@@ -47,7 +47,7 @@ const changeCollapsed = () => {
 };
 const clickHandler = (e) => {
   if (e.value === 2) {
-    user.clearInfo();
+    user.loginOut();
     router.push({ path: "/login" });
   }
 };

@@ -5,6 +5,7 @@ import http from "@PUtils/http";
 export default defineStore("user", () => {
   const info = ref(null);
   const menuList = ref([]);
+  const isLogin = ref(false);
 
   function getInfo() {
     if (info.value) {
@@ -26,13 +27,20 @@ export default defineStore("user", () => {
     return null;
   }
   function setInfo(e) {
+    if (!e) {
+      return;
+    }
+    isLogin.value = true;
     info.value = e;
     localStorage.setItem("token", e.token);
     localStorage.setItem("role", e.role);
     localStorage.setItem("user_id", e.user_id);
     localStorage.setItem("user_info", JSON.stringify(e.user_info));
   }
-  function clearInfo() {
+  setInfo(getInfo());
+  function loginOut() {
+    isLogin.value = false;
+    menuList.value = [];
     info.value = null;
     localStorage.removeItem("token");
     localStorage.removeItem("role");
@@ -53,5 +61,5 @@ export default defineStore("user", () => {
       });
     });
   }
-  return { getInfo, setInfo, clearInfo, getMenuList };
+  return { isLogin, getInfo, setInfo, loginOut, getMenuList };
 });

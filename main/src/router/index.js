@@ -78,6 +78,7 @@ router.beforeEach((to, from, next) => {
 const authRouter = (to, from, next) => {
   if (!to.meta.isAuth) return next();
   const user = useUserStore();
+  if (!user.isLogin) return next("/login");
   user.getMenuList().then((res) => {
     let menuList = res || [];
     let id = menuList.find((item) => item.path === to.fullPath)?.id;

@@ -45,7 +45,6 @@ import { ref, nextTick } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import PConfig from "@PConfig";
 import useUserStore from "@/stores/user";
-import { cloneDeep } from "es-toolkit/object";
 const props = defineProps({
   collapsed: {
     type: Boolean,
@@ -69,11 +68,15 @@ const changeMenuValue = () => {
   });
 };
 user.getMenuList().then((res) => {
-  menuList.value = cloneDeep(res);
-  leftList.value = buildStructuredMenu(menuList.value);
+  menuList.value = res;
+  leftList.value = buildStructuredMenu(res);
   changeMenuValue();
 });
 router.afterEach((to) => {
+  if (!user.isLogin) {
+    menuList.value = [];
+    leftList.value = [];
+  }
   changeMenuValue();
 });
 const changeMenu = (e) => {
