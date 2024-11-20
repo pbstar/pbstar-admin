@@ -58,20 +58,32 @@ const router = createRouter({
     },
   ],
 });
+router.beforeEach((to, from, next) => {
+  if (to.fullPath == from.fullPath) return;
+  if (!to.meta.isApp && from.meta.isApp) {
+    // 过滤从app跳过来自动触发的
+    let bool = false;
+    for (let key in to.query) {
+      if (from.query[key]) {
+        bool = true;
+        break;
+      }
+    }
+    if (bool) return;
+  }
+  authRouter(to, from, next);
+});
 
-// router.beforeEach((to, from, next) => {
-//   console.log(to, from,"beforeEach");
-  
-//   const user = useUserStore();
-//   user.getMenuList().then((res) => {
-//     let menuList = res || [];
-//     let id = menuList.find((item) => item.path === to.fullPath)?.id || "";
-//     // if (!id && to.meta.isAuth) {
-//     //   next("/403");
-//     // } else {
-//       next();
-//     // }
-//   });
-// });
+// 路由鉴权
+const authRouter = (to, from, next) => {
+  if (!to.meta.isAuth) return next();
+  const user = useUserStore();
+  user.getMenuList().then((res) => {
+    let menuList = res || [];
+    let id = menuList.find((item) => item.path === to.fullPath)?.id;
+    if (id) next();
+    else next("/403");
+  });
+};
 
 export default router;

@@ -59,10 +59,7 @@ const title = ref(PConfig.title);
 const leftList = ref([]);
 const menuList = ref([]);
 const menuValue = ref("");
-
-user.getMenuList().then((res) => {
-  menuList.value = cloneDeep(res);
-  leftList.value = buildStructuredMenu(menuList.value);
+const changeMenuValue = () => {
   nextTick(() => {
     let id =
       menuList.value.find((item) => item.path === route.fullPath)?.id || "";
@@ -70,6 +67,14 @@ user.getMenuList().then((res) => {
       menuValue.value = id;
     }
   });
+};
+user.getMenuList().then((res) => {
+  menuList.value = cloneDeep(res);
+  leftList.value = buildStructuredMenu(menuList.value);
+  changeMenuValue();
+});
+router.afterEach((to) => {
+  changeMenuValue();
 });
 const changeMenu = (e) => {
   let path = menuList.value.find((item) => item.id == e)?.path;
