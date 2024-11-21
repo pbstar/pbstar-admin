@@ -13,13 +13,7 @@ export default defineConfig({
     },
   },
   plugins: [
-    vue({
-      template: {
-        compilerOptions: {
-          isCustomElement: tag => tag === 'micro-app'
-        }
-      }
-    }),
+    vue(),
   ],
   resolve: {
     alias: {

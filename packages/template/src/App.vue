@@ -7,10 +7,29 @@
 </template>
 
 <script setup>
-import { RouterLink, RouterView } from "vue-router";
-const data = window.microApp.getData();
-if (!data || !data.isNormal) {
-}
+import { onMounted, onBeforeUnmount } from "vue";
+import { RouterLink, RouterView, useRouter } from "vue-router";
+import WujieVue from "wujie-vue3";
+const { bus } = WujieVue;
+const router = useRouter();
+const url = "/admin/app_template?template=";
+router.afterEach((to, from) => {
+  let path = encodeURIComponent(to.fullPath);
+  bus.$emit("changeMenuValue", url + path);
+});
+onMounted(() => {
+  bus.$on("changeRouter", (e) => {
+    //判断字符串是否包含某个字符
+    if (e.indexOf(url) > -1) {
+      e = e.replace(url, "");
+      e = decodeURIComponent(e);
+      router.push(e);
+    }
+  });
+});
+onBeforeUnmount(() => {
+  bus.$off("changeRouter", () => {});
+});
 </script>
 
 <style lang="scss" scoped>

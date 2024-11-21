@@ -41,10 +41,12 @@
   </div>
 </template>
 <script setup>
-import { ref, nextTick } from "vue";
+import { ref, nextTick, onMounted, onBeforeUnmount } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import PConfig from "@PConfig";
 import useUserStore from "@/stores/user";
+import WujieVue from "wujie-vue3";
+const { bus } = WujieVue;
 const props = defineProps({
   collapsed: {
     type: Boolean,
@@ -58,34 +60,36 @@ const title = ref(PConfig.title);
 const leftList = ref([]);
 const menuList = ref([]);
 const menuValue = ref("");
-const changeMenuValue = () => {
+const changeMenuValue = (fullPath) => {
+  let id = menuList.value.find((item) => item.path === fullPath)?.id || "";
+  if (!id || menuValue.value == id) return;
   nextTick(() => {
-    let id =
-      menuList.value.find((item) => item.path === route.fullPath)?.id || "";
-    if (menuValue.value != id && id) {
-      menuValue.value = id;
-    }
+    menuValue.value = id;
   });
 };
+onMounted(() => {
+  bus.$on("changeMenuValue", (e) => {
+    changeMenuValue(e);
+  });
+});
+onBeforeUnmount(() => {
+  bus.$off("changeMenuValue", () => {});
+});
+
 user.getMenuList().then((res) => {
   menuList.value = res;
   leftList.value = buildStructuredMenu(res);
-  changeMenuValue();
-});
-router.afterEach((to) => {
-  if (!user.isLogin) {
-    menuList.value = [];
-    leftList.value = [];
-  }
-  changeMenuValue();
+  changeMenuValue(route.fullPath);
 });
 const changeMenu = (e) => {
   let path = menuList.value.find((item) => item.id == e)?.path;
   if (!path) return;
   menuValue.value = e;
   router.push(path);
+  bus.$emit("changeRouter", path);
 };
-function buildStructuredMenu(flatMenu) {
+//结构化菜单
+const buildStructuredMenu = (flatMenu) => {
   let structuredMenu = [];
   flatMenu.forEach((item) => {
     if (item.parentId == 0) {
@@ -99,7 +103,7 @@ function buildStructuredMenu(flatMenu) {
     }
   });
   return structuredMenu;
-}
+};
 </script>
 <style scoped lang="scss">
 .left {

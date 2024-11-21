@@ -59,18 +59,6 @@ const router = createRouter({
   ],
 });
 router.beforeEach((to, from, next) => {
-  if (to.fullPath == from.fullPath) return;
-  if (!to.meta.isApp && from.meta.isApp) {
-    // 过滤从app跳过来自动触发的
-    let bool = false;
-    for (let key in to.query) {
-      if (from.query[key]) {
-        bool = true;
-        break;
-      }
-    }
-    if (bool) return;
-  }
   authRouter(to, from, next);
 });
 

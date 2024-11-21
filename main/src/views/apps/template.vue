@@ -1,28 +1,18 @@
 <template>
-  <micro-app
-    style="width: 100%; height: 100%"
+  <WujieVue
+    width="100%"
+    height="100%"
     :name="name"
     :url="url"
-    iframe
-    :data="data"
-  ></micro-app>
+    :sync="true"
+    :props="{
+      isNormal: true,
+    }"
+  ></WujieVue>
 </template>
 <script setup>
 import { ref } from "vue";
-import { onBeforeRouteUpdate } from "vue-router";
-import microApp from "@micro-zoe/micro-app";
 import apps from "@PConfig/apps";
 const name = ref("template");
-const url = ref("");
-const data = ref({
-  isNormal: true,
-});
-const app = apps.find((item) => item.name === name.value);
-url.value = app.url;
-onBeforeRouteUpdate((to, from) => {
-  microApp.router.push({
-    name: name.value,
-    path: to.query[name.value],
-  });
-});
+const url = ref(apps.find((item) => item.name === name.value).url);
 </script>

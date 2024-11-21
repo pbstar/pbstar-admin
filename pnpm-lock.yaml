@@ -8,9 +8,6 @@ importers:
 
   .:
     dependencies:
-      '@micro-zoe/micro-app':
-        specifier: ^1.0.0-rc.13
-        version: 1.0.0-rc.13
       axios:
         specifier: ^1.7.7
         version: 1.7.7
@@ -315,9 +312,6 @@ packages:
 
   '@jridgewell/sourcemap-codec@1.5.0':
     resolution: {integrity: sha512-gv3ZRaISU3fjPAgNsriBRqGWQL6quFx04YMPW/zD8XMLsU32mhCCbfbO6KZFLjvYpCZ8zyDEgqsgf+PwPaM7GQ==}
-
-  '@micro-zoe/micro-app@1.0.0-rc.13':
-    resolution: {integrity: sha512-2FA2dpYFAIKwoNtDABrGB3TpVWkqfi3wxxbtfRPkomEhiWLZyth7mocY1TjpUCIcNNiIxdfz42ebZA0tK+6dkw==}
 
   '@popperjs/core@2.11.8':
     resolution: {integrity: sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==}
@@ -1114,8 +1108,6 @@ snapshots:
       '@types/node': 22.9.0
 
   '@jridgewell/sourcemap-codec@1.5.0': {}
-
-  '@micro-zoe/micro-app@1.0.0-rc.13': {}
 
   '@popperjs/core@2.11.8': {}
 
