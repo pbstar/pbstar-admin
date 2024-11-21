@@ -4,7 +4,9 @@
     :name="name"
     :url="url"
     iframe
-    :data="data"
+    :data="{
+      isNormal: true,
+    }"
   ></micro-app>
 </template>
 <script setup>
@@ -13,12 +15,7 @@ import { onBeforeRouteUpdate } from "vue-router";
 import microApp from "@micro-zoe/micro-app";
 import apps from "@PConfig/apps";
 const name = ref("template");
-const url = ref("");
-const data = ref({
-  isNormal: true,
-});
-const app = apps.find((item) => item.name === name.value);
-url.value = app.url;
+const url = ref(apps.find((item) => item.name === name.value).url);
 onBeforeRouteUpdate((to, from) => {
   microApp.router.push({
     name: name.value,

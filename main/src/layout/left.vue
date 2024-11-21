@@ -59,12 +59,10 @@ const leftList = ref([]);
 const menuList = ref([]);
 const menuValue = ref("");
 const changeMenuValue = () => {
+  let id = menuList.value.find((item) => item.path === route.fullPath)?.id;
+  if (!id || menuValue.value == id) return;
   nextTick(() => {
-    let id =
-      menuList.value.find((item) => item.path === route.fullPath)?.id || "";
-    if (menuValue.value != id && id) {
-      menuValue.value = id;
-    }
+    menuValue.value = id;
   });
 };
 user.getMenuList().then((res) => {
@@ -85,8 +83,10 @@ const changeMenu = (e) => {
   menuValue.value = e;
   router.push(path);
 };
-function buildStructuredMenu(flatMenu) {
+//结构化菜单
+const buildStructuredMenu = (flatMenu) => {
   let structuredMenu = [];
+  flatMenu = flatMenu.filter((item) => item.isMenu);
   flatMenu.forEach((item) => {
     if (item.parentId == 0) {
       structuredMenu.push(item);
@@ -99,7 +99,7 @@ function buildStructuredMenu(flatMenu) {
     }
   });
   return structuredMenu;
-}
+};
 </script>
 <style scoped lang="scss">
 .left {
