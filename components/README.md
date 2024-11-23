@@ -6,7 +6,7 @@
 
 ```javaScript
 // 全局引入并注册
-import pComponents from '../../components';
+import pComponents from '@PComponents'
 app.use(pComponents);
 // 页面按需引入
 import pVerificationCode from '@PComponents/verificationCode';
@@ -17,7 +17,7 @@ import pVerificationCode from '@PComponents/verificationCode';
 ```javaScript
 <template>
   <div>
-    <p-button>按钮</p-button>
+    <pVerificationCode />
   </div>
 </template>
 ```

@@ -39,6 +39,24 @@ const router = createRouter({
           component: () => import("@/views/admin/user/index.vue"),
         },
         {
+          path: "role",
+          name: "adminRole",
+          meta: {
+            title: "角色管理",
+            isAuth: true,
+          },
+          component: () => import("@/views/admin/role/index.vue"),
+        },
+        {
+          path: "menu",
+          name: "adminMenu",
+          meta: {
+            title: "菜单管理",
+            isAuth: true,
+          },
+          component: () => import("@/views/admin/menu/index.vue"),
+        },
+        {
           path: "app_template",
           name: "adminAppTemplate",
           meta: {
