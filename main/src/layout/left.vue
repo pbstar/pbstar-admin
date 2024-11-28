@@ -43,6 +43,7 @@
 <script setup>
 import { ref, nextTick } from "vue";
 import { useRouter, useRoute } from "vue-router";
+import { cloneDeep } from "es-toolkit/object";
 import PConfig from "@PConfig";
 import useUserStore from "@/stores/user";
 const props = defineProps({
@@ -67,7 +68,7 @@ const changeMenuValue = () => {
 };
 user.getMenuList().then((res) => {
   menuList.value = res;
-  leftList.value = buildStructuredMenu(res);
+  leftList.value = buildStructuredMenu(cloneDeep(res));
   changeMenuValue();
 });
 router.afterEach((to) => {
@@ -86,14 +87,17 @@ const changeMenu = (e) => {
 //结构化菜单
 const buildStructuredMenu = (flatMenu) => {
   let structuredMenu = [];
-  flatMenu = flatMenu.filter((item) => item.isMenu);
+  flatMenu = flatMenu.sort((a, b) => a.parentId - b.parentId);
   flatMenu.forEach((item) => {
+    if (!item.isMenu) return;
     if (item.parentId == 0) {
       structuredMenu.push(item);
     } else {
       let parent = structuredMenu.find((i) => i.id == item.parentId);
       if (parent) {
-        parent.children = parent.children || [];
+        if (!parent.children) {
+          parent.children = [];
+        }
         parent.children.push(item);
       }
     }
