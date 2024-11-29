@@ -63,11 +63,10 @@ const searchList = ref([
   },
   {
     label: "创建时间",
-    dom: "t-time-range-picker",
+    dom: "t-date-range-picker",
     key: "createTime",
     value: [],
     bind: {
-      type: "daterange",
       placeholder: "请选择创建时间",
     },
   },

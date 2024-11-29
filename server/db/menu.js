@@ -56,4 +56,25 @@ export default [
     path: "/admin/menu",
     isMenu: true,
   },
+  {
+    id: 9,
+    parentId: 0,
+    name: "外部链接管理",
+    icon: "link-1",
+    isMenu: true,
+  },
+  {
+    id: 11,
+    parentId: 9,
+    name: "掘金",
+    path: "/admin/link_juejin",
+    isMenu: true,
+  },
+  {
+    id: 12,
+    parentId: 9,
+    name: "GitHub",
+    link: "https://github.com/pbstar/pbstar-admin",
+    isMenu: true,
+  }
 ];

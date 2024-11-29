@@ -22,7 +22,7 @@ const getMenuList = (userId, param) => {
       return;
     }
     let menu = db_menu.filter((item) => {
-      return role.menus.includes(item.id);
+      return role.menus == "all" || role.menus.includes(item.id);
     });
     resolve({
       code: 200,

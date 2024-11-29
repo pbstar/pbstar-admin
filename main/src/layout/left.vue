@@ -80,6 +80,11 @@ router.afterEach((to) => {
 });
 const changeMenu = (e) => {
   let path = menuList.value.find((item) => item.id == e)?.path;
+  let link = menuList.value.find((item) => item.id == e)?.link;
+  if (link) {
+    window.open(link, "_blank");
+    return;
+  }
   if (!path) return;
   menuValue.value = e;
   router.push(path);

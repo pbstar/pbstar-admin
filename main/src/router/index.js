@@ -67,6 +67,15 @@ const router = createRouter({
           },
           component: () => import("@/views/apps/template.vue"),
         },
+        {
+          path: "link_juejin",
+          name: "adminLinkJuejin",
+          meta: {
+            title: "掘金",
+            isAuth: true,
+          },
+          component: () => import("@/views/links/juejin.vue"),
+        },
       ],
     },
     {
