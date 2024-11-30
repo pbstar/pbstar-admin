@@ -2,6 +2,7 @@ import menu from "./controller/menu";
 import user from "./controller/user";
 const getMap = {
   "/api/getMenuList": menu.getMenuList,
+  "/api/getUserList": user.getUserList,
 };
 const postMap = {
   "/api/login": user.login,
@@ -18,7 +19,7 @@ const request = (e) => {
     apifunc = postMap[e.url] || null;
   }
   return new Promise((resolve, reject) => {
-    apifunc(userId, param).then((res) => {
+    apifunc(userId, param || {}).then((res) => {
       resolve(res);
     });
   });

@@ -51,7 +51,7 @@ const searchList = ref([
         },
         {
           label: "禁用",
-          value: 0,
+          value: 2,
         },
       ],
     },
@@ -101,7 +101,29 @@ const tableList = ref([
   { colKey: "name", title: "姓名" },
   { colKey: "username", title: "用户名" },
   { colKey: "phone", title: "手机号" },
-  { colKey: "status", title: "状态" },
+  { colKey: "roleName", title: "角色" },
+  {
+    colKey: "status",
+    title: "状态",
+    slotName: "status",
+    slotList: [
+      {
+        dom: "t-tag",
+        contentFn: (row) => {
+          return row.status === 1 ? "正常" : "禁用";
+        },
+        bind: {
+          shape: "round",
+          variant: "light-outline",
+        },
+        bindFn: {
+          theme: (row) => {
+            return row.status === 1 ? "success" : "danger";
+          },
+        },
+      },
+    ],
+  },
   { colKey: "createTime", title: "创建时间" },
   {
     colKey: "action",

@@ -1,80 +1,77 @@
-export default [
+const list = [
   {
     id: 1,
-    parentId: 0,
     name: "首页面板",
     path: "/admin/home",
     icon: "home",
-    isMenu: true,
   },
   {
     id: 2,
-    parentId: 0,
     name: "模板管理",
     icon: "user",
-    isMenu: true,
   },
   {
     id: 3,
     parentId: 2,
     name: "页面一",
     path: "/admin/app_template?template=%2Fpage1",
-    isMenu: true,
   },
   {
     id: 4,
     parentId: 2,
     name: "页面二",
     path: "/admin/app_template?template=%2Fpage2",
-    isMenu: false,
   },
   {
     id: 5,
-    parentId: 0,
     name: "系统管理",
     icon: "system-setting",
-    isMenu: true,
   },
   {
     id: 6,
     parentId: 5,
     name: "用户管理",
     path: "/admin/user",
-    isMenu: true,
   },
   {
     id: 7,
     parentId: 5,
     name: "角色管理",
     path: "/admin/role",
-    isMenu: true,
   },
   {
     id: 8,
     parentId: 5,
     name: "菜单管理",
     path: "/admin/menu",
-    isMenu: true,
   },
   {
     id: 9,
-    parentId: 0,
     name: "外部链接管理",
     icon: "link-1",
-    isMenu: true,
   },
   {
     id: 11,
     parentId: 9,
     name: "掘金",
     path: "/admin/link_juejin",
-    isMenu: true,
   },
   {
     id: 12,
     parentId: 9,
     name: "GitHub",
     link: "https://github.com/pbstar/pbstar-admin",
-    isMenu: true,
-  }
+  },
 ];
+const type = {
+  id: 0,
+  parentId: 0,
+  name: "",
+  icon: "",
+  link: "",
+  path: "",
+  isMenu: true,
+};
+export default list.map((item) => {
+  return { ...type, ...item };
+});

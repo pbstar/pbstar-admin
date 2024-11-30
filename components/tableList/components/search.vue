@@ -10,8 +10,8 @@
       </div>
       <div class="item" style="width: 180px"></div>
       <div class="searchBtn">
-        <t-button style="margin-right: 10px">搜索</t-button>
-        <t-button variant="outline">重置</t-button>
+        <t-button style="margin-right: 10px" @click="toSearch">搜索</t-button>
+        <t-button variant="outline" @click="toReset">重置</t-button>
       </div>
     </div>
   </div>
@@ -24,6 +24,20 @@ const props = defineProps({
     default: () => [],
   },
 });
+const emit = defineEmits(["toSearch"]);
+const toSearch = () => {
+  let param = {};
+  props.searchList.forEach((item) => {
+    param[item.key] = item.value;
+  });
+  emit("toSearch", param);
+};
+const toReset = () => {
+  props.searchList.forEach((item) => {
+    item.value = "";
+  });
+  emit("toSearch", {});
+};
 </script>
 <style scoped lang="scss">
 .search {

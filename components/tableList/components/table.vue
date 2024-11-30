@@ -27,6 +27,7 @@
 <script setup>
 import { ref } from "vue";
 import Dom from "./dom.vue";
+import http from "@PUtils/http";
 const props = defineProps({
   tableList: {
     type: Array,
@@ -35,19 +36,32 @@ const props = defineProps({
 });
 const slots = ref([]);
 slots.value = props.tableList.filter((item) => item.slotName);
-const data = [];
-const total = 28;
-for (let i = 0; i < total; i++) {
-  data.push({
-    index: i + 1,
-  });
-}
-
-const pagination = {
+const data = ref([]);
+const pagination = ref({
   defaultCurrent: 1,
   defaultPageSize: 5,
-  total,
+  total: 0,
+});
+
+const getUserList = (e) => {
+  http
+    .get("/api/getUserList", {
+      ...{
+        page: pagination.value.defaultCurrent,
+        pageSize: pagination.value.defaultPageSize,
+      },
+      ...e,
+    })
+    .then((res) => {
+      if (res.code === 200) {
+        data.value = res.data.list || [];
+        pagination.value.total = res.data.total || 0;
+      }
+    });
 };
+defineExpose({
+  getUserList,
+});
 </script>
 <style scoped lang="scss">
 .table {

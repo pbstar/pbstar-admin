@@ -1,4 +1,4 @@
-export default [
+const list =[
   {
     id: 1,
     name: "超管",
@@ -12,3 +12,12 @@ export default [
     menus: "1,2,3,4",
   },
 ];
+const type = {
+  id: 0,
+  name: "",
+  role: "",
+  menus: "",
+};
+export default list.map((item) => {
+  return { ...type, ...item };
+});

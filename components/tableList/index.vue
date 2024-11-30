@@ -1,9 +1,9 @@
 <template>
   <div class="pTableList">
-    <Search v-if="searchList.length" :searchList="searchList" />
+    <Search v-if="searchList.length" :searchList="searchList" @toSearch="toSearch" />
     <div class="line"></div>
     <TopBtn :topBtnList="topBtnList" />
-    <Table :tableList="tableList" />
+    <Table ref="table" :tableList="tableList" />
   </div>
 </template>
 <script setup>
@@ -29,8 +29,14 @@ const props = defineProps({
     default: [],
   },
 });
-// const emit = defineEmits(["changeCode"]);
-onMounted(() => {});
+
+const table = ref(null);
+onMounted(() => {
+  table.value.getUserList();
+});
+const toSearch = (val) => {
+  table.value.getUserList(val);
+};
 </script>
 <style scoped lang="scss">
 .pTableList {
