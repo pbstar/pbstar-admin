@@ -1,7 +1,7 @@
 # Pbstar-admin
 
 Pbstar-admin 是一套全面便捷的后台管理系统解决方案，基于 micro-app、pnpm 完成微前端架构，运用 vue3、vite、pinia、tdesign 等主流技术栈。
-本项目提供[脚手架](./cli/README.md)、[组件库](./components/README.md)和[部署工具](./deploy/README.md)，帮助开发者快速搭建后台管理系统。
+本项目提供[脚手架](./cli/README.md)、[组件库](./components/README.md)、[代码生成器](./generator/README.md)和[部署工具](./deploy/README.md)，帮助开发者快速搭建后台管理系统。
 
 ## 环境要求
 
@@ -51,6 +51,7 @@ pnpm remove <依赖名> --filter <包名>
 ├── components       # 组件
 ├── config           # 配置
 ├── deploy           # 部署
+├── generator        # 代码生成器
 ├── main             # main包
 ├── packages         # 模块包
 │ ├── example        # 示例包
