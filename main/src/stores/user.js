@@ -12,13 +12,13 @@ export default defineStore("user", () => {
       return info.value;
     }
     const token = localStorage.getItem("token");
-    const role = localStorage.getItem("role");
+    const role_key = localStorage.getItem("role_key");
     const user_id = localStorage.getItem("user_id");
     const user_info = localStorage.getItem("user_info");
-    if (token && role && user_id && user_info) {
+    if (token && role_key && user_id && user_info) {
       info.value = {
         token,
-        role,
+        role_key,
         user_id,
         user_info: JSON.parse(user_info),
       };
@@ -33,7 +33,7 @@ export default defineStore("user", () => {
     isLogin.value = true;
     info.value = e;
     localStorage.setItem("token", e.token);
-    localStorage.setItem("role", e.role);
+    localStorage.setItem("role_key", e.role_key);
     localStorage.setItem("user_id", e.user_id);
     localStorage.setItem("user_info", JSON.stringify(e.user_info));
   }
@@ -43,7 +43,7 @@ export default defineStore("user", () => {
     menuList.value = [];
     info.value = null;
     localStorage.removeItem("token");
-    localStorage.removeItem("role");
+    localStorage.removeItem("role_key");
     localStorage.removeItem("user_id");
     localStorage.removeItem("user_info");
   }

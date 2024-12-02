@@ -28,7 +28,7 @@ const login = (userId, param) => {
       msg: "成功",
       data: {
         token: user.id,
-        role: role.role,
+        role_key: role.key,
         user_id: user.id,
         user_info: {
           name: user.name,
@@ -56,7 +56,7 @@ const getUserList = (userId, param) => {
         name: item.name,
         phone: item.phone,
         username: item.username,
-        role: db_role.find((itemR) => itemR.id == item.role).role,
+        roleKey: db_role.find((itemR) => itemR.id == item.role).key,
         roleName: db_role.find((itemR) => itemR.id == item.role).name,
         status: item.status,
         createTime: item.createTime,
