@@ -1,7 +1,7 @@
 import db_menu from "../db/menu";
 import db_user from "../db/user";
 import db_role from "../db/role";
-const getMenuList = (userId, param) => {
+const getMyMenuList = (userId, param) => {
   return new Promise((resolve, reject) => {
     let user = db_user.find((item) => item.id == userId);
     if (!userId || !user) {
@@ -32,5 +32,5 @@ const getMenuList = (userId, param) => {
   });
 };
 export default {
-  getMenuList,
+  getMyMenuList,
 };

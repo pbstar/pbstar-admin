@@ -66,7 +66,7 @@ const changeMenuValue = () => {
     menuValue.value = id;
   });
 };
-user.getMenuList().then((res) => {
+user.getMyMenuList().then((res) => {
   menuList.value = res;
   leftList.value = buildStructuredMenu(cloneDeep(res));
   changeMenuValue();

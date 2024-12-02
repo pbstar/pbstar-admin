@@ -1,7 +1,7 @@
 import menu from "./controller/menu";
 import user from "./controller/user";
 const getMap = {
-  "/api/getMenuList": menu.getMenuList,
+  "/api/getMyMenuList": menu.getMyMenuList,
   "/api/getUserList": user.getUserList,
 };
 const postMap = {

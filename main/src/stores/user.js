@@ -47,13 +47,13 @@ export default defineStore("user", () => {
     localStorage.removeItem("user_id");
     localStorage.removeItem("user_info");
   }
-  function getMenuList() {
+  function getMyMenuList() {
     return new Promise((resolve) => {
       if (menuList.value.length) {
         resolve(menuList.value);
         return;
       }
-      http.get("/api/getMenuList").then((res) => {
+      http.get("/api/getMyMenuList").then((res) => {
         if (res.code === 200) {
           menuList.value = res.data || [];
         }
@@ -61,5 +61,5 @@ export default defineStore("user", () => {
       });
     });
   }
-  return { isLogin, getInfo, setInfo, loginOut, getMenuList };
+  return { isLogin, getInfo, setInfo, loginOut, getMyMenuList };
 });

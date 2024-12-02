@@ -106,7 +106,7 @@ const authRouter = (to, from, next) => {
   if (!to.meta.isAuth) return next();
   const user = useUserStore();
   if (!user.isLogin) return next("/login");
-  user.getMenuList().then((res) => {
+  user.getMyMenuList().then((res) => {
     let menuList = res || [];
     let id = menuList.find((item) => item.path === to.fullPath)?.id;
     if (id) next();
