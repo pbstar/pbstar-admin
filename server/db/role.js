@@ -17,6 +17,7 @@ const type = {
   name: "",
   key: "",
   menus: "",
+  createTime: "2000-01-01 00:00:00",
 };
 export default list.map((item) => {
   return { ...type, ...item };

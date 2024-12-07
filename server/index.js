@@ -1,8 +1,10 @@
 import menu from "./controller/menu";
 import user from "./controller/user";
+import role from "./controller/role";
 const getMap = {
   "/api/getMyMenuList": menu.getMyMenuList,
   "/api/getUserList": user.getUserList,
+  "/api/getRoleList": role.getRoleList,
 };
 const postMap = {
   "/api/login": user.login,

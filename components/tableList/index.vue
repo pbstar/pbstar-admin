@@ -3,7 +3,7 @@
     <Search v-if="searchList.length" :searchList="searchList" @toSearch="toSearch" />
     <div class="line"></div>
     <TopBtn :topBtnList="topBtnList" />
-    <Table ref="table" :tableList="tableList" />
+    <Table ref="table" :tableList="tableList" :tableConfig="tableConfig" :getDateUrl="getDateUrl"/>
   </div>
 </template>
 <script setup>
@@ -19,6 +19,10 @@ const props = defineProps({
   tableList: {
     type: Array,
     default: [],
+  },
+  tableConfig: {
+    type: Object,
+    default: {},
   },
   getDateUrl: {
     type: String,

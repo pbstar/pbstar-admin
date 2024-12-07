@@ -4,11 +4,13 @@
       :searchList="searchList"
       :topBtnList="topBtnList"
       :tableList="tableList"
+      :getDateUrl="getDateUrl"
     />
   </div>
 </template>
 <script setup>
 import { ref } from "vue";
+const getDateUrl = ref("/api/getUserList");
 const searchList = ref([
   {
     label: "姓名",

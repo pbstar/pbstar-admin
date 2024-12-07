@@ -8,6 +8,7 @@
       :bordered="true"
       :pagination="pagination"
       cell-empty-content="-"
+      :resizable="true"
     >
       <template
         v-for="(item, index) in slots"
@@ -33,6 +34,14 @@ const props = defineProps({
     type: Array,
     default: () => [],
   },
+  getDateUrl: {
+    type: String,
+    default: "",
+  },
+  tableConfig: {
+    type: Object,
+    default: () => ({}),
+  },
 });
 const slots = ref([]);
 slots.value = props.tableList.filter((item) => item.slotName);
@@ -42,10 +51,23 @@ const pagination = ref({
   defaultPageSize: 5,
   total: 0,
 });
+const config = Object.assign(
+  {
+    showIndexcolumn: true,
+  },
+  props.tableConfig
+);
 
+if (config.showIndexcolumn) {
+  props.tableList.unshift({
+    title: "序号",
+    colKey: "p_index",
+    width: 80,
+  });
+}
 const getUserList = (e) => {
   http
-    .get("/api/getUserList", {
+    .get(props.getDateUrl, {
       ...{
         page: pagination.value.defaultCurrent,
         pageSize: pagination.value.defaultPageSize,
@@ -55,6 +77,15 @@ const getUserList = (e) => {
     .then((res) => {
       if (res.code === 200) {
         data.value = res.data.list || [];
+        data.value.forEach((item, index) => {
+          if (config.showIndexcolumn) {
+            item.p_index =
+              (pagination.value.defaultCurrent - 1) *
+                pagination.value.defaultPageSize +
+              index +
+              1;
+          }
+        });
         pagination.value.total = res.data.total || 0;
       }
     });
