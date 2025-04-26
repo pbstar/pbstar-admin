@@ -1,0 +1,446 @@
+<script setup lang="ts">
+import { ref, watch } from "vue";
+import { useEnumStore } from "@/stores/common";
+import upload from "@/components/base/upload.vue";
+import selectRemote from "@/components/base/selectRemote.vue";
+import { useEquipTypeStore, useEquipFactoryStore } from "@/stores/equipBase";
+const equipTypeStore = useEquipTypeStore();
+const equipFactoryStore = useEquipFactoryStore();
+const enumStore = useEnumStore();
+const props = defineProps({
+  item: {
+    type: Object,
+    default: () => {},
+  },
+  modelValue: {
+    type: [Number, String, Boolean, Array, Object],
+    default: "",
+  },
+});
+const emit = defineEmits(["change", "update:modelValue"]);
+const getPlaceholder = (item: any) => {
+  const placeholderMap: any = {
+    input: "请输入",
+    textarea: "请输入",
+    inputNumber: "请输入",
+    select: "请选择",
+    selectRemote: "请选择",
+    selectMultiple: "请选择",
+    date: "请选择",
+    daterange: "请选择",
+    time: "请选择",
+    timerange: "请选择",
+    year: "请选择",
+    month: "请选择",
+    datetimerange: "请选择",
+  };
+  return placeholderMap[item.type] || "";
+};
+const item: any = ref({
+  key: "",
+  label: "",
+  type: "input",
+  placeholder: getPlaceholder(props.item),
+  isText: false,
+  isRequired: false,
+  isDisabled: false,
+  options: [],
+  labelStyle: "",
+  enumType: "",
+  tipText: "",
+  rightText: "",
+  limit: 5, // 上传组件用
+  prefixName: "base", // 上传组件用
+  remoteMethod: () => {}, // 远程搜索下拉框组件用
+});
+const value: any = ref("");
+const text: any = ref("");
+const changeText = (arr: any) => {
+  let obj = arr.find((it: any) => it.value == value.value);
+  if (obj) {
+    text.value = obj.label;
+  } else {
+    text.value = "";
+  }
+};
+watch(
+  () => props.modelValue,
+  (newVal: any) => {
+    value.value = newVal;
+
+    if (item.value.options && item.value.options.length > 0) {
+      changeText(item.value.options);
+    }
+    if (item.value.type == "equipType") {
+      let obj = equipTypeStore.getItem(value.value);
+      if (obj) {
+        text.value = obj.label;
+      }
+    } else if (item.value.type == "equipFactory") {
+      let obj = equipFactoryStore.getItem(value.value);
+      if (obj) {
+        text.value = obj.label;
+      }
+    }
+  },
+  {
+    immediate: true,
+  }
+);
+watch(
+  () => props.item,
+  (newVal: any) => {
+    item.value = { ...item.value, ...newVal };
+  },
+  {
+    immediate: true,
+    deep: true,
+  }
+);
+watch(
+  () => item.value.enumType,
+  (newVal: any) => {
+    if (newVal) {
+      enumStore.getEnum(item.value.enumType).then((res: any) => {
+        if (res) {
+          let list = res[item.value.enumType];
+          item.value.options = list.map((it: any) => {
+            return {
+              label: it.enumValue,
+              value: it.enumKey,
+            };
+          });
+          changeText(item.value.options);
+        }
+      });
+    }
+  },
+  {
+    immediate: true,
+  }
+);
+watch(
+  () => item.value.options,
+  (newVal: any) => {
+    if (newVal && newVal.length > 0) {
+      changeText(newVal);
+    }
+  },
+  {
+    immediate: true,
+    deep: true,
+  }
+);
+const change = (val: any) => {
+  let row = {};
+  if (item.value.options && item.value.options.length > 0) {
+    row = item.value.options.find((it: any) => it.value == value.value);
+  }
+  emit("update:modelValue", value.value);
+  emit("change", {
+    key: item.value.key,
+    type: item.value.type,
+    value: val,
+    row,
+  });
+};
+</script>
+<template>
+  <div class="item">
+    <div class="label" v-if="item.label" :style="item.labelStyle">
+      <span
+        v-show="item.isRequired && !item.isText && !item.isDisabled"
+        style="color: red"
+        >*</span
+      >
+      <span>{{ item.label }}</span>
+    </div>
+    <div class="value">
+      <div class="valBox" v-if="item.type != 'slot'">
+        <div class="input">
+          <!-- 文本 -->
+          <div class="text" v-if="item.isText">
+            <div v-show="text">{{ text }}</div>
+            <div v-show="!text">{{ value }}</div>
+          </div>
+          <!-- 输入框 -->
+          <el-input
+            v-model="value"
+            :placeholder="item.placeholder"
+            :disabled="item.isDisabled"
+            v-if="item.type == 'input' && !item.isText"
+            @change="change"
+          />
+          <!-- 文本域 -->
+          <el-input
+            v-model="value"
+            type="textarea"
+            :placeholder="item.placeholder"
+            :disabled="item.isDisabled"
+            v-if="item.type == 'textarea' && !item.isText"
+            @change="change"
+          />
+          <!-- 数字输入框 -->
+          <el-input
+            v-model="value"
+            type="number"
+            :placeholder="item.placeholder"
+            :disabled="item.isDisabled"
+            v-if="item.type == 'inputNumber' && !item.isText"
+            @change="change"
+          />
+          <!-- 下拉框 -->
+          <el-select
+            v-model="value"
+            :placeholder="item.placeholder"
+            v-if="item.type == 'select' && !item.isText"
+            :disabled="item.isDisabled"
+            @change="change"
+          >
+            <el-option
+              v-for="(it, index) in item.options"
+              :key="index"
+              :label="it.label"
+              :value="it.value"
+            />
+          </el-select>
+          <!-- 多选下拉框 -->
+          <el-select
+            v-model="value"
+            :placeholder="item.placeholder"
+            v-if="item.type == 'selectMultiple' && !item.isText"
+            :disabled="item.isDisabled"
+            @change="change"
+            multiple
+            collapse-tags
+            collapse-tags-tooltip
+          >
+            <el-option
+              v-for="(it, index) in item.options"
+              :key="index"
+              :label="it.label"
+              :value="it.value"
+            />
+          </el-select>
+          <!-- 单选框 -->
+          <el-radio-group
+            v-model="value"
+            v-if="item.type == 'radio' && !item.isText"
+            :disabled="item.isDisabled"
+            @change="change"
+          >
+            <el-radio
+              v-for="(it, index) in item.options"
+              :key="index"
+              :label="it.label"
+              :value="it.value"
+            />
+          </el-radio-group>
+          <!-- 多选框 -->
+          <el-checkbox-group
+            v-model="value"
+            v-if="item.type == 'checkbox' && !item.isText"
+            :disabled="item.isDisabled"
+            @change="change"
+          >
+            <el-checkbox
+              v-for="(it, index) in item.options"
+              :key="index"
+              :label="it.label"
+              :value="it.value"
+            />
+          </el-checkbox-group>
+          <!-- 日期 -->
+          <el-date-picker
+            v-model="value"
+            type="date"
+            placeholder="选择日期"
+            value-format="YYYY-MM-DD"
+            v-if="item.type == 'date' && !item.isText"
+            :disabled="item.isDisabled"
+            @change="change"
+          />
+          <!-- 日期范围 -->
+          <el-date-picker
+            v-model="value"
+            type="daterange"
+            range-separator="至"
+            value-format="YYYY-MM-DD"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+            v-if="item.type == 'daterange' && !item.isText"
+            :disabled="item.isDisabled"
+            @change="change"
+          />
+          <!-- 年度 -->
+          <el-date-picker
+            v-model="value"
+            type="year"
+            placeholder="选择年度"
+            v-if="item.type == 'year' && !item.isText"
+            value-format="YYYY"
+            :disabled="item.isDisabled"
+            @change="change"
+          />
+          <!-- 月份 -->
+          <el-date-picker
+            v-model="value"
+            type="month"
+            placeholder="选择月份"
+            v-if="item.type == 'month' && !item.isText"
+            value-format="YYYY-MM"
+            :disabled="item.isDisabled"
+            @change="change"
+          />
+
+          <!-- 时间 -->
+          <el-time-picker
+            v-model="value"
+            placeholder="选择时间"
+            v-if="item.type == 'time' && !item.isText"
+            @change="change"
+          />
+          <!-- 时间范围 -->
+          <el-time-picker
+            v-model="value"
+            is-range
+            range-separator="至"
+            start-placeholder="开始时间"
+            end-placeholder="结束时间"
+            v-if="item.type == 'timerange' && !item.isText"
+            :disabled="item.isDisabled"
+            @change="change"
+          />
+          <!-- 日期时间 -->
+          <el-date-picker
+            v-model="value"
+            type="datetime"
+            placeholder="选择日期时间"
+            v-if="item.type == 'datetime' && !item.isText"
+            :disabled="item.isDisabled"
+            value-format="YYYY-MM-DD hh:mm:ss"
+            @change="change"
+          />
+          <!-- 日期时间范围 -->
+          <el-date-picker
+            v-model="value"
+            type="datetimerange"
+            range-separator="至"
+            start-placeholder="开始日期时间"
+            end-placeholder="结束日期时间"
+            value-format="YYYY-MM-DD hh:mm:ss"
+            v-if="item.type == 'datetimerange' && !item.isText"
+            :disabled="item.isDisabled"
+            @change="change"
+          />
+          <!-- 文件上传 -->
+          <upload
+            v-if="item.type == 'uploadFile' && !item.isText"
+            type="file"
+            v-model="value"
+            :isDisabled="item.isDisabled"
+            :limit="item.limit"
+            @change="change"
+            :prefixName="item.prefixName"
+          ></upload>
+          <!-- 图片上传 -->
+          <upload
+            v-if="item.type == 'uploadImage' && !item.isText"
+            type="image"
+            v-model="value"
+            :isDisabled="item.isDisabled"
+            :limit="item.limit"
+            @change="change"
+            :prefixName="item.prefixName"
+          ></upload>
+          <!-- 远程搜索下拉框 -->
+          <selectRemote
+            v-if="item.type == 'selectRemote' && !item.isText"
+            v-model="value"
+            :isDisabled="item.isDisabled"
+            :options="item.options"
+            :remoteMethod="item.remoteMethod"
+            @change="change"
+          ></selectRemote>
+        </div>
+        <div class="rightText" v-if="item.rightText">
+          {{ item.rightText }}
+        </div>
+      </div>
+      <slot v-else></slot>
+      <div class="tipBox" v-if="item.tipText">
+        {{ item.tipText }}
+      </div>
+    </div>
+  </div>
+</template>
+<style scoped lang="scss">
+.item {
+  display: flex;
+}
+.label {
+  height: 20px;
+  width: 100px;
+  line-height: 20px;
+  margin-right: 6px;
+  text-align: right;
+  margin-top: 6px;
+  flex-shrink: 0;
+  font-size: 14px;
+  color: var(--color-table);
+}
+.value {
+  min-width: 150px;
+  max-width: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  .valBox {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 100%;
+    .input {
+      max-width: 100%;
+      flex: 1;
+      .text {
+        height: 30px;
+        padding: 0 6px;
+        line-height: 30px;
+        color: var(--color-table);
+        border-bottom: 1px solid #dcdcdc;
+        overflow-x: auto;
+        overflow-y: hidden;
+        white-space: nowrap;
+        &::-webkit-scrollbar {
+          width: 2px;
+          height: 2px;
+        }
+        &::-webkit-scrollbar-thumb {
+          background-color: #ddd;
+          border-radius: 2px;
+        }
+        &::-webkit-scrollbar-track {
+          background-color: #f5f5f5;
+          border-radius: 3px;
+        }
+        &::-webkit-scrollbar-corner {
+          background-color: #f5f5f5;
+        }
+      }
+    }
+    .rightText {
+      flex-shrink: 0;
+      font-size: 14px;
+      color: var(--color-table);
+      margin-left: 6px;
+    }
+  }
+  .tipBox {
+    font-size: 12px;
+    line-height: 16px;
+    color: var(--color-toptab);
+    margin-top: 4px;
+  }
+}
+</style>

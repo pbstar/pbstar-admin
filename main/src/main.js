@@ -10,10 +10,12 @@ import "@Passets/css/base.css";
 import App from "./App.vue";
 import router from "./router";
 const app = createApp(App);
+const mainPinia = createPinia();
+window.$mainPinia = mainPinia;
 app.use(ElementPlus, {
   locale: zhCn,
 });
 app.use(WujieVue);
-app.use(createPinia());
+app.use(mainPinia);
 app.use(router);
 app.mount("#root");

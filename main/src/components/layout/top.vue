@@ -1,19 +1,25 @@
 <script setup>
 import { ref } from "vue";
-import { CaretBottom,Setting } from "@element-plus/icons-vue";
+import { CaretBottom, Setting } from "@element-plus/icons-vue";
+import useSharedStore from "@Passets/stores/shared";
+import WujieVue from "wujie-vue3";
+const { bus } = WujieVue;
+const sharedStore = useSharedStore();
 
 const title = ref(import.meta.env.PUBLIC_TITLE);
 const apps = ref([]);
 const activeIndex = ref("app-example");
 const userName = ref("管理员");
 const userImg = ref("");
+const toUserInfo = () => {
+  sharedStore.isLogin = true;
+  bus.$emit("changeSharedPinia", { isLogin: true });
+};
 </script>
 <template>
   <div class="box">
     <div class="left">
-      <div class="title">
-        {{ title }}
-      </div>
+      <div class="title">{{ title }}</div>
       <div class="apps">
         <div
           :class="{
@@ -38,7 +44,7 @@ const userImg = ref("");
           </div>
           <template #dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item>个人资料</el-dropdown-item>
+              <el-dropdown-item @click="toUserInfo">个人资料</el-dropdown-item>
             </el-dropdown-menu>
           </template>
         </el-dropdown>
@@ -108,7 +114,7 @@ const userImg = ref("");
         }
       }
     }
-    .setting{
+    .setting {
       color: #fff;
       cursor: pointer;
       font-size: 20px;

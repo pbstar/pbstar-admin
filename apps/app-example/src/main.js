@@ -7,8 +7,11 @@ import "@Passets/css/base.css";
 
 import App from "./App.vue";
 const app = createApp(App);
+const mainPinia = window.parent.$mainPinia;
+
 app.use(ElementPlus, {
   locale: zhCn,
 });
 app.use(createPinia());
+app.use(mainPinia);
 app.mount("#root");
