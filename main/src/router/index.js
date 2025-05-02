@@ -32,14 +32,14 @@ const router = createRouter({
         {
           path: ":pathMatch(.*)*",
           name: "admin_notFound",
-          component: () => import("@/views/default/404.vue"),
+          component: () => import("@Pcomponents/page/default/404.vue"),
         },
       ],
     },
     {
       path: "/:pathMatch(.*)*",
       name: "notFound",
-      component: () => import("@/views/default/404.vue"),
+      component: () => import("@Pcomponents/page/default/404.vue"),
     },
   ],
 });

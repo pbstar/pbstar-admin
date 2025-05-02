@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {},
-  "dependencies": {},
-  "devDependencies": {}
+  "dependencies": {
+    "wujie-vue3": "^1.0.28"
+  }
 }

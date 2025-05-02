@@ -1,4 +1,5 @@
 <script setup>
+import { RouterView } from "vue-router";
 import useSharedStore from "@Passets/stores/shared";
 const sharedStore = useSharedStore();
 window.$wujie?.bus.$on("changeSharedPinia", (e) => {
@@ -9,7 +10,7 @@ window.$wujie?.bus.$on("changeSharedPinia", (e) => {
 </script>
 
 <template>
-  <div style="width: 100%; height: 800px">{{ sharedStore.isLogin }}</div>
+  <RouterView />
 </template>
 
 <style scoped lang="scss"></style>

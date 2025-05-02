@@ -100,7 +100,7 @@ import { ElMessage } from "element-plus";
 import { User, Lock, Postcard } from "@element-plus/icons-vue";
 import request from "@Passets/utils/request";
 import useUserStore from "@/stores/user";
-import pVerificationCode from "@Pcomponents/p-verificationCode/index.vue";
+import pVerificationCode from "@Pcomponents/more/p-verificationCode/index.vue";
 
 const user = useUserStore();
 const router = useRouter();
