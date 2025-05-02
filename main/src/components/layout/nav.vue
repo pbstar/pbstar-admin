@@ -1,27 +1,11 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter, useRoute } from "vue-router";
+import request from "@Passets/utils/request";
 const router = useRouter();
 const route = useRoute();
 const activeIndex = ref("1");
-const list = ref([
-  {
-    title: "首页",
-    url: "/admin/home",
-    index: "1",
-  },
-  {
-    title: "示例应用",
-    index: "2",
-    children: [
-      {
-        title: "首页",
-        url: "/admin/apps?name=app-example&app-example=%2F",
-        index: "2-1",
-      },
-    ],
-  },
-]);
+const list = ref([]);
 
 const select = (val) => {
   activeIndex.value = val;
@@ -36,7 +20,7 @@ const findUrlByIndex = (index) => {
   const findUrl = (list) => {
     for (let i = 0; i < list.length; i++) {
       const item = list[i];
-      if (item.index === index) {
+      if (item.id.toString() === index) {
         url = item.url;
         break;
       } else if (item.children) {
@@ -54,7 +38,7 @@ const findIndexByUrl = (url) => {
     for (let i = 0; i < list.length; i++) {
       const item = list[i];
       if (item.url === url) {
-        index = item.index;
+        index = item.id.toString();
         break;
       } else if (item.children) {
         findIndex(item.children);
@@ -64,52 +48,67 @@ const findIndexByUrl = (url) => {
   findIndex(list.value);
   return index;
 };
-// 初始化activeIndex
-if (route.fullPath) {
-  activeIndex.value = findIndexByUrl(route.fullPath);
-}
+
 router.afterEach((to, from) => {
   if (to.fullPath) {
     activeIndex.value = findIndexByUrl(to.fullPath);
   }
 });
+const getList = async () => {
+  request
+    .get({
+      base: "base",
+      url: "/base/getNavTreeList",
+    })
+    .then((res) => {
+      if (res.code === 200) {
+        list.value = res.data;
+        if (route.fullPath) {
+          activeIndex.value = findIndexByUrl(route.fullPath);
+        }
+      } else {
+        ElMessage.error(res.msg || "获取菜单失败");
+      }
+    });
+};
+getList();
 </script>
 <template>
   <div class="navBox">
     <el-menu class="menu" :default-active="activeIndex" @select="select">
       <div class="item" v-for="(item, index) in list" :key="index">
-        <el-menu-item :index="item.index" v-if="!item.children">
+        <el-menu-item :index="item.id.toString()" v-if="!item.children">
           <el-icon v-if="item.icon">
             <component :is="item.icon" />
           </el-icon>
-          <span>{{ item.title }}</span>
+          <span>{{ item.name }}</span>
         </el-menu-item>
-        <el-sub-menu :index="item.index" v-if="item.children">
+        <el-sub-menu :index="item.id.toString()" v-if="item.children">
           <template #title>
             <el-icon v-if="item.icon">
               <component :is="item.icon" />
             </el-icon>
-            <span>{{ item.title }}</span>
+            <span>{{ item.name }}</span>
           </template>
           <div
             class="items"
             v-for="(items, indexs) in item.children"
             :key="indexs + 's'"
           >
-            <el-menu-item :index="items.index" v-if="!items.children"
-              >{{ items.title }}
+            <el-menu-item :index="items.id.toString()" v-if="!items.children"
+              >{{ items.name }}
             </el-menu-item>
-            <el-sub-menu :index="items.index" v-if="items.children">
+            <el-sub-menu :index="items.id.toString()" v-if="items.children">
               <template #title>
-                <span>{{ items.title }}</span>
+                <span>{{ items.name }}</span>
               </template>
               <div
                 class="itemss"
                 v-for="(itemss, indexss) in items.children"
                 :key="indexss + 'ss'"
               >
-                <el-menu-item :index="itemss.index"
-                  >{{ itemss.title }}
+                <el-menu-item :index="itemss.id.toString()"
+                  >{{ itemss.name }}
                 </el-menu-item>
               </div>
             </el-sub-menu>

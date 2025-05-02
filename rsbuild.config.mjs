@@ -20,6 +20,15 @@ export default defineConfig({
       "@Passets": "./assets",
     },
   },
+  server: {
+    proxy: {
+      "/api_base": {
+        target: import.meta.env.PUBLIC_API_BASE_URL,
+        pathRewrite: { "^/api_base": "" },
+        changeOrigin: true,
+      },
+    },
+  },
   environments: {
     main: {
       html: {

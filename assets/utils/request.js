@@ -38,7 +38,7 @@ const request = (config) => {
   if (config.url.includes("http")) {
     baseUrl = "";
   } else {
-    baseUrl = config.base || "";
+    baseUrl = `/api_${config.base}` || "";
   }
   const conf = {
     baseURL: baseUrl,

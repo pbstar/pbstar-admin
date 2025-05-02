@@ -23,6 +23,8 @@ pnpm install
 pnpm run dev
 # 启动example包
 pnpm run dev:example
+# 启动后端server服务
+pnpm run server
 ```
 
 ## 创建子应用

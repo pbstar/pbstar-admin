@@ -5,6 +5,8 @@
   "private": true,
   "scripts": {
     "create": "node ./cli/index.js",
+    "server": "pnpm run -filter server dev",
+    "server:start": "pnpm run -filter server start",
     "dev": "rsbuild dev --environment main --port 8800 --open",
     "build": "rsbuild build --environment main",
     "dev:example": "rsbuild dev --environment app-example --port 8801",
@@ -23,10 +25,6 @@
     "@rsbuild/core": "^1.3.1",
     "@rsbuild/plugin-sass": "^1.3.1",
     "@rsbuild/plugin-vue": "^1.0.7"
-  },
-  "nano-staged": {
-    "*.md": "prettier --write",
-    "*.{js,vue,json,scss}": "prettier --write"
   },
   "engines": {
     "node": ">=18",
