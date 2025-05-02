@@ -7,8 +7,6 @@ const { bus } = WujieVue;
 const sharedStore = useSharedStore();
 
 const title = ref(import.meta.env.PUBLIC_TITLE);
-const apps = ref([]);
-const activeIndex = ref("app-example");
 const userName = ref("管理员");
 const userImg = ref("");
 const toUserInfo = () => {
@@ -20,18 +18,6 @@ const toUserInfo = () => {
   <div class="box">
     <div class="left">
       <div class="title">{{ title }}</div>
-      <div class="apps">
-        <div
-          :class="{
-            active: item.name == activeIndex,
-            app: true,
-          }"
-          v-for="(item, index) in apps"
-          :key="index"
-        >
-          <span>{{ item.title }}</span>
-        </div>
-      </div>
     </div>
     <div class="right">
       <div class="user">
@@ -69,27 +55,6 @@ const toUserInfo = () => {
       font-weight: bold;
       margin-left: 20px;
       color: #fff;
-    }
-    .apps {
-      margin-left: 150px;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      .app {
-        display: flex;
-        align-items: center;
-        color: #fff;
-        font-size: 16px;
-        line-height: 20px;
-        cursor: pointer;
-        margin-right: 20px;
-        &.active {
-          background-color: #fff;
-          color: #0d86ff;
-          border-radius: 5px;
-          padding: 6px 10px;
-        }
-      }
     }
   }
   .right {

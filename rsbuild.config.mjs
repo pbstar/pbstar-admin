@@ -67,5 +67,22 @@ export default defineConfig({
         },
       },
     },
+    "app-system": {
+      source: {
+        entry: {
+          index: "./apps/app-system/src/main.js",
+        },
+      },
+      output: {
+        distPath: {
+          root: "./dist/app-system",
+        },
+      },
+      resolve: {
+        alias: {
+          "@": "./apps/app-system/src",
+        },
+      },
+    },
   },
 });

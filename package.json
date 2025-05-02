@@ -4,13 +4,15 @@
   "description": "",
   "private": true,
   "scripts": {
-    "create": "node ./cli/index.js",
+    "create": "pnpm run -filter cli create",
     "server": "pnpm run -filter server dev",
     "server:start": "pnpm run -filter server start",
     "dev": "rsbuild dev --environment main --port 8800 --open",
     "build": "rsbuild build --environment main",
     "dev:example": "rsbuild dev --environment app-example --port 8801",
-    "build:example": "rsbuild build --environment app-example"
+    "build:example": "rsbuild build --environment app-example",
+    "dev:system": "rsbuild dev --environment app-system --port 8802",
+    "build:system": "rsbuild build --environment app-system"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.1",

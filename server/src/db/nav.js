@@ -9,8 +9,18 @@ const db = {
       url: "/admin/apps?name=app-example&app-example=%2Flist",
     },
     { id: 4, name: "系统管理", parentId: null },
-    { id: 5, name: "菜单管理", parentId: 4, url: "/menu" },
-    { id: 6, name: "代码生成器", parentId: 4, url: "/generator" },
+    {
+      id: 5,
+      name: "菜单管理",
+      parentId: 4,
+      url: "/admin/apps?name=app-system&app-system=%2Flist",
+    },
+    {
+      id: 6,
+      name: "代码生成器",
+      parentId: 4,
+      url: "/admin/apps?name=app-system&app-system=%2Fgenerator",
+    },
   ],
   lastId: 2,
 };

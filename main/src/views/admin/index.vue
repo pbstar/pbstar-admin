@@ -26,7 +26,7 @@ import AdminNav from "@/components/layout/nav.vue";
   width: 100vw;
   display: flex;
   flex-direction: column;
-  background-color: #F1F2F6;
+  background-color: #f1f2f6;
 
   .top {
     height: 52px;
@@ -63,6 +63,7 @@ import AdminNav from "@/components/layout/nav.vue";
       }
       .mApp {
         width: 100%;
+        min-height: 100%;
         background-color: #fff;
       }
     }
