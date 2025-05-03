@@ -2,22 +2,28 @@
 import { ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import WujieVue from "wujie-vue3";
+import apps from "../../../../apps/apps.json";
+
 const { bus } = WujieVue;
 const route = useRoute();
 const router = useRouter();
-const apps = ref([
-  { name: "app-example", url: "http://localhost:8801/" },
-  { name: "app-system", url: "http://localhost:8802/" },
-]);
+const appList = ref([]);
 const appName = ref("");
 const appUrl = ref("");
 const toChangeApp = (name) => {
-  const app = apps.value.find((item) => item.name === name);
+  const app = appList.value.find((item) => item.name === name);
   if (app) {
     appName.value = app.name;
     appUrl.value = app.url;
   }
 };
+const isDev = import.meta.env.DEV;
+appList.value = apps.map((item) => {
+  return {
+    name: item.name,
+    url: isDev ? `http://localhost:${item.devPort}/` : item.proUrl,
+  };
+});
 if (route.query.name) {
   toChangeApp(route.query.name);
 }
@@ -36,10 +42,15 @@ router.afterEach((to) => {
     v-if="appName && appUrl"
     width="100%"
     height="100%"
+    class="app"
     :name="appName"
     :url="appUrl"
     :sync="true"
     :props="{}"
   ></WujieVue>
 </template>
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.app {
+  min-height: 500px;
+}
+</style>

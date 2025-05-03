@@ -14,6 +14,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 // 定义路径
 const TEMPLATE_DIR = path.join(__dirname, "./template");
 const OUTPUT_DIR = path.join(__dirname, "../apps");
+const PROJECT_DIR = path.join(__dirname, "../");
 
 // 定义命令
 program
@@ -55,6 +56,31 @@ program
         process.exit(1);
       }
 
+      // apps.json文件中添加子应用配置
+      const appsJsonPath = path.join(OUTPUT_DIR, "apps.json");
+      let prot = 0;
+      if (fs.existsSync(appsJsonPath)) {
+        const appsJson = fs.readJsonSync(appsJsonPath);
+        const maxPort = appsJson.reduce((max, app) => {
+          return Math.max(max, app.devPort);
+        });
+        prot = maxPort + 1;
+        if (prot < 8801 || prot > 8899) {
+          console.error(
+            chalk.red(
+              "错误: 端口号超出范围（ 8801-8899 ），请检测子应用配置（ /pbstar-admin/apps/apps.json ）。"
+            )
+          );
+          process.exit(1);
+        }
+        appsJson.push({
+          name: "app-" + appName,
+          devPort: prot,
+          proUrl: "",
+        });
+        fs.writeJsonSync(appsJsonPath, appsJson);
+      }
+
       console.log(chalk.blue(`创建子应用: ${appName}`));
 
       // 创建项目目录
@@ -64,24 +90,28 @@ program
       await fs.copy(TEMPLATE_DIR, appPath);
 
       // 更新占位符
-      const options = {
+      await replaceInFile({
         files: [appPath + "/**/*"],
         from: [/{{name}}/g],
         to: [appName],
-      };
+      });
 
-      await replaceInFile(options);
+      // package.json文件中添加子应用配置
+      const packageJsonPath = path.join(PROJECT_DIR, "package.json");
+      if (fs.existsSync(packageJsonPath)) {
+        const packageJson = fs.readJsonSync(packageJsonPath);
+        if (!packageJson.scripts) {
+          packageJson.scripts = {};
+        }
+        packageJson.scripts[`dev:${appName}`] =
+          `rsbuild dev --environment app-${appName} --port ${prot}`;
+        packageJson.scripts[`build:${appName}`] =
+          `rsbuild build --environment app-${appName}`;
+      }
 
       console.log(chalk.green("子应用创建成功!"));
       console.log(chalk.blue("\n下一步:"));
-      console.log(
-        "  1.请到/pbstar-admin/rsbuild.config.mjs文件中添加子应用配置"
-      );
-      console.log("  2.请到/pbstar-admin/package.json文件中添加子应用配置");
-      console.log(
-        "  3.请到/pbstar-admin/main/src/views/admin/apps.vue文件中添加子应用配置"
-      );
-      console.log("  4.启动子应用: pnpm run dev:" + appName);
+      console.log("  启动子应用: pnpm run dev:" + appName);
     } catch (err) {
       console.error(chalk.red("Error creating project:"), err);
       process.exit(1);

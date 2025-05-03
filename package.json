@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "description": "",
   "private": true,
+  "type": "module",
   "scripts": {
     "create": "pnpm run -filter cli create",
     "server": "pnpm run -filter server dev",

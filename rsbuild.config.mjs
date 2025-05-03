@@ -1,6 +1,28 @@
 import { defineConfig } from "@rsbuild/core";
 import { pluginVue } from "@rsbuild/plugin-vue";
 import { pluginSass } from "@rsbuild/plugin-sass";
+import apps from "./apps/apps.json";
+
+const appsConfig = {};
+apps.forEach((item) => {
+  appsConfig[item.name] = {
+    source: {
+      entry: {
+        index: `./apps/${item.name}/src/main.js`,
+      },
+    },
+    output: {
+      distPath: {
+        root: `./dist/${item.name}`,
+      },
+    },
+    resolve: {
+      alias: {
+        "@": `./apps/${item.name}/src`,
+      },
+    },
+  };
+});
 
 export default defineConfig({
   plugins: [
@@ -50,39 +72,6 @@ export default defineConfig({
         },
       },
     },
-    "app-example": {
-      source: {
-        entry: {
-          index: "./apps/app-example/src/main.js",
-        },
-      },
-      output: {
-        distPath: {
-          root: "./dist/app-example",
-        },
-      },
-      resolve: {
-        alias: {
-          "@": "./apps/app-example/src",
-        },
-      },
-    },
-    "app-system": {
-      source: {
-        entry: {
-          index: "./apps/app-system/src/main.js",
-        },
-      },
-      output: {
-        distPath: {
-          root: "./dist/app-system",
-        },
-      },
-      resolve: {
-        alias: {
-          "@": "./apps/app-system/src",
-        },
-      },
-    },
+    ...appsConfig,
   },
 });

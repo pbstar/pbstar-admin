@@ -1,0 +1,12 @@
+[
+  {
+    "name": "app-example",
+    "devPort": 8801,
+    "proUrl": ""
+  },
+  {
+    "name": "app-system",
+    "devPort": 8802,
+    "proUrl": ""
+  }
+]
