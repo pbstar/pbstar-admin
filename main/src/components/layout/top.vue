@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from "vue";
-import { CaretBottom, Setting } from "@element-plus/icons-vue";
+import { CaretBottom, Setting, Moon, Sunny } from "@element-plus/icons-vue";
 import useSharedStore from "@Passets/stores/shared";
 import WujieVue from "wujie-vue3";
 const { bus } = WujieVue;
@@ -9,9 +9,19 @@ const sharedStore = useSharedStore();
 const title = ref(import.meta.env.PUBLIC_TITLE);
 const userName = ref("管理员");
 const userImg = ref("");
+const theme = ref(false);
 const toUserInfo = () => {
   sharedStore.isLogin = true;
   bus.$emit("changeSharedPinia", { isLogin: true });
+};
+const themeChange = () => {
+  if (theme.value) {
+    document.documentElement.setAttribute("data-theme", "dark");
+    document.documentElement.classList.add("dark");
+  } else {
+    document.documentElement.setAttribute("data-theme", "light");
+    document.documentElement.classList.remove("dark");
+  }
 };
 </script>
 <template>
@@ -20,6 +30,21 @@ const toUserInfo = () => {
       <div class="title">{{ title }}</div>
     </div>
     <div class="right">
+      <el-switch
+        v-model="theme"
+        inline-prompt
+        active-text="深色"
+        inactive-text="浅色"
+        :active-action-icon="Moon"
+        :inactive-action-icon="Sunny"
+        style="
+          margin-left: 10px;
+          border-color: #fff;
+          --el-switch-on-color: #272a2f;
+          --el-switch-off-color: #2165c9;
+        "
+        @change="themeChange"
+      />
       <div class="user">
         <el-dropdown trigger="click">
           <div class="userBox">
@@ -43,7 +68,8 @@ const toUserInfo = () => {
 .box {
   width: 100%;
   height: 100%;
-  background-color: #0d86ff;
+  background-color: var(--c-bg-theme);
+  color: var(--c-text-theme);
   display: flex;
   justify-content: space-between;
   .left {
@@ -54,7 +80,6 @@ const toUserInfo = () => {
       font-size: 20px;
       font-weight: bold;
       margin-left: 20px;
-      color: #fff;
     }
   }
   .right {
@@ -69,7 +94,7 @@ const toUserInfo = () => {
         margin-left: 20px;
         display: flex;
         align-items: center;
-        color: #fff;
+        color: var(--c-text-theme);
         cursor: pointer;
         img {
           margin-right: 8px;
@@ -80,7 +105,6 @@ const toUserInfo = () => {
       }
     }
     .setting {
-      color: #fff;
       cursor: pointer;
       font-size: 20px;
       margin-left: 20px;

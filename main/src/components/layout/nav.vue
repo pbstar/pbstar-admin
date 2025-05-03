@@ -122,24 +122,13 @@ getList();
 .navBox {
   width: 200px;
   height: 100%;
-  background-color: #fff;
+  background-color: var(--c-bg);
 }
 .navBox .menu {
   height: 100%;
   padding: 5px 0;
   overflow-y: auto;
   border-right: 0;
-  &::-webkit-scrollbar {
-    width: 6px;
-  }
-  &::-webkit-scrollbar-thumb {
-    border-radius: 4px;
-    background: rgba(180, 211, 255, 0.6);
-  }
-  &::-webkit-scrollbar-track {
-    border-radius: 4px;
-    background: rgba(0, 0, 0, 0.1);
-  }
 }
 
 .navBox :deep(.el-menu-item),

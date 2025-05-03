@@ -416,17 +416,6 @@ const change = (val: any) => {
           width: 2px;
           height: 2px;
         }
-        &::-webkit-scrollbar-thumb {
-          background-color: #ddd;
-          border-radius: 2px;
-        }
-        &::-webkit-scrollbar-track {
-          background-color: #f5f5f5;
-          border-radius: 3px;
-        }
-        &::-webkit-scrollbar-corner {
-          background-color: #f5f5f5;
-        }
       }
     }
     .rightText {

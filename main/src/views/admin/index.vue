@@ -26,12 +26,11 @@ import AdminNav from "@/components/layout/nav.vue";
   width: 100vw;
   display: flex;
   flex-direction: column;
-  background-color: #f1f2f6;
+  background-color: var(--c-bg-box);
 
   .top {
     height: 52px;
     width: 100%;
-    background-color: #fff;
   }
 
   .main {
@@ -49,22 +48,11 @@ import AdminNav from "@/components/layout/nav.vue";
       flex: 1;
       overflow-y: auto;
       overflow-x: hidden;
-      //滚动条样式
-      &::-webkit-scrollbar {
-        width: 6px;
-      }
-      &::-webkit-scrollbar-thumb {
-        border-radius: 4px;
-        background: rgba(34, 122, 247, 0.6);
-      }
-      &::-webkit-scrollbar-track {
-        border-radius: 4px;
-        background: rgba(0, 0, 0, 0.1);
-      }
+
       .mApp {
         width: 100%;
         min-height: 100%;
-        background-color: #fff;
+        background-color: var(--c-bg);
       }
     }
   }
