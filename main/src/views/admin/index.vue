@@ -8,6 +8,7 @@
         <AdminNav />
       </div>
       <div class="mRight">
+        <history />
         <div class="mApp">
           <RouterView />
         </div>
@@ -19,6 +20,7 @@
 import { RouterView } from "vue-router";
 import AdminTop from "@/components/layout/top.vue";
 import AdminNav from "@/components/layout/nav.vue";
+import history from "@/components/layout/history.vue";
 </script>
 <style scoped lang="scss">
 .page {
@@ -44,15 +46,15 @@ import AdminNav from "@/components/layout/nav.vue";
     }
     .mRight {
       height: 100%;
-      padding: 10px 0 0 10px;
+      padding-left: 10px;
       flex: 1;
-      overflow-y: auto;
-      overflow-x: hidden;
 
       .mApp {
         width: 100%;
-        min-height: 100%;
+        height: calc(100% - 40px);
         background-color: var(--c-bg);
+        overflow-y: auto;
+        overflow-x: hidden;
       }
     }
   }

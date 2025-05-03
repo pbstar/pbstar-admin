@@ -10,4 +10,12 @@ export default {
       message: "成功",
     });
   },
+  getNavList: async (req, res) => {
+    const list = await db.findAll();
+    res.json({
+      code: 200,
+      data: list,
+      message: "成功",
+    });
+  },
 };
