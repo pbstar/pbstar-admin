@@ -90,7 +90,7 @@ program
       // 更新占位符
       await replaceInFile({
         files: [appPath + "/**/*"],
-        from: [/{{name}}/g],
+        from: [/PA{name}/g],
         to: [appName],
       });
 
