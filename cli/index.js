@@ -58,14 +58,12 @@ program
 
       // apps.json文件中添加子应用配置
       const appsJsonPath = path.join(OUTPUT_DIR, "apps.json");
-      let prot = 0;
+      let port = 0;
       if (fs.existsSync(appsJsonPath)) {
         const appsJson = fs.readJsonSync(appsJsonPath);
-        const maxPort = appsJson.reduce((max, app) => {
-          return Math.max(max, app.devPort);
-        });
-        prot = maxPort + 1;
-        if (prot < 8801 || prot > 8899) {
+        const maxPort = Math.max(...appsJson.map((item) => item.devPort));
+        port = maxPort + 1;
+        if (port < 8801 || port > 8899 || !port) {
           console.error(
             chalk.red(
               "错误: 端口号超出范围（ 8801-8899 ），请检测子应用配置（ /pbstar-admin/apps/apps.json ）。"
@@ -75,10 +73,10 @@ program
         }
         appsJson.push({
           name: "app-" + appName,
-          devPort: prot,
+          devPort: port,
           proUrl: "",
         });
-        fs.writeJsonSync(appsJsonPath, appsJson);
+        fs.writeJsonSync(appsJsonPath, appsJson, { spaces: 2 });
       }
 
       console.log(chalk.blue(`创建子应用: ${appName}`));
@@ -104,9 +102,10 @@ program
           packageJson.scripts = {};
         }
         packageJson.scripts[`dev:${appName}`] =
-          `rsbuild dev --environment app-${appName} --port ${prot}`;
+          `rsbuild dev --environment app-${appName} --port ${port}`;
         packageJson.scripts[`build:${appName}`] =
           `rsbuild build --environment app-${appName}`;
+        fs.writeJsonSync(packageJsonPath, packageJson, { spaces: 2 });
       }
 
       console.log(chalk.green("子应用创建成功!"));
