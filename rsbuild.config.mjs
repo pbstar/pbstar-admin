@@ -55,6 +55,7 @@ export default defineConfig({
     main: {
       html: {
         title: import.meta.env.PUBLIC_TITLE,
+        favicon: "./main/src/assets/imgs/logo.png",
       },
       source: {
         entry: {

@@ -27,6 +27,7 @@ const themeChange = () => {
 <template>
   <div class="box">
     <div class="left">
+      <img src="@/assets/imgs/logo-w.png" alt="" />
       <div class="title">{{ title }}</div>
     </div>
     <div class="right">
@@ -40,7 +41,7 @@ const themeChange = () => {
         style="
           margin-left: 10px;
           border-color: #fff;
-          --el-switch-on-color: #272a2f;
+          --el-switch-on-color: #2C384D;
           --el-switch-off-color: #2165c9;
         "
         @change="themeChange"
@@ -76,10 +77,16 @@ const themeChange = () => {
     height: 100%;
     display: flex;
     align-items: center;
+    img {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      margin-left: 10px;
+    }
     .title {
       font-size: 20px;
       font-weight: bold;
-      margin-left: 20px;
+      margin-left: 6px;
     }
   }
   .right {

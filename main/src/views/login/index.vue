@@ -1,35 +1,35 @@
 <template>
   <div class="login-container">
     <div class="login-center">
-      <div class="login-left"></div>
-      <div class="login-right">
-        <h3 class="title">{{ title }}</h3>
-        <div class="formBox">
-          <el-input
-            v-model="loginForm.username"
-            placeholder="请输入用户名"
-            :prefix-icon="User"
-          ></el-input>
-          <el-input
-            v-model="loginForm.password"
-            placeholder="请输入密码"
-            :prefix-icon="Lock"
-            type="password"
-          ></el-input>
-          <el-input
-            v-model="loginForm.captcha"
-            placeholder="请输入验证码"
-            :prefix-icon="Postcard"
-          >
-            <template #suffix>
-              <p-verificationCode
-                identifyCodes="23456789"
-                @changeCode="changeCode"
-              />
-            </template>
-          </el-input>
-          <el-button type="primary" @click="handleSubmit"> 登录成功 </el-button>
-        </div>
+      <div class="top">
+        <img src="@/assets/imgs/logo.png" alt="" />
+        <h3>{{ title }}</h3>
+      </div>
+      <div class="formBox">
+        <el-input
+          v-model="loginForm.username"
+          placeholder="请输入用户名"
+          :prefix-icon="User"
+        ></el-input>
+        <el-input
+          v-model="loginForm.password"
+          placeholder="请输入密码"
+          :prefix-icon="Lock"
+          type="password"
+        ></el-input>
+        <el-input
+          v-model="loginForm.captcha"
+          placeholder="请输入验证码"
+          :prefix-icon="Postcard"
+        >
+          <template #suffix>
+            <p-verificationCode
+              identifyCodes="23456789"
+              @changeCode="changeCode"
+            />
+          </template>
+        </el-input>
+        <el-button type="primary" @click="handleSubmit"> 登 录 </el-button>
       </div>
     </div>
     <div class="login-lb">
@@ -159,33 +159,35 @@ const toLoginOk = (e) => {
   overflow: hidden;
 }
 .login-center {
-  width: 780px;
-  height: 400px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  width: 520px;
+  height: 390px;
+  padding: 36px 60px;
+  background-color: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   display: flex;
-  .login-left {
-    width: 480px;
-    height: 400px;
-    background-image: url("@/assets/imgs/login.png");
-    background-size: 100% 100%;
+  flex-direction: column;
+  .top {
+    width: 100%;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    img {
+      width: 38px;
+      height: 38px;
+    }
+    h3 {
+      font-size: 26px;
+      font-weight: bold;
+      margin-left: 10px;
+    }
   }
-  .login-right {
-    width: 300px;
-    height: 400px;
-    background-color: #fff;
-    padding: 40px 25px 0;
-    .title {
-      font-size: 20px;
-      text-align: center;
-      line-height: 40px;
-    }
-    :deep(.el-input) {
-      margin-top: 20px;
-    }
-    :deep(.el-button) {
-      margin-top: 25px;
-      width: 100%;
-    }
+  :deep(.el-input) {
+    margin-top: 16px;
+  }
+  :deep(.el-button) {
+    margin-top: 30px;
+    width: 100%;
   }
 }
 .login-lb {
