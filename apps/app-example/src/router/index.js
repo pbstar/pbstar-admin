@@ -4,14 +4,14 @@ const router = createRouter({
   history: createWebHistory(),
   routes: [
     {
-      path: "/",
-      name: "index",
-      redirect: "/list",
-    },
-    {
       path: "/list",
       name: "list",
       component: () => import("@/views/list.vue"),
+    },
+    {
+      path: "/echarts",
+      name: "echarts",
+      component: () => import("@/views/echarts.vue"),
     },
     {
       path: "/:pathMatch(.*)*",

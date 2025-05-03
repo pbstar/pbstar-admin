@@ -1,5 +1,5 @@
 <template>
-  <div class="page">list.vue</div>
+  <div class="page">echarts.vue</div>
 </template>
 <script setup></script>
 <style lang="scss">

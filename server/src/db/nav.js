@@ -21,6 +21,12 @@ const db = {
       parentId: 4,
       url: "/admin/apps?name=app-system&app-system=%2Fgenerator",
     },
+    {
+      id: 7,
+      name: "Echarts示例",
+      parentId: 2,
+      url: "/admin/apps?name=app-example&app-example=%2Fecharts",
+    },
   ],
   lastId: 2,
 };

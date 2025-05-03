@@ -109,7 +109,7 @@ router.afterEach((to, from) => {
   font-size: 14px;
 }
 .historyBox .list {
-  width: calc(100% - 38px);
+  width: calc(100% - 30px);
   display: flex;
   align-items: center;
   overflow-x: auto;

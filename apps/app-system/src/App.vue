@@ -10,6 +10,7 @@ if (window.__POWERED_BY_WUJIE__) {
       sharedStore[key] = e[key];
     }
   });
+  window.$wujie?.props.path && router.push(window.$wujie.props.path);
   window.$wujie?.bus.$on("subappRouteChange", (path) => {
     router.push(path);
   });
