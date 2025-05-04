@@ -1,4 +1,17 @@
 import { createRouter, createWebHistory } from "vue-router";
+import apps from "../../../apps/apps.json";
+const isDev = import.meta.env.DEV;
+const appsRouter = apps.map((item) => {
+  return {
+    path: item.name,
+    name: "admin_" + item.name,
+    component: () => import(`@/views/admin/app.vue`),
+    meta: {
+      appName: item.name,
+      appUrl: isDev ? `http://localhost:${item.devPort}/` : item.proUrl,
+    },
+  };
+});
 
 const router = createRouter({
   history: createWebHistory(),
@@ -24,11 +37,7 @@ const router = createRouter({
           name: "admin_home",
           component: () => import("@/views/admin/home.vue"),
         },
-        {
-          path: "apps",
-          name: "admin_apps",
-          component: () => import("@/views/admin/apps.vue"),
-        },
+        ...appsRouter,
         {
           path: ":pathMatch(.*)*",
           name: "admin_notFound",

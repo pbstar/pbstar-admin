@@ -10,8 +10,11 @@ if (window.__POWERED_BY_WUJIE__) {
       sharedStore[key] = e[key];
     }
   });
-  window.$wujie?.bus.$on("subappRouteChange", (path) => {
-    router.push(path);
+  window.$wujie?.props.path && router.push(window.$wujie.props.path);
+  window.$wujie?.bus.$on("subappRouteChange", (obj) => {
+    if (obj && obj.path && obj.name == window.$wujie?.bus.id) {
+      router.push(obj.path);
+    }
   });
 }
 </script>
