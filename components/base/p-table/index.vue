@@ -284,6 +284,7 @@ defineExpose({
     margin-top: 10px;
     :deep(thead th) {
       background: var(--c-bg-theme-light);
+      font-weight: normal;
     }
   }
   .bot {

@@ -12,11 +12,10 @@ if (window.__POWERED_BY_WUJIE__) {
         if (e[key]) {
           document.documentElement.setAttribute("data-theme", "dark");
           document.documentElement.classList.add("dark");
-        }else{
+        } else {
           document.documentElement.removeAttribute("data-theme");
           document.documentElement.classList.remove("dark");
         }
-       
       }
     }
   });

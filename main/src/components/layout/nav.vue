@@ -120,7 +120,7 @@ getList();
 </template>
 <style scoped>
 .navBox {
-  width: 200px;
+  width: 100%;
   height: 100%;
   background-color: var(--c-bg);
 }
