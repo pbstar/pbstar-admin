@@ -31,12 +31,12 @@ import history from "@/components/layout/history.vue";
   background-color: var(--c-bg-box);
 
   .top {
-    height: 52px;
+    height: 50px;
     width: 100%;
   }
 
   .main {
-    height: calc(100vh - 52px);
+    height: calc(100vh - 50px);
     width: 100%;
     display: flex;
     .mLeft {

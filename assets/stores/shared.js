@@ -4,6 +4,6 @@ export default defineStore("shared", () => {
   const info = ref(null);
   const menuList = ref([]);
   const isLogin = ref(false);
-
-  return { isLogin, info, menuList };
+  const isDark = ref(false);
+  return { isLogin, info, menuList, isDark };
 });

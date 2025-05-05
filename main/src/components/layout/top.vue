@@ -16,10 +16,14 @@ const toUserInfo = () => {
 };
 const themeChange = () => {
   if (theme.value) {
+    sharedStore.isDark = true;
+    bus.$emit("changeSharedPinia", { isDark: true });
     document.documentElement.setAttribute("data-theme", "dark");
     document.documentElement.classList.add("dark");
   } else {
-    document.documentElement.setAttribute("data-theme", "light");
+    sharedStore.isDark = false;
+    bus.$emit("changeSharedPinia", { isDark: false });
+    document.documentElement.removeAttribute("data-theme");
     document.documentElement.classList.remove("dark");
   }
 };
@@ -41,7 +45,7 @@ const themeChange = () => {
         style="
           margin-left: 10px;
           border-color: #fff;
-          --el-switch-on-color: #2C384D;
+          --el-switch-on-color: #2c384d;
           --el-switch-off-color: #2165c9;
         "
         @change="themeChange"

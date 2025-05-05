@@ -1,5 +1,299 @@
-<script setup></script>
+<template>
+  <div class="tabulation">
+    <div class="topBtn">
+      <div class="tLeft">
+        <topBtn :btns="props.topBtn" @btnClick="handleClickTop" />
+      </div>
+      <div class="tRight">
+        <setting
+          v-if="props.showSetting && props.tableKey"
+          :tableKey="props.tableKey"
+          :column="props.column"
+          @change="settingChange"
+        />
+        <slot name="topRight"></slot>
+      </div>
+    </div>
+    <el-table
+      class="table"
+      :data="dataList"
+      border
+      stripe
+      :max-height="props.maxHeight"
+      show-overflow-tooltip
+      @selection-change="handleSelectionChange"
+    >
+      <el-table-column type="selection" width="55" v-if="props.showSelection" />
+      <el-table-column
+        label="序号"
+        type="index"
+        width="60"
+        v-if="props.showIndex"
+      />
+      <template v-for="(item, i) in columnList" :key="i">
+        <el-table-column
+          v-if="optionsMap[item.key] && optionsMap[item.key].length > 0"
+          :prop="item.key"
+          :label="item.label"
+          :width="item.width"
+          :min-width="item.minWidth"
+        >
+          <template #default="scope">
+            {{
+              optionsMap[item.key].find((it) => it.value == scope.row[item.key])
+                ?.label || ""
+            }}
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-else
+          :prop="item.key"
+          :label="item.label"
+          :width="item.width"
+          :min-width="item.minWidth"
+        />
+      </template>
+      <el-table-column
+        fixed="right"
+        label="操作"
+        width="160"
+        v-if="props.rightBtn.length > 0"
+      >
+        <template #default="scope">
+          <rightBtn
+            :data="scope.row"
+            :btns="props.rightBtn"
+            @btnClick="handleClick"
+          />
+        </template>
+      </el-table-column>
+    </el-table>
+    <div class="bot">
+      <div class="bLeft">
+        <slot name="botLeft"></slot>
+      </div>
+      <div class="bRight">
+        <el-pagination
+          class="pagination"
+          v-if="props.pagination && props.pagination != {}"
+          v-model:current-page="pageNumber"
+          v-model:page-size="pageSize"
+          :page-sizes="[10, 20, 50, 100]"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="total"
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+        />
+      </div>
+    </div>
+  </div>
+</template>
+<script setup>
+import { ref, watch } from "vue";
+import topBtn from "./topBtn.vue";
+import rightBtn from "./rightBtn.vue";
+import setting from "./setting.vue";
+import { useEnumStore } from "@Passets/stores/enum";
+const enumStore = useEnumStore();
 
-<template></template>
+const props = defineProps({
+  data: {
+    type: Array,
+    default: () => [],
+  },
+  column: {
+    type: Array,
+    default: () => [],
+  },
+  rightBtn: {
+    type: Array,
+    default: () => [],
+  },
+  topBtn: {
+    type: Array,
+    default: () => [],
+  },
+  pagination: {
+    type: Object,
+    default: () => {},
+  },
+  showSetting: {
+    type: Boolean,
+    default: false,
+  },
+  tableKey: {
+    type: String,
+    default: "",
+  },
+  showSelection: {
+    type: Boolean,
+    default: false,
+  },
+  showIndex: {
+    type: Boolean,
+    default: true,
+  },
+  maxHeight: {
+    type: String || Number,
+    default: "800",
+  },
+});
+const emit = defineEmits(["rightBtnClick", "topBtnClick", "paginationChange"]);
 
-<style scoped lang="scss"></style>
+const columnList = ref(props.column);
+const dataList = ref([]);
+const pageNumber = ref(0);
+const pageSize = ref(10);
+const total = ref(0);
+const selectionList = ref([]);
+const columnItemDefault = {
+  key: "", //字段名
+  label: "", //标题
+  width: null, //宽度
+  minWidth: 86, //最小宽度
+  enumType: null, //枚举类型
+  options: [], //枚举值（优先级高于枚举类型）
+};
+const optionsMap = ref([]);
+
+const handleClick = (row, btn) => {
+  emit("rightBtnClick", { row, btn });
+};
+const handleClickTop = (btn) => {
+  const obj = {
+    btn,
+  };
+  if (props.showSelection) {
+    obj.selectionList = selectionList.value;
+  }
+  emit("topBtnClick", obj);
+};
+const handleSizeChange = (val) => {
+  pageSize.value = val;
+  emit("paginationChange", {
+    pageNumber: pageNumber.value,
+    pageSize: pageSize.value,
+  });
+};
+const handleCurrentChange = (val) => {
+  pageNumber.value = val;
+  emit("paginationChange", {
+    pageNumber: pageNumber.value,
+    pageSize: pageSize.value,
+  });
+};
+const settingChange = (val) => {
+  columnList.value = val;
+};
+const handleSelectionChange = (val) => {
+  selectionList.value = val;
+};
+const toChangeColumnOptions = ({ key, options }) => {
+  if (!key || !options) {
+    return;
+  }
+  optionsMap.value[key] = options;
+};
+
+// 动态更新column
+watch(
+  () => props.column,
+  async (val) => {
+    const enumTypeList = [];
+    props.column.forEach((item) => {
+      item = { ...columnItemDefault, ...item };
+      if (item.options && item.options.length > 0) {
+        optionsMap.value[item.key] = item.options;
+      } else if (
+        item.enumType &&
+        !enumTypeList.includes(item.enumType) &&
+        !optionsMap.value[item.key]
+      ) {
+        enumTypeList.push(item.enumType);
+      }
+    });
+    if (enumTypeList.length > 0) {
+      let str = enumTypeList.join(",");
+      const res = await enumStore.getEnum(str);
+      for (const enumType in res) {
+        props.column.forEach((item) => {
+          if (item.enumType == enumType) {
+            optionsMap.value[item.key] = res[enumType];
+          }
+        });
+      }
+    }
+  },
+  {
+    deep: true,
+    immediate: true,
+  }
+);
+// 动态处理data
+watch(
+  () => props.data,
+  (val) => {
+    dataList.value = val || [];
+  },
+  {
+    deep: true,
+    immediate: true,
+  }
+);
+// 动态更新分页信息
+watch(
+  () => props.pagination,
+  (val) => {
+    if (!val || val == {}) {
+      return;
+    }
+    pageNumber.value = val.pageNumber || 1;
+    pageSize.value = val.pageSize || 10;
+    total.value = val.total || 0;
+  },
+  {
+    deep: true,
+    immediate: true,
+  }
+);
+defineExpose({
+  toChangeColumnOptions,
+});
+</script>
+<style scoped>
+.tabulation {
+  width: 100%;
+  padding-bottom: 10px;
+  .topBtn {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding-top: 10px;
+    .tLeft {
+      display: flex;
+      align-items: center;
+    }
+    .tRight {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+    }
+  }
+  .table {
+    width: 100%;
+    margin-top: 10px;
+    :deep(thead th) {
+      background: var(--c-bg-theme-light);
+    }
+  }
+  .bot {
+    display: flex;
+    justify-content: space-between;
+    .bRight {
+      .pagination {
+        padding-top: 10px;
+      }
+    }
+  }
+}
+</style>

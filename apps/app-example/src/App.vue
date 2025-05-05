@@ -8,6 +8,16 @@ if (window.__POWERED_BY_WUJIE__) {
   window.$wujie?.bus.$on("changeSharedPinia", (e) => {
     for (const key in e) {
       sharedStore[key] = e[key];
+      if (key == "isDark") {
+        if (e[key]) {
+          document.documentElement.setAttribute("data-theme", "dark");
+          document.documentElement.classList.add("dark");
+        }else{
+          document.documentElement.removeAttribute("data-theme");
+          document.documentElement.classList.remove("dark");
+        }
+       
+      }
     }
   });
   window.$wujie?.props.path && router.push(window.$wujie.props.path);

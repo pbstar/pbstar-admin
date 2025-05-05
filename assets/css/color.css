@@ -1,17 +1,16 @@
 :root {
   /* ========== 背景色 ========== */
   --c-bg: #ffffff; /* 主背景 */
-  --c-bg-box: #f8fafc; /* 容器背景 */
+  --c-bg-box: #f7fbff; /* 容器背景 */
   --c-bg-theme: #3b82f6; /* 主题背景 */
+  --c-bg-theme-light: #f5f8ff; /* 主题背景-浅 */
   /* ========== 文字色 ========== */
   --c-text: #1e293b; /* 主文字 */
   --c-text2: #4b5563; /* 次要文字 */
   --c-text3: #1e74ff; /* 重要文字 */
   --c-text-theme: #ffffff; /* 主题文字 */
-
   /* ========== 边框色 ========== */
   --c-border: #e2e8f0; /* 主边框 */
-
   /* ========== 其他 ========== */
   --c-scrollbar-thumb: #6ea6ff; /* 滚动条 */
   --c-scrollbar-track: #b1b9c3; /* 滚动条轨道 */
@@ -22,6 +21,7 @@ html[data-theme="dark"] {
   --c-bg: #1e293b; /* 主背景 */
   --c-bg-box: #2c384d; /* 容器背景 */
   --c-bg-theme: #012861; /* 主题背景 */
+  --c-bg-theme-light: #001533; /* 主题背景-浅 */
   /* ========== 文字色 ========== */
   --c-text: #f8fafc; /* 主文字 */
   --c-text2: #9ca3af; /* 次要文字 */

@@ -1,11 +1,6 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
 import { useEnumStore } from "@/stores/common";
-import upload from "@/components/base/upload.vue";
-import selectRemote from "@/components/base/selectRemote.vue";
-import { useEquipTypeStore, useEquipFactoryStore } from "@/stores/equipBase";
-const equipTypeStore = useEquipTypeStore();
-const equipFactoryStore = useEquipFactoryStore();
 const enumStore = useEnumStore();
 const props = defineProps({
   item: {
@@ -24,14 +19,10 @@ const getPlaceholder = (item: any) => {
     textarea: "请输入",
     inputNumber: "请输入",
     select: "请选择",
-    selectRemote: "请选择",
     selectMultiple: "请选择",
     date: "请选择",
     daterange: "请选择",
-    time: "请选择",
-    timerange: "请选择",
-    year: "请选择",
-    month: "请选择",
+    datetime: "请选择",
     datetimerange: "请选择",
   };
   return placeholderMap[item.type] || "";
@@ -49,9 +40,6 @@ const item: any = ref({
   enumType: "",
   tipText: "",
   rightText: "",
-  limit: 5, // 上传组件用
-  prefixName: "base", // 上传组件用
-  remoteMethod: () => {}, // 远程搜索下拉框组件用
 });
 const value: any = ref("");
 const text: any = ref("");
@@ -70,17 +58,6 @@ watch(
 
     if (item.value.options && item.value.options.length > 0) {
       changeText(item.value.options);
-    }
-    if (item.value.type == "equipType") {
-      let obj = equipTypeStore.getItem(value.value);
-      if (obj) {
-        text.value = obj.label;
-      }
-    } else if (item.value.type == "equipFactory") {
-      let obj = equipFactoryStore.getItem(value.value);
-      if (obj) {
-        text.value = obj.label;
-      }
     }
   },
   {
@@ -272,45 +249,6 @@ const change = (val: any) => {
             :disabled="item.isDisabled"
             @change="change"
           />
-          <!-- 年度 -->
-          <el-date-picker
-            v-model="value"
-            type="year"
-            placeholder="选择年度"
-            v-if="item.type == 'year' && !item.isText"
-            value-format="YYYY"
-            :disabled="item.isDisabled"
-            @change="change"
-          />
-          <!-- 月份 -->
-          <el-date-picker
-            v-model="value"
-            type="month"
-            placeholder="选择月份"
-            v-if="item.type == 'month' && !item.isText"
-            value-format="YYYY-MM"
-            :disabled="item.isDisabled"
-            @change="change"
-          />
-
-          <!-- 时间 -->
-          <el-time-picker
-            v-model="value"
-            placeholder="选择时间"
-            v-if="item.type == 'time' && !item.isText"
-            @change="change"
-          />
-          <!-- 时间范围 -->
-          <el-time-picker
-            v-model="value"
-            is-range
-            range-separator="至"
-            start-placeholder="开始时间"
-            end-placeholder="结束时间"
-            v-if="item.type == 'timerange' && !item.isText"
-            :disabled="item.isDisabled"
-            @change="change"
-          />
           <!-- 日期时间 -->
           <el-date-picker
             v-model="value"
@@ -333,35 +271,6 @@ const change = (val: any) => {
             :disabled="item.isDisabled"
             @change="change"
           />
-          <!-- 文件上传 -->
-          <upload
-            v-if="item.type == 'uploadFile' && !item.isText"
-            type="file"
-            v-model="value"
-            :isDisabled="item.isDisabled"
-            :limit="item.limit"
-            @change="change"
-            :prefixName="item.prefixName"
-          ></upload>
-          <!-- 图片上传 -->
-          <upload
-            v-if="item.type == 'uploadImage' && !item.isText"
-            type="image"
-            v-model="value"
-            :isDisabled="item.isDisabled"
-            :limit="item.limit"
-            @change="change"
-            :prefixName="item.prefixName"
-          ></upload>
-          <!-- 远程搜索下拉框 -->
-          <selectRemote
-            v-if="item.type == 'selectRemote' && !item.isText"
-            v-model="value"
-            :isDisabled="item.isDisabled"
-            :options="item.options"
-            :remoteMethod="item.remoteMethod"
-            @change="change"
-          ></selectRemote>
         </div>
         <div class="rightText" v-if="item.rightText">
           {{ item.rightText }}
