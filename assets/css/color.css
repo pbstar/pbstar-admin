@@ -1,9 +1,9 @@
 :root {
   /* ========== 背景色 ========== */
   --c-bg: #ffffff; /* 主背景 */
-  --c-bg-box: #f0f7ff; /* 容器背景 */
+  --c-bg-box: #edf3fa; /* 容器背景 */
   --c-bg-theme: #3b82f6; /* 主题背景 */
-  --c-bg-theme-light: #f5f8ff; /* 主题背景-浅 */
+  --c-bg-theme-light: #cedfff; /* 主题背景-浅 */
   /* ========== 文字色 ========== */
   --c-text: #1e293b; /* 主文字 */
   --c-text2: #4b5563; /* 次要文字 */

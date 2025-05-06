@@ -1,19 +1,21 @@
 <template>
-  <el-button
-    size="small"
-    text
-    @click="handleClickSetting()"
-    class="setting"
-  >
+  <el-button size="small" text @click="handleClickSetting()" class="setting">
     <img src="@Passets/imgs/icons12/setting.png" alt="" />
     <span>定制表头</span>
   </el-button>
-  <diadrawer
+  <p-dialog
+    type="drawer"
     title="定制表头"
-    width="400px"
     v-model="isDialog"
-    :botBtn="diapageBtn"
-    :botBtnMore="[
+    :botBtn="[
+      {
+        label: '保存',
+        key: 'save',
+      },
+      {
+        label: '返回',
+        key: 'back',
+      },
       {
         label: '重置',
         key: 'reset',
@@ -34,14 +36,14 @@
         </div>
       </VueDraggable>
     </div>
-  </diadrawer>
+  </p-dialog>
 </template>
 <script setup>
 import { ref } from "vue";
 import { ElMessage } from "element-plus";
 import { Sort } from "@element-plus/icons-vue";
 import { VueDraggable } from "vue-draggable-plus";
-import diadrawer from "@Pcomponents/base/p-dialog/index.vue";
+import pDialog from "@Pcomponents/base/p-dialog/index.vue";
 import { useTableStore } from "@Passets/stores/base";
 const tableStore = useTableStore();
 const props = defineProps({
@@ -55,7 +57,6 @@ const props = defineProps({
   },
 });
 const emit = defineEmits(["change"]);
-const diapageBtn = ref(["save", "back"]);
 const isDialog = ref(false);
 const allColumn = ref([]);
 
@@ -130,7 +131,7 @@ if (props.tableKey) {
   height: 12px;
   line-height: 12px;
   font-size: 12px;
-  img{
+  img {
     margin-right: 5px;
   }
 }
@@ -146,13 +147,13 @@ if (props.tableKey) {
     margin-bottom: 6px;
     height: 26px;
     padding: 0 10px;
-    background-color: var(--color-search-bg);
+    background-color: var(--c-bg-box);
     .handle {
       cursor: move;
     }
   }
   .ghost {
-    background-color: var(--color-nav-drag-bg);
+    background-color: var(--c-bg-theme-light);
     opacity: 0.5;
   }
 }

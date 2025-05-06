@@ -58,5 +58,6 @@ onMounted(() => {
 .page {
   width: 100%;
   padding: 0 10px;
+  background-color: var(--c-bg);
 }
 </style>

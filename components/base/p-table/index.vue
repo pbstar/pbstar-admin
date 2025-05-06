@@ -183,7 +183,7 @@ const handleCurrentChange = (val) => {
   });
 };
 const settingChange = (val) => {
-  columnList.value = val;
+  columnList.value = val.columnList || [];
 };
 const handleSelectionChange = (val) => {
   selectionList.value = val;
@@ -284,6 +284,7 @@ defineExpose({
     margin-top: 10px;
     :deep(thead th) {
       background: var(--c-bg-theme-light);
+      color: var(--c-text2);
       font-weight: normal;
     }
   }
