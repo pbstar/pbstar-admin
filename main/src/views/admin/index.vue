@@ -29,33 +29,18 @@
 <script setup>
 import { ref } from "vue";
 import { Expand, Fold } from "@element-plus/icons-vue";
-import { RouterView, useRoute } from "vue-router";
-import { throttle } from "es-toolkit/function";
+import { RouterView } from "vue-router";
 import AdminTop from "@/components/layout/top.vue";
 import AdminNav from "@/components/layout/nav.vue";
 import history from "@/components/layout/history.vue";
 import { useBaseStore } from "@/stores/base";
 const baseStore = useBaseStore();
-const route = useRoute();
 
 const isFold = ref(baseStore.getIsFold());
-const reloadForApp = () => {
-  if (route.meta.appName) {
-    window.location.reload();
-  }
-};
 const toFold = () => {
   isFold.value = !isFold.value;
   baseStore.setIsFold(isFold.value);
-  reloadForApp();
 };
-const resize = throttle(() => {
-  reloadForApp();
-}, 3000);
-// 监听屏幕宽度变化
-window.addEventListener("resize", () => {
-  resize();
-});
 </script>
 <style scoped lang="scss">
 .page {
@@ -77,7 +62,7 @@ window.addEventListener("resize", () => {
     display: flex;
     .mLeft {
       height: 100%;
-      flex-shrink: 1;
+      flex-shrink: 0;
       position: relative;
       transition: all 0.3s ease-in-out;
       &.fold {
@@ -111,6 +96,7 @@ window.addEventListener("resize", () => {
       padding-left: 10px;
       padding-right: 10px;
       flex: 1;
+      overflow: auto;
 
       .mApp {
         width: 100%;

@@ -41,7 +41,7 @@ router.afterEach((to) => {
     v-if="appName && appUrl"
     width="100%"
     height="100%"
-    class="app"
+    class="subapp"
     :name="appName"
     :url="appUrl"
     :sync="true"
@@ -49,7 +49,8 @@ router.afterEach((to) => {
   ></WujieVue>
 </template>
 <style scoped lang="scss">
-.app {
+.subapp {
+  width: 100%;
   min-height: 500px;
 }
 </style>

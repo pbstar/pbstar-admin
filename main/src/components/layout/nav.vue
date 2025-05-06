@@ -123,6 +123,7 @@ getList();
   width: 100%;
   height: 100%;
   background-color: var(--c-bg);
+  overflow: hidden;
 }
 .navBox .menu {
   height: 100%;

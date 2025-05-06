@@ -19,6 +19,7 @@ body {
 }
 div::-webkit-scrollbar {
   width: 6px;
+  height: 4px;
 }
 div::-webkit-scrollbar-thumb {
   border-radius: 2px;
