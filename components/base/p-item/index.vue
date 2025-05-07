@@ -1,6 +1,6 @@
-<script setup lang="ts">
+<script setup>
 import { ref, watch } from "vue";
-import { useEnumStore } from "@/stores/common";
+import { useEnumStore } from "@Passets/stores/enum";
 const enumStore = useEnumStore();
 const props = defineProps({
   item: {
@@ -13,8 +13,8 @@ const props = defineProps({
   },
 });
 const emit = defineEmits(["change", "update:modelValue"]);
-const getPlaceholder = (item: any) => {
-  const placeholderMap: any = {
+const getPlaceholder = (item) => {
+  const placeholderMap = {
     input: "请输入",
     textarea: "请输入",
     inputNumber: "请输入",
@@ -27,7 +27,7 @@ const getPlaceholder = (item: any) => {
   };
   return placeholderMap[item.type] || "";
 };
-const item: any = ref({
+const item = ref({
   key: "",
   label: "",
   type: "input",
@@ -41,10 +41,10 @@ const item: any = ref({
   tipText: "",
   rightText: "",
 });
-const value: any = ref("");
-const text: any = ref("");
-const changeText = (arr: any) => {
-  let obj = arr.find((it: any) => it.value == value.value);
+const value = ref("");
+const text = ref("");
+const changeText = (arr) => {
+  let obj = arr.find((it) => it.value == value.value);
   if (obj) {
     text.value = obj.label;
   } else {
@@ -53,10 +53,13 @@ const changeText = (arr: any) => {
 };
 watch(
   () => props.modelValue,
-  (newVal: any) => {
+  (newVal) => {
     value.value = newVal;
-
-    if (item.value.options && item.value.options.length > 0) {
+    if (
+      item.value.isText &&
+      item.value.options &&
+      item.value.options.length > 0
+    ) {
       changeText(item.value.options);
     }
   },
@@ -66,7 +69,7 @@ watch(
 );
 watch(
   () => props.item,
-  (newVal: any) => {
+  (newVal) => {
     item.value = { ...item.value, ...newVal };
   },
   {
@@ -76,18 +79,20 @@ watch(
 );
 watch(
   () => item.value.enumType,
-  (newVal: any) => {
+  (newVal) => {
     if (newVal) {
-      enumStore.getEnum(item.value.enumType).then((res: any) => {
+      enumStore.getEnum(item.value.enumType).then((res) => {
         if (res) {
           let list = res[item.value.enumType];
-          item.value.options = list.map((it: any) => {
+          item.value.options = list.map((it) => {
             return {
               label: it.enumValue,
               value: it.enumKey,
             };
           });
-          changeText(item.value.options);
+          if (item.value.isText) {
+            changeText(item.value.options);
+          }
         }
       });
     }
@@ -98,9 +103,11 @@ watch(
 );
 watch(
   () => item.value.options,
-  (newVal: any) => {
+  (newVal) => {
     if (newVal && newVal.length > 0) {
-      changeText(newVal);
+      if (item.value.isText) {
+        changeText(newVal);
+      }
     }
   },
   {
@@ -108,10 +115,10 @@ watch(
     deep: true,
   }
 );
-const change = (val: any) => {
+const change = (val) => {
   let row = {};
   if (item.value.options && item.value.options.length > 0) {
-    row = item.value.options.find((it: any) => it.value == value.value);
+    row = item.value.options.find((it) => it.value == value.value);
   }
   emit("update:modelValue", value.value);
   emit("change", {
@@ -296,7 +303,7 @@ const change = (val: any) => {
   margin-top: 6px;
   flex-shrink: 0;
   font-size: 14px;
-  color: var(--color-table);
+  color: var(--c-text);
 }
 .value {
   min-width: 150px;
@@ -316,8 +323,8 @@ const change = (val: any) => {
         height: 30px;
         padding: 0 6px;
         line-height: 30px;
-        color: var(--color-table);
-        border-bottom: 1px solid #dcdcdc;
+        color: var(--c-text);
+        border-bottom: 1px solid var(--c-border);
         overflow-x: auto;
         overflow-y: hidden;
         white-space: nowrap;
@@ -330,14 +337,14 @@ const change = (val: any) => {
     .rightText {
       flex-shrink: 0;
       font-size: 14px;
-      color: var(--color-table);
+      color: var(--c-text);
       margin-left: 6px;
     }
   }
   .tipBox {
     font-size: 12px;
     line-height: 16px;
-    color: var(--color-toptab);
+    color: var(--c-text2);
     margin-top: 4px;
   }
 }

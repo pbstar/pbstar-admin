@@ -1,5 +1,10 @@
 <template>
   <div class="page">
+    <p-search
+      ref="searchRef"
+      :data="searchData"
+      @btnClick="toSearch"
+    ></p-search>
     <p-table
       ref="tableRef"
       :data="data"
@@ -15,6 +20,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import PTable from "@Pcomponents/base/p-table/index.vue";
+import PSearch from "@Pcomponents/base/p-search/index.vue";
 const data = ref([
   { name: "张三", age: 18, sex: "男", minzu: "1", isHealthy: "1" },
   { name: "李四", age: 19, sex: "女", minzu: "3", isHealthy: "2" },
@@ -43,6 +49,15 @@ const pagination = ref({
   pageSize: 10,
   pageNumber: 1,
 });
+const searchRef = ref(null);
+const searchData = ref([
+  { key: "name", label: "姓名", type: "input" },
+  { key: "age", label: "年龄", type: "inputNumber" },
+  { key: "sex", label: "性别", type: "select", options: [] },
+]);
+const toSearch = (data) => {
+  console.log(data);
+};
 onMounted(() => {
   tableRef.value.toChangeColumnOptions({
     key: "minzu",
@@ -52,12 +67,21 @@ onMounted(() => {
       { label: "壮族", value: "3" },
     ],
   });
+  setTimeout(() => {
+    searchRef.value.toChangeDataOptions({
+      key: "sex",
+      options: [
+        { label: "男", value: "1" },
+        { label: "女", value: "2" },
+      ],
+    });
+  }, 300);
 });
 </script>
 <style lang="scss">
 .page {
   width: 100%;
-  padding: 0 10px;
+  padding: 10px 10px 0;
   background-color: var(--c-bg);
 }
 </style>
