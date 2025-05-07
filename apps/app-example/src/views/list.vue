@@ -1,5 +1,6 @@
 <template>
   <div class="page">
+    <p-title :list="['测试表格']"></p-title>
     <p-search
       ref="searchRef"
       :data="searchData"
@@ -21,6 +22,7 @@
 import { ref, onMounted } from "vue";
 import PTable from "@Pcomponents/base/p-table/index.vue";
 import PSearch from "@Pcomponents/base/p-search/index.vue";
+import pTitle from "@Pcomponents/base/p-title/index.vue";
 const data = ref([
   { name: "张三", age: 18, sex: "男", minzu: "1", isHealthy: "1" },
   { name: "李四", age: 19, sex: "女", minzu: "3", isHealthy: "2" },
@@ -81,7 +83,7 @@ onMounted(() => {
 <style lang="scss">
 .page {
   width: 100%;
-  padding: 10px 10px 0;
+  padding: 0 10px;
   background-color: var(--c-bg);
 }
 </style>

@@ -10,7 +10,7 @@
       >
         <div class="header"></div>
         <div class="top">
-          <div class="title">{{ computedTitle }}</div>
+          <div class="title">{{ title }}</div>
           <img src="@Passets/imgs/icons14/close2.png" alt="" @click="toClose" />
         </div>
         <div class="mid">
@@ -54,7 +54,7 @@
       >
         <div class="top">
           <div class="tLeft">
-            <div class="title">{{ computedTitle }}</div>
+            <div class="title">{{ title }}</div>
           </div>
           <div class="tRight">
             <img
@@ -97,16 +97,9 @@
       >
         <div class="diapage">
           <div class="top">
-            <div class="tLeft">
-              <div class="title" v-if="title">{{ computedTitle }}</div>
-              <slot v-else name="headerLeft"></slot>
-            </div>
-            <div class="tCenter">
-              <slot name="headerCenter"></slot>
-            </div>
-            <div class="tRight">
-              <slot name="headerRight"></slot>
-            </div>
+            <p-title :list="[title]">
+              <slot name="header"></slot>
+            </p-title>
           </div>
           <div class="mid">
             <slot></slot>
@@ -130,6 +123,7 @@
 <script setup>
 import { ref, computed, watch } from "vue";
 import useSharedStore from "@Passets/stores/shared";
+import pTitle from "@Pcomponents/base/p-title/index.vue";
 const sharedStore = useSharedStore();
 
 const props = defineProps({
@@ -163,10 +157,6 @@ const emit = defineEmits(["update:modelValue", "botBtnClick"]);
 
 const dialogVisible = ref(props.modelValue);
 const zIndex = ref(1000);
-
-const computedTitle = computed(() => {
-  return props.title || "详情";
-});
 const navWidth = computed(() => {
   return sharedStore.isFold ? "0" : "200";
 });
@@ -356,38 +346,6 @@ const handleClickBot = (key) => {
   .top {
     width: 100%;
     height: 42px;
-    border-bottom: 1px solid var(--c-border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    .tLeft {
-      width: 20%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      .title {
-        display: inline-block;
-        font-weight: bold;
-        font-size: 16px;
-        line-height: 40px;
-        color: var(--c-text);
-        border-bottom: 3px solid var(--c-bg-theme);
-      }
-    }
-    .tCenter {
-      width: 60%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .tRight {
-      width: 20%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-    }
   }
   .mid {
     width: 100%;
