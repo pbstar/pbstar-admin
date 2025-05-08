@@ -32,6 +32,9 @@ program
             if (input.trim() === "") {
               return "请输入子应用名称";
             }
+            if (input === "main") {
+              return "子应用名称不能为 main";
+            }
             if (!/^[a-z0-9-]+$/.test(input)) {
               return "子应用名称只能包含小写字母、数字和连字符";
             }
@@ -90,7 +93,7 @@ program
       // 更新占位符
       await replaceInFile({
         files: [appPath + "/**/*"],
-        from: [/PA{name}/g],
+        from: [/P{name}/g],
         to: [appName],
       });
 

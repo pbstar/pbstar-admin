@@ -2,6 +2,7 @@
 import { ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import WujieVue from "wujie-vue3";
+import { InstanceofPlugin } from "wujie-polyfill";
 
 const { bus } = WujieVue;
 const route = useRoute();
@@ -46,6 +47,7 @@ router.afterEach((to) => {
     :url="appUrl"
     :sync="true"
     :props="props"
+    :plugins="[InstanceofPlugin()]"
   ></WujieVue>
 </template>
 <style scoped lang="scss">

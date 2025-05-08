@@ -2,11 +2,13 @@
   <div class="page">
     <p-title :list="['测试表格']"></p-title>
     <p-search
+      style="margin-top: 10px"
       ref="searchRef"
       :data="searchData"
       @btnClick="toSearch"
     ></p-search>
     <p-table
+      style="margin-top: 10px"
       ref="tableRef"
       :data="data"
       :column="column"

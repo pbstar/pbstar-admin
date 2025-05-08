@@ -92,7 +92,6 @@ defineExpose({
   flex-wrap: wrap;
   padding: 5px;
   position: relative;
-  margin-top: 10px;
   .item {
     width: 300px;
     margin-bottom: 5px;

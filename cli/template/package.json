@@ -1,5 +1,5 @@
 {
-  "name": "app-PA{name}",
+  "name": "P{name}",
   "version": "0.0.0",
   "private": true,
   "type": "module",

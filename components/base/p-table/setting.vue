@@ -101,7 +101,7 @@ const initAllColumn = () => {
   handleColumnList("init");
 };
 
-const dialogBotBtnClick = (btn) => {
+const dialogBotBtnClick = ({ btn }) => {
   if (btn == "save") {
     handleColumnList("save");
     ElMessage.success("操作成功");

@@ -180,7 +180,7 @@ const toClose = () => {
 };
 
 const handleClickBot = (key) => {
-  emit("botBtnClick", key);
+  emit("botBtnClick", { key });
 };
 </script>
 

@@ -27,6 +27,7 @@
       <el-table-column
         label="序号"
         type="index"
+        :index="getIndex"
         width="60"
         v-if="props.showIndex"
       />
@@ -142,7 +143,7 @@ const emit = defineEmits(["rightBtnClick", "topBtnClick", "paginationChange"]);
 
 const columnList = ref(props.column);
 const dataList = ref([]);
-const pageNumber = ref(0);
+const pageNumber = ref(1);
 const pageSize = ref(10);
 const total = ref(0);
 const selectionList = ref([]);
@@ -156,10 +157,13 @@ const columnItemDefault = {
 };
 const optionsMap = ref([]);
 
-const handleClick = (row, btn) => {
+const getIndex = (index) => {
+  return (pageNumber.value - 1) * pageSize.value + index + 1;
+};
+const handleClick = ({ row, btn }) => {
   emit("rightBtnClick", { row, btn });
 };
-const handleClickTop = (btn) => {
+const handleClickTop = ({ btn }) => {
   const obj = {
     btn,
   };
@@ -268,7 +272,6 @@ defineExpose({
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
-    padding-top: 10px;
     .tLeft {
       display: flex;
       align-items: center;
