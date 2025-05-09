@@ -11,12 +11,6 @@ import request from "@Passets/utils/request";
 import { getNowTime } from "@Passets/utils/time";
 import { cloneDeep } from "es-toolkit/object";
 onBeforeMount(() => {
-  if (import.meta.env.MODE !== "development") {
-    ElMessageBox.alert("当前环境非开发环境，该功能无法使用", "提示", {
-      type: "warning",
-    }).then(() => {});
-    return;
-  }
   historyList.value = JSON.parse(
     localStorage.getItem("p_codeGenerator") || "[]"
   );
@@ -141,7 +135,7 @@ const tableTopBtnClick = ({ btn }) => {
       info.value.template === "childTable"
     ) {
       if (!info.value.api.list) {
-        ElMessage.error("请输入api_list");
+        ElMessage.error("请输入列表接口");
         return;
       }
     }
@@ -162,15 +156,21 @@ const tableTopBtnClick = ({ btn }) => {
         "p_codeGenerator",
         JSON.stringify(historyList.value)
       );
-      request.post("http://localhost:3000/generate", info.value).then((res) => {
-        if (res && res.code == 200) {
-          codeList.value = res.data;
-          isCodeView.value = true;
-          ElMessage.success(res.msg || "操作成功");
-        } else {
-          ElMessage.error(res.msg || "操作异常");
-        }
-      });
+      request
+        .post({
+          base: "base",
+          url: "/system/generator",
+          data: info.value,
+        })
+        .then((res) => {
+          if (res && res.code == 200) {
+            codeList.value = res.data;
+            isCodeView.value = true;
+            ElMessage.success(res.msg || "操作成功");
+          } else {
+            ElMessage.error(res.msg || "操作异常");
+          }
+        });
     });
   } else if (btn == "reset") {
     info.value = cloneDeep(defaultInfo);
@@ -256,7 +256,7 @@ const toHistoryUse = (row) => {
             class="item"
             :item="{
               type: 'input',
-              label: 'api_list',
+              label: '列表接口',
               placeholder: '请输入获取列表接口地址',
             }"
             v-model="info.api.list"
@@ -266,7 +266,7 @@ const toHistoryUse = (row) => {
             class="item"
             :item="{
               type: 'input',
-              label: 'api_create',
+              label: '新增接口',
               placeholder: '请输入创建接口地址',
             }"
             v-model="info.api.create"
@@ -276,7 +276,7 @@ const toHistoryUse = (row) => {
             class="item"
             :item="{
               type: 'input',
-              label: 'api_update',
+              label: '修改接口',
               placeholder: '请输入更新接口地址',
             }"
             v-model="info.api.update"
@@ -286,7 +286,7 @@ const toHistoryUse = (row) => {
             class="item"
             :item="{
               type: 'input',
-              label: 'api_delete',
+              label: '删除接口',
               placeholder: '请输入删除接口地址',
             }"
             v-model="info.api.delete"
@@ -296,7 +296,7 @@ const toHistoryUse = (row) => {
             class="item"
             :item="{
               type: 'input',
-              label: 'api_getOne',
+              label: '详情接口',
               placeholder: '请输入获取单条接口地址',
             }"
             v-model="info.api.getOne"

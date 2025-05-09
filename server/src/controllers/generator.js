@@ -39,7 +39,7 @@ export default {
         });
         res.status(200).json({
           code: 200,
-          msg: "Vue file generated successfully",
+          msg: "生成成功",
           data: arr,
         });
       } else {

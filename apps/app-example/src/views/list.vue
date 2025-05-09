@@ -34,7 +34,7 @@ const column = ref([
   { key: "age", label: "年龄", width: 100 },
   { key: "sex", label: "性别", minWidth: 100 },
   { key: "minzu", label: "民族", options: [] },
-  { key: "isHealthy", label: "是否健康", enumType: "p_boolean1" },
+  { key: "isHealthy", label: "是否健康", enumType: "p_boolean" },
 ]);
 const topBtn = ref([
   { key: "add", label: "新增" },

@@ -1,5 +1,6 @@
 import express from "express";
-import baseRouter from "./routes/base.js";
+import mainRouter from "./routes/main.js";
+import systemRouter from "./routes/system.js";
 
 const app = express();
 
@@ -7,7 +8,8 @@ const app = express();
 app.use(express.json());
 
 // 路由
-app.use("/base", baseRouter);
+app.use("/main", mainRouter);
+app.use("/system", systemRouter);
 
 // 简单错误处理
 app.use((err, req, res, next) => {

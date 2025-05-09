@@ -3,12 +3,7 @@ import { defineStore } from "pinia";
 import request from "@Passets/utils/request";
 
 export const useEnumStore = defineStore("enum", () => {
-  const enums = ref({
-    p_boolean: [
-      { value: "1", label: "是" },
-      { value: "2", label: "否" },
-    ],
-  });
+  const enums = ref({});
   const getEnum = async (enumType) => {
     const result = {};
     const types = enumType.split(",");
@@ -19,12 +14,19 @@ export const useEnumStore = defineStore("enum", () => {
       });
     } else {
       // 接口获取服务端枚举
+      const str = types.filter((type) => !enums.value[type]).join(",");
       const res = await request.get({
         base: "base",
-        url: "/base/getNavTreeList",
+        url: "/main/getEnum",
+        data: { enumType: str },
       });
-      if (res.code === 200) {
-        result["p_boolean1"] = [{ value: "1", label: "是" }, { value: "2", label: "否" }]
+      if (res.code === 200 && res.data) {
+        for (const key in res.data) {
+          if (res.data.hasOwnProperty(key)) {
+            enums.value[key] = res.data[key];
+            result[key] = res.data[key];
+          }
+        }
       }
     }
     return result;

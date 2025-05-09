@@ -49,7 +49,7 @@ const getList = async () => {
   request
     .get({
       base: "base",
-      url: "/base/getNavList",
+      url: "/main/getNavList",
     })
     .then((res) => {
       if (res.code === 200) {
