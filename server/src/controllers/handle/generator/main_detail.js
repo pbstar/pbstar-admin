@@ -8,7 +8,7 @@ const create = async (json) => {
 
 const createScript = async (json) => {
   let code = `
-  <script setup lang="ts">
+  <script setup>
     import { ref, onBeforeMount } from "vue";
     import collapse from "@/components/base/collapse.vue";
     import formItem from "@/components/base/formItem.vue";
@@ -23,7 +23,7 @@ const createScript = async (json) => {
         default: () => ({}),
       },
     });
-    const detailInfo: any = ref({});
+    const detailInfo = ref({});
     const detailType = ref("");
   
     onBeforeMount(() => {
@@ -76,7 +76,7 @@ const createHtml = async (json) => {
               (field) => `
           <formItem
             class="dtItem"
-            :item="{
+            :config="{
               key: '${field.key}',
               isText: detailType == 'preview',
               type: '${field.type}',

@@ -72,11 +72,11 @@ defineExpose({
       class="item"
       v-for="(item, index) in data"
       :key="index"
-      :item="item"
+      :config="item"
       v-model="item.value"
       @change="handleChange"
     ></formItem>
-    <div class="item" style="width: 160px; height: 32px"></div>
+    <div class="item" style="width: 160px; height: 30px"></div>
     <div class="searchBtn">
       <el-button type="primary" plain @click="toSearch">搜索</el-button>
       <el-button v-show="props.showReset" @click="toReset">重置</el-button>

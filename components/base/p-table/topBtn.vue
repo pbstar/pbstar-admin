@@ -3,7 +3,7 @@
     <el-button
       v-for="(item, index) in btns"
       :key="index"
-      type="primary"
+      :type="item.type || 'primary'"
       @click="handleClick(item.key)"
     >
       <img
@@ -48,7 +48,7 @@ const handleClick = (btn) => {
     display: flex;
     align-items: center;
     justify-content: center;
-    img{
+    img {
       margin-right: 4px;
     }
   }

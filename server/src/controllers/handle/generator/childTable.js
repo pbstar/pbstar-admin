@@ -21,16 +21,14 @@ const createScript = async (json) => {
   });
 
   let code = `
-<script setup lang="ts">
+<script setup>
   import { ref, onBeforeMount, watch } from "vue";
   import { ElMessage, ElMessageBox } from "element-plus";
-  import request from "@/assets/utils/request";
-  import tabulation from "@/components/base/tabulation.vue";
-  ${json.detailDiaType === "diadrawer" ? `import diadrawer from "@/components/base/diadrawer.vue";` : ""}
-  ${json.detailDiaType === "diapage" ? `import diapage from "@/components/base/diapage.vue";` : ""}
-  ${json.detailDiaType === "diabox" ? `import diabox from "@/components/base/diabox.vue";` : ""}
-  ${json.detailDiaType !== "diabox" ? `import collapse from "@/components/base/collapse.vue";` : ""}
-  import formItem from "@/components/base/formItem.vue";
+  import request from "@Passets/utils/request";
+  import PTable from "@Pcomponents/base/p-table/index.vue";
+  import pDialog from "@Pcomponents/base/p-dialog/index.vue";
+  ${json.detailDiaType !== "diabox" ? `import PCollapse from "@Pcomponents/base/p-collapse/index.vue";` : ""}
+  import PItem from "@Pcomponents/base/p-item/index.vue";
 
   const props = defineProps({
     type: {
@@ -52,18 +50,23 @@ const createScript = async (json) => {
       tableRightBtn.value = [];
       initTable();
     } else {
-      tableTopBtn.value = ["add"];
-      tableRightBtn.value = ["edit", "delete"];
+      tableTopBtn.value = [{ label: "新增", value: "add"}];
+      tableRightBtn.value = [{ label: "编辑", value: "edit"}, { label: "删除", value: "delete"}];
       initTable();
     }
   });
 
   const tableColumn = ref(${JSON.stringify(tableColumn)});
   const tableData = ref([]);
-  const tableRightBtn = ref(["edit", "delete"]);
-  const tableTopBtn = ref(["add"]);
+  const tableRightBtn = ref([
+    { label: "编辑", value: "edit"},
+    { label: "删除", value: "delete"},
+  ]);
+  const tableTopBtn = ref([
+    { label: "新增", value: "add"}
+  ]);
   const detailType = ref("");
-  const detailInfo: any = ref({});
+  const detailInfo = ref({});
   const isDetail = ref(false);
   
   const initTable = () => {
@@ -73,7 +76,7 @@ const createScript = async (json) => {
       ${json.childTableKey}: props.info.id,
     };
     tableData.value = [];
-    request.post("${json.api.list}", params).then((res: any) => {
+    request.post("${json.api.list}", params).then((res) => {
       if (res && res.code === 200) {
         tableData.value = res.data.records;
       } else {
@@ -82,9 +85,9 @@ const createScript = async (json) => {
     });
   };
   
-  const tableRightBtnClick = (row: any, btn: any) => {
+  const tableRightBtnClick = (row, btn) => {
     if (btn === "edit") {
-      request.get("${json.api.getOne}", { id: row.id }).then((res: any) => {
+      request.get("${json.api.getOne}", { id: row.id }).then((res) => {
         if (res && res.code === 200 && res.data) {
           detailType.value = btn;
           detailInfo.value = res.data;
@@ -98,7 +101,7 @@ const createScript = async (json) => {
         type: "warning",
       })
         .then(() => {
-          request.post("${json.api.delete}", [row.id]).then((res: any) => {
+          request.post("${json.api.delete}", [row.id]).then((res) => {
             if (res && res.code === 200) {
               initTable();
               ElMessage.success("操作成功");
@@ -111,7 +114,7 @@ const createScript = async (json) => {
     }
   };
   
-  const tableTopBtnClick = (btn: any) => {
+  const tableTopBtnClick = (btn) => {
     if (btn === "add") {
       detailType.value = "add";
       detailInfo.value = {
@@ -121,7 +124,7 @@ const createScript = async (json) => {
     }
   };
   
-  const diaBotBtnClick = (btn: any) => {
+  const diaBotBtnClick = (btn) => {
     if (btn === "save") {
       let url = "";
       if (detailType.value === "add") {
@@ -130,7 +133,7 @@ const createScript = async (json) => {
         url = "${json.api.update}";
       }
       
-      request.post(url, detailInfo.value).then((res: any) => {
+      request.post(url, detailInfo.value).then((res) => {
         if (res && res.code === 200) {
           initTable();
           ElMessage.success("操作成功");
@@ -179,26 +182,35 @@ const createHtml = async (json) => {
 `;
 
   const contentCode = `
-    <tabulation
+    <p-table
       :column="tableColumn"
       :data="tableData"
       :rightBtn="tableRightBtn"
       :topBtn="tableTopBtn"
-      :showPagination="false"
       @rightBtnClick="tableRightBtnClick"
       @topBtnClick="tableTopBtnClick"
     />
 `;
 
   const diaCode = `
-    <${json.detailDiaType}
+    <p-dialog
+      type="${json.detailDiaType}"
       title="${json.title}详情页"
       v-model="isDetail"
-      :botBtn="['save', 'back']"
+      :botBtn="[
+        {
+          label: '保存',
+          key: 'save',
+        },
+        {
+          label: '返回',
+          key: 'back',
+        },
+      ]"
       @botBtnClick="diaBotBtnClick"
     >
       ${
-        json.detailDiaType === "diapage" || json.detailDiaType === "diadrawer"
+        json.detailDiaType === "page" || json.detailDiaType === "drawer"
           ? `<div class="detail">
           <collapse title="基础信息" :isControl="false" :showDownLine="false">`
           : ""
@@ -209,7 +221,7 @@ const createHtml = async (json) => {
               (field) => `
           <formItem
             class="dtItem"
-            :item="{
+            :config="{
               key: '${field.key}',
               type: '${field.type}',
               label: '${field.label}',
@@ -221,12 +233,12 @@ const createHtml = async (json) => {
             .join("")}
         </div>
         ${
-          json.detailDiaType === "diapage" || json.detailDiaType === "diadrawer"
+          json.detailDiaType === "page" || json.detailDiaType === "drawer"
             ? `</collapse>
       </div>`
             : ""
         }
-    </${json.detailDiaType}>
+    </p-dialog>
 `;
 
   const bottomCode = `
@@ -249,24 +261,24 @@ const createStyle = async (json) => {
     width: 100%;
     padding-top: 10px;
     ${
-      json.detailDiaType === "diadrawer" || json.detailDiaType === "diapage"
+      json.detailDiaType === "drawer" || json.detailDiaType === "page"
         ? `.detail {
       padding: 0 10px;`
         : ""
     }
     
     .items {
-      ${json.detailDiaType === "diabox" ? `padding: 20px;` : ""}
+      ${json.detailDiaType === "box" ? `padding: 20px;` : ""}
       display: flex;
       ${
-        json.detailDiaType === "diapage"
+        json.detailDiaType === "page"
           ? `flex-wrap: wrap;`
           : `flex-direction: column;`
       }
       
       .dtItem {
         ${
-          json.detailDiaType === "diapage"
+          json.detailDiaType === "page"
             ? `width: 260px; margin-right: 10px;`
             : `width: 100%;`
         }
@@ -274,7 +286,7 @@ const createStyle = async (json) => {
       }
     }
     ${
-      json.detailDiaType === "diadrawer" || json.detailDiaType === "diapage"
+      json.detailDiaType === "drawer" || json.detailDiaType === "page"
         ? `}`
         : ""
     }

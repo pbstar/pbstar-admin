@@ -3,7 +3,7 @@ import { ref, watch } from "vue";
 import { useEnumStore } from "@Passets/stores/enum";
 const enumStore = useEnumStore();
 const props = defineProps({
-  item: {
+  config: {
     type: Object,
     default: () => {},
   },
@@ -13,7 +13,7 @@ const props = defineProps({
   },
 });
 const emit = defineEmits(["change", "update:modelValue"]);
-const getPlaceholder = (item) => {
+const getPlaceholder = (config) => {
   const placeholderMap = {
     input: "请输入",
     textarea: "请输入",
@@ -25,13 +25,13 @@ const getPlaceholder = (item) => {
     datetime: "请选择",
     datetimerange: "请选择",
   };
-  return placeholderMap[item.type] || "";
+  return placeholderMap[config.type] || "";
 };
-const item = ref({
+const config = ref({
   key: "",
   label: "",
   type: "input",
-  placeholder: getPlaceholder(props.item),
+  placeholder: getPlaceholder(props.config),
   isText: false,
   isRequired: false,
   isDisabled: false,
@@ -56,11 +56,11 @@ watch(
   (newVal) => {
     value.value = newVal;
     if (
-      item.value.isText &&
-      item.value.options &&
-      item.value.options.length > 0
+      config.value.isText &&
+      config.value.options &&
+      config.value.options.length > 0
     ) {
-      changeText(item.value.options);
+      changeText(config.value.options);
     }
   },
   {
@@ -68,9 +68,9 @@ watch(
   }
 );
 watch(
-  () => props.item,
+  () => props.config,
   (newVal) => {
-    item.value = { ...item.value, ...newVal };
+    config.value = { ...config.value, ...newVal };
   },
   {
     immediate: true,
@@ -78,20 +78,20 @@ watch(
   }
 );
 watch(
-  () => item.value.enumType,
+  () => config.value.enumType,
   (newVal) => {
     if (newVal) {
-      enumStore.getEnum(item.value.enumType).then((res) => {
+      enumStore.getEnum(config.value.enumType).then((res) => {
         if (res) {
-          let list = res[item.value.enumType];
-          item.value.options = list.map((it) => {
+          let list = res[config.value.enumType];
+          config.value.options = list.map((it) => {
             return {
               label: it.enumValue,
               value: it.enumKey,
             };
           });
-          if (item.value.isText) {
-            changeText(item.value.options);
+          if (config.value.isText) {
+            changeText(config.value.options);
           }
         }
       });
@@ -102,10 +102,10 @@ watch(
   }
 );
 watch(
-  () => item.value.options,
+  () => config.value.options,
   (newVal) => {
     if (newVal && newVal.length > 0) {
-      if (item.value.isText) {
+      if (config.value.isText) {
         changeText(newVal);
       }
     }
@@ -116,73 +116,76 @@ watch(
   }
 );
 const change = (val) => {
-  let row = {};
-  if (item.value.options && item.value.options.length > 0) {
-    row = item.value.options.find((it) => it.value == value.value);
+  const obj = {
+    value: val,
+  };
+  if (config.value.key) {
+    obj.key = config.value.key;
+  }
+  if (config.value.options && config.value.options.length > 0) {
+    row = config.value.options.find((it) => it.value == value.value);
+    if (row) {
+      obj.row = row;
+    }
   }
   emit("update:modelValue", value.value);
-  emit("change", {
-    key: item.value.key,
-    type: item.value.type,
-    value: val,
-    row,
-  });
+  emit("change", obj);
 };
 </script>
 <template>
   <div class="item">
-    <div class="label" v-if="item.label" :style="item.labelStyle">
+    <div class="label" v-if="config.label" :style="config.labelStyle">
       <span
-        v-show="item.isRequired && !item.isText && !item.isDisabled"
+        v-show="config.isRequired && !config.isText && !config.isDisabled"
         style="color: red"
         >*</span
       >
-      <span>{{ item.label }}</span>
+      <span>{{ config.label }}</span>
     </div>
     <div class="value">
-      <div class="valBox" v-if="item.type != 'slot'">
+      <div class="valBox" v-if="config.type != 'slot'">
         <div class="input">
           <!-- 文本 -->
-          <div class="text" v-if="item.isText">
+          <div class="text" v-if="config.isText">
             <div v-show="text">{{ text }}</div>
             <div v-show="!text">{{ value }}</div>
           </div>
           <!-- 输入框 -->
           <el-input
             v-model="value"
-            :placeholder="item.placeholder"
-            :disabled="item.isDisabled"
-            v-if="item.type == 'input' && !item.isText"
+            :placeholder="config.placeholder"
+            :disabled="config.isDisabled"
+            v-if="config.type == 'input' && !config.isText"
             @change="change"
           />
           <!-- 文本域 -->
           <el-input
             v-model="value"
             type="textarea"
-            :placeholder="item.placeholder"
-            :disabled="item.isDisabled"
-            v-if="item.type == 'textarea' && !item.isText"
+            :placeholder="config.placeholder"
+            :disabled="config.isDisabled"
+            v-if="config.type == 'textarea' && !config.isText"
             @change="change"
           />
           <!-- 数字输入框 -->
           <el-input
             v-model="value"
             type="number"
-            :placeholder="item.placeholder"
-            :disabled="item.isDisabled"
-            v-if="item.type == 'inputNumber' && !item.isText"
+            :placeholder="config.placeholder"
+            :disabled="config.isDisabled"
+            v-if="config.type == 'inputNumber' && !config.isText"
             @change="change"
           />
           <!-- 下拉框 -->
           <el-select
             v-model="value"
-            :placeholder="item.placeholder"
-            v-if="item.type == 'select' && !item.isText"
-            :disabled="item.isDisabled"
+            :placeholder="config.placeholder"
+            v-if="config.type == 'select' && !config.isText"
+            :disabled="config.isDisabled"
             @change="change"
           >
             <el-option
-              v-for="(it, index) in item.options"
+              v-for="(it, index) in config.options"
               :key="index"
               :label="it.label"
               :value="it.value"
@@ -191,16 +194,16 @@ const change = (val) => {
           <!-- 多选下拉框 -->
           <el-select
             v-model="value"
-            :placeholder="item.placeholder"
-            v-if="item.type == 'selectMultiple' && !item.isText"
-            :disabled="item.isDisabled"
+            :placeholder="config.placeholder"
+            v-if="config.type == 'selectMultiple' && !config.isText"
+            :disabled="config.isDisabled"
             @change="change"
             multiple
             collapse-tags
             collapse-tags-tooltip
           >
             <el-option
-              v-for="(it, index) in item.options"
+              v-for="(it, index) in config.options"
               :key="index"
               :label="it.label"
               :value="it.value"
@@ -209,12 +212,12 @@ const change = (val) => {
           <!-- 单选框 -->
           <el-radio-group
             v-model="value"
-            v-if="item.type == 'radio' && !item.isText"
-            :disabled="item.isDisabled"
+            v-if="config.type == 'radio' && !config.isText"
+            :disabled="config.isDisabled"
             @change="change"
           >
             <el-radio
-              v-for="(it, index) in item.options"
+              v-for="(it, index) in config.options"
               :key="index"
               :label="it.label"
               :value="it.value"
@@ -223,12 +226,12 @@ const change = (val) => {
           <!-- 多选框 -->
           <el-checkbox-group
             v-model="value"
-            v-if="item.type == 'checkbox' && !item.isText"
-            :disabled="item.isDisabled"
+            v-if="config.type == 'checkbox' && !config.isText"
+            :disabled="config.isDisabled"
             @change="change"
           >
             <el-checkbox
-              v-for="(it, index) in item.options"
+              v-for="(it, index) in config.options"
               :key="index"
               :label="it.label"
               :value="it.value"
@@ -240,8 +243,8 @@ const change = (val) => {
             type="date"
             placeholder="选择日期"
             value-format="YYYY-MM-DD"
-            v-if="item.type == 'date' && !item.isText"
-            :disabled="item.isDisabled"
+            v-if="config.type == 'date' && !config.isText"
+            :disabled="config.isDisabled"
             @change="change"
           />
           <!-- 日期范围 -->
@@ -252,8 +255,8 @@ const change = (val) => {
             value-format="YYYY-MM-DD"
             start-placeholder="开始日期"
             end-placeholder="结束日期"
-            v-if="item.type == 'daterange' && !item.isText"
-            :disabled="item.isDisabled"
+            v-if="config.type == 'daterange' && !config.isText"
+            :disabled="config.isDisabled"
             @change="change"
           />
           <!-- 日期时间 -->
@@ -261,8 +264,8 @@ const change = (val) => {
             v-model="value"
             type="datetime"
             placeholder="选择日期时间"
-            v-if="item.type == 'datetime' && !item.isText"
-            :disabled="item.isDisabled"
+            v-if="config.type == 'datetime' && !config.isText"
+            :disabled="config.isDisabled"
             value-format="YYYY-MM-DD hh:mm:ss"
             @change="change"
           />
@@ -274,18 +277,18 @@ const change = (val) => {
             start-placeholder="开始日期时间"
             end-placeholder="结束日期时间"
             value-format="YYYY-MM-DD hh:mm:ss"
-            v-if="item.type == 'datetimerange' && !item.isText"
-            :disabled="item.isDisabled"
+            v-if="config.type == 'datetimerange' && !config.isText"
+            :disabled="config.isDisabled"
             @change="change"
           />
         </div>
-        <div class="rightText" v-if="item.rightText">
-          {{ item.rightText }}
+        <div class="rightText" v-if="config.rightText">
+          {{ config.rightText }}
         </div>
       </div>
       <slot v-else></slot>
-      <div class="tipBox" v-if="item.tipText">
-        {{ item.tipText }}
+      <div class="tipBox" v-if="config.tipText">
+        {{ config.tipText }}
       </div>
     </div>
   </div>

@@ -157,6 +157,10 @@ const columnItemDefault = {
 };
 const optionsMap = ref([]);
 
+if (props.showSetting && !props.tableKey) {
+  console.error("showSetting为true时必须传入tableKey");
+}
+
 const getIndex = (index) => {
   return (pageNumber.value - 1) * pageSize.value + index + 1;
 };

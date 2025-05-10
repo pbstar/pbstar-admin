@@ -1,7 +1,9 @@
 # Pbstar-admin
 
 Pbstar-admin 是一套全面便捷的后台管理系统解决方案，基于 wujie、rsbuild、pnpm 完成微前端架构，运用 vue3、pinia、element plus 等主流技术栈。
-本项目提供脚手架(计划)、[组件库](./components/README.md)、代码生成器(计划)和部署工具(计划)，帮助开发者快速搭建后台管理系统。
+本项目提供脚手架、组件库、代码生成器和部署工具(计划)，帮助开发者快速搭建后台管理系统。
+
+[官方文档-GitHub Page](https://pbstar.github.io/pbstar-admin/)[官方文档-腾讯云](http://152.136.96.92:8799/pbstar-admin/)
 
 ## 环境要求
 

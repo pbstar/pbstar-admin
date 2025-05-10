@@ -203,7 +203,7 @@ const toHistoryUse = (row) => {
         <div class="tRow">
           <p-item
             class="item"
-            :item="{
+            :config="{
               type: 'select',
               label: '模板',
               placeholder: '请选择模板',
@@ -218,7 +218,7 @@ const toHistoryUse = (row) => {
           </p-item>
           <p-item
             class="item"
-            :item="{
+            :config="{
               type: 'input',
               label: 'key',
               placeholder: '作为唯一标识，请使用英文驼峰命名',
@@ -229,7 +229,7 @@ const toHistoryUse = (row) => {
           <p-item
             class="item"
             v-show="info.template === 'childTable'"
-            :item="{
+            :config="{
               type: 'input',
               label: 'childTableKey',
               placeholder: '子表中关联主表id的字段',
@@ -239,7 +239,7 @@ const toHistoryUse = (row) => {
           </p-item>
           <p-item
             class="item"
-            :item="{
+            :config="{
               type: 'input',
               label: 'title',
               placeholder: '作为页面名称，请使用中文命名',
@@ -254,7 +254,7 @@ const toHistoryUse = (row) => {
         >
           <p-item
             class="item"
-            :item="{
+            :config="{
               type: 'input',
               label: '列表接口',
               placeholder: '请输入获取列表接口地址',
@@ -264,7 +264,7 @@ const toHistoryUse = (row) => {
           </p-item>
           <p-item
             class="item"
-            :item="{
+            :config="{
               type: 'input',
               label: '新增接口',
               placeholder: '请输入创建接口地址',
@@ -274,7 +274,7 @@ const toHistoryUse = (row) => {
           </p-item>
           <p-item
             class="item"
-            :item="{
+            :config="{
               type: 'input',
               label: '修改接口',
               placeholder: '请输入更新接口地址',
@@ -284,7 +284,7 @@ const toHistoryUse = (row) => {
           </p-item>
           <p-item
             class="item"
-            :item="{
+            :config="{
               type: 'input',
               label: '删除接口',
               placeholder: '请输入删除接口地址',
@@ -294,7 +294,7 @@ const toHistoryUse = (row) => {
           </p-item>
           <p-item
             class="item"
-            :item="{
+            :config="{
               type: 'input',
               label: '详情接口',
               placeholder: '请输入获取单条接口地址',
@@ -307,7 +307,7 @@ const toHistoryUse = (row) => {
           <p-item
             class="item"
             style="width: 400px"
-            :item="{
+            :config="{
               type: 'radio',
               label: '详情弹框类型',
               placeholder: '请选择详情弹框类型',
@@ -350,7 +350,7 @@ const toHistoryUse = (row) => {
           <div class="items">
             <p-item
               class="dtItem"
-              :item="{
+              :config="{
                 type: 'input',
                 label: 'key',
                 placeholder: '请输入',
@@ -361,7 +361,7 @@ const toHistoryUse = (row) => {
             </p-item>
             <p-item
               class="dtItem"
-              :item="{
+              :config="{
                 type: 'input',
                 label: 'label',
                 placeholder: '请输入',
@@ -371,7 +371,7 @@ const toHistoryUse = (row) => {
             </p-item>
             <p-item
               class="dtItem"
-              :item="{
+              :config="{
                 type: 'radio',
                 label: 'type',
                 placeholder: '请输入',
@@ -395,7 +395,7 @@ const toHistoryUse = (row) => {
             <p-item
               class="dtItem"
               v-if="info.template === 'main'"
-              :item="{
+              :config="{
                 type: 'checkbox',
                 label: 'showIn',
                 placeholder: '请输入',
@@ -413,7 +413,7 @@ const toHistoryUse = (row) => {
               v-if="
                 info.template === 'childTable' || info.template === 'formTable'
               "
-              :item="{
+              :config="{
                 type: 'checkbox',
                 label: 'showIn',
                 placeholder: '请输入',
@@ -427,7 +427,7 @@ const toHistoryUse = (row) => {
             </p-item>
             <p-item
               class="dtItem"
-              :item="{
+              :config="{
                 type: 'input',
                 label: 'enumType',
                 placeholder: '请输入',

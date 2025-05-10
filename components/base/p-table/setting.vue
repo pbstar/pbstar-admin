@@ -131,6 +131,7 @@ if (props.tableKey) {
   height: 12px;
   line-height: 12px;
   font-size: 12px;
+  margin-top: 18px;
   img {
     margin-right: 5px;
   }

@@ -17,17 +17,20 @@
       tableKey="table1"
       showSetting
       :pagination="pagination"
+      @paginationChange="toPageChange"
     ></p-table>
   </div>
 </template>
 <script setup>
 import { ref, onMounted } from "vue";
+import { ElMessage, ElMessageBox } from "element-plus";
+import request from "@Passets/utils/request";
 import PTable from "@Pcomponents/base/p-table/index.vue";
 import PSearch from "@Pcomponents/base/p-search/index.vue";
 import pTitle from "@Pcomponents/base/p-title/index.vue";
 const data = ref([
-  { name: "张三", age: 18, sex: "男", minzu: "1", isHealthy: "1" },
-  { name: "李四", age: 19, sex: "女", minzu: "3", isHealthy: "2" },
+  { name: "张三", age: 18, sex: "1", minzu: "1", isHealthy: "1" },
+  { name: "李四", age: 19, sex: "2", minzu: "3", isHealthy: "2" },
 ]);
 const column = ref([
   { key: "name", label: "姓名" },
@@ -44,8 +47,7 @@ const rightBtn = ref([
   { key: "view", label: "查看" },
   { key: "edit", label: "编辑" },
   { key: "delete", label: "删除" },
-  { key: "import", label: "导入" },
-  { key: "export", label: "导出" },
+  { key: "other", label: "其他" },
 ]);
 const tableRef = ref(null);
 const pagination = ref({
@@ -59,9 +61,8 @@ const searchData = ref([
   { key: "age", label: "年龄", type: "inputNumber" },
   { key: "sex", label: "性别", type: "select", options: [] },
 ]);
-const toSearch = (data) => {
-  console.log(data);
-};
+const searchValue = ref({});
+
 onMounted(() => {
   tableRef.value.toChangeColumnOptions({
     key: "minzu",
@@ -71,16 +72,45 @@ onMounted(() => {
       { label: "壮族", value: "3" },
     ],
   });
-  setTimeout(() => {
-    searchRef.value.toChangeDataOptions({
-      key: "sex",
-      options: [
-        { label: "男", value: "1" },
-        { label: "女", value: "2" },
-      ],
-    });
-  }, 300);
+  tableRef.value.toChangeColumnOptions({
+    key: "sex",
+    options: [
+      { label: "男", value: "1" },
+      { label: "女", value: "2" },
+    ],
+  });
+  searchRef.value.toChangeDataOptions({
+    key: "sex",
+    options: [
+      { label: "男", value: "1" },
+      { label: "女", value: "2" },
+    ],
+  });
 });
+const toSearch = ({ data }) => {
+  searchValue.value = data;
+};
+const toPageChange = ({ pageNumber, pageSize }) => {
+  pagination.value.pageNumber = pageNumber;
+  pagination.value.pageSize = pageSize;
+};
+const initTable = () => {
+  request
+    .post({
+      base: "base",
+      url: "/system/generator",
+      data: info.value,
+    })
+    .then((res) => {
+      if (res && res.code == 200) {
+        codeList.value = res.data;
+        isCodeView.value = true;
+        ElMessage.success(res.msg || "操作成功");
+      } else {
+        ElMessage.error(res.msg || "操作异常");
+      }
+    });
+};
 </script>
 <style lang="scss">
 .page {

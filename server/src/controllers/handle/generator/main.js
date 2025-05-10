@@ -35,12 +35,12 @@ const createScript = async (json) => {
   });
 
   let code = `
-<script setup lang="ts">
+<script setup>
   import { ref, onBeforeMount } from "vue";
   import { ElMessage, ElMessageBox } from "element-plus";
-  import request from "@/assets/utils/request";
+  import request from "@Passets/utils/request";
   import search from "@/components/base/search.vue";
-  import tabulation from "@/components/base/tabulation.vue";
+  import PTable from "@Pcomponents/base/p-table/index.vue";
   ${json.detailDiaType === "diadrawer" ? `import diadrawer from "@/components/base/diadrawer.vue";` : ""}
   ${json.detailDiaType === "diapage" ? `import diapage from "@/components/base/diapage.vue";` : ""}
   ${json.detailDiaType === "diabox" ? `import diabox from "@/components/base/diabox.vue";` : ""}
@@ -48,7 +48,7 @@ const createScript = async (json) => {
 
   const searchData = ref(${JSON.stringify(searchData)});
   const showSearch = ref(true);
-  const searchValue:any = ref({});
+  const searchValue = ref({});
   const tableColumn = ref(${JSON.stringify(tableColumn)});
   const tableData = ref([]);
   const tableRightBtn = ref(["preview", "edit", "delete"]);
@@ -59,15 +59,15 @@ const createScript = async (json) => {
     total: 0
   });
   const detailType = ref("");
-  const detailInfo: any = ref({});
+  const detailInfo = ref({});
   const isDetail = ref(false);
-  const detailRef: any = ref(null);
+  const detailRef = ref(null);
 
   onBeforeMount(() => {
     initTable();
   });
 
-  const searchFind = (val: any) => {
+  const searchFind = (val) => {
     searchValue.value = val;
     pagination.value.pageNumber = 1;
     initTable();
@@ -79,7 +79,7 @@ const createScript = async (json) => {
     initTable();
   };
 
-  const paginationChange = (val: any) => {
+  const paginationChange = (val) => {
     pagination.value.pageNumber = val.pageNumber;
     pagination.value.pageSize = val.pageSize;
     initTable();
@@ -102,7 +102,7 @@ const createScript = async (json) => {
     });
   };
 
-  const tableRightBtnClick = (row: any, btn: any) => {
+  const tableRightBtnClick = (row, btn) => {
     if (btn === "preview" || btn === "edit") {
       request.get("${json.api.getOne}", { id: row.id }).then((res: any) => {
         if (res && res.code === 200 && res.data) {
@@ -131,7 +131,7 @@ const createScript = async (json) => {
     }
   };
 
-  const tableTopBtnClick = (btn: any) => {
+  const tableTopBtnClick = (btn) => {
     if (btn === "add") {
       detailType.value = "add";
       detailInfo.value = {};
@@ -139,7 +139,7 @@ const createScript = async (json) => {
     }
   };
 
-  const diaBotBtnClick = (btn: any) => {
+  const diaBotBtnClick = (btn) => {
     if (btn === "save") {
       let url = "";
       if (detailType.value === "add") {
@@ -199,14 +199,14 @@ const createHtml = async (json) => {
 
   const contentCode = `
     <div class="content">
-      <tabulation
+      <p-table
         :column="tableColumn"
         :data="tableData"
         :rightBtn="tableRightBtn"
         :topBtn="tableTopBtn"
         :pagination="pagination"
-        :showSetting="true"
-        settingKey="${json.key}_1"
+        showSetting
+        tableKey="${json.key}_1"
         @rightBtnClick="tableRightBtnClick"
         @topBtnClick="tableTopBtnClick"
         @paginationChange="paginationChange"

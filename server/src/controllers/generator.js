@@ -1,21 +1,21 @@
 import prettier from "prettier";
-import cge_main from "./handle/generator/cge_main.js";
-import cge_main__detail from "./handle/generator/cge_main__detail.js";
-import cge_childTable from "./handle/generator/cge_childTable.js";
-import cge_formTable from "./handle/generator/cge_formTable.js";
+import main from "./handle/generator/main.js";
+import main_detail from "./handle/generator/main_detail.js";
+import childTable from "./handle/generator/childTable.js";
+import formTable from "./handle/generator/formTable.js";
 export default {
   toCreate: async (req, res) => {
     const { jsonData } = req.body;
     try {
       const arr = [];
       if (jsonData.template === "main") {
-        const code = await cge_main.create(jsonData);
+        const code = await main.create(jsonData);
         const formattedCode = await prettier.format(code, { parser: "vue" });
         arr.push({
           fileName: `${jsonData.key}.vue`,
           fileCode: formattedCode,
         });
-        const code__detail = await cge_main__detail.create(jsonData);
+        const code__detail = await main_detail.create(jsonData);
         const formattedCodeDetail = await prettier.format(code__detail, {
           parser: "vue",
         });
@@ -24,14 +24,14 @@ export default {
           fileCode: formattedCodeDetail,
         });
       } else if (jsonData.template === "childTable") {
-        const code = await cge_childTable.create(jsonData);
+        const code = await childTable.create(jsonData);
         const formattedCode = await prettier.format(code, { parser: "vue" });
         arr.push({
           fileName: `${jsonData.key}.vue`,
           fileCode: formattedCode,
         });
       } else if (jsonData.template === "formTable") {
-        const code = await cge_formTable.create(jsonData);
+        const code = await formTable.create(jsonData);
         const formattedCode = await prettier.format(code, { parser: "vue" });
         arr.push({
           fileName: `${jsonData.key}.vue`,

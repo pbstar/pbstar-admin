@@ -3,7 +3,7 @@
     <el-button
       v-for="(item, index) in btns"
       :key="index"
-      type="primary"
+      :type="item.type || 'primary'"
       size="small"
       link
       @click="handleClick(item.key)"

@@ -21,16 +21,14 @@ const createScript = async (json) => {
   });
 
   let code = `
-  <script setup lang="ts">
+  <script setup>
     import { ref, onBeforeMount, watch } from "vue";
     import { cloneDeep } from "es-toolkit/object";
     import { ElMessageBox } from "element-plus";
-    import tabulation from "@/components/base/tabulation.vue";
-    ${json.detailDiaType === "diadrawer" ? `import diadrawer from "@/components/base/diadrawer.vue";` : ""}
-    ${json.detailDiaType === "diapage" ? `import diapage from "@/components/base/diapage.vue";` : ""}
-    ${json.detailDiaType === "diabox" ? `import diabox from "@/components/base/diabox.vue";` : ""}
-    ${json.detailDiaType !== "diabox" ? `import collapse from "@/components/base/collapse.vue";` : ""}
-    import formItem from "@/components/base/formItem.vue";
+    import PTable from "@Pcomponents/base/p-table/index.vue";
+    import pDialog from "@Pcomponents/base/p-dialog/index.vue";
+    ${json.detailDiaType !== "diabox" ? `import PCollapse from "@Pcomponents/base/p-collapse/index.vue";` : ""}
+    import PItem from "@Pcomponents/base/p-item/index.vue";
   
     const props = defineProps({
       type: {
@@ -49,17 +47,17 @@ const createScript = async (json) => {
         tableTopBtn.value = [];
         tableRightBtn.value = [];
       } else {
-        tableTopBtn.value = ["add"];
-        tableRightBtn.value = ["edit", "delete"];
+        tableTopBtn.value = [{ label: "新增", value: "add"}];
+        tableRightBtn.value = [{ label: "编辑", value: "edit"}, { label: "删除", value: "delete"}];
       }
     });
   
     const tableColumn = ref(${JSON.stringify(tableColumn)});
-    const tableData: any = ref([]);
-    const tableRightBtn = ref(["edit", "delete"]);
-    const tableTopBtn = ref(["add"]);
+    const tableData = ref([]);
+    const tableRightBtn = ref([{ label: "编辑", value: "edit"}, { label: "删除", value: "delete"}]);
+    const tableTopBtn = ref([{ label: "新增", value: "add"]);
     const detailType = ref("");
-    const detailInfo: any = ref({});
+    const detailInfo = ref({});
     const isDetail = ref(false);
     
     const getWebId = () => {
@@ -78,7 +76,7 @@ const createScript = async (json) => {
       emit("change", arr);
     };
     
-    const tableRightBtnClick = (row: any, btn: any) => {
+    const tableRightBtnClick = (row, btn) => {
       if (btn === "edit") {
         detailType.value = btn;
         const index = tableData.value.findIndex((item: any) => {
@@ -105,7 +103,7 @@ const createScript = async (json) => {
       }
     };
     
-    const tableTopBtnClick = (btn: any) => {
+    const tableTopBtnClick = (btn) => {
       if (btn === "add") {
         detailType.value = "add";
         detailInfo.value = {};
@@ -114,7 +112,7 @@ const createScript = async (json) => {
       }
     };
     
-    const diaBotBtnClick = (btn: any) => {
+    const diaBotBtnClick = (btn) => {
       if (btn === "save") {
         if (detailType.value === "add") {
           tableData.value.push(detailInfo.value);
@@ -179,22 +177,30 @@ const createHtml = async (json) => {
   `;
 
   const contentCode = `
-      <tabulation
+      <p-table
         :column="tableColumn"
         :data="tableData"
         :rightBtn="tableRightBtn"
         :topBtn="tableTopBtn"
-        :showPagination="false"
         @rightBtnClick="tableRightBtnClick"
         @topBtnClick="tableTopBtnClick"
       />
   `;
 
   const diaCode = `
-      <${json.detailDiaType}
+      <p-dialog
         title="${json.title}详情页"
         v-model="isDetail"
-        :botBtn="['save', 'back']"
+        :botBtn="[
+           {
+          label: '保存',
+          key: 'save',
+        },
+        {
+          label: '返回',
+          key: 'back',
+        },
+      ]"
         @botBtnClick="diaBotBtnClick"
       >
         ${
@@ -209,7 +215,7 @@ const createHtml = async (json) => {
                 (field) => `
             <formItem
               class="dtItem"
-              :item="{
+              :config="{
                 key: '${field.key}',
                 type: '${field.type}',
                 label: '${field.label}',
