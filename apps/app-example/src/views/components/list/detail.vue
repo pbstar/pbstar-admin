@@ -5,6 +5,7 @@ import request from "@Passets/utils/request";
 import PCollapse from "@Pcomponents/base/p-collapse/index.vue";
 import PItem from "@Pcomponents/base/p-item/index.vue";
 import hobbyTable from "./hobbyTable.vue";
+import eduTable from "./eduTable.vue";
 
 const props = defineProps({
   type: {
@@ -121,7 +122,9 @@ defineExpose({
         </p-item>
       </div>
     </p-collapse>
-    <p-collapse title="教育背景"></p-collapse>
+    <p-collapse title="教育背景">
+      <eduTable :type="detailType" :id="detailId" />
+    </p-collapse>
   </div>
 </template>
 

@@ -36,11 +36,8 @@ const tableColumn = ref([
   { label: "爱好描述", key: "hobbyDesc" },
 ]);
 const tableData = ref([]);
-const tableRightBtn = ref([
-  { label: "编辑", key: "edit" },
-  { label: "删除", key: "delete" },
-]);
-const tableTopBtn = ref([{ label: "新增", key: "add" }]);
+const tableRightBtn = ref([]);
+const tableTopBtn = ref([]);
 const detailType = ref("");
 const detailInfo = ref({});
 const isDetail = ref(false);
