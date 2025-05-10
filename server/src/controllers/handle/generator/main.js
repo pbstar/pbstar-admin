@@ -1,37 +1,36 @@
-const create = async (json) => {
+const create = (json) => {
   let code = "";
-  code += await createScript(json);
-  code += await createHtml(json);
-  code += await createStyle(json);
+  code += createScript(json);
+  code += createHtml(json);
+  code += createStyle();
   return code;
 };
 
-const createScript = async (json) => {
+const createScript = (json) => {
   const searchData = [];
-  json.fields.forEach((field) => {
-    if (!field.showIn.includes("search")) return;
-    let obj = {
-      label: field.label,
-      key: field.key,
-      type: field.type,
-    };
-    if (field.enumType) {
-      obj = { ...obj, enumType: field.enumType };
-    }
-    searchData.push(obj);
-  });
-
   const tableColumn = [];
   json.fields.forEach((field) => {
-    if (!field.showIn.includes("table")) return;
-    let obj = {
-      label: field.label,
-      key: field.key,
-    };
-    if (field.enumType) {
-      obj = { ...obj, enumType: field.enumType };
+    if (field.showIn.includes("search")) {
+      let objS = {
+        label: field.label,
+        key: field.key,
+        type: field.type,
+      };
+      if (field.enumType) {
+        objS = { ...objS, enumType: field.enumType };
+      }
+      searchData.push(objS);
     }
-    tableColumn.push(obj);
+    if (field.showIn.includes("table")) {
+      let objT = {
+        label: field.label,
+        key: field.key,
+      };
+      if (field.enumType) {
+        objT = { ...objT, enumType: field.enumType };
+      }
+      tableColumn.push(objT);
+    }
   });
 
   let code = `
@@ -39,11 +38,10 @@ const createScript = async (json) => {
   import { ref, onBeforeMount } from "vue";
   import { ElMessage, ElMessageBox } from "element-plus";
   import request from "@Passets/utils/request";
-  import search from "@/components/base/search.vue";
   import PTable from "@Pcomponents/base/p-table/index.vue";
-  ${json.detailDiaType === "diadrawer" ? `import diadrawer from "@/components/base/diadrawer.vue";` : ""}
-  ${json.detailDiaType === "diapage" ? `import diapage from "@/components/base/diapage.vue";` : ""}
-  ${json.detailDiaType === "diabox" ? `import diabox from "@/components/base/diabox.vue";` : ""}
+  import PSearch from "@Pcomponents/base/p-search/index.vue";
+  import PTitle from "@Pcomponents/base/p-title/index.vue";
+  import PDialog from "@Pcomponents/base/p-dialog/index.vue";
   import Detail from "./components/${json.key}/detail.vue";
 
   const searchData = ref(${JSON.stringify(searchData)});
@@ -51,15 +49,22 @@ const createScript = async (json) => {
   const searchValue = ref({});
   const tableColumn = ref(${JSON.stringify(tableColumn)});
   const tableData = ref([]);
-  const tableRightBtn = ref(["preview", "edit", "delete"]);
-  const tableTopBtn = ref(["add", "export"]);
+    const tableTopBtn = ref([
+    { key: "add", label: "新增" },
+    { key: "export", label: "导出" },
+  ]);
+  const tableRightBtn = ref([
+    { key: "view", label: "查看" },
+    { key: "edit", label: "编辑" },
+    { key: "delete", label: "删除" },
+  ]);
   const pagination = ref({
     pageNumber: 1,
     pageSize: 10,
     total: 0
   });
   const detailType = ref("");
-  const detailInfo = ref({});
+  const detailId = ref("");
   const isDetail = ref(false);
   const detailRef = ref(null);
 
@@ -67,24 +72,15 @@ const createScript = async (json) => {
     initTable();
   });
 
-  const searchFind = (val) => {
-    searchValue.value = val;
-    pagination.value.pageNumber = 1;
+  const toSearch = ({ data }) => {
+    searchValue.value = data;
     initTable();
   };
-
-  const searchReset = () => {
-    searchValue.value = {};
-    pagination.value.pageNumber = 1;
+  const tablePaginationChange = ({ pageNumber, pageSize }) => {
+    pagination.value.pageNumber = pageNumber;
+    pagination.value.pageSize = pageSize;
     initTable();
   };
-
-  const paginationChange = (val) => {
-    pagination.value.pageNumber = val.pageNumber;
-    pagination.value.pageSize = val.pageSize;
-    initTable();
-  };
-
   const initTable = () => {
     const params = {
       pageNumber: pagination.value.pageNumber,
@@ -92,33 +88,34 @@ const createScript = async (json) => {
       ...searchValue.value
     };
     tableData.value = [];
-    request.post("${json.api.list}", params).then((res: any) => {
+    request.post({
+      base: "${json.apiBase}",
+      url: "${json.api.list}",
+      data: params
+    }).then((res) => {
       if (res && res.code === 200) {
-        tableData.value = res.data.records;
+        tableData.value = res.data.list;
         pagination.value.total = res.data.total;
       } else {
         ElMessage.error(res?.msg || "操作异常");
       }
     });
   };
-
-  const tableRightBtnClick = (row, btn) => {
-    if (btn === "preview" || btn === "edit") {
-      request.get("${json.api.getOne}", { id: row.id }).then((res: any) => {
-        if (res && res.code === 200 && res.data) {
-          detailType.value = btn;
-          detailInfo.value = res.data;
-          isDetail.value = true;
-        } else {
-          ElMessage.error(res?.msg || "操作异常");
-        }
-      });
+  const tableRightBtnClick = ({row, btn}) => {
+    if (btn == "view" || btn == "edit") {
+      detailType.value = btn;
+      detailId.value = row.id;
+      isDetail.value = true;
     } else if (btn === "delete") {
       ElMessageBox.confirm("确认删除吗?", "提示", {
         type: "warning",
       })
         .then(() => {
-          request.post("${json.api.delete}", [row.id]).then((res: any) => {
+          request.post({
+            base: "${json.apiBase}",
+            url: "${json.api.delete}",
+            data: { idList: [row.id] }
+          }).then((res) => {
             if (res && res.code === 200) {
               initTable();
               ElMessage.success("操作成功");
@@ -130,33 +127,37 @@ const createScript = async (json) => {
         .catch(() => {});
     }
   };
-
-  const tableTopBtnClick = (btn) => {
-    if (btn === "add") {
+  const tableTopBtnClick = ({btn}) => {
+    if (btn == "add") {
       detailType.value = "add";
-      detailInfo.value = {};
+      detailId.value = "";
       isDetail.value = true;
+    } else if (btn == "export") {
+      ElMessage.success("导出");
     }
   };
-
-  const diaBotBtnClick = (btn) => {
+  const diaBotBtnClick = ({btn}) => {
     if (btn === "save") {
-      let url = "";
-      if (detailType.value === "add") {
-        url = "${json.api.create}";
-      } else if (detailType.value === "edit") {
-        url = "${json.api.update}";
-      }
-      detailInfo.value = detailRef.value.getFormValue();
-      request.post(url, detailInfo.value).then((res: any) => {
-        if (res && res.code === 200) {
-          initTable();
-          ElMessage.success("操作成功");
-          isDetail.value = false;
-        } else {
-          ElMessage.error(res?.msg || "操作异常");
-        }
-      });
+      const detailInfo = detailRef.value.getFormValue();
+      const url =
+        detailType.value == "add"
+          ? "${json.api.create}"
+          : "${json.api.update}";
+      request
+        .post({
+          base: "${json.apiBase}",
+          url,
+          data: detailInfo,
+        })
+        .then((res) => {
+          if (res && res.code === 200) {
+            initTable();
+            ElMessage.success("操作成功");
+            isDetail.value = false;
+          } else {
+            ElMessage.error(res?.msg || "操作异常");
+          }
+        });
     } else if (btn === "back") {
       isDetail.value = false;
     }
@@ -166,67 +167,61 @@ const createScript = async (json) => {
   return code;
 };
 
-const createHtml = async (json) => {
+const createHtml = (json) => {
   const topCode = `
 <template>
-  <div class="fbox">
-    <div class="topTab">
-      <div class="tabs">
-        <div class="tab active">${json.title}</div>
-      </div>
-      <div class="btn">
-        <el-button
-          type="primary"
-          size="small"
-          text
-          style="margin-bottom: -8px"
-          @click="showSearch = !showSearch"
-        >
-          {{ showSearch ? "收起" : "查询" }}
-        </el-button>
-      </div>
-    </div>
+  <div class="page">
+    <p-title :list="['${json.title}']">
+      <el-button
+        type="primary"
+        size="small"
+        text
+        style="margin-bottom: -8px"
+        @click="showSearch = !showSearch"
+      >
+        {{ showSearch ? "收起" : "查询" }}
+      </el-button>
+    </p-title>
 `;
 
   const searchCode = `
-    <search
+    <p-search
       v-show="showSearch"
+      style="margin-top: 10px"
       :data="searchData"
-      @find="searchFind"
-      @reset="searchReset"
-    />
+      @btnClick="toSearch"
+    ></p-search>
 `;
 
   const contentCode = `
-    <div class="content">
-      <p-table
-        :column="tableColumn"
-        :data="tableData"
-        :rightBtn="tableRightBtn"
-        :topBtn="tableTopBtn"
-        :pagination="pagination"
-        showSetting
-        tableKey="${json.key}_1"
-        @rightBtnClick="tableRightBtnClick"
-        @topBtnClick="tableTopBtnClick"
-        @paginationChange="paginationChange"
-      />
-    </div>
+    <p-table
+      style="margin-top: 10px"
+      :data="tableData"
+      :column="tableColumn"
+      :topBtn="tableTopBtn"
+      :rightBtn="tableRightBtn"
+      tableKey="${json.key}_1"
+      showSetting
+      :pagination="pagination"
+      @paginationChange="tablePaginationChange"
+      @topBtnClick="tableTopBtnClick"
+      @rightBtnClick="tableRightBtnClick"
+    ></p-table>
 `;
 
   const diaCode = `
-    <${json.detailDiaType}
+    <p-dialog
       title="${json.title}详情页"
+      type="${json.detailDiaType}"
       v-model="isDetail"
-      :botBtn="['save', 'back']"
+      :botBtn="[
+        { label: '保存', key: 'save' },
+        { label: '返回', key: 'back' },
+      ]"
       @botBtnClick="diaBotBtnClick"
     >
-      <Detail
-        :type="detailType"
-        :info="detailInfo"
-        ref="detailRef"
-      />
-    </${json.detailDiaType}>
+      <Detail ref="detailRef" :type="detailType" :id="detailId"></Detail>
+    </p-dialog>
 `;
 
   const bottomCode = `
@@ -243,71 +238,14 @@ const createHtml = async (json) => {
   return code;
 };
 
-const createStyle = async (json) => {
+const createStyle = () => {
   const code = `
 <style scoped lang="scss">
-  .fbox {
-    width: calc(100% - 20px);
-    margin-left: 10px;
-    padding: 0 10px;
-    background: var(--color-box-bg);
-    overflow: hidden;
-    
-    .topTab {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      height: 42px;
-      width: 100%;
-      border-bottom: 1px solid var(--color-toptab-border);
-      
-      .tabs {
-        display: flex;
-        
-        .tab {
-          height: 40px;
-          line-height: 40px;
-          text-align: center;
-          font-size: 16px;
-          color: var(--color-toptab);
-          margin-right: 20px;
-        }
-        
-        .tab.active {
-          color: var(--color-toptab-active);
-          font-weight: bold;
-          border-bottom: 3px solid var(--color-admin-bg);
-        }
-      }
-    }
-    
-    .content {
-      padding-top: 10px;
-    }
-    
-    .detail {
-      padding: 0 10px;
-      
-      .items {
-        ${json.detailDiaType === "diabox" ? `padding: 10px 0;` : ""}
-        display: flex;
-        ${
-          json.detailDiaType === "diapage"
-            ? `flex-wrap: wrap;`
-            : `flex-direction: column;`
-        }
-        
-        .dtItem {
-          ${
-            json.detailDiaType === "diapage"
-              ? `width: 30%; margin-right: 3%;`
-              : `width: 100%;`
-          }
-          margin-bottom: 10px;
-        }
-      }
-    }
-  }
+.page {
+  width: 100%;
+  padding: 0 10px;
+  background-color: var(--c-bg);
+}
 </style>
 `;
   return code;

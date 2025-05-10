@@ -30,6 +30,7 @@ const defaultInfo = {
   template: "main",
   childTableKey: "",
   title: "",
+  apiBase: "",
   api: {
     list: "",
     create: "",
@@ -252,6 +253,16 @@ const toHistoryUse = (row) => {
           class="tRow"
           v-show="info.template === 'main' || info.template === 'childTable'"
         >
+          <p-item
+            class="item"
+            :config="{
+              type: 'input',
+              label: 'apiBase',
+              placeholder: '请输入接口Base',
+            }"
+            v-model="info.apiBase"
+          >
+          </p-item>
           <p-item
             class="item"
             :config="{

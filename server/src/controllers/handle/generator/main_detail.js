@@ -1,39 +1,59 @@
-const create = async (json) => {
+const create = (json) => {
   let code = "";
-  code += await createScript(json);
-  code += await createHtml(json);
-  code += await createStyle(json);
+  code += createScript(json);
+  code += createHtml(json);
+  code += createStyle(json);
   return code;
 };
 
-const createScript = async (json) => {
+const createScript = (json) => {
   let code = `
   <script setup>
     import { ref, onBeforeMount } from "vue";
-    import collapse from "@/components/base/collapse.vue";
-    import formItem from "@/components/base/formItem.vue";
+    import { ElMessage, ElMessageBox } from "element-plus";
+    import request from "@Passets/utils/request";
+    ${json.detailDiaType === "page" || json.detailDiaType === "drawer" ? 'import PCollapse from "@Pcomponents/base/p-collapse/index.vue";' : ""}
+    import PItem from "@Pcomponents/base/p-item/index.vue";
 
     const props = defineProps({
       type: {
         type: String,
         default: "",
       },
-      info: {
-        type: Object,
-        default: () => ({}),
+      id: {
+        type: [String, Number],
+        default: "",
       },
     });
     const detailInfo = ref({});
     const detailType = ref("");
+    const detailId = ref("");
   
     onBeforeMount(() => {
-      if (props.type) {
-        detailType.value = props.type;
-      }
-      if (props.info) {
-        detailInfo.value = props.info;
+      detailType.value = props.type;
+      detailId.value = props.id;
+      if (detailType.value == "view" || detailType.value == "edit") {
+        getDetailInfo();
       }
     });
+
+    const getDetailInfo = () => {
+      request
+        .get({
+          base: "${json.apiBase}",
+          url: "${json.api.getOne}",
+          data: {
+            id: detailId.value,
+          },
+        })
+        .then((res) => {
+          if (res && res.code == 200) {
+            detailInfo.value = res.data;
+          } else {
+          ElMessage.error(res.msg || "操作异常");
+        }
+      });
+    };
     const getFormValue = () => {
       return detailInfo.value;
     };
@@ -46,7 +66,7 @@ const createScript = async (json) => {
   return code;
 };
 
-const createHtml = async (json) => {
+const createHtml = (json) => {
   const formData = [];
   json.fields.forEach((field) => {
     if (!field.showIn.includes("form")) return;
@@ -65,19 +85,18 @@ const createHtml = async (json) => {
   const code = `
   <template>
     ${
-      json.detailDiaType === "diapage" || json.detailDiaType === "diadrawer"
+      json.detailDiaType === "page" || json.detailDiaType === "drawer"
         ? `<div class="detail">
-              <collapse title="基础信息" :isControl="false" :showDownLine="false">`
+              <p-collapse title="基础信息" :isControl="false" :showDownLine="false">`
         : ""
     }
         <div class="items">
           ${formData
             .map(
               (field) => `
-          <formItem
+          <p-item
             class="dtItem"
             :config="{
-              key: '${field.key}',
               isText: detailType == 'preview',
               type: '${field.type}',
               label: '${field.label}',
@@ -89,8 +108,8 @@ const createHtml = async (json) => {
             .join("")}
         </div>
         ${
-          json.detailDiaType === "diapage" || json.detailDiaType === "diadrawer"
-            ? `</collapse>
+          json.detailDiaType === "page" || json.detailDiaType === "drawer"
+            ? `</p-collapse>
                 </div>`
             : ""
         }
@@ -99,34 +118,30 @@ const createHtml = async (json) => {
   return code;
 };
 
-const createStyle = async (json) => {
+const createStyle = (json) => {
   const code = `
   <style scoped lang="scss">
-  ${
-    json.detailDiaType === "diapage" || json.detailDiaType === "diadrawer"
-      ? `.detail {
-           padding: 0 10px;
-         }`
-      : ""
-  }
+  .detail {
+    padding: 0 10px;
     .items {
-      ${json.detailDiaType === "diabox" ? `padding: 10px 0;` : ""}
+      ${json.detailDiaType === "box" ? `padding: 10px 0;` : ""}
       display: flex;
       ${
-        json.detailDiaType === "diapage"
+        json.detailDiaType === "page"
           ? `flex-wrap: wrap;`
           : `flex-direction: column;`
       }
       
       .dtItem {
         ${
-          json.detailDiaType === "diapage"
+          json.detailDiaType === "page"
             ? `width: 30%; margin-right: 3%;`
             : `width: 100%;`
         }
         margin-bottom: 10px;
       }
     }
+  }
   </style>
   `;
   return code;

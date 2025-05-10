@@ -76,9 +76,13 @@ const createScript = async (json) => {
       ${json.childTableKey}: props.info.id,
     };
     tableData.value = [];
-    request.post("${json.api.list}", params).then((res) => {
+    request.post({
+      base: "base",
+      url: "${json.api.list}",
+      data: params
+    }).then((res) => {
       if (res && res.code === 200) {
-        tableData.value = res.data.records;
+        tableData.value = res.data.list;
       } else {
         ElMessage.error(res?.msg || "操作异常");
       }
@@ -87,7 +91,11 @@ const createScript = async (json) => {
   
   const tableRightBtnClick = (row, btn) => {
     if (btn === "edit") {
-      request.get("${json.api.getOne}", { id: row.id }).then((res) => {
+      request.get({
+        base: "base",
+        url: "${json.api.getOne}",
+        data: { id: row.id }
+      }).then((res) => {
         if (res && res.code === 200 && res.data) {
           detailType.value = btn;
           detailInfo.value = res.data;
@@ -101,7 +109,11 @@ const createScript = async (json) => {
         type: "warning",
       })
         .then(() => {
-          request.post("${json.api.delete}", [row.id]).then((res) => {
+          request.post({
+            base: "base",
+            url: "${json.api.delete}",
+            data: { idList: [row.id] }
+          }).then((res) => {
             if (res && res.code === 200) {
               initTable();
               ElMessage.success("操作成功");

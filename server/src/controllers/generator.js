@@ -5,17 +5,17 @@ import childTable from "./handle/generator/childTable.js";
 import formTable from "./handle/generator/formTable.js";
 export default {
   toCreate: async (req, res) => {
-    const { jsonData } = req.body;
+    const jsonData = req.body;
     try {
       const arr = [];
       if (jsonData.template === "main") {
-        const code = await main.create(jsonData);
+        const code = main.create(jsonData);
         const formattedCode = await prettier.format(code, { parser: "vue" });
         arr.push({
           fileName: `${jsonData.key}.vue`,
           fileCode: formattedCode,
         });
-        const code__detail = await main_detail.create(jsonData);
+        const code__detail = main_detail.create(jsonData);
         const formattedCodeDetail = await prettier.format(code__detail, {
           parser: "vue",
         });
@@ -37,18 +37,19 @@ export default {
           fileName: `${jsonData.key}.vue`,
           fileCode: formattedCode,
         });
-        res.status(200).json({
-          code: 200,
-          msg: "生成成功",
-          data: arr,
-        });
       } else {
         res.status(400).json({
           code: 400,
           msg: "Invalid template type",
           data: null,
         });
+        return;
       }
+      res.status(200).json({
+        code: 200,
+        msg: "生成成功",
+        data: arr,
+      });
     } catch (error) {
       console.error("Error generating Vue file:", error);
       res.status(500).json({
