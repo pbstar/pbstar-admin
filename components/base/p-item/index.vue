@@ -84,12 +84,7 @@ watch(
       enumStore.getEnum(config.value.enumType).then((res) => {
         if (res) {
           let list = res[config.value.enumType];
-          config.value.options = list.map((it) => {
-            return {
-              label: it.enumValue,
-              value: it.enumKey,
-            };
-          });
+          config.value.options = list;
           if (config.value.isText) {
             changeText(config.value.options);
           }

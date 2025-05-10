@@ -12,10 +12,10 @@
         }"
       >
         <AdminNav />
-        <div class="foldBtn" @click="toFold">
+        <!-- <div class="foldBtn" @click="toFold">
           <el-icon v-show="isFold"><DArrowRight /></el-icon>
           <el-icon v-show="!isFold"><DArrowLeft /></el-icon>
-        </div>
+        </div> -->
       </div>
       <div class="mRight">
         <history />

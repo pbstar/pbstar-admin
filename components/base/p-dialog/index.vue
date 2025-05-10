@@ -1,34 +1,46 @@
 <template>
   <!-- Box 类型对话框 -->
   <template v-if="type === 'box'">
-    <div class="diabox">
-      <el-dialog
-        v-model="dialogVisible"
-        :close-on-click-modal="false"
-        :show-close="false"
-        :width="width || '500px'"
+    <transition name="dia">
+      <div
+        class="diaboxF"
+        v-if="dialogVisible"
+        :style="{
+          'z-index': zIndex + 2000,
+        }"
       >
-        <div class="header"></div>
-        <div class="top">
-          <div class="title">{{ title }}</div>
-          <img src="@Passets/imgs/icons14/close2.png" alt="" @click="toClose" />
+        <div
+          class="diabox"
+          :style="{
+            width: width || '500px',
+          }"
+        >
+          <div class="header"></div>
+          <div class="top">
+            <div class="title">{{ title }}</div>
+            <img
+              src="@Passets/imgs/icons14/close2.png"
+              alt=""
+              @click="toClose"
+            />
+          </div>
+          <div class="mid">
+            <slot></slot>
+          </div>
+          <div class="bot">
+            <el-button
+              v-for="(item, index) in botBtn"
+              :key="index"
+              size="small"
+              :type="item.type || 'primary'"
+              @click="handleClickBot(item.key)"
+            >
+              {{ item.label }}
+            </el-button>
+          </div>
         </div>
-        <div class="mid">
-          <slot></slot>
-        </div>
-        <div class="bot">
-          <el-button
-            v-for="(item, index) in botBtn"
-            :key="index"
-            size="small"
-            :type="item.type || 'primary'"
-            @click="handleClickBot(item.key)"
-          >
-            {{ item.label }}
-          </el-button>
-        </div>
-      </el-dialog>
-    </div>
+      </div>
+    </transition>
   </template>
 
   <!-- Drawer 类型对话框 -->
@@ -165,7 +177,7 @@ watch(
   () => props.modelValue,
   (newVal) => {
     dialogVisible.value = newVal;
-    if (newVal && props.type !== "box") {
+    if (newVal) {
       zIndex.value = sharedStore.getIndex();
     }
   }
@@ -196,55 +208,36 @@ const handleClickBot = (btn) => {
   transition: opacity 0.1s;
 }
 
-/* box类型样式 */
-.diabox {
-  :deep(.el-dialog) {
-    padding: 0;
-  }
-  :deep(.el-dialog__header) {
-    display: none;
-    padding: 0;
-  }
-  :deep(.el-dialog__body) {
-    padding: 0;
-  }
-  .header {
-    width: 100%;
-    height: 5px;
-    background: var(--c-bg-theme);
-  }
+/* page类型样式 */
+.diapageF {
+  height: calc(100vh - 90px);
+  background-color: var(--c-bg-box);
+  position: fixed;
+  top: 90px;
+  right: 0;
+  padding-left: 10px;
+}
+.diapage {
+  width: calc(100% - 10px);
+  height: calc(100%);
+  padding: 0 10px;
+  background-color: var(--c-bg);
+
   .top {
-    width: calc(100% - 20px);
-    margin-left: 10px;
-    height: 35px;
-    border-bottom: 1px solid var(--c-border);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    .title {
-      display: inline-block;
-      font-weight: bold;
-      font-size: 16px;
-      line-height: 20px;
-      color: var(--c-text);
-    }
-    img {
-      cursor: pointer;
-    }
+    width: 100%;
+    height: 42px;
   }
   .mid {
     width: 100%;
-    min-height: 200px;
-    padding-bottom: 20px;
+    height: calc(100% - 90px);
+    overflow-y: auto;
   }
   .bot {
     width: 100%;
-    height: 36px;
-    background-color: var(--c-bg-box);
+    height: 48px;
     display: flex;
     align-items: center;
-    justify-content: flex-end;
-    padding-right: 10px;
+    justify-content: center;
   }
 }
 
@@ -328,36 +321,57 @@ const handleClickBot = (btn) => {
   transition: transform 0.2s ease;
 }
 
-/* page类型样式 */
-.diapageF {
-  height: calc(100vh - 90px);
-  background-color: var(--c-bg-box);
+/* box类型样式 */
+.diaboxF {
+  height: 100vh;
+  width: 100vw;
+  background-color: rgba(0, 0, 0, 0.5);
   position: fixed;
-  top: 90px;
+  top: 0;
   right: 0;
-  padding-left: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-.diapage {
-  width: calc(100% - 10px);
-  height: calc(100% - 10px);
-  padding: 0 10px;
-  background-color: var(--c-bg);
-
+.diabox {
+  background: var(--c-bg);
+  .header {
+    width: 100%;
+    height: 5px;
+    background: var(--c-bg-theme);
+  }
   .top {
     width: 100%;
-    height: 42px;
+    padding: 0 10px;
+    height: 35px;
+    border-bottom: 1px solid var(--c-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .title {
+      display: inline-block;
+      font-weight: bold;
+      font-size: 16px;
+      line-height: 20px;
+      color: var(--c-text);
+    }
+    img {
+      cursor: pointer;
+    }
   }
   .mid {
     width: 100%;
-    height: calc(100% - 90px);
-    overflow-y: auto;
+    min-height: 200px;
+    padding-bottom: 20px;
   }
   .bot {
     width: 100%;
-    height: 48px;
+    height: 36px;
+    background-color: var(--c-bg-box);
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-end;
+    padding-right: 10px;
   }
 }
 </style>

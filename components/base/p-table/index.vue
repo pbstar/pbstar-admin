@@ -16,6 +16,12 @@
     </div>
     <el-table
       class="table"
+      :style="{
+        marginTop:
+          props.topBtn.length > 0 || (props.showSetting && props.tableKey)
+            ? '10px'
+            : '0px',
+      }"
       :data="dataList"
       border
       stripe
@@ -135,7 +141,7 @@ const props = defineProps({
     default: true,
   },
   maxHeight: {
-    type: String || Number,
+    type: [String, Number],
     default: "800",
   },
 });
@@ -288,7 +294,6 @@ defineExpose({
   }
   .table {
     width: 100%;
-    margin-top: 10px;
     :deep(thead th) {
       background: var(--c-bg-theme-light);
       color: var(--c-text2);

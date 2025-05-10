@@ -23,4 +23,46 @@ export default {
       message: "成功",
     });
   },
+  // 详情
+  getDetail: async (req, res) => {
+    const { id } = req.query;
+    const result = await db.findById(id);
+    res.json({
+      code: 200,
+      data: result,
+      message: "成功",
+    });
+  },
+  // 新增
+  create: async (req, res) => {
+    const { name, age, sex, ethnic, isHealthy, hobbyList } = req.body;
+    const newObj = { name, age, sex, ethnic, isHealthy, hobbyList };
+    const result = await db.create(newObj);
+    res.json({
+      code: 200,
+      data: result,
+      message: "成功",
+    });
+  },
+  // 修改
+  update: async (req, res) => {
+    const { id, name, age, sex, ethnic, isHealthy, hobbyList } = req.body;
+    const updatedObj = { id, name, age, sex, ethnic, isHealthy, hobbyList };
+    const result = await db.update(updatedObj);
+    res.json({
+      code: 200,
+      data: result,
+      message: "成功",
+    });
+  },
+  // 删除
+  delete: async (req, res) => {
+    const { idList } = req.body;
+    const result = await db.delete(idList);
+    res.json({
+      code: 200,
+      data: result,
+      message: "成功",
+    });
+  },
 };
