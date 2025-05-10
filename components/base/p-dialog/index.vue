@@ -179,8 +179,8 @@ const toClose = () => {
   dialogVisible.value = false;
 };
 
-const handleClickBot = (key) => {
-  emit("botBtnClick", { key });
+const handleClickBot = (btn) => {
+  emit("botBtnClick", { btn });
 };
 </script>
 

@@ -18,6 +18,8 @@
       showSetting
       :pagination="pagination"
       @paginationChange="toPageChange"
+      @topBtnClick="toTopBtnClick"
+      @rightBtnClick="toRightBtnClick"
     ></p-table>
   </div>
 </template>
@@ -28,15 +30,12 @@ import request from "@Passets/utils/request";
 import PTable from "@Pcomponents/base/p-table/index.vue";
 import PSearch from "@Pcomponents/base/p-search/index.vue";
 import pTitle from "@Pcomponents/base/p-title/index.vue";
-const data = ref([
-  { name: "张三", age: 18, sex: "1", minzu: "1", isHealthy: "1" },
-  { name: "李四", age: 19, sex: "2", minzu: "3", isHealthy: "2" },
-]);
+const data = ref([]);
 const column = ref([
   { key: "name", label: "姓名" },
-  { key: "age", label: "年龄", width: 100 },
-  { key: "sex", label: "性别", minWidth: 100 },
-  { key: "minzu", label: "民族", options: [] },
+  { key: "age", label: "年龄" },
+  { key: "sex", label: "性别" },
+  { key: "ethnic", label: "民族", enumType: "p_ethnic" },
   { key: "isHealthy", label: "是否健康", enumType: "p_boolean" },
 ]);
 const topBtn = ref([
@@ -51,9 +50,9 @@ const rightBtn = ref([
 ]);
 const tableRef = ref(null);
 const pagination = ref({
-  total: 100,
-  pageSize: 10,
   pageNumber: 1,
+  pageSize: 10,
+  total: 0,
 });
 const searchRef = ref(null);
 const searchData = ref([
@@ -64,14 +63,6 @@ const searchData = ref([
 const searchValue = ref({});
 
 onMounted(() => {
-  tableRef.value.toChangeColumnOptions({
-    key: "minzu",
-    options: [
-      { label: "汉族", value: "1" },
-      { label: "苗族", value: "2" },
-      { label: "壮族", value: "3" },
-    ],
-  });
   tableRef.value.toChangeColumnOptions({
     key: "sex",
     options: [
@@ -86,30 +77,50 @@ onMounted(() => {
       { label: "女", value: "2" },
     ],
   });
+  initTable();
 });
 const toSearch = ({ data }) => {
   searchValue.value = data;
+  initTable();
 };
 const toPageChange = ({ pageNumber, pageSize }) => {
   pagination.value.pageNumber = pageNumber;
   pagination.value.pageSize = pageSize;
+  initTable();
 };
 const initTable = () => {
   request
     .post({
       base: "base",
-      url: "/system/generator",
-      data: info.value,
+      url: "/example/test/getList",
+      data: { ...searchValue.value, ...pagination.value },
     })
     .then((res) => {
       if (res && res.code == 200) {
-        codeList.value = res.data;
-        isCodeView.value = true;
-        ElMessage.success(res.msg || "操作成功");
+        data.value = res.data.list;
+        pagination.value.total = res.data.total;
       } else {
         ElMessage.error(res.msg || "操作异常");
       }
     });
+};
+const toTopBtnClick = ({ btn }) => {
+  if (btn == "add") {
+    ElMessage.success("新增");
+  } else if (btn == "export") {
+    ElMessage.success("导出");
+  }
+};
+const toRightBtnClick = ({ btn, row }) => {
+  if (btn == "view") {
+    ElMessage.success("查看");
+  } else if (btn == "edit") {
+    ElMessage.success("编辑");
+  } else if (btn == "delete") {
+    ElMessage.success("删除");
+  } else if (btn == "other") {
+    ElMessage.success("其他");
+  }
 };
 </script>
 <style lang="scss">

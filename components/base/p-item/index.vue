@@ -123,7 +123,7 @@ const change = (val) => {
     obj.key = config.value.key;
   }
   if (config.value.options && config.value.options.length > 0) {
-    row = config.value.options.find((it) => it.value == value.value);
+    const row = config.value.options.find((it) => it.value == value.value);
     if (row) {
       obj.row = row;
     }

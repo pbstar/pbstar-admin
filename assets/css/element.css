@@ -24,3 +24,9 @@
 .el-date-editor.el-input__wrapper {
   width: 100%;
 }
+.el-table .el-table__cell {
+  padding: 6px 0;
+}
+.el-table th.el-table__cell {
+  padding: 7px 0;
+}
