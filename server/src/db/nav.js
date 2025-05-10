@@ -31,40 +31,4 @@ const db = {
   lastId: 2,
 };
 
-export default {
-  // 获取所有示例
-  findAll: () => {
-    return Promise.resolve(db.list);
-  },
-
-  // 根据ID查找
-  findById: (id) => {
-    const obj = db.list.find((item) => item.id === Number(id));
-    return Promise.resolve(obj || null);
-  },
-
-  // 创建新示例
-  create: (data) => {
-    const newObj = { ...data, id: db.lastId++ };
-    db.list.push(newObj);
-    return Promise.resolve(newObj);
-  },
-
-  // 更新示例
-  update: (data) => {
-    if (!data.id) return Promise.resolve(null);
-    const index = db.list.findIndex((item) => item.id === Number(data.id));
-    if (index === -1) return Promise.resolve(null);
-    const updatedObj = { ...db.list[index], ...data };
-    db.list[index] = updatedObj;
-    return Promise.resolve(updatedObj);
-  },
-
-  // 删除示例
-  delete: (id) => {
-    const index = db.list.findIndex((item) => item.id === Number(id));
-    if (index === -1) return Promise.resolve(false);
-    db.list.splice(index, 1);
-    return Promise.resolve(true);
-  },
-};
+export default db;

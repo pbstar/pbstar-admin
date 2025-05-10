@@ -121,7 +121,7 @@ defineExpose({
         </p-item>
       </div>
     </p-collapse>
-    <p-collapse title="工作经历"></p-collapse>
+    <p-collapse title="教育背景"></p-collapse>
   </div>
 </template>
 

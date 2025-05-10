@@ -1,17 +1,18 @@
 import db from "../db/nav.js";
+import crud from "../utils/crud.js";
 import { toTree } from "../utils/array.js";
 
 export default {
-  getNavTreeList: async (req, res) => {
-    const list = await db.findAll();
+  getNavTreeList: (req, res) => {
+    const list = crud.findAll(db);
     res.json({
       code: 200,
       data: toTree(list),
       message: "成功",
     });
   },
-  getNavList: async (req, res) => {
-    const list = await db.findAll();
+  getNavList: (req, res) => {
+    const list = crud.findAll(db);
     res.json({
       code: 200,
       data: list,

@@ -1,9 +1,15 @@
 import db from "../db/enum.js";
+import crud from "../utils/crud.js";
 
 export default {
-  getEnum: async (req, res) => {
+  getEnum: (req, res) => {
     const { enumType } = req.query;
-    const result = await db.findByEnumType(enumType);
+    const all = crud.findAll(db);
+    const typeArr = enumType.split(",");
+    const result = {};
+    typeArr.forEach((item) => {
+      result[item] = all.filter((i) => i.type === item);
+    });
     res.json({
       code: 200,
       data: result,

@@ -12,14 +12,4 @@ const db = {
   lastId: 2,
 };
 
-export default {
-  // 根据枚举类型查找
-  findByEnumType: (enumType) => {
-    const typeArr = enumType.split(",");
-    const res = {};
-    typeArr.forEach((item) => {
-      res[item] = db.list.filter((i) => i.type === item);
-    });
-    return Promise.resolve(res);
-  },
-};
+export default db;

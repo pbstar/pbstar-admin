@@ -125,43 +125,34 @@ const db = {
     },
   ],
   lastId: 13,
-};
-
-export default {
-  // 获取所有示例
-  findAll: () => {
-    //id倒序排序
-    const arr = db.list.sort((a, b) => b.id - a.id);
-    return Promise.resolve(arr);
-  },
-
-  // 根据ID查找
-  findById: (id) => {
-    const obj = db.list.find((item) => item.id === Number(id));
-    return Promise.resolve(obj || null);
-  },
-
-  // 创建新示例
-  create: (data) => {
-    db.lastId++;
-    const newObj = { ...data, id: db.lastId };
-    db.list.push(newObj);
-    return Promise.resolve(newObj);
-  },
-
-  // 更新示例
-  update: (data) => {
-    if (!data.id) return Promise.resolve(null);
-    const index = db.list.findIndex((item) => item.id === Number(data.id));
-    if (index === -1) return Promise.resolve(null);
-    const updatedObj = { ...db.list[index], ...data };
-    db.list[index] = updatedObj;
-    return Promise.resolve(updatedObj);
-  },
-
-  // 删除示例
-  delete: (idList) => {
-    db.list = db.list.filter((item) => !idList.includes(item.id));
-    return Promise.resolve(true);
+  //子表
+  children: {
+    edu: {
+      list: [
+        {
+          id: 1,
+          testId: 13,
+          eduName: "本科",
+          dateRange: ["2018-09-01", "2022-06-30"],
+          remark: "",
+        },
+        {
+          id: 2,
+          testId: 13,
+          eduName: "硕士",
+          dateRange: ["2022-09-01", "2024-06-30"],
+          remark: "",
+        },
+        {
+          id: 3,
+          testId: 13,
+          eduName: "博士",
+          dateRange: ["2024-09-01", "2026-06-30"],
+          remark: "",
+        },
+      ],
+      lastId: 3,
+    },
   },
 };
+export default db;
