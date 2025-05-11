@@ -38,16 +38,13 @@ program
             if (!/^[a-z0-9-]+$/.test(input)) {
               return "子应用名称只能包含小写字母、数字和连字符";
             }
-            if (input.startsWith("app-")) {
-              return "子应用名称不能以 'app-' 开头";
-            }
             return true;
           },
         },
       ]);
 
       const { appName } = answers;
-      const appPath = path.join(OUTPUT_DIR, "app-" + appName);
+      const appPath = path.join(OUTPUT_DIR, appName);
 
       // 检查目录是否存在
       if (fs.existsSync(appPath)) {
@@ -75,7 +72,7 @@ program
           process.exit(1);
         }
         appsJson.push({
-          name: "app-" + appName,
+          name: appName,
           devPort: port,
           proUrl: "",
         });
@@ -105,9 +102,9 @@ program
           packageJson.scripts = {};
         }
         packageJson.scripts[`dev:${appName}`] =
-          `rsbuild dev --environment app-${appName} --port ${port}`;
+          `rsbuild dev --environment ${appName} --port ${port}`;
         packageJson.scripts[`build:${appName}`] =
-          `rsbuild build --environment app-${appName}`;
+          `rsbuild build --environment ${appName}`;
         fs.writeJsonSync(packageJsonPath, packageJson, { spaces: 2 });
       }
 

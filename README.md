@@ -52,8 +52,8 @@ pnpm remove <依赖名> --filter <包名>
 
 ```
 ├── apps                   # 子应用
-│ ├── app-system           # 系统管理
-│ └── app-example          # 示例应用
+│ ├── system               # 系统管理
+│ └── example              # 示例应用
 ├── assets                 # 静态资源
 ├── build                  # 打包
 ├── cli                    # 脚手架

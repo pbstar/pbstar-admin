@@ -320,7 +320,7 @@ const toHistoryUse = (row) => {
             style="width: 400px"
             :config="{
               type: 'radio',
-              label: '详情弹框类型',
+              label: '详情弹框',
               placeholder: '请选择详情弹框类型',
               options: [
                 { label: 'page', value: 'page' },

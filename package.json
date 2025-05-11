@@ -10,10 +10,10 @@
     "server:start": "pnpm run -filter server start",
     "dev": "rsbuild dev --environment main --port 8800 --open",
     "build": "rsbuild build --environment main",
-    "dev:example": "rsbuild dev --environment app-example --port 8801",
-    "build:example": "rsbuild build --environment app-example",
-    "dev:system": "rsbuild dev --environment app-system --port 8802",
-    "build:system": "rsbuild build --environment app-system"
+    "dev:example": "rsbuild dev --environment example --port 8801",
+    "build:example": "rsbuild build --environment example",
+    "dev:system": "rsbuild dev --environment system --port 8802",
+    "build:system": "rsbuild build --environment system"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.1",

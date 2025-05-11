@@ -50,8 +50,6 @@ importers:
 
   apps/app-system: {}
 
-  apps/test: {}
-
   cli:
     dependencies:
       chalk:
