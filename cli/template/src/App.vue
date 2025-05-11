@@ -25,6 +25,8 @@ if (window.__POWERED_BY_WUJIE__) {
       router.push(obj.path);
     }
   });
+} else {
+  sharedStore.isFull = true;
 }
 </script>
 

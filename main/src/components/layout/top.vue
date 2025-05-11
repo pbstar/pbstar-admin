@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from "vue";
-import { CaretBottom, Setting, Moon, Sunny } from "@element-plus/icons-vue";
+import { CaretBottom, FullScreen, Moon, Sunny } from "@element-plus/icons-vue";
 import useSharedStore from "@Passets/stores/shared";
 import WujieVue from "wujie-vue3";
 const { bus } = WujieVue;
@@ -27,6 +27,10 @@ const themeChange = () => {
     document.documentElement.classList.remove("dark");
   }
 };
+const toFull = () => {
+  sharedStore.isFull = true;
+  bus.$emit("changeSharedPinia", { isFull: true });
+};
 </script>
 <template>
   <div class="box">
@@ -35,6 +39,7 @@ const themeChange = () => {
       <div class="title">{{ title }}</div>
     </div>
     <div class="right">
+      <el-icon class="full" @click="toFull"><FullScreen /></el-icon>
       <el-switch
         v-model="theme"
         inline-prompt
@@ -43,7 +48,6 @@ const themeChange = () => {
         :active-action-icon="Moon"
         :inactive-action-icon="Sunny"
         style="
-          margin-left: 10px;
           border-color: #fff;
           --el-switch-on-color: #2c384d;
           --el-switch-off-color: #2165c9;
@@ -65,7 +69,6 @@ const themeChange = () => {
           </template>
         </el-dropdown>
       </div>
-      <el-icon class="setting"><Setting /></el-icon>
     </div>
   </div>
 </template>
@@ -98,6 +101,11 @@ const themeChange = () => {
     display: flex;
     align-items: center;
     padding-right: 20px;
+    .full {
+      margin-right: 20px;
+      font-size: 20px;
+      cursor: pointer;
+    }
     .user {
       display: flex;
       align-items: center;
@@ -114,11 +122,6 @@ const themeChange = () => {
           margin-left: 8px;
         }
       }
-    }
-    .setting {
-      cursor: pointer;
-      font-size: 20px;
-      margin-left: 20px;
     }
   }
 }

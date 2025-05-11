@@ -1,24 +1,19 @@
 <template>
   <div class="page">
-    <div class="top">
+    <div class="top" v-show="!isFull">
       <AdminTop />
     </div>
     <div class="main">
-      <div
-        :class="{
-          mLeft: true,
-          fold: isFold,
-          unfold: !isFold,
-        }"
-      >
+      <div class="mLeft" v-show="!isFull">
         <AdminNav />
-        <!-- <div class="foldBtn" @click="toFold">
-          <el-icon v-show="isFold"><DArrowRight /></el-icon>
-          <el-icon v-show="!isFold"><DArrowLeft /></el-icon>
-        </div> -->
       </div>
       <div class="mRight">
-        <history />
+        <history class="history" v-show="!isFull" />
+        <div style="height: 5px; width: 100%" v-show="isFull">
+          <div class="unfull" @click="toUnFull">
+            <el-icon><Close /></el-icon>
+          </div>
+        </div>
         <div class="mApp">
           <RouterView />
         </div>
@@ -27,9 +22,9 @@
   </div>
 </template>
 <script setup>
-import { ref } from "vue";
-import { DArrowLeft, DArrowRight } from "@element-plus/icons-vue";
+import { computed } from "vue";
 import { RouterView } from "vue-router";
+import { Close } from "@element-plus/icons-vue";
 import AdminTop from "@/components/layout/top.vue";
 import AdminNav from "@/components/layout/nav.vue";
 import history from "@/components/layout/history.vue";
@@ -37,11 +32,12 @@ import useSharedStore from "@Passets/stores/shared";
 import WujieVue from "wujie-vue3";
 const { bus } = WujieVue;
 const sharedStore = useSharedStore();
-const isFold = ref(sharedStore.isFold);
-const toFold = () => {
-  isFold.value = !isFold.value;
-  sharedStore.isFold = isFold.value;
-  bus.$emit("changeSharedPinia", { isFold: isFold.value });
+const isFull = computed(() => {
+  return sharedStore.isFull;
+});
+const toUnFull = () => {
+  sharedStore.isFull = false;
+  bus.$emit("changeSharedPinia", { isFull: false });
 };
 </script>
 <style scoped lang="scss">
@@ -56,51 +52,17 @@ const toFold = () => {
   .top {
     height: 50px;
     width: 100%;
+    flex-shrink: 0;
   }
 
   .main {
-    height: calc(100vh - 50px);
-    width: 100%;
+    flex: 1;
+    min-height: 0;
     display: flex;
     .mLeft {
+      width: 200px;
       height: 100%;
       flex-shrink: 0;
-      position: relative;
-      transition: all 0.3s ease-in-out;
-      .foldBtn {
-        width: 16px;
-        height: 30px;
-        border-radius: 0 16px 16px 0;
-        border-right: 1px solid var(--c-border);
-        background-color: var(--c-bg);
-        position: absolute;
-        right: -16px;
-        bottom: 80px;
-        z-index: 2000;
-        display: flex;
-        align-items: center;
-        cursor: pointer;
-        .el-icon {
-          color: var(--c-text);
-          font-size: 16px;
-        }
-      }
-      &.fold {
-        width: 0;
-        .foldBtn {
-          .el-icon {
-            margin-left: -5px;
-          }
-        }
-      }
-      &.unfold {
-        width: 200px;
-        .foldBtn {
-          .el-icon {
-            margin-left: -7px;
-          }
-        }
-      }
     }
     .mRight {
       height: 100%;
@@ -108,14 +70,49 @@ const toFold = () => {
       padding-right: 10px;
       flex: 1;
       overflow: auto;
+      display: flex;
+      flex-direction: column;
 
-      .mApp {
+      .history {
         width: 100%;
-        height: calc(100% - 40px);
+        height: 40px;
+        flex-shrink: 0;
+      }
+      .mApp {
+        flex: 1;
         overflow-y: auto;
         overflow-x: hidden;
       }
+      .unfull {
+        position: fixed;
+        bottom: 100px;
+        right: 30px;
+        z-index: 2100;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: var(--c-bg-theme);
+        color: var(--c-text-theme);
+        cursor: pointer;
+        opacity: 0.8;
+        //上下跳动动画
+        animation: upDown 1s infinite;
+      }
     }
+  }
+}
+@keyframes upDown {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+  100% {
+    transform: translateY(0);
   }
 }
 </style>

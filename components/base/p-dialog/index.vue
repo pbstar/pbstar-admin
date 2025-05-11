@@ -52,6 +52,8 @@
         :style="{
           'z-index': zIndex,
           width: `calc(100vw - ${navWidth}px)`,
+          height: `calc(100vh - ${topHeight}px)`,
+          top: topHeight + 'px',
         }"
       ></div>
     </transition>
@@ -61,6 +63,8 @@
         v-if="dialogVisible"
         :style="{
           width: width || '400px',
+          height: `calc(100vh - ${topHeight}px)`,
+          top: topHeight + 'px',
           'z-index': zIndex + 1,
         }"
       >
@@ -105,6 +109,8 @@
         :style="{
           'z-index': zIndex,
           width: `calc(100vw - ${navWidth}px)`,
+          height: `calc(100vh - ${topHeight}px)`,
+          top: topHeight + 'px',
         }"
       >
         <div class="diapage">
@@ -170,7 +176,10 @@ const emit = defineEmits(["update:modelValue", "botBtnClick"]);
 const dialogVisible = ref(props.modelValue);
 const zIndex = ref(1000);
 const navWidth = computed(() => {
-  return sharedStore.isFold ? "0" : "200";
+  return sharedStore.isFull ? "0" : "200";
+});
+const topHeight = computed(() => {
+  return sharedStore.isFull ? "0" : "90";
 });
 
 watch(
@@ -210,10 +219,8 @@ const handleClickBot = (btn) => {
 
 /* page类型样式 */
 .diapageF {
-  height: calc(100vh - 90px);
   background-color: var(--c-bg-box);
   position: fixed;
-  top: 90px;
   right: 0;
   padding-left: 10px;
 }
@@ -243,18 +250,14 @@ const handleClickBot = (btn) => {
 
 /* drawer类型样式 */
 .diadrawerF {
-  height: calc(100vh - 90px);
   background-color: rgba(0, 0, 0, 0.5);
   position: fixed;
-  top: 90px;
   right: 0;
 }
 .diadrawer {
   width: 700px;
-  height: calc(100vh - 90px);
   background-color: var(--c-bg-box);
   position: fixed;
-  top: 90px;
   right: 0;
   .top {
     width: 100%;
