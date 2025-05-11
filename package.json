@@ -5,7 +5,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "prepare": "husky install",
+    "prepare": "husky",
     "create": "pnpm run -filter cli create",
     "server": "pnpm run -filter server dev",
     "server:start": "pnpm run -filter server start",
@@ -15,11 +15,6 @@
     "build:example": "rsbuild build --environment example",
     "dev:system": "rsbuild dev --environment system --port 8802",
     "build:system": "rsbuild build --environment system"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
   },
   "lint-staged": {
     "*.{js,vue,css,json,md}": [

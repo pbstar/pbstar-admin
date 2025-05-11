@@ -55,10 +55,6 @@ importers:
         specifier: ^3.5.3
         version: 3.5.3
 
-  apps/app-example: {}
-
-  apps/app-system: {}
-
   apps/example: {}
 
   apps/system: {}
