@@ -5,6 +5,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "prepare": "husky install",
     "create": "pnpm run -filter cli create",
     "server": "pnpm run -filter server dev",
     "server:start": "pnpm run -filter server start",
@@ -14,6 +15,20 @@
     "build:example": "rsbuild build --environment example",
     "dev:system": "rsbuild dev --environment system --port 8802",
     "build:system": "rsbuild build --environment system"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,vue,css,json,md}": [
+      "prettier --write",
+      "git add"
+    ],
+    "*.ts": [
+      "echo '禁止提交ts文件' && false"
+    ]
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.1",
@@ -29,7 +44,10 @@
   "devDependencies": {
     "@rsbuild/core": "^1.3.1",
     "@rsbuild/plugin-sass": "^1.3.1",
-    "@rsbuild/plugin-vue": "^1.0.7"
+    "@rsbuild/plugin-vue": "^1.0.7",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.0.0",
+    "prettier": "^3.5.3"
   },
   "engines": {
     "node": ">=18",
