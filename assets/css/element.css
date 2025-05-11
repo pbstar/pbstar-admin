@@ -1,6 +1,11 @@
 :root {
   --el-color-primary: var(--c-bg-theme);
 }
+html.dark {
+  --el-bg-color: var(--c-bg);
+  --el-fill-color-lighter: var(--c-bg);
+  --el-fill-color-light: var(--c-bg);
+}
 .el-button:not(.is-link),
 .el-select,
 .el-input {

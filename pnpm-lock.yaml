@@ -20,18 +20,12 @@ importers:
       es-toolkit:
         specifier: ^1.37.2
         version: 1.37.2
-      highlight.js:
-        specifier: ^11.11.1
-        version: 11.11.1
       pinia:
         specifier: ^3.0.2
         version: 3.0.2(vue@3.5.13)
       vue:
         specifier: ^3.5.13
         version: 3.5.13
-      vue-draggable-plus:
-        specifier: ^0.6.0
-        version: 0.6.0(@types/sortablejs@1.15.8)
       vue-router:
         specifier: ^4.5.1
         version: 4.5.1(vue@3.5.13)
@@ -76,6 +70,15 @@ importers:
       replace-in-file:
         specifier: ^8.3.0
         version: 8.3.0
+
+  components:
+    dependencies:
+      highlight.js:
+        specifier: ^11.11.1
+        version: 11.11.1
+      vue-draggable-plus:
+        specifier: ^0.6.0
+        version: 0.6.0(@types/sortablejs@1.15.8)
 
   main:
     dependencies:

@@ -29,11 +29,12 @@ program
           name: "appName",
           message: "子应用名称:",
           validate: (input) => {
+            const blackList = ["main", "components"];
             if (input.trim() === "") {
               return "请输入子应用名称";
             }
-            if (input === "main") {
-              return "子应用名称不能为 main";
+            if (blackList.includes(input)) {
+              return "子应用名称不能为" + input;
             }
             if (!/^[a-z0-9-]+$/.test(input)) {
               return "子应用名称只能包含小写字母、数字和连字符";
@@ -50,8 +51,8 @@ program
       if (fs.existsSync(appPath)) {
         console.error(
           chalk.red(
-            `错误: 目录 ${appPath} 已存在，请选择其他名称或删除现有的目录。`
-          )
+            `错误: 目录 ${appPath} 已存在，请选择其他名称或删除现有的目录。`,
+          ),
         );
         process.exit(1);
       }
@@ -66,8 +67,8 @@ program
         if (port < 8801 || port > 8899 || !port) {
           console.error(
             chalk.red(
-              "错误: 端口号超出范围（ 8801-8899 ），请检测子应用配置（ /pbstar-admin/apps/apps.json ）。"
-            )
+              "错误: 端口号超出范围（ 8801-8899 ），请检测子应用配置（ /pbstar-admin/apps/apps.json ）。",
+            ),
           );
           process.exit(1);
         }

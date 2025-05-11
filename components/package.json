@@ -1,0 +1,10 @@
+{
+  "name": "components",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "highlight.js": "^11.11.1",
+    "vue-draggable-plus": "^0.6.0"
+  }
+}

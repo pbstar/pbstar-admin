@@ -241,7 +241,7 @@ watch(
   {
     deep: true,
     immediate: true,
-  }
+  },
 );
 // 动态处理data
 watch(
@@ -252,7 +252,7 @@ watch(
   {
     deep: true,
     immediate: true,
-  }
+  },
 );
 // 动态更新分页信息
 watch(
@@ -268,7 +268,7 @@ watch(
   {
     deep: true,
     immediate: true,
-  }
+  },
 );
 defineExpose({
   toChangeColumnOptions,
@@ -295,7 +295,7 @@ defineExpose({
   .table {
     width: 100%;
     :deep(thead th) {
-      background: var(--c-bg-theme-light);
+      background: var(--c-bg-box);
       color: var(--c-text2);
       font-weight: normal;
     }

@@ -30,10 +30,8 @@
     "axios": "^1.9.0",
     "element-plus": "^2.9.8",
     "es-toolkit": "^1.37.2",
-    "highlight.js": "^11.11.1",
     "pinia": "^3.0.2",
     "vue": "^3.5.13",
-    "vue-draggable-plus": "^0.6.0",
     "vue-router": "^4.5.1"
   },
   "devDependencies": {
