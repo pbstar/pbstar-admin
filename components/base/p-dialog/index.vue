@@ -6,7 +6,7 @@
         class="diaboxF"
         v-if="dialogVisible"
         :style="{
-          'z-index': zIndex + 2000,
+          'z-index': zIndex,
         }"
       >
         <div
@@ -258,7 +258,7 @@ const handleClickBot = (btn) => {
   right: 0;
   .top {
     width: 100%;
-    height: 60px;
+    height: 50px;
     background-color: var(--c-bg-theme);
     display: flex;
     align-items: center;
@@ -290,7 +290,7 @@ const handleClickBot = (btn) => {
   }
   .mid {
     width: 100%;
-    height: calc(100% - 100px);
+    height: calc(100% - 90px);
     margin-top: -18px;
     overflow-y: auto;
 

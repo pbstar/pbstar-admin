@@ -64,6 +64,14 @@ const copyCode = async () => {
     await navigator.clipboard.writeText(props.code);
     ElMessage.success("代码已复制到剪贴板");
   } catch (err) {
+    await copyCode2();
+  }
+};
+const copyCode2 = async () => {
+  try {
+    await window.parent?.navigator.clipboard.writeText(props.code);
+    ElMessage.success("代码已复制到剪贴板");
+  } catch (err) {
     ElMessage.error("复制失败，请手动复制");
   }
 };
