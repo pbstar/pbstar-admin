@@ -346,7 +346,7 @@ const toHistoryUse = (row) => {
       </div>
     </div>
     <p-dialog
-      type="drawer" title="字段详情"
+        type="drawer" title="字段详情"
       v-model="isDetail"
       :botBtn="[
         { label: '保存', key: 'save' },
