@@ -12,7 +12,7 @@ import { getNowTime } from "@Passets/utils/time";
 import { cloneDeep } from "es-toolkit/object";
 onBeforeMount(() => {
   historyList.value = JSON.parse(
-    localStorage.getItem("p_codeGenerator") || "[]"
+    localStorage.getItem("p_codeGenerator") || "[]",
   );
   if (historyList.value.length > 0) {
     info.value = cloneDeep(historyList.value[0].info);
@@ -71,7 +71,7 @@ const tableRightBtnClick = ({ row, btn }) => {
       type: "warning",
     }).then(() => {
       info.value.fields = info.value.fields.filter(
-        (item) => item.key !== row.key
+        (item) => item.key !== row.key,
       );
     });
   }
@@ -90,7 +90,7 @@ const diadrawerBotBtnClick = ({ btn }) => {
       info.value.fields.push(detailInfo.value);
     } else if (detailType.value == "edit") {
       const index = info.value.fields.findIndex(
-        (item) => item.key == detailInfo.value.key
+        (item) => item.key == detailInfo.value.key,
       );
       if (index !== -1) {
         info.value.fields[index] = detailInfo.value;
@@ -155,7 +155,7 @@ const tableTopBtnClick = ({ btn }) => {
       });
       localStorage.setItem(
         "p_codeGenerator",
-        JSON.stringify(historyList.value)
+        JSON.stringify(historyList.value),
       );
       request
         .post({
@@ -186,7 +186,7 @@ const toHistoryDel = (row) => {
     type: "warning",
   }).then(() => {
     historyList.value = historyList.value.filter(
-      (item) => item.name !== row.name
+      (item) => item.name !== row.name,
     );
     localStorage.setItem("p_codeGenerator", JSON.stringify(historyList.value));
   });
@@ -346,7 +346,8 @@ const toHistoryUse = (row) => {
       </div>
     </div>
     <p-dialog
-        type="drawer" title="字段详情"
+      type="drawer"
+      title="字段详情"
       v-model="isDetail"
       :botBtn="[
         { label: '保存', key: 'save' },
