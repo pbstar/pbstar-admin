@@ -28,6 +28,7 @@
       tableKey="table1"
       showSetting
       :pagination="pagination"
+      :export="toExport"
       @paginationChange="toPageChange"
       @topBtnClick="toTopBtnClick"
       @rightBtnClick="toRightBtnClick"
@@ -203,6 +204,28 @@ const toBotBtnClick = ({ btn }) => {
   } else if (btn == "back") {
     isDetail.value = false;
   }
+};
+const toExport = (callBack) => {
+  request
+    .post({
+      base: "base",
+      url: "/example/test/getList",
+      data: {
+        pageNumber: 1,
+        pageSize: 10000,
+        ...searchValue.value,
+      },
+    })
+    .then((res) => {
+      if (res && res.code == 200) {
+        callBack({
+          fileName: "用户列表",
+          data: res.data.list,
+        });
+      } else {
+        ElMessage.error(res.msg || "操作异常");
+      }
+    });
 };
 </script>
 <style lang="scss">

@@ -1,8 +1,10 @@
 <template>
-  <el-button size="small" text @click="handleClickSetting()" class="setting">
-    <img src="@Passets/imgs/icons12/setting.png" alt="" />
-    <span>定制表头</span>
-  </el-button>
+  <el-button
+    size="small"
+    :icon="Operation"
+    circle
+    @click="handleClickSetting()"
+  />
   <p-dialog
     type="drawer"
     title="定制表头"
@@ -41,7 +43,7 @@
 <script setup>
 import { ref } from "vue";
 import { ElMessage } from "element-plus";
-import { Sort } from "@element-plus/icons-vue";
+import { Sort, Operation } from "@element-plus/icons-vue";
 import { VueDraggable } from "vue-draggable-plus";
 import pDialog from "@Pcomponents/base/p-dialog/index.vue";
 import { useTableStore } from "@Passets/stores/base";
@@ -126,16 +128,6 @@ if (props.tableKey) {
 }
 </script>
 <style lang="scss" scoped>
-.setting {
-  padding: 0;
-  height: 12px;
-  line-height: 12px;
-  font-size: 12px;
-  margin-top: 18px;
-  img {
-    margin-right: 5px;
-  }
-}
 .row {
   padding: 0 10px;
   display: flex;

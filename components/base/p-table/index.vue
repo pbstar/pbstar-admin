@@ -5,6 +5,14 @@
         <topBtn :btns="props.topBtn" @btnClick="handleClickTop" />
       </div>
       <div class="tRight">
+        <el-button
+          v-if="props.export"
+          size="small"
+          :loading="exportLoading"
+          :icon="Download"
+          circle
+          @click="toExport"
+        />
         <setting
           v-if="props.showSetting && props.tableKey"
           :tableKey="props.tableKey"
@@ -108,6 +116,9 @@
 </template>
 <script setup>
 import { ref, watch } from "vue";
+import { ElMessage } from "element-plus";
+import { Download } from "@element-plus/icons-vue";
+import pExportExcel from "p-export-excel";
 import topBtn from "./topBtn.vue";
 import rightBtn from "./rightBtn.vue";
 import setting from "./setting.vue";
@@ -155,6 +166,10 @@ const props = defineProps({
     type: [String, Number],
     default: "800",
   },
+  export: {
+    type: [Function, null],
+    default: null,
+  },
 });
 const emit = defineEmits(["rightBtnClick", "topBtnClick", "paginationChange"]);
 
@@ -174,6 +189,7 @@ const columnItemDefault = {
   slot: null, //插槽名（非必填）
 };
 const optionsMap = ref([]);
+const exportLoading = ref(false);
 
 if (props.showSetting && !props.tableKey) {
   console.error("showSetting为true时必须传入tableKey");
@@ -219,6 +235,62 @@ const toChangeColumnOptions = ({ key, options }) => {
     return;
   }
   optionsMap.value[key] = options;
+};
+const toExport = () => {
+  exportLoading.value = true;
+  props.export((data) => {
+    if (!data) {
+      ElMessage.error("导出失败");
+      exportLoading.value = false;
+      return;
+    }
+    const rows = [];
+    const thCells = props.column.map((item) => {
+      return item.label;
+    });
+    rows.push({
+      cells: thCells,
+    });
+    dataList.value.forEach((item) => {
+      const row = [];
+      props.column.forEach((col) => {
+        if (optionsMap.value[col.key] && optionsMap.value[col.key].length > 0) {
+          const obj = optionsMap.value[col.key].find(
+            (it) => it.value == item[col.key],
+          );
+          if (obj) {
+            row.push(obj.label);
+            return;
+          }
+          row.push(item[col.key] || "");
+          return;
+        }
+        row.push(item[col.key] || "");
+      });
+      rows.push({
+        cells: row,
+      });
+    });
+
+    pExportExcel({
+      fileName: data.fileName || "导出数据表",
+      sheets: [
+        {
+          sheetName: "sheet1",
+          rows,
+        },
+      ],
+    })
+      .then(() => {
+        exportLoading.value = false;
+        ElMessage.success("导出成功");
+      })
+      .catch((err) => {
+        exportLoading.value = false;
+        console.error(err);
+        ElMessage.error("导出失败");
+      });
+  });
 };
 
 // 动态更新column
