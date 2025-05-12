@@ -31,7 +31,12 @@
       @paginationChange="toPageChange"
       @topBtnClick="toTopBtnClick"
       @rightBtnClick="toRightBtnClick"
-    ></p-table>
+    >
+      <template #age="scope">
+        <span v-show="scope.row.age < 25">{{ scope.row.age }}</span>
+        <span v-show="scope.row.age >= 25">{{ scope.row.age }}（老年人）</span>
+      </template>
+    </p-table>
     <p-dialog
       title="用户列表详情页"
       type="page"
@@ -58,7 +63,7 @@ import Detail from "./components/list/detail.vue";
 const data = ref([]);
 const column = ref([
   { key: "name", label: "姓名" },
-  { key: "age", label: "年龄" },
+  { key: "age", label: "年龄", slot: "age" },
   { key: "sex", label: "性别" },
   { key: "ethnic", label: "民族", enumType: "p_ethnic" },
   { key: "isHealthy", label: "是否健康", enumType: "p_boolean" },

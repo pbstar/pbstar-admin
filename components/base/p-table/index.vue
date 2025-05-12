@@ -39,7 +39,18 @@
       />
       <template v-for="(item, i) in columnList" :key="i">
         <el-table-column
-          v-if="optionsMap[item.key] && optionsMap[item.key].length > 0"
+          v-if="item.slot"
+          :prop="item.key"
+          :label="item.label"
+          :width="item.width"
+          :min-width="item.minWidth"
+        >
+          <template #default="scope">
+            <slot :name="item.slot" :row="scope.row"></slot>
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-else-if="optionsMap[item.key] && optionsMap[item.key].length > 0"
           :prop="item.key"
           :label="item.label"
           :width="item.width"
@@ -160,6 +171,7 @@ const columnItemDefault = {
   minWidth: 86, //最小宽度
   enumType: null, //枚举类型
   options: [], //枚举值（优先级高于枚举类型）
+  slot: null, //插槽名（非必填）
 };
 const optionsMap = ref([]);
 
