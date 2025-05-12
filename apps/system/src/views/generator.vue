@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onBeforeMount } from "vue";
+import { ref, onBeforeMount, computed } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import pTitle from "@Pcomponents/base/p-title/index.vue";
 import pItem from "@Pcomponents/base/p-item/index.vue";
@@ -60,6 +60,21 @@ const isHistory = ref(false); // 是否显示生成历史
 const detailType = ref("");
 const isCodeView = ref(false); // 是否显示代码查看
 const codeList = ref([]); // 代码
+
+const detailDiaTypeList = computed(() => {
+  if (info.value.template === "main") {
+    return [
+      { label: "box", value: "box" },
+      { label: "drawer", value: "drawer" },
+      { label: "page", value: "page" },
+    ];
+  } else {
+    return [
+      { label: "box", value: "box" },
+      { label: "drawer", value: "drawer" },
+    ];
+  }
+});
 
 const tableRightBtnClick = ({ row, btn }) => {
   if (btn == "edit") {
@@ -140,7 +155,15 @@ const tableTopBtnClick = ({ btn }) => {
         return;
       }
     }
-
+    if (
+      info.value.template === "childTable" ||
+      info.value.template === "formTable"
+    ) {
+      if (info.value.detailDiaType === "page") {
+        ElMessage.error("请选择详情页类型");
+        return;
+      }
+    }
     if (info.value.fields.length === 0) {
       ElMessage.error("请添加字段");
       return;
@@ -322,11 +345,7 @@ const toHistoryUse = (row) => {
               type: 'radio',
               label: '详情弹框',
               placeholder: '请选择详情弹框类型',
-              options: [
-                { label: 'page', value: 'page' },
-                { label: 'drawer', value: 'drawer' },
-                { label: 'box', value: 'box' },
-              ],
+              options: detailDiaTypeList,
             }"
             v-model="info.detailDiaType"
           >

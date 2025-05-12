@@ -1,12 +1,12 @@
-const create = async (json) => {
+const create = (json) => {
   let code = "";
-  code += await createScript(json);
-  code += await createHtml(json);
-  code += await createStyle(json);
+  code += createScript(json);
+  code += createHtml(json);
+  code += createStyle(json);
   return code;
 };
 
-const createScript = async (json) => {
+const createScript = (json) => {
   const tableColumn = [];
   json.fields.forEach((field) => {
     if (!field.showIn.includes("table")) return;
@@ -26,73 +26,69 @@ const createScript = async (json) => {
   import { ElMessage, ElMessageBox } from "element-plus";
   import request from "@Passets/utils/request";
   import PTable from "@Pcomponents/base/p-table/index.vue";
-  import pDialog from "@Pcomponents/base/p-dialog/index.vue";
-  ${json.detailDiaType !== "diabox" ? `import PCollapse from "@Pcomponents/base/p-collapse/index.vue";` : ""}
+  import PDialog from "@Pcomponents/base/p-dialog/index.vue";
   import PItem from "@Pcomponents/base/p-item/index.vue";
+  ${json.detailDiaType !== "box" ? `import PCollapse from "@Pcomponents/base/p-collapse/index.vue";` : ""}
 
   const props = defineProps({
     type: {
       type: String,
       default: "",
     },
-    info: {
-      type: Object,
-      default: () => ({}),
+    id: {
+      type: [String, Number],
+      default: "",
     },
   });
 
-  onBeforeMount(() => {
-    if (props.type == "add") {
-      tableTopBtn.value = [];
-      tableRightBtn.value = [];
-    } else if (props.type == "preview") {
-      tableTopBtn.value = [];
-      tableRightBtn.value = [];
-      initTable();
-    } else {
-      tableTopBtn.value = [{ label: "新增", value: "add"}];
-      tableRightBtn.value = [{ label: "编辑", value: "edit"}, { label: "删除", value: "delete"}];
-      initTable();
-    }
-  });
+onBeforeMount(() => {
+  if (props.type == "add") {
+    tableTopBtn.value = [];
+    tableRightBtn.value = [];
+  } else if (props.type == "view") {
+    tableTopBtn.value = [];
+    tableRightBtn.value = [];
+    initTable();
+  } else {
+    tableTopBtn.value = [{ label: "新增", key: "add" }];
+    tableRightBtn.value = [
+      { label: "编辑", key: "edit" },
+      { label: "删除", key: "delete" },
+    ];
+    initTable();
+  }
+});
 
   const tableColumn = ref(${JSON.stringify(tableColumn)});
   const tableData = ref([]);
-  const tableRightBtn = ref([
-    { label: "编辑", value: "edit"},
-    { label: "删除", value: "delete"},
-  ]);
-  const tableTopBtn = ref([
-    { label: "新增", value: "add"}
-  ]);
+  const tableRightBtn = ref([]);
+  const tableTopBtn = ref([]);
   const detailType = ref("");
   const detailInfo = ref({});
   const isDetail = ref(false);
   
   const initTable = () => {
-    const params = {
-      pageNumber: 1,
-      pageSize: 99999,
-      ${json.childTableKey}: props.info.id,
-    };
     tableData.value = [];
-    request.post({
-      base: "base",
-      url: "${json.api.list}",
-      data: params
-    }).then((res) => {
-      if (res && res.code === 200) {
-        tableData.value = res.data.list;
-      } else {
-        ElMessage.error(res?.msg || "操作异常");
-      }
-    });
+    request
+      .get({
+        base: "${json.apiBase}",
+        url: "${json.api.list}",
+        data: {
+          ${json.childTableKey}: props.id,
+        },
+      })
+      .then((res) => {
+        if (res && res.code === 200) {
+          tableData.value = res.data;
+        } else {
+          ElMessage.error(res?.msg || "操作异常");
+        }
+      });
   };
-  
   const tableRightBtnClick = (row, btn) => {
     if (btn === "edit") {
       request.get({
-        base: "base",
+        base: "${json.apiBase}",
         url: "${json.api.getOne}",
         data: { id: row.id }
       }).then((res) => {
@@ -110,7 +106,7 @@ const createScript = async (json) => {
       })
         .then(() => {
           request.post({
-            base: "base",
+            base: "${json.apiBase}",
             url: "${json.api.delete}",
             data: { idList: [row.id] }
           }).then((res) => {
@@ -125,27 +121,26 @@ const createScript = async (json) => {
         .catch(() => {});
     }
   };
-  
   const tableTopBtnClick = (btn) => {
     if (btn === "add") {
       detailType.value = "add";
       detailInfo.value = {
-        ${json.childTableKey}: props.info.id,
+        ${json.childTableKey}: props.id,
       };
       isDetail.value = true;
     }
   };
-  
   const diaBotBtnClick = (btn) => {
     if (btn === "save") {
-      let url = "";
-      if (detailType.value === "add") {
-        url = "${json.api.create}";
-      } else if (detailType.value === "edit") {
-        url = "${json.api.update}";
-      }
-      
-      request.post(url, detailInfo.value).then((res) => {
+      const url =
+        detailType.value == "add"
+          ? "${json.api.create}"
+          : "${json.api.update}";
+      request.post({
+        base: "${json.apiBase}",
+        url,
+        data: detailInfo.value,
+      }).then((res) => {
         if (res && res.code === 200) {
           initTable();
           ElMessage.success("操作成功");
@@ -160,7 +155,7 @@ const createScript = async (json) => {
   };
 
   watch(
-    () => props.info.id,
+    () => props.id,
     (newVal, oldVal) => {
       if (newVal) {
         initTable();
@@ -172,12 +167,11 @@ const createScript = async (json) => {
   return code;
 };
 
-const createHtml = async (json) => {
+const createHtml = (json) => {
   const formData = [];
   json.fields.forEach((field) => {
     if (!field.showIn.includes("form")) return;
     let obj = {
-      name: field.name,
       label: field.label,
       type: field.type,
       key: field.key,
@@ -210,28 +204,21 @@ const createHtml = async (json) => {
       title="${json.title}详情页"
       v-model="isDetail"
       :botBtn="[
-        {
-          label: '保存',
-          key: 'save',
-        },
-        {
-          label: '返回',
-          key: 'back',
-        },
+        { label: '保存', key: 'save' },
+        { label: '返回', key: 'back' },
       ]"
       @botBtnClick="diaBotBtnClick"
     >
       ${
-        json.detailDiaType === "page" || json.detailDiaType === "drawer"
-          ? `<div class="detail">
-          <collapse title="基础信息" :isControl="false" :showDownLine="false">`
+        json.detailDiaType === "drawer"
+          ? `<div class="detail"><collapse title="基础信息" :isControl="false" :showDownLine="false">`
           : ""
       }
         <div class="items">
           ${formData
             .map(
               (field) => `
-          <formItem
+          <p-item
             class="dtItem"
             :config="{
               key: '${field.key}',
@@ -240,16 +227,11 @@ const createHtml = async (json) => {
               ${field.enumType ? `enumType: '${field.enumType}',` : ""}
             }"
             v-model="detailInfo.${field.key}"
-          />`
+          />`,
             )
             .join("")}
         </div>
-        ${
-          json.detailDiaType === "page" || json.detailDiaType === "drawer"
-            ? `</collapse>
-      </div>`
-            : ""
-        }
+        ${json.detailDiaType === "drawer" ? `</collapse></div>` : ""}
     </p-dialog>
 `;
 
@@ -266,42 +248,25 @@ const createHtml = async (json) => {
   return code;
 };
 
-const createStyle = async (json) => {
+const createStyle = (json) => {
   const code = `
 <style scoped lang="scss">
   .box {
     width: 100%;
     padding-top: 10px;
-    ${
-      json.detailDiaType === "drawer" || json.detailDiaType === "page"
-        ? `.detail {
-      padding: 0 10px;`
-        : ""
-    }
+    ${json.detailDiaType === "drawer" ? `.detail { padding: 0 10px;` : ""}
     
     .items {
       ${json.detailDiaType === "box" ? `padding: 20px;` : ""}
       display: flex;
-      ${
-        json.detailDiaType === "page"
-          ? `flex-wrap: wrap;`
-          : `flex-direction: column;`
-      }
+      flex-direction: column;
       
       .dtItem {
-        ${
-          json.detailDiaType === "page"
-            ? `width: 260px; margin-right: 10px;`
-            : `width: 100%;`
-        }
+        width: 100%;
         margin-bottom: 10px;
       }
     }
-    ${
-      json.detailDiaType === "drawer" || json.detailDiaType === "page"
-        ? `}`
-        : ""
-    }
+    ${json.detailDiaType === "drawer" ? `}` : ""}
   }
 </style>
 `;

@@ -71,7 +71,6 @@ const createHtml = (json) => {
   json.fields.forEach((field) => {
     if (!field.showIn.includes("form")) return;
     let obj = {
-      name: field.name,
       label: field.label,
       type: field.type,
       key: field.key,
@@ -97,13 +96,13 @@ const createHtml = (json) => {
           <p-item
             class="dtItem"
             :config="{
-              isText: detailType == 'preview',
+              isText: detailType == 'view',
               type: '${field.type}',
               label: '${field.label}',
               ${field.enumType ? `enumType: '${field.enumType}',` : ""}
             }"
             v-model="detailInfo.${field.key}"
-          />`
+          />`,
             )
             .join("")}
         </div>

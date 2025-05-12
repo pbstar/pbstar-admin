@@ -115,7 +115,7 @@ const tableTopBtnClick = ({ btn }) => {
   if (btn === "add") {
     detailType.value = "add";
     detailInfo.value = {
-      testId: props.info.id,
+      testId: props.id,
     };
     isDetail.value = true;
   }

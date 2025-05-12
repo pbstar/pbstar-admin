@@ -26,8 +26,8 @@ const createScript = async (json) => {
     import { cloneDeep } from "es-toolkit/object";
     import { ElMessageBox } from "element-plus";
     import PTable from "@Pcomponents/base/p-table/index.vue";
-    import pDialog from "@Pcomponents/base/p-dialog/index.vue";
-    ${json.detailDiaType !== "diabox" ? `import PCollapse from "@Pcomponents/base/p-collapse/index.vue";` : ""}
+    import PDialog from "@Pcomponents/base/p-dialog/index.vue";
+    ${json.detailDiaType !== "box" ? `import PCollapse from "@Pcomponents/base/p-collapse/index.vue";` : ""}
     import PItem from "@Pcomponents/base/p-item/index.vue";
   
     const props = defineProps({
@@ -36,14 +36,14 @@ const createScript = async (json) => {
         default: "",
       },
       modelValue: {
-        type: Array<any>,
+        type: Array,
         default: () => [],
       },
     });
     const emit = defineEmits(["update:modelValue", "change"]);
 
     onBeforeMount(() => {
-      if (props.type == "preview") {
+      if (props.type == "view") {
         tableTopBtn.value = [];
         tableRightBtn.value = [];
       } else {
@@ -54,8 +54,8 @@ const createScript = async (json) => {
   
     const tableColumn = ref(${JSON.stringify(tableColumn)});
     const tableData = ref([]);
-    const tableRightBtn = ref([{ label: "编辑", value: "edit"}, { label: "删除", value: "delete"}]);
-    const tableTopBtn = ref([{ label: "新增", value: "add"]);
+    const tableRightBtn = ref([]);
+    const tableTopBtn = ref([]);
     const detailType = ref("");
     const detailInfo = ref({});
     const isDetail = ref(false);
@@ -65,9 +65,9 @@ const createScript = async (json) => {
       const randomNum = Math.floor(Math.random() * 1000);
       return "webId_" + timestamp + "_" + randomNum;
     };
-    const handleChange = (val: any) => {
+    const handleChange = (val) => {
       let arr = cloneDeep(val);
-      arr.forEach((item: any) => {
+      arr.forEach((item) => {
         if (item["webId"]) {
           delete item["webId"];
         }
@@ -79,7 +79,7 @@ const createScript = async (json) => {
     const tableRightBtnClick = (row, btn) => {
       if (btn === "edit") {
         detailType.value = btn;
-        const index = tableData.value.findIndex((item: any) => {
+        const index = tableData.value.findIndex((item) => {
           return item.webId == row.webId;
         });
         if (index > -1) {
@@ -91,7 +91,7 @@ const createScript = async (json) => {
           type: "warning",
         })
           .then(() => {
-            const index = tableData.value.findIndex((item: any) => {
+            const index = tableData.value.findIndex((item) => {
               return item.webId == row.webId;
             });
             if (index > -1) {
@@ -117,7 +117,7 @@ const createScript = async (json) => {
         if (detailType.value === "add") {
           tableData.value.push(detailInfo.value);
         } else if (detailType.value === "edit") {
-          const index = tableData.value.findIndex((item: any) => {
+          const index = tableData.value.findIndex((item) => {
             return item.webId == detailInfo.value.webId;
           });
           if (index > -1) {
@@ -136,7 +136,7 @@ const createScript = async (json) => {
       (newVal, oldVal) => {
         if (newVal && newVal.length > 0) {
           tableData.value = cloneDeep(newVal);
-          tableData.value.forEach((item: any) => {
+          tableData.value.forEach((item) => {
             if (!item.webId) {
               item.webId = getWebId();
             }
@@ -160,7 +160,6 @@ const createHtml = async (json) => {
   json.fields.forEach((field) => {
     if (!field.showIn.includes("form")) return;
     let obj = {
-      name: field.name,
       label: field.label,
       type: field.type,
       key: field.key,
@@ -189,24 +188,18 @@ const createHtml = async (json) => {
 
   const diaCode = `
       <p-dialog
+        type="${json.detailDiaType}"
         title="${json.title}详情页"
         v-model="isDetail"
         :botBtn="[
-           {
-          label: '保存',
-          key: 'save',
-        },
-        {
-          label: '返回',
-          key: 'back',
-        },
-      ]"
+          { label: '保存', key: 'save' },
+          { label: '返回', key: 'back' },
+        ]"
         @botBtnClick="diaBotBtnClick"
       >
         ${
-          json.detailDiaType === "diapage" || json.detailDiaType === "diadrawer"
-            ? `<div class="detail">
-            <collapse title="基础信息" :isControl="false" :showDownLine="false">`
+          json.detailDiaType === "drawer"
+            ? `<div class="detail"><collapse title="基础信息" :isControl="false" :showDownLine="false">`
             : ""
         }
           <div class="items">
@@ -222,18 +215,12 @@ const createHtml = async (json) => {
                 ${field.enumType ? `enumType: '${field.enumType}',` : ""}
               }"
               v-model="detailInfo.${field.key}"
-            />`
+            />`,
               )
               .join("")}
           </div>
-          ${
-            json.detailDiaType === "diapage" ||
-            json.detailDiaType === "diadrawer"
-              ? `</collapse>
-        </div>`
-              : ""
-          }
-      </${json.detailDiaType}>
+          ${json.detailDiaType === "drawer" ? `</collapse></div>` : ""}
+      </p-dialog>
   `;
 
   const bottomCode = `
@@ -251,42 +238,25 @@ const createHtml = async (json) => {
 
 const createStyle = async (json) => {
   const code = `
-  <style scoped lang="scss">
-    .box {
-      width: 100%;
-      padding-top: 10px;
-      ${
-        json.detailDiaType === "diadrawer" || json.detailDiaType === "diapage"
-          ? `.detail {
-        padding: 0 10px;`
-          : ""
-      }
+<style scoped lang="scss">
+  .box {
+    width: 100%;
+    padding-top: 10px;
+    ${json.detailDiaType === "drawer" ? `.detail { padding: 0 10px;` : ""}
+    
+    .items {
+      ${json.detailDiaType === "box" ? `padding: 20px;` : ""}
+      display: flex;
+      flex-direction: column;
       
-      .items {
-        ${json.detailDiaType === "diabox" ? `padding: 20px;` : ""}
-        display: flex;
-        ${
-          json.detailDiaType === "diapage"
-            ? `flex-wrap: wrap;`
-            : `flex-direction: column;`
-        }
-        
-        .dtItem {
-          ${
-            json.detailDiaType === "diapage"
-              ? `width: 260px; margin-right: 10px;`
-              : `width: 100%;`
-          }
-          margin-bottom: 10px;
-        }
-      }
-      ${
-        json.detailDiaType === "diadrawer" || json.detailDiaType === "diapage"
-          ? `}`
-          : ""
+      .dtItem {
+        width: 100%;
+        margin-bottom: 10px;
       }
     }
-  </style>
+    ${json.detailDiaType === "drawer" ? `}` : ""}
+  }
+</style>
   `;
   return code;
 };
