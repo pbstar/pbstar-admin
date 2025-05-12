@@ -66,8 +66,8 @@ const column = ref([
   { key: "name", label: "姓名" },
   { key: "age", label: "年龄", slot: "age" },
   { key: "sex", label: "性别" },
-  { key: "ethnic", label: "民族", enumType: "p_ethnic" },
-  { key: "isHealthy", label: "是否健康", enumType: "p_boolean" },
+  { key: "ethnic", label: "民族", enumKey: "p_ethnic" },
+  { key: "isHealthy", label: "是否健康", enumKey: "p_boolean" },
 ]);
 const topBtn = ref([
   { key: "add", label: "新增" },
@@ -91,6 +91,12 @@ const searchData = ref([
   { key: "name", label: "姓名", type: "input" },
   { key: "age", label: "年龄", type: "inputNumber" },
   { key: "sex", label: "性别", type: "select", options: [] },
+  {
+    key: "isHealthy",
+    label: "是否健康",
+    type: "select",
+    enumKey: "p_boolean",
+  },
 ]);
 const searchValue = ref({});
 const isDetail = ref(false);

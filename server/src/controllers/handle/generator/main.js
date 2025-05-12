@@ -16,8 +16,8 @@ const createScript = (json) => {
         key: field.key,
         type: field.type,
       };
-      if (field.enumType) {
-        objS = { ...objS, enumType: field.enumType };
+      if (field.enumKey) {
+        objS = { ...objS, enumKey: field.enumKey };
       }
       searchData.push(objS);
     }
@@ -26,8 +26,8 @@ const createScript = (json) => {
         label: field.label,
         key: field.key,
       };
-      if (field.enumType) {
-        objT = { ...objT, enumType: field.enumType };
+      if (field.enumKey) {
+        objT = { ...objT, enumKey: field.enumKey };
       }
       tableColumn.push(objT);
     }

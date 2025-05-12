@@ -14,8 +14,8 @@ const createScript = async (json) => {
       label: field.label,
       key: field.key,
     };
-    if (field.enumType) {
-      obj = { ...obj, enumType: field.enumType };
+    if (field.enumKey) {
+      obj = { ...obj, enumKey: field.enumKey };
     }
     tableColumn.push(obj);
   });
@@ -76,7 +76,7 @@ const createScript = async (json) => {
       emit("change", arr);
     };
     
-    const tableRightBtnClick = (row, btn) => {
+    const tableRightBtnClick = ({row, btn}) => {
       if (btn === "edit") {
         detailType.value = btn;
         const index = tableData.value.findIndex((item) => {
@@ -103,7 +103,7 @@ const createScript = async (json) => {
       }
     };
     
-    const tableTopBtnClick = (btn) => {
+    const tableTopBtnClick = ({btn}) => {
       if (btn === "add") {
         detailType.value = "add";
         detailInfo.value = {};
@@ -112,7 +112,7 @@ const createScript = async (json) => {
       }
     };
     
-    const diaBotBtnClick = (btn) => {
+    const diaBotBtnClick = ({btn}) => {
       if (btn === "save") {
         if (detailType.value === "add") {
           tableData.value.push(detailInfo.value);
@@ -164,8 +164,8 @@ const createHtml = async (json) => {
       type: field.type,
       key: field.key,
     };
-    if (field.enumType) {
-      obj = { ...obj, enumType: field.enumType };
+    if (field.enumKey) {
+      obj = { ...obj, enumKey: field.enumKey };
     }
     formData.push(obj);
   });
@@ -199,7 +199,7 @@ const createHtml = async (json) => {
       >
         ${
           json.detailDiaType === "drawer"
-            ? `<div class="detail"><collapse title="基础信息" :isControl="false" :showDownLine="false">`
+            ? `<div class="detail"><p-collapse title="基础信息" :isControl="false" :showDownLine="false">`
             : ""
         }
           <div class="items">
@@ -212,14 +212,14 @@ const createHtml = async (json) => {
                 key: '${field.key}',
                 type: '${field.type}',
                 label: '${field.label}',
-                ${field.enumType ? `enumType: '${field.enumType}',` : ""}
+                ${field.enumKey ? `enumKey: '${field.enumKey}',` : ""}
               }"
               v-model="detailInfo.${field.key}"
             />`,
               )
               .join("")}
           </div>
-          ${json.detailDiaType === "drawer" ? `</collapse></div>` : ""}
+          ${json.detailDiaType === "drawer" ? `</p-collapse></div>` : ""}
       </p-dialog>
   `;
 

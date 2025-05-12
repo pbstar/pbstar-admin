@@ -4,8 +4,7 @@ import { ElMessage, ElMessageBox } from "element-plus";
 import request from "@Passets/utils/request";
 import PCollapse from "@Pcomponents/base/p-collapse/index.vue";
 import PItem from "@Pcomponents/base/p-item/index.vue";
-import hobbyTable from "./hobbyTable.vue";
-import eduTable from "./eduTable.vue";
+import EnumTable from "./enumTable.vue";
 
 const props = defineProps({
   type: {
@@ -33,7 +32,7 @@ const getDetailInfo = () => {
   request
     .get({
       base: "base",
-      url: "/example/test/getDetail",
+      url: "/system/enum/getDetail",
       data: {
         id: detailId.value,
       },
@@ -64,7 +63,7 @@ defineExpose({
           :config="{
             isText: detailType == 'view',
             type: 'input',
-            label: '姓名',
+            label: '枚举名称',
           }"
           v-model="detailInfo.name"
         />
@@ -72,71 +71,28 @@ defineExpose({
           class="dtItem"
           :config="{
             isText: detailType == 'view',
-            type: 'inputNumber',
-            label: '年龄',
+            type: 'input',
+            label: '枚举Key',
           }"
-          v-model="detailInfo.age"
+          v-model="detailInfo.key"
         />
-        <p-item
-          class="dtItem"
-          :config="{
-            isText: detailType == 'view',
-            type: 'select',
-            label: '性别',
-            options: [
-              { label: '男', value: '1' },
-              { label: '女', value: '2' },
-            ],
-          }"
-          v-model="detailInfo.sex"
-        />
-        <p-item
-          class="dtItem"
-          :config="{
-            isText: detailType == 'view',
-            type: 'select',
-            label: '民族',
-            enumKey: 'p_ethnic',
-          }"
-          v-model="detailInfo.ethnic"
-        />
-        <p-item
-          class="dtItem"
-          :config="{
-            isText: detailType == 'view',
-            type: 'select',
-            label: '是否健康',
-            enumKey: 'p_boolean',
-          }"
-          v-model="detailInfo.isHealthy"
-        />
-        <p-item
-          class="dtItem"
-          style="width: 96%"
-          :config="{
-            type: 'slot',
-            label: '兴趣爱好',
-          }"
-        >
-          <hobbyTable :type="detailType" v-model="detailInfo.hobbyList" />
-        </p-item>
       </div>
     </p-collapse>
-    <p-collapse title="教育背景">
-      <eduTable :type="detailType" :id="detailId" />
+    <p-collapse title="详细列表">
+      <enumTable :type="detailType" :id="detailId" />
     </p-collapse>
   </div>
 </template>
 
 <style scoped lang="scss">
 .detail {
+  padding: 0 10px;
   .items {
     display: flex;
     flex-wrap: wrap;
 
     .dtItem {
-      width: 30%;
-      margin-right: 3%;
+      width: 50%;
       margin-bottom: 10px;
     }
   }

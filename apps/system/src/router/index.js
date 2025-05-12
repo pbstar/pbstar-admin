@@ -14,6 +14,11 @@ const router = createRouter({
       component: () => import("@/views/generator.vue"),
     },
     {
+      path: "/enum",
+      name: "enum",
+      component: () => import("@/views/enum.vue"),
+    },
+    {
       path: "/:pathMatch(.*)*",
       name: "notFound",
       component: () => import("@Pcomponents/page/default/404.vue"),

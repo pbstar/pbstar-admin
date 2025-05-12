@@ -14,8 +14,8 @@ const createScript = (json) => {
       label: field.label,
       key: field.key,
     };
-    if (field.enumType) {
-      obj = { ...obj, enumType: field.enumType };
+    if (field.enumKey) {
+      obj = { ...obj, enumKey: field.enumKey };
     }
     tableColumn.push(obj);
   });
@@ -85,7 +85,7 @@ onBeforeMount(() => {
         }
       });
   };
-  const tableRightBtnClick = (row, btn) => {
+  const tableRightBtnClick = ({row, btn}) => {
     if (btn === "edit") {
       request.get({
         base: "${json.apiBase}",
@@ -121,7 +121,7 @@ onBeforeMount(() => {
         .catch(() => {});
     }
   };
-  const tableTopBtnClick = (btn) => {
+  const tableTopBtnClick = ({btn}) => {
     if (btn === "add") {
       detailType.value = "add";
       detailInfo.value = {
@@ -130,7 +130,7 @@ onBeforeMount(() => {
       isDetail.value = true;
     }
   };
-  const diaBotBtnClick = (btn) => {
+  const diaBotBtnClick = ({btn}) => {
     if (btn === "save") {
       const url =
         detailType.value == "add"
@@ -176,8 +176,8 @@ const createHtml = (json) => {
       type: field.type,
       key: field.key,
     };
-    if (field.enumType) {
-      obj = { ...obj, enumType: field.enumType };
+    if (field.enumKey) {
+      obj = { ...obj, enumKey: field.enumKey };
     }
     formData.push(obj);
   });
@@ -211,7 +211,7 @@ const createHtml = (json) => {
     >
       ${
         json.detailDiaType === "drawer"
-          ? `<div class="detail"><collapse title="基础信息" :isControl="false" :showDownLine="false">`
+          ? `<div class="detail"><p-collapse title="基础信息" :isControl="false" :showDownLine="false">`
           : ""
       }
         <div class="items">
@@ -224,14 +224,14 @@ const createHtml = (json) => {
               key: '${field.key}',
               type: '${field.type}',
               label: '${field.label}',
-              ${field.enumType ? `enumType: '${field.enumType}',` : ""}
+              ${field.enumKey ? `enumKey: '${field.enumKey}',` : ""}
             }"
             v-model="detailInfo.${field.key}"
           />`,
             )
             .join("")}
         </div>
-        ${json.detailDiaType === "drawer" ? `</collapse></div>` : ""}
+        ${json.detailDiaType === "drawer" ? `</p-collapse></div>` : ""}
     </p-dialog>
 `;
 

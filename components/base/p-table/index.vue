@@ -184,7 +184,7 @@ const columnItemDefault = {
   label: "", //标题
   width: null, //宽度
   minWidth: 86, //最小宽度
-  enumType: null, //枚举类型
+  enumKey: null, //枚举类型
   options: [], //枚举值（优先级高于枚举类型）
   slot: null, //插槽名（非必填）
 };
@@ -297,26 +297,26 @@ const toExport = () => {
 watch(
   () => props.column,
   async (val) => {
-    const enumTypeList = [];
+    const enumKeyList = [];
     props.column.forEach((item) => {
       item = { ...columnItemDefault, ...item };
       if (item.options && item.options.length > 0) {
         optionsMap.value[item.key] = item.options;
       } else if (
-        item.enumType &&
-        !enumTypeList.includes(item.enumType) &&
+        item.enumKey &&
+        !enumKeyList.includes(item.enumKey) &&
         !optionsMap.value[item.key]
       ) {
-        enumTypeList.push(item.enumType);
+        enumKeyList.push(item.enumKey);
       }
     });
-    if (enumTypeList.length > 0) {
-      let str = enumTypeList.join(",");
+    if (enumKeyList.length > 0) {
+      let str = enumKeyList.join(",");
       const res = await enumStore.getEnum(str);
-      for (const enumType in res) {
+      for (const enumKey in res) {
         props.column.forEach((item) => {
-          if (item.enumType == enumType) {
-            optionsMap.value[item.key] = res[enumType];
+          if (item.enumKey == enumKey) {
+            optionsMap.value[item.key] = res[enumKey];
           }
         });
       }

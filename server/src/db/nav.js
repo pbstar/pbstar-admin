@@ -27,6 +27,12 @@ const db = {
       parentId: 2,
       url: "/admin/example?example=%2Fecharts",
     },
+    {
+      id: 8,
+      name: "枚举管理",
+      parentId: 4,
+      url: "/admin/system?system=%2Fenum",
+    },
   ],
   lastId: 2,
 };

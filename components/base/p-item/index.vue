@@ -37,7 +37,7 @@ const config = ref({
   isDisabled: false,
   options: [],
   labelStyle: "",
-  enumType: "",
+  enumKey: "",
   tipText: "",
   rightText: "",
 });
@@ -65,7 +65,7 @@ watch(
   },
   {
     immediate: true,
-  }
+  },
 );
 watch(
   () => props.config,
@@ -75,15 +75,15 @@ watch(
   {
     immediate: true,
     deep: true,
-  }
+  },
 );
 watch(
-  () => config.value.enumType,
+  () => config.value.enumKey,
   (newVal) => {
     if (newVal) {
-      enumStore.getEnum(config.value.enumType).then((res) => {
+      enumStore.getEnum(config.value.enumKey).then((res) => {
         if (res) {
-          let list = res[config.value.enumType];
+          let list = res[config.value.enumKey];
           config.value.options = list;
           if (config.value.isText) {
             changeText(config.value.options);
@@ -94,7 +94,7 @@ watch(
   },
   {
     immediate: true,
-  }
+  },
 );
 watch(
   () => config.value.options,
@@ -108,7 +108,7 @@ watch(
   {
     immediate: true,
     deep: true,
-  }
+  },
 );
 const change = (val) => {
   const obj = {

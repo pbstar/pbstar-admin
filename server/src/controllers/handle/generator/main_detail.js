@@ -75,8 +75,8 @@ const createHtml = (json) => {
       type: field.type,
       key: field.key,
     };
-    if (field.enumType) {
-      obj = { ...obj, enumType: field.enumType };
+    if (field.enumKey) {
+      obj = { ...obj, enumKey: field.enumKey };
     }
     formData.push(obj);
   });
@@ -99,7 +99,7 @@ const createHtml = (json) => {
               isText: detailType == 'view',
               type: '${field.type}',
               label: '${field.label}',
-              ${field.enumType ? `enumType: '${field.enumType}',` : ""}
+              ${field.enumKey ? `enumKey: '${field.enumKey}',` : ""}
             }"
             v-model="detailInfo.${field.key}"
           />`,

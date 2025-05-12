@@ -23,7 +23,7 @@ const tableColumn = ref([
   { label: "label", key: "label" },
   { label: "type", key: "type" },
   { label: "showIn", key: "showIn" },
-  { label: "enumType", key: "enumType" },
+  { label: "enumKey", key: "enumKey" },
 ]);
 const defaultInfo = {
   key: "",
@@ -125,7 +125,7 @@ const tableTopBtnClick = ({ btn }) => {
       label: "",
       type: "input",
       showIn: ["table", "form"],
-      enumType: "",
+      enumKey: "",
     };
     detailType.value = "add";
     isDetail.value = true;
@@ -459,10 +459,10 @@ const toHistoryUse = (row) => {
               class="dtItem"
               :config="{
                 type: 'input',
-                label: 'enumType',
+                label: 'enumKey',
                 placeholder: '请输入',
               }"
-              v-model="detailInfo.enumType"
+              v-model="detailInfo.enumKey"
             >
             </p-item>
           </div>
@@ -498,7 +498,7 @@ const toHistoryUse = (row) => {
       title="代码详情"
       v-model="isCodeView"
       :botBtn="[{ label: '返回', key: 'back' }]"
-      width="800px"
+      width="700px"
       @botBtnClick="isCodeView = false"
     >
       <div class="detail">

@@ -4,9 +4,9 @@ import request from "@Passets/utils/request";
 
 export const useEnumStore = defineStore("enum", () => {
   const enums = ref({});
-  const getEnum = async (enumType) => {
+  const getEnum = async (enumKey) => {
     const result = {};
-    const types = enumType.split(",");
+    const types = enumKey.split(",");
     const cachedTypes = types.filter((type) => enums.value[type]);
     if (cachedTypes.length === types.length) {
       types.forEach((type) => {
@@ -18,7 +18,7 @@ export const useEnumStore = defineStore("enum", () => {
       const res = await request.get({
         base: "base",
         url: "/main/getEnum",
-        data: { enumType: str },
+        data: { enumKey: str },
       });
       if (res.code === 200 && res.data) {
         for (const key in res.data) {

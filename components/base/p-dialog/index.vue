@@ -189,7 +189,7 @@ watch(
     if (newVal) {
       zIndex.value = sharedStore.getIndex();
     }
-  }
+  },
 );
 
 watch(dialogVisible, (newVal) => {
@@ -230,16 +230,16 @@ const handleClickBot = (btn) => {
   padding: 0 10px;
   background-color: var(--c-bg);
 
-  .top {
+  & > .top {
     width: 100%;
     height: 42px;
   }
-  .mid {
+  & > .mid {
     width: 100%;
     height: calc(100% - 90px);
     overflow-y: auto;
   }
-  .bot {
+  & > .bot {
     width: 100%;
     height: 48px;
     display: flex;
@@ -259,7 +259,7 @@ const handleClickBot = (btn) => {
   background-color: var(--c-bg-box);
   position: fixed;
   right: 0;
-  .top {
+  & > .top {
     width: 100%;
     height: 50px;
     background-color: var(--c-bg-theme);
@@ -286,12 +286,12 @@ const handleClickBot = (btn) => {
       }
     }
   }
-  .top2 {
+  & > .top2 {
     width: 100%;
     height: 18px;
     background-color: var(--c-bg-theme);
   }
-  .mid {
+  & > .mid {
     width: 100%;
     height: calc(100% - 90px);
     margin-top: -18px;
@@ -306,7 +306,7 @@ const handleClickBot = (btn) => {
       overflow: hidden;
     }
   }
-  .bot {
+  & > .bot {
     width: 100%;
     height: 40px;
     display: flex;
@@ -338,12 +338,12 @@ const handleClickBot = (btn) => {
 }
 .diabox {
   background: var(--c-bg);
-  .header {
+  & > .header {
     width: 100%;
     height: 5px;
     background: var(--c-bg-theme);
   }
-  .top {
+  & > .top {
     width: 100%;
     padding: 0 10px;
     height: 35px;
@@ -362,12 +362,12 @@ const handleClickBot = (btn) => {
       cursor: pointer;
     }
   }
-  .mid {
+  & > .mid {
     width: 100%;
     min-height: 200px;
     padding-bottom: 20px;
   }
-  .bot {
+  & > .bot {
     width: 100%;
     height: 36px;
     background-color: var(--c-bg-box);
