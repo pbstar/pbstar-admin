@@ -1,9 +1,9 @@
 <div align="center">
     <img src="https://github.com/pbstar/pbstar-admin/blob/main/main/src/assets/imgs/logo-w.png" height="80px">
-    <h1 style="margin: 10px 0 30px; font-weight: bold;">PbstarAdmin 微后台🎉</h1>
+    <h1 style="margin-bottom:30px;margin-top:10px; font-weight: bold;">PbstarAdmin 微后台🎉</h1>
     <h4>
-        <p>基于 wujie、rsbuild、pnpm 完成微前端架构，运用 vue3、pinia、element plus 等主流技术栈。</p>
-        <p>提供脚手架、组件库、代码生成器和部署工具(计划)，让开发者快速搭建和部署微前端应用。</p>
+        <p style="margin-bottom:0;">基于 wujie、rsbuild、pnpm 完成微前端架构，运用 vue3、pinia、element plus 等主流技术栈。</p>
+        <p style="margin-bottom:0;">提供脚手架、组件库、代码生成器和部署工具(计划)，让开发者快速搭建和部署微前端应用。</p>
     </h4>
 </div>
 
