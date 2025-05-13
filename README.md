@@ -1,9 +1,9 @@
 <div align="center">
-    <img src="/main/src/assets/imgs/logo-w.png" height="80px">
+    <img src="https://github.com/pbstar/pbstar-admin/blob/main/main/src/assets/imgs/logo-w.png" height="80px">
     <h1>PbstarAdmin 微后台🎉</h1>
-    [![](https://img.shields.io/github/license/pbstar/p-camera-h5?style=flat&color=109BCD)](https://github.com/pbstar/pbstar-admin)
-    [![](https://img.shields.io/badge/在线演示-FF5722?style=flat)](https://github.com/pbstar/pbstar-admin)
-    [![](https://img.shields.io/badge/官方文档-5672CD?style=flat)](http://152.136.96.92:8799)
+    ![](https://img.shields.io/github/license/pbstar/p-camera-h5?style=flat&color=109BCD)(https://github.com/pbstar/pbstar-admin)
+    ![](https://img.shields.io/badge/在线演示-FF5722?style=flat)(https://github.com/pbstar/pbstar-admin)
+    ![](https://img.shields.io/badge/官方文档-5672CD?style=flat)(http://152.136.96.92:8799)
 </div>
 
 PbstarAdmin 是一套全面便捷的后台管理系统解决方案，基于 wujie、rsbuild、pnpm 完成微前端架构，运用 vue3、pinia、element plus 等主流技术栈。
