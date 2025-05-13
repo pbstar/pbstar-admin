@@ -43,6 +43,7 @@ const config = ref({
 });
 const value = ref("");
 const text = ref("");
+const selectTreeData = ref([]); //树形结构数据
 const changeText = (arr) => {
   let obj = arr.find((it) => it.value == value.value);
   if (obj) {
@@ -51,6 +52,27 @@ const changeText = (arr) => {
     text.value = "";
   }
 };
+const toTree = (arr) => {
+  if (!arr || !Array.isArray(arr) || arr.length === 0) {
+    return [];
+  }
+  const tree = [];
+  const map = new Map();
+  arr.forEach((item) => map.set(item.id, { ...item }));
+  arr.forEach((item) => {
+    const parent = map.get(item.parentId);
+    if (parent) {
+      if (!parent.children) {
+        parent.children = [];
+      }
+      parent.children.push(map.get(item.id));
+    } else {
+      tree.push(map.get(item.id));
+    }
+  });
+  return tree;
+};
+
 watch(
   () => props.modelValue,
   (newVal) => {
@@ -102,6 +124,9 @@ watch(
     if (newVal && newVal.length > 0) {
       if (config.value.isText) {
         changeText(newVal);
+      }
+      if (config.value.type == "selectTree") {
+        selectTreeData.value = toTree(newVal);
       }
     }
   },
@@ -204,6 +229,17 @@ const change = (val) => {
               :value="it.value"
             />
           </el-select>
+          <!-- 树形下拉框 -->
+          <el-tree-select
+            v-model="value"
+            :placeholder="config.placeholder"
+            v-if="config.type == 'selectTree' && !config.isText"
+            :disabled="config.isDisabled"
+            @change="change"
+            :data="selectTreeData"
+            check-strictly
+            :render-after-expand="false"
+          />
           <!-- 单选框 -->
           <el-radio-group
             v-model="value"

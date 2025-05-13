@@ -1,6 +1,7 @@
 import { Router } from "express";
 import generatorController from "../controllers/generator.js";
 import enumController from "../controllers/enum.js";
+import navController from "../controllers/nav.js";
 
 const router = Router();
 
@@ -15,5 +16,11 @@ router.get("/enum/getEnumDetail", enumController.getEnumDetail);
 router.post("/enum/createEnum", enumController.createEnum);
 router.post("/enum/updateEnum", enumController.updateEnum);
 router.post("/enum/deleteEnum", enumController.deleteEnum);
+
+router.post("/nav/getList", navController.getList);
+router.post("/nav/delete", navController.delete);
+router.post("/nav/create", navController.create);
+router.post("/nav/update", navController.update);
+router.get("/nav/getDetail", navController.getDetail);
 
 export default router;

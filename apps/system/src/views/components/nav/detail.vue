@@ -18,20 +18,43 @@ const props = defineProps({
 const detailInfo = ref({});
 const detailType = ref("");
 const detailId = ref("");
+const navList = ref([]); // 菜单树结构
 
 onBeforeMount(() => {
   detailType.value = props.type;
   detailId.value = props.id;
+  getNavList();
   if (detailType.value == "view" || detailType.value == "edit") {
     getDetailInfo();
   }
 });
 
+const getNavList = () => {
+  request
+    .get({
+      base: "base",
+      url: "/main/getNavList",
+    })
+    .then((res) => {
+      if (res.code === 200) {
+        navList.value = res.data.map((item) => {
+          return {
+            label: item.name,
+            value: item.id,
+            ...item,
+          };
+        });
+      } else {
+        ElMessage.error(res.msg || "获取菜单失败");
+      }
+    });
+};
+
 const getDetailInfo = () => {
   request
     .get({
       base: "base",
-      url: "/detail",
+      url: "/system/nav/getDetail",
       data: {
         id: detailId.value,
       },
@@ -60,11 +83,39 @@ defineExpose({
         <p-item
           class="dtItem"
           :config="{
-            isText: detailType == 'preview',
+            isText: detailType == 'view',
             type: 'input',
-            label: '测试',
+            label: '菜单名称',
           }"
-          v-model="detailInfo.aa"
+          v-model="detailInfo.name"
+        />
+        <p-item
+          class="dtItem"
+          :config="{
+            isText: detailType == 'view',
+            type: 'input',
+            label: '菜单链接',
+          }"
+          v-model="detailInfo.url"
+        />
+        <p-item
+          class="dtItem"
+          :config="{
+            isText: detailType == 'view',
+            type: 'selectTree',
+            label: '上级菜单',
+            options: navList,
+          }"
+          v-model="detailInfo.parentId"
+        />
+        <p-item
+          class="dtItem"
+          :config="{
+            isText: detailType == 'view',
+            type: 'input',
+            label: '菜单图标',
+          }"
+          v-model="detailInfo.icon"
         />
       </div>
     </p-collapse>
@@ -76,11 +127,10 @@ defineExpose({
   padding: 0 10px;
   .items {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
 
     .dtItem {
-      width: 30%;
-      margin-right: 3%;
+      width: 100%;
       margin-bottom: 10px;
     }
   }

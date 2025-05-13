@@ -4,9 +4,9 @@ const router = createRouter({
   history: createWebHistory(),
   routes: [
     {
-      path: "/list",
-      name: "list",
-      component: () => import("@/views/list.vue"),
+      path: "/nav",
+      name: "nav",
+      component: () => import("@/views/nav.vue"),
     },
     {
       path: "/generator",

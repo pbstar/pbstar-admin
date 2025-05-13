@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from "vue";
+import * as ElementPlusIconsVue from "@element-plus/icons-vue";
 import { useRouter, useRoute } from "vue-router";
 import request from "@Passets/utils/request";
 const router = useRouter();
@@ -7,6 +8,13 @@ const route = useRoute();
 const activeIndex = ref("1");
 const list = ref([]);
 
+const getIcon = (iconName) => {
+  if (!ElementPlusIconsVue[iconName]) {
+    console.error(`ElementPlusIconsVue 中不存在名为 ${iconName} 的图标`);
+    return null; // 或者返回一个默认的图标组件
+  }
+  return ElementPlusIconsVue[iconName];
+};
 const select = (val) => {
   activeIndex.value = val;
   const url = findUrlByIndex(val);
@@ -79,14 +87,14 @@ getList();
       <div class="item" v-for="(item, index) in list" :key="index">
         <el-menu-item :index="item.id.toString()" v-if="!item.children">
           <el-icon v-if="item.icon">
-            <component :is="item.icon" />
+            <component :is="getIcon(item.icon)" />
           </el-icon>
           <span>{{ item.name }}</span>
         </el-menu-item>
         <el-sub-menu :index="item.id.toString()" v-if="item.children">
           <template #title>
             <el-icon v-if="item.icon">
-              <component :is="item.icon" />
+              <component :is="getIcon(item.icon)" />
             </el-icon>
             <span>{{ item.name }}</span>
           </template>

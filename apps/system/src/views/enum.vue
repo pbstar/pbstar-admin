@@ -19,10 +19,7 @@ const tableColumn = ref([
   { label: "枚举Key", key: "key" },
 ]);
 const tableData = ref([]);
-const tableTopBtn = ref([
-  { key: "add", label: "新增" },
-  { key: "export", label: "导出" },
-]);
+const tableTopBtn = ref([{ key: "add", label: "新增" }]);
 const tableRightBtn = ref([
   { key: "view", label: "查看" },
   { key: "edit", label: "编辑" },
@@ -106,8 +103,6 @@ const tableTopBtnClick = ({ btn }) => {
     detailType.value = "add";
     detailId.value = "";
     isDetail.value = true;
-  } else if (btn == "export") {
-    ElMessage.success("导出");
   }
 };
 const diaBotBtnClick = ({ btn }) => {

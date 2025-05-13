@@ -51,7 +51,6 @@ const createScript = (json) => {
   const tableData = ref([]);
     const tableTopBtn = ref([
     { key: "add", label: "新增" },
-    { key: "export", label: "导出" },
   ]);
   const tableRightBtn = ref([
     { key: "view", label: "查看" },
@@ -132,8 +131,6 @@ const createScript = (json) => {
       detailType.value = "add";
       detailId.value = "";
       isDetail.value = true;
-    } else if (btn == "export") {
-      ElMessage.success("导出");
     }
   };
   const diaBotBtnClick = ({btn}) => {

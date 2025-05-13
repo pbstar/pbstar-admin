@@ -411,6 +411,7 @@ const toHistoryUse = (row) => {
                   { label: 'inputNumber', value: 'inputNumber' },
                   { label: 'select', value: 'select' },
                   { label: 'selectMultiple', value: 'selectMultiple' },
+                  { label: 'selectTree', value: 'selectTree' },
                   { label: 'radio', value: 'radio' },
                   { label: 'checkbox', value: 'checkbox' },
                   { label: 'date', value: 'date' },

@@ -32,6 +32,7 @@
       }"
       :data="dataList"
       border
+      row-key="id"
       stripe
       :max-height="props.maxHeight"
       show-overflow-tooltip

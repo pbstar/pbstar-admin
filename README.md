@@ -1,9 +1,13 @@
-# Pbstar-admin
+<div align="center">
+    <img src="/main/src/assets/imgs/logo-w.png" height="80px">
+    <h1>PbstarAdmin 微后台🎉</h1>
+    [![](https://img.shields.io/github/license/pbstar/p-camera-h5?style=flat&color=109BCD)](https://github.com/pbstar/pbstar-admin)
+    [![](https://img.shields.io/badge/在线演示-FF5722?style=flat)](https://github.com/pbstar/pbstar-admin)
+    [![](https://img.shields.io/badge/官方文档-5672CD?style=flat)](http://152.136.96.92:8799)
+</div>
 
-Pbstar-admin 是一套全面便捷的后台管理系统解决方案，基于 wujie、rsbuild、pnpm 完成微前端架构，运用 vue3、pinia、element plus 等主流技术栈。
+PbstarAdmin 是一套全面便捷的后台管理系统解决方案，基于 wujie、rsbuild、pnpm 完成微前端架构，运用 vue3、pinia、element plus 等主流技术栈。
 本项目提供脚手架、组件库、代码生成器和部署工具(计划)，帮助开发者快速搭建后台管理系统。
-
-[官方文档-GitHubPage](https://pbstar.github.io/pbstar-admin/) [官方文档-腾讯云](http://152.136.96.92:8799/pbstar-admin/)
 
 ## 环境要求
 
@@ -55,7 +59,6 @@ pnpm remove <依赖名> --filter <包名>
 │ ├── system               # 系统管理
 │ └── example              # 示例应用
 ├── assets                 # 静态资源
-├── build                  # 打包
 ├── cli                    # 脚手架
 ├── components             # 组件
 ├── main                   # 主应用

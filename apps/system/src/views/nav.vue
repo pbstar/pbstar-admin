@@ -6,17 +6,22 @@ import PTable from "@Pcomponents/base/p-table/index.vue";
 import PSearch from "@Pcomponents/base/p-search/index.vue";
 import PTitle from "@Pcomponents/base/p-title/index.vue";
 import PDialog from "@Pcomponents/base/p-dialog/index.vue";
-import Detail from "./components/list/detail.vue";
+import Detail from "./components/nav/detail.vue";
 
-const searchData = ref([]);
+const searchData = ref([
+  { label: "菜单名称", key: "name", type: "input" },
+  { label: "菜单链接", key: "url", type: "input" },
+]);
 const showSearch = ref(true);
 const searchValue = ref({});
-const tableColumn = ref([{"label":"测试","key":"aa"}]);
-const tableData = ref([]);
-  const tableTopBtn = ref([
-  { key: "add", label: "新增" },
-  { key: "export", label: "导出" },
+const tableColumn = ref([
+  { label: "菜单名称", key: "name" },
+  { label: "菜单链接", key: "url" },
+  // { label: "上级菜单", key: "parentId" },
+  { label: "菜单图标", key: "icon" },
 ]);
+const tableData = ref([]);
+const tableTopBtn = ref([{ key: "add", label: "新增" }]);
 const tableRightBtn = ref([
   { key: "view", label: "查看" },
   { key: "edit", label: "编辑" },
@@ -25,7 +30,7 @@ const tableRightBtn = ref([
 const pagination = ref({
   pageNumber: 1,
   pageSize: 10,
-  total: 0
+  total: 0,
 });
 const detailType = ref("");
 const detailId = ref("");
@@ -49,23 +54,25 @@ const initTable = () => {
   const params = {
     pageNumber: pagination.value.pageNumber,
     pageSize: pagination.value.pageSize,
-    ...searchValue.value
+    ...searchValue.value,
   };
   tableData.value = [];
-  request.post({
-    base: "base",
-    url: "/list",
-    data: params
-  }).then((res) => {
-    if (res && res.code === 200) {
-      tableData.value = res.data.list;
-      pagination.value.total = res.data.total;
-    } else {
-      ElMessage.error(res?.msg || "操作异常");
-    }
-  });
+  request
+    .post({
+      base: "base",
+      url: "/system/nav/getList",
+      data: params,
+    })
+    .then((res) => {
+      if (res && res.code === 200) {
+        tableData.value = res.data.list;
+        pagination.value.total = res.data.total;
+      } else {
+        ElMessage.error(res?.msg || "操作异常");
+      }
+    });
 };
-const tableRightBtnClick = ({row, btn}) => {
+const tableRightBtnClick = ({ row, btn }) => {
   if (btn == "view" || btn == "edit") {
     detailType.value = btn;
     detailId.value = row.id;
@@ -75,38 +82,36 @@ const tableRightBtnClick = ({row, btn}) => {
       type: "warning",
     })
       .then(() => {
-        request.post({
-          base: "base",
-          url: "/delete",
-          data: { idList: [row.id] }
-        }).then((res) => {
-          if (res && res.code === 200) {
-            initTable();
-            ElMessage.success("操作成功");
-          } else {
-            ElMessage.error(res?.msg || "操作异常");
-          }
-        });
+        request
+          .post({
+            base: "base",
+            url: "/system/nav/delete",
+            data: { idList: [row.id] },
+          })
+          .then((res) => {
+            if (res && res.code === 200) {
+              initTable();
+              ElMessage.success("操作成功");
+            } else {
+              ElMessage.error(res?.msg || "操作异常");
+            }
+          });
       })
       .catch(() => {});
   }
 };
-const tableTopBtnClick = ({btn}) => {
+const tableTopBtnClick = ({ btn }) => {
   if (btn == "add") {
     detailType.value = "add";
     detailId.value = "";
     isDetail.value = true;
-  } else if (btn == "export") {
-    ElMessage.success("导出");
   }
 };
-const diaBotBtnClick = ({btn}) => {
+const diaBotBtnClick = ({ btn }) => {
   if (btn === "save") {
     const detailInfo = detailRef.value.getFormValue();
     const url =
-      detailType.value == "add"
-        ? "/add"
-        : "/updata";
+      detailType.value == "add" ? "/system/nav/create" : "/system/nav/update";
     request
       .post({
         base: "base",
@@ -130,7 +135,7 @@ const diaBotBtnClick = ({btn}) => {
 
 <template>
   <div class="page">
-    <p-title :list="['测试main']">
+    <p-title :list="['菜单管理']">
       <el-button
         type="primary"
         size="small"
@@ -155,7 +160,7 @@ const diaBotBtnClick = ({btn}) => {
       :column="tableColumn"
       :topBtn="tableTopBtn"
       :rightBtn="tableRightBtn"
-      tableKey="aaa_1"
+      tableKey="nav_1"
       showSetting
       :pagination="pagination"
       @paginationChange="tablePaginationChange"
@@ -164,8 +169,8 @@ const diaBotBtnClick = ({btn}) => {
     ></p-table>
 
     <p-dialog
-      title="测试main详情页"
-      type="page"
+      title="菜单管理详情页"
+      type="drawer"
       v-model="isDetail"
       :botBtn="[
         { label: '保存', key: 'save' },

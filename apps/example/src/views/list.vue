@@ -69,10 +69,7 @@ const column = ref([
   { key: "ethnic", label: "民族", enumKey: "p_ethnic" },
   { key: "isHealthy", label: "是否健康", enumKey: "p_boolean" },
 ]);
-const topBtn = ref([
-  { key: "add", label: "新增" },
-  { key: "export", label: "导出" },
-]);
+const topBtn = ref([{ key: "add", label: "新增" }]);
 const rightBtn = ref([
   { key: "view", label: "查看" },
   { key: "edit", label: "编辑" },
@@ -151,8 +148,6 @@ const toTopBtnClick = ({ btn }) => {
     detailType.value = "add";
     detailId.value = "";
     isDetail.value = true;
-  } else if (btn == "export") {
-    ElMessage.success("导出");
   }
 };
 const toRightBtnClick = ({ btn, row }) => {
