@@ -18,7 +18,7 @@ const props = defineProps({
 const detailInfo = ref({});
 const detailType = ref("");
 const detailId = ref("");
-const navList = ref([]); // 菜单树结构
+const navList = ref([]);
 
 onBeforeMount(() => {
   detailType.value = props.type;
@@ -28,7 +28,6 @@ onBeforeMount(() => {
     getDetailInfo();
   }
 });
-
 const getNavList = () => {
   request
     .get({
@@ -54,7 +53,7 @@ const getDetailInfo = () => {
   request
     .get({
       base: "base",
-      url: "/system/nav/getDetail",
+      url: "/system/role/getDetail",
       data: {
         id: detailId.value,
       },
@@ -85,7 +84,7 @@ defineExpose({
           :config="{
             isText: detailType == 'view',
             type: 'input',
-            label: '菜单名称',
+            label: '角色名称',
           }"
           v-model="detailInfo.name"
         />
@@ -94,31 +93,24 @@ defineExpose({
           :config="{
             isText: detailType == 'view',
             type: 'input',
-            label: '菜单链接',
+            label: '角色Key',
           }"
-          v-model="detailInfo.url"
+          v-model="detailInfo.key"
         />
         <p-item
           class="dtItem"
           :config="{
             isText: detailType == 'view',
             type: 'selectTree',
-            label: '上级菜单',
+            label: '菜单权限',
             options: navList,
             more: {
+              showCheckbox: true,
+              multiple: true,
               checkStrictly: true,
             },
           }"
-          v-model="detailInfo.parentId"
-        />
-        <p-item
-          class="dtItem"
-          :config="{
-            isText: detailType == 'view',
-            type: 'input',
-            label: '菜单图标',
-          }"
-          v-model="detailInfo.icon"
+          v-model="detailInfo.navs"
         />
       </div>
     </p-collapse>

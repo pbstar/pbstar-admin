@@ -19,6 +19,16 @@ const router = createRouter({
       component: () => import("@/views/enum.vue"),
     },
     {
+      path: "/user",
+      name: "user",
+      component: () => import("@/views/user.vue"),
+    },
+    {
+      path: "/role",
+      name: "role",
+      component: () => import("@/views/role.vue"),
+    },
+    {
       path: "/:pathMatch(.*)*",
       name: "notFound",
       component: () => import("@Pcomponents/page/default/404.vue"),

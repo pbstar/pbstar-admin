@@ -6,10 +6,11 @@ export default {
   getList: (req, res) => {
     const { pageNumber, pageSize, name, key } = req.body;
     const allList = crud.findAll(db).sort((a, b) => b.id - a.id);
-    const filteredList = allList.filter(
-      (role) =>
-        (!name || role.name.includes(name)) && (!key || role.key.includes(key)),
-    );
+    const filteredList = allList.filter((item) => {
+      const nameMatch = name ? item.name.includes(name) : true;
+      const keyMatch = key ? item.key.includes(key) : true;
+      return nameMatch && keyMatch;
+    });
 
     const startIndex = (pageNumber - 1) * pageSize;
     const endIndex = startIndex + pageSize;

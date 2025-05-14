@@ -28,11 +28,14 @@ export default {
 
   // 获取用户列表
   getList: (req, res) => {
-    const { pageNumber, pageSize, username } = req.body;
+    const { pageNumber, pageSize, username, name, role } = req.body;
     const allList = crud.findAll(db).sort((a, b) => b.id - a.id);
-    const filteredList = allList.filter(
-      (user) => !username || user.username.includes(username),
-    );
+    const filteredList = allList.filter((item) => {
+      const matchName = !name || item.name.includes(name);
+      const matchUsername = !username || item.username.includes(username);
+      const matchRole = !role || item.role == role;
+      return matchName && matchUsername && matchRole;
+    });
 
     const startIndex = (pageNumber - 1) * pageSize;
     const endIndex = startIndex + pageSize;
@@ -131,7 +134,7 @@ export default {
     } else {
       res.json({
         code: 401,
-        msg: "token无效",
+        msg: "登录失效，请重新登录",
       });
     }
   },

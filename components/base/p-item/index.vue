@@ -40,6 +40,7 @@ const config = ref({
   enumKey: "",
   tipText: "",
   rightText: "",
+  more: {},
 });
 const value = ref("");
 const text = ref("");
@@ -237,7 +238,9 @@ const change = (val) => {
             :disabled="config.isDisabled"
             @change="change"
             :data="selectTreeData"
-            check-strictly
+            :check-strictly="config.more.checkStrictly"
+            :showCheckbox="config.more.showCheckbox"
+            :multiple="config.more.multiple"
             :render-after-expand="false"
           />
           <!-- 单选框 -->

@@ -5,7 +5,7 @@ import userController from "../controllers/user.js";
 
 const router = Router();
 
-router.get("/getMayNavTreeList", navController.getMayNavTreeList);
+router.get("/getMyNavTreeList", navController.getMyNavTreeList);
 router.get("/getNavList", navController.getNavList);
 router.get("/getEnum", enumController.getEnum);
 router.post("/login", userController.login);

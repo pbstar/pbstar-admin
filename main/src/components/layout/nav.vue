@@ -66,7 +66,7 @@ const getList = async () => {
   request
     .get({
       base: "base",
-      url: "/main/getMayNavTreeList",
+      url: "/main/getMyNavTreeList",
     })
     .then((res) => {
       if (res.code === 200) {

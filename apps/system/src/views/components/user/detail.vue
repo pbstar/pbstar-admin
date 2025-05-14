@@ -18,43 +18,20 @@ const props = defineProps({
 const detailInfo = ref({});
 const detailType = ref("");
 const detailId = ref("");
-const navList = ref([]); // 菜单树结构
 
 onBeforeMount(() => {
   detailType.value = props.type;
   detailId.value = props.id;
-  getNavList();
   if (detailType.value == "view" || detailType.value == "edit") {
     getDetailInfo();
   }
 });
 
-const getNavList = () => {
-  request
-    .get({
-      base: "base",
-      url: "/main/getNavList",
-    })
-    .then((res) => {
-      if (res.code === 200) {
-        navList.value = res.data.map((item) => {
-          return {
-            label: item.name,
-            value: item.id,
-            ...item,
-          };
-        });
-      } else {
-        ElMessage.error(res.msg || "获取菜单失败");
-      }
-    });
-};
-
 const getDetailInfo = () => {
   request
     .get({
       base: "base",
-      url: "/system/nav/getDetail",
+      url: "/system/user/getDetail",
       data: {
         id: detailId.value,
       },
@@ -85,7 +62,7 @@ defineExpose({
           :config="{
             isText: detailType == 'view',
             type: 'input',
-            label: '菜单名称',
+            label: '姓名',
           }"
           v-model="detailInfo.name"
         />
@@ -94,31 +71,37 @@ defineExpose({
           :config="{
             isText: detailType == 'view',
             type: 'input',
-            label: '菜单链接',
+            label: '头像',
           }"
-          v-model="detailInfo.url"
-        />
-        <p-item
-          class="dtItem"
-          :config="{
-            isText: detailType == 'view',
-            type: 'selectTree',
-            label: '上级菜单',
-            options: navList,
-            more: {
-              checkStrictly: true,
-            },
-          }"
-          v-model="detailInfo.parentId"
+          v-model="detailInfo.avatar"
         />
         <p-item
           class="dtItem"
           :config="{
             isText: detailType == 'view',
             type: 'input',
-            label: '菜单图标',
+            label: '账号',
           }"
-          v-model="detailInfo.icon"
+          v-model="detailInfo.username"
+        />
+        <p-item
+          class="dtItem"
+          v-show="detailType == 'add'"
+          :config="{
+            isText: detailType == 'view',
+            type: 'input',
+            label: '密码',
+          }"
+          v-model="detailInfo.password"
+        />
+        <p-item
+          class="dtItem"
+          :config="{
+            isText: detailType == 'view',
+            type: 'select',
+            label: '角色',
+          }"
+          v-model="detailInfo.role"
         />
       </div>
     </p-collapse>

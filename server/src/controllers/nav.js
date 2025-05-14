@@ -6,7 +6,7 @@ import userDb from "../db/user.js";
 import roleDb from "../db/role.js";
 
 export default {
-  getMayNavTreeList: (req, res) => {
+  getMyNavTreeList: (req, res) => {
     const token = req.headers.token;
     if (!token) {
       return res.status(401).json({

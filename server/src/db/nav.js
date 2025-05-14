@@ -24,23 +24,23 @@ const db = {
     { id: 4, name: "系统应用", parentId: null, url: null, icon: "Tools" },
     {
       id: 5,
-      name: "菜单管理",
+      name: "用户管理",
       parentId: 4,
-      url: "/admin/system?system=%2Fnav",
+      url: "/admin/system?system=%2Fuser",
       icon: "",
     },
     {
       id: 6,
-      name: "代码生成器",
+      name: "角色管理",
       parentId: 4,
-      url: "/admin/system?system=%2Fgenerator",
+      url: "/admin/system?system=%2Frole",
       icon: "",
     },
     {
       id: 7,
-      name: "Echarts示例",
-      parentId: 2,
-      url: "/admin/example?example=%2Fecharts",
+      name: "菜单管理",
+      parentId: 4,
+      url: "/admin/system?system=%2Fnav",
       icon: "",
     },
     {
@@ -50,8 +50,22 @@ const db = {
       url: "/admin/system?system=%2Fenum",
       icon: "",
     },
+    {
+      id: 9,
+      name: "代码生成器",
+      parentId: 4,
+      url: "/admin/system?system=%2Fgenerator",
+      icon: "",
+    },
+    {
+      id: 10,
+      name: "Echarts示例",
+      parentId: 2,
+      url: "/admin/example?example=%2Fecharts",
+      icon: "",
+    },
   ],
-  lastId: 2,
+  lastId: 10,
 };
 
 export default db;

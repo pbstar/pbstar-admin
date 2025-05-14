@@ -24,7 +24,7 @@
 <script setup>
 import { computed } from "vue";
 import { ElMessage } from "element-plus";
-import { RouterView } from "vue-router";
+import { RouterView, useRouter } from "vue-router";
 import { Close } from "@element-plus/icons-vue";
 import AdminTop from "@/components/layout/top.vue";
 import AdminNav from "@/components/layout/nav.vue";
@@ -34,6 +34,7 @@ import WujieVue from "wujie-vue3";
 import request from "@Passets/utils/request";
 const { bus } = WujieVue;
 const sharedStore = useSharedStore();
+const router = useRouter();
 const isFull = computed(() => {
   return sharedStore.isFull;
 });
@@ -59,6 +60,8 @@ if (!sharedStore.userInfo) {
         };
       } else {
         ElMessage.error(res.msg);
+        localStorage.removeItem("p_token");
+        router.push({ path: "/login" });
       }
     });
 }
