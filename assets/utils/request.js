@@ -3,7 +3,10 @@ import { ElMessage, ElMessageBox } from "element-plus";
 
 // 请求拦截器
 axios.interceptors.request.use((config) => {
-  // 在发送请求之前做些什么
+  const token = localStorage.getItem("p_token");
+  if (token) {
+    config.headers["token"] = token;
+  }
   return config;
 });
 // 响应拦截器
@@ -23,7 +26,7 @@ axios.interceptors.response.use(
       return;
     }
     ElMessage.error("请求失败！请您稍后重试");
-  }
+  },
 );
 const request = (config) => {
   const token = localStorage.getItem("token");

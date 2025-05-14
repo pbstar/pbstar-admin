@@ -1,19 +1,19 @@
 <script setup>
 import { ref } from "vue";
+import { useRouter } from "vue-router";
 import { CaretBottom, FullScreen, Moon, Sunny } from "@element-plus/icons-vue";
 import useSharedStore from "@Passets/stores/shared";
 import WujieVue from "wujie-vue3";
+import request from "@Passets/utils/request";
 const { bus } = WujieVue;
 const sharedStore = useSharedStore();
-
+const router = useRouter();
+const userInfo = sharedStore.userInfo || {};
 const title = ref(import.meta.env.PUBLIC_TITLE);
-const userName = ref("管理员");
-const userImg = ref("");
+const userName = ref(userInfo.name || "管理员");
+const userImg = ref(userInfo.avatar || "");
 const theme = ref(false);
-const toUserInfo = () => {
-  sharedStore.isLogin = true;
-  bus.$emit("changeSharedPinia", { isLogin: true });
-};
+const toUserInfo = () => {};
 const themeChange = () => {
   if (theme.value) {
     sharedStore.isDark = true;
@@ -30,6 +30,21 @@ const themeChange = () => {
 const toFull = () => {
   sharedStore.isFull = true;
   bus.$emit("changeSharedPinia", { isFull: true });
+};
+const toLoginOut = () => {
+  request
+    .post({
+      base: "base",
+      url: "/main/logout",
+    })
+    .then((res) => {
+      if (res.code == 200) {
+        sharedStore.userInfo = null;
+        localStorage.removeItem("p_token");
+        bus.$emit("changeSharedPinia", { userInfo: null });
+        router.push({ path: "/login" });
+      }
+    });
 };
 </script>
 <template>
@@ -65,6 +80,7 @@ const toFull = () => {
           <template #dropdown>
             <el-dropdown-menu>
               <el-dropdown-item @click="toUserInfo">个人资料</el-dropdown-item>
+              <el-dropdown-item @click="toLoginOut">退出登录</el-dropdown-item>
             </el-dropdown-menu>
           </template>
         </el-dropdown>

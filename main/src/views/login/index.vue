@@ -99,18 +99,16 @@ import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
 import { User, Lock, Postcard } from "@element-plus/icons-vue";
 import request from "@Passets/utils/request";
-import useUserStore from "@/stores/user";
+import useSharedStore from "@Passets/stores/shared";
 import pVerificationCode from "@Pcomponents/more/p-verificationCode/index.vue";
 
-const user = useUserStore();
+const sharedStore = useSharedStore();
 const router = useRouter();
 
 let title = ref(import.meta.env.PUBLIC_TITLE);
 
 let code = "";
 const changeCode = (e) => {
-  console.log(e);
-
   code = e;
 };
 const loginForm = ref({
@@ -135,18 +133,31 @@ const handleSubmit = () => {
     ElMessage.error("验证码错误");
     return;
   }
-  request.post("/api/login", loginForm.value).then((res) => {
-    if (res.code == 200) {
-      toLoginOk(res.data);
-    } else {
-      ElMessage.error(res.msg);
-    }
-  });
-};
-const toLoginOk = (e) => {
-  user.setInfo(e);
-  router.push({ path: "/" });
-  ElMessage.success("登录成功");
+  request
+    .post({
+      base: "base",
+      url: "/main/login",
+      data: {
+        username: loginForm.value.username,
+        password: loginForm.value.password,
+      },
+    })
+    .then((res) => {
+      if (res.code == 200 && res.data) {
+        localStorage.setItem("p_token", res.data.token);
+        sharedStore.userInfo = {
+          id: res.data.id,
+          name: res.data.name,
+          avatar: res.data.avatar,
+          username: res.data.username,
+          role: res.data.role,
+        };
+        router.push({ path: "/" });
+        ElMessage.success("登录成功");
+      } else {
+        ElMessage.error(res.msg);
+      }
+    });
 };
 </script>
 <style scoped lang="scss">
@@ -184,6 +195,13 @@ const toLoginOk = (e) => {
   }
   :deep(.el-input) {
     margin-top: 16px;
+  }
+  :deep(.el-input__inner),
+  :deep(.el-input__prefix),
+  :deep(.el-input__suffix),
+  :deep(.el-input__wrapper),
+  :deep(.el-button) {
+    height: 36px;
   }
   :deep(.el-button) {
     margin-top: 30px;

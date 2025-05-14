@@ -19,7 +19,7 @@ export default {
     res.json({
       code: 200,
       data: result,
-      message: "成功",
+      msg: "成功",
     });
   },
   // 查询
@@ -40,7 +40,7 @@ export default {
     res.json({
       code: 200,
       data: result,
-      message: "成功",
+      msg: "成功",
     });
   },
   // 详情
@@ -50,7 +50,7 @@ export default {
     res.json({
       code: 200,
       data: result,
-      message: "成功",
+      msg: "成功",
     });
   },
   // 新增
@@ -61,7 +61,7 @@ export default {
     res.json({
       code: 200,
       data: result,
-      message: "成功",
+      msg: "成功",
     });
   },
   // 修改
@@ -72,7 +72,7 @@ export default {
     res.json({
       code: 200,
       data: result,
-      message: "成功",
+      msg: "成功",
     });
   },
   // 删除
@@ -82,7 +82,7 @@ export default {
     res.json({
       code: 200,
       data: result,
-      message: "成功",
+      msg: "成功",
     });
   },
   // 获取教育经历子表列表
@@ -92,7 +92,7 @@ export default {
     res.json({
       code: 200,
       data: result,
-      message: "成功",
+      msg: "成功",
     });
   },
   // 获取教育经历子表详情
@@ -102,7 +102,7 @@ export default {
     res.json({
       code: 200,
       data: result,
-      message: "成功",
+      msg: "成功",
     });
   },
   // 新增教育经历子表
@@ -113,7 +113,7 @@ export default {
     res.json({
       code: 200,
       data: result,
-      message: "成功",
+      msg: "成功",
     });
   },
   // 修改教育经历子表
@@ -124,7 +124,7 @@ export default {
     res.json({
       code: 200,
       data: result,
-      message: "成功",
+      msg: "成功",
     });
   },
   // 删除教育经历子表
@@ -134,7 +134,7 @@ export default {
     res.json({
       code: 200,
       data: result,
-      message: "成功",
+      msg: "成功",
     });
   },
 };

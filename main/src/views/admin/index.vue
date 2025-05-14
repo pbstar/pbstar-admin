@@ -23,6 +23,7 @@
 </template>
 <script setup>
 import { computed } from "vue";
+import { ElMessage } from "element-plus";
 import { RouterView } from "vue-router";
 import { Close } from "@element-plus/icons-vue";
 import AdminTop from "@/components/layout/top.vue";
@@ -30,6 +31,7 @@ import AdminNav from "@/components/layout/nav.vue";
 import history from "@/components/layout/history.vue";
 import useSharedStore from "@Passets/stores/shared";
 import WujieVue from "wujie-vue3";
+import request from "@Passets/utils/request";
 const { bus } = WujieVue;
 const sharedStore = useSharedStore();
 const isFull = computed(() => {
@@ -39,6 +41,27 @@ const toUnFull = () => {
   sharedStore.isFull = false;
   bus.$emit("changeSharedPinia", { isFull: false });
 };
+if (!sharedStore.userInfo) {
+  request
+    .post({
+      base: "base",
+      url: "/main/loginByToken",
+    })
+    .then((res) => {
+      if (res.code == 200 && res.data) {
+        localStorage.setItem("p_token", res.data.token);
+        sharedStore.userInfo = {
+          id: res.data.id,
+          name: res.data.name,
+          avatar: res.data.avatar,
+          username: res.data.username,
+          role: res.data.role,
+        };
+      } else {
+        ElMessage.error(res.msg);
+      }
+    });
+}
 </script>
 <style scoped lang="scss">
 .page {

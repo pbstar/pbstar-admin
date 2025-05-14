@@ -16,7 +16,7 @@ app.use("/example", exampleRouter);
 // 简单错误处理
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).json({ message: "Something went wrong!" });
+  res.status(500).json({ msg: "Something went wrong!" });
 });
 
 export default app;
