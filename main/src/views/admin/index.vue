@@ -30,10 +30,12 @@ import AdminTop from "@/components/layout/top.vue";
 import AdminNav from "@/components/layout/nav.vue";
 import history from "@/components/layout/history.vue";
 import useSharedStore from "@Passets/stores/shared";
+import { useNavsStore } from "@/stores/navs";
 import WujieVue from "wujie-vue3";
 import request from "@Passets/utils/request";
 const { bus } = WujieVue;
 const sharedStore = useSharedStore();
+const navsStore = useNavsStore();
 const router = useRouter();
 const isFull = computed(() => {
   return sharedStore.isFull;
@@ -65,6 +67,24 @@ if (!sharedStore.userInfo) {
       }
     });
 }
+router.beforeEach((to, from, next) => {
+  // 白名单
+  const whiteList = ["/login", "/404", "/403"];
+  if (whiteList.includes(to.path)) {
+    next();
+  } else {
+    if (!localStorage.getItem("p_token")) {
+      next({ path: "/login" });
+      return false;
+    }
+    if (!navsStore.hasNav(to.fullPath)) {
+      ElMessage.error("无权限访问");
+      next({ path: "/403" });
+      return false;
+    }
+    next();
+  }
+});
 </script>
 <style scoped lang="scss">
 .page {

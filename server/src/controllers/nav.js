@@ -9,28 +9,28 @@ export default {
   getMyNavTreeList: (req, res) => {
     const token = req.headers.token;
     if (!token) {
-      return res.status(401).json({
+      return res.json({
         code: 401,
         msg: "未登录",
       });
     }
     const { id } = parseToken(token);
     if (!id) {
-      return res.status(401).json({
+      return res.json({
         code: 401,
         msg: "token无效",
       });
     }
     const user = crud.findById(userDb, id);
     if (!user) {
-      return res.status(401).json({
+      return res.json({
         code: 401,
         msg: "用户不存在",
       });
     }
     const role = user.role;
     if (!role) {
-      return res.status(401).json({
+      return res.json({
         code: 401,
         msg: "用户角色不存在",
       });

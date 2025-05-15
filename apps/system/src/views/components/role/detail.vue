@@ -67,7 +67,38 @@ const getDetailInfo = () => {
     });
 };
 const getFormValue = () => {
-  return detailInfo.value;
+  // 添加父级
+  const navs = [];
+  if (detailInfo.value.navs) {
+    const getParentId = (pid) => {
+      const parentIds = [pid];
+      const getId = (id) => {
+        const nav = navList.value.find((item) => item.id == id);
+        if (nav && nav.parentId) {
+          parentIds.push(nav.parentId);
+          getId(nav.parentId);
+        }
+      };
+      return parentIds;
+    };
+    detailInfo.value.navs.forEach((item) => {
+      navs.push(item);
+      const nav = navList.value.find((it) => it.id == item);
+      if (nav.parentId) {
+        const parentIds = getParentId(nav.parentId);
+        parentIds.forEach((id) => {
+          if (!navs.includes(id)) {
+            navs.push(id);
+          }
+        });
+      }
+    });
+  }
+
+  return {
+    ...detailInfo.value,
+    navs,
+  };
 };
 
 defineExpose({
@@ -107,7 +138,7 @@ defineExpose({
             more: {
               showCheckbox: true,
               multiple: true,
-              checkStrictly: true,
+              checkStrictly: false,
             },
           }"
           v-model="detailInfo.navs"

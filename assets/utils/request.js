@@ -23,20 +23,6 @@ axios.interceptors.response.use(
     ) {
       ElMessage.error("请求超时！请您稍后重试");
       return;
-    } else if (error.status === 401) {
-      ElMessageBox.confirm(
-        "登录状态已过期，您可以继续留在该页面，或者重新登录",
-        "系统提示",
-        {
-          confirmButtonText: "重新登录",
-          cancelButtonText: "取消",
-          type: "warning",
-        },
-      )
-        .then(() => {
-          location.reload();
-        })
-        .catch(() => {});
     } else {
       ElMessage.error("请求失败！请您稍后重试");
     }

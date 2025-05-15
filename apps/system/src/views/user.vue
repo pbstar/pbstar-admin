@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onBeforeMount } from "vue";
+import { ref, onBeforeMount, onMounted } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import request from "@Passets/utils/request";
 import PTable from "@Pcomponents/base/p-table/index.vue";
@@ -22,6 +22,7 @@ const tableColumn = ref([
   //   { label: "密码", key: "password" },
   { label: "角色", key: "role" },
 ]);
+const tableRef = ref(null);
 const tableData = ref([]);
 const tableTopBtn = ref([{ key: "add", label: "新增" }]);
 const tableRightBtn = ref([
@@ -41,6 +42,9 @@ const detailRef = ref(null);
 
 onBeforeMount(() => {
   initTable();
+});
+onMounted(() => {
+  getRoleList();
 });
 
 const toSearch = ({ data }) => {
@@ -71,6 +75,32 @@ const initTable = () => {
         pagination.value.total = res.data.total;
       } else {
         ElMessage.error(res?.msg || "操作异常");
+      }
+    });
+};
+const getRoleList = () => {
+  request
+    .post({
+      base: "base",
+      url: "/system/role/getList",
+      data: {
+        pageNumber: 1,
+        pageSize: 1000,
+      },
+    })
+    .then((res) => {
+      if (res.code === 200 && res.data) {
+        tableRef.value.toChangeColumnOptions({
+          key: "role",
+          options: res.data.list.map((item) => {
+            return {
+              label: item.name,
+              value: item.key,
+            };
+          }),
+        });
+      } else {
+        ElMessage.error(res.msg || "获取角色列表失败");
       }
     });
 };
@@ -164,6 +194,7 @@ const diaBotBtnClick = ({ btn }) => {
       :rightBtn="tableRightBtn"
       tableKey="user_1"
       showSetting
+      ref="tableRef"
       :pagination="pagination"
       @paginationChange="tablePaginationChange"
       @topBtnClick="tableTopBtnClick"

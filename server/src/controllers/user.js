@@ -111,14 +111,14 @@ export default {
   loginByToken: (req, res) => {
     const token = req.headers.token;
     if (!token) {
-      return res.status(401).json({
+      return res.json({
         code: 401,
         msg: "未登录",
       });
     }
     const { id } = parseToken(token);
     if (!id) {
-      return res.status(401).json({
+      return res.json({
         code: 401,
         msg: "token无效",
       });

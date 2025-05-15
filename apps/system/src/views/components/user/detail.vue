@@ -18,15 +18,39 @@ const props = defineProps({
 const detailInfo = ref({});
 const detailType = ref("");
 const detailId = ref("");
+const roleList = ref([]);
 
 onBeforeMount(() => {
   detailType.value = props.type;
   detailId.value = props.id;
+  getRoleList();
   if (detailType.value == "view" || detailType.value == "edit") {
     getDetailInfo();
   }
 });
-
+const getRoleList = () => {
+  request
+    .post({
+      base: "base",
+      url: "/system/role/getList",
+      data: {
+        pageNumber: 1,
+        pageSize: 1000,
+      },
+    })
+    .then((res) => {
+      if (res.code === 200 && res.data) {
+        roleList.value = res.data.list.map((item) => {
+          return {
+            label: item.name,
+            value: item.key,
+          };
+        });
+      } else {
+        ElMessage.error(res.msg || "获取角色列表失败");
+      }
+    });
+};
 const getDetailInfo = () => {
   request
     .get({
@@ -100,6 +124,7 @@ defineExpose({
             isText: detailType == 'view',
             type: 'select',
             label: '角色',
+            options: roleList,
           }"
           v-model="detailInfo.role"
         />

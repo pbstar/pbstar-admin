@@ -38,12 +38,12 @@ const router = createRouter({
           component: () => import("@/views/admin/home.vue"),
         },
         ...appsRouter,
-        {
-          path: ":pathMatch(.*)*",
-          name: "admin_notFound",
-          component: () => import("@Pcomponents/page/default/404.vue"),
-        },
       ],
+    },
+    {
+      path: "/403",
+      name: "403",
+      component: () => import("@Pcomponents/page/default/403.vue"),
     },
     {
       path: "/:pathMatch(.*)*",

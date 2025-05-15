@@ -3,8 +3,10 @@ import { ref } from "vue";
 import * as ElementPlusIconsVue from "@element-plus/icons-vue";
 import { useRouter, useRoute } from "vue-router";
 import request from "@Passets/utils/request";
+import { useNavsStore } from "@/stores/navs";
 const router = useRouter();
 const route = useRoute();
+const navsStore = useNavsStore();
 const activeIndex = ref("1");
 const list = ref([]);
 
@@ -71,7 +73,14 @@ const getList = async () => {
     .then((res) => {
       if (res.code === 200) {
         list.value = res.data;
+        navsStore.setNavs(res.data);
         if (route.fullPath) {
+          if (!navsStore.hasNav(route.fullPath)) {
+            router.push({
+              path: "/403",
+            });
+            return;
+          }
           activeIndex.value = findIndexByUrl(route.fullPath);
         }
       } else {

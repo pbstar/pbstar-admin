@@ -241,7 +241,8 @@ const change = (val) => {
             :check-strictly="config.more.checkStrictly"
             :showCheckbox="config.more.showCheckbox"
             :multiple="config.more.multiple"
-            :render-after-expand="false"
+            collapse-tags
+            collapse-tags-tooltip
           />
           <!-- 单选框 -->
           <el-radio-group
