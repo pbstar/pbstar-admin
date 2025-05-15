@@ -24,7 +24,7 @@
 <script setup>
 import { computed } from "vue";
 import { ElMessage } from "element-plus";
-import { RouterView, useRouter } from "vue-router";
+import { RouterView, useRouter, useRoute } from "vue-router";
 import { Close } from "@element-plus/icons-vue";
 import AdminTop from "@/components/layout/top.vue";
 import AdminNav from "@/components/layout/nav.vue";
@@ -37,6 +37,7 @@ const { bus } = WujieVue;
 const sharedStore = useSharedStore();
 const navsStore = useNavsStore();
 const router = useRouter();
+const route = useRoute();
 const isFull = computed(() => {
   return sharedStore.isFull;
 });
@@ -60,6 +61,23 @@ if (!sharedStore.userInfo) {
           username: res.data.username,
           role: res.data.role,
         };
+        request
+          .get({
+            base: "base",
+            url: "/main/getMyNavTreeList",
+          })
+          .then((r) => {
+            if (r.code === 200) {
+              navsStore.setNavs(r.data);
+              if (!navsStore.hasNav(route.fullPath)) {
+                ElMessage.error("无权限访问");
+                router.push({ path: "/403" });
+                return false;
+              }
+            } else {
+              ElMessage.error(r.msg);
+            }
+          });
       } else {
         ElMessage.error(res.msg);
         localStorage.removeItem("p_token");

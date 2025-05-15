@@ -32,8 +32,8 @@ npm install -g pnpm
 pnpm install
 # 启动main包
 pnpm run dev
-# 启动example包
-pnpm run dev:example
+# 启动应用包
+pnpm run dev:<包名>
 # 启动后端server服务
 pnpm run server
 ```

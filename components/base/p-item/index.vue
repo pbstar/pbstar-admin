@@ -176,6 +176,7 @@ const change = (val) => {
             v-model="value"
             :placeholder="config.placeholder"
             :disabled="config.isDisabled"
+            v-bind="config.more"
             v-if="config.type == 'input' && !config.isText"
             @change="change"
           />
@@ -185,6 +186,7 @@ const change = (val) => {
             type="textarea"
             :placeholder="config.placeholder"
             :disabled="config.isDisabled"
+            v-bind="config.more"
             v-if="config.type == 'textarea' && !config.isText"
             @change="change"
           />
@@ -194,6 +196,7 @@ const change = (val) => {
             type="number"
             :placeholder="config.placeholder"
             :disabled="config.isDisabled"
+            v-bind="config.more"
             v-if="config.type == 'inputNumber' && !config.isText"
             @change="change"
           />
@@ -203,6 +206,7 @@ const change = (val) => {
             :placeholder="config.placeholder"
             v-if="config.type == 'select' && !config.isText"
             :disabled="config.isDisabled"
+            v-bind="config.more"
             @change="change"
           >
             <el-option
@@ -218,6 +222,7 @@ const change = (val) => {
             :placeholder="config.placeholder"
             v-if="config.type == 'selectMultiple' && !config.isText"
             :disabled="config.isDisabled"
+            v-bind="config.more"
             @change="change"
             multiple
             collapse-tags
@@ -238,9 +243,7 @@ const change = (val) => {
             :disabled="config.isDisabled"
             @change="change"
             :data="selectTreeData"
-            :check-strictly="config.more.checkStrictly"
-            :showCheckbox="config.more.showCheckbox"
-            :multiple="config.more.multiple"
+            v-bind="config.more"
             collapse-tags
             collapse-tags-tooltip
           />
@@ -249,6 +252,7 @@ const change = (val) => {
             v-model="value"
             v-if="config.type == 'radio' && !config.isText"
             :disabled="config.isDisabled"
+            v-bind="config.more"
             @change="change"
           >
             <el-radio
@@ -263,6 +267,7 @@ const change = (val) => {
             v-model="value"
             v-if="config.type == 'checkbox' && !config.isText"
             :disabled="config.isDisabled"
+            v-bind="config.more"
             @change="change"
           >
             <el-checkbox
@@ -280,6 +285,7 @@ const change = (val) => {
             value-format="YYYY-MM-DD"
             v-if="config.type == 'date' && !config.isText"
             :disabled="config.isDisabled"
+            v-bind="config.more"
             @change="change"
           />
           <!-- 日期范围 -->
@@ -292,6 +298,7 @@ const change = (val) => {
             end-placeholder="结束日期"
             v-if="config.type == 'daterange' && !config.isText"
             :disabled="config.isDisabled"
+            v-bind="config.more"
             @change="change"
           />
           <!-- 日期时间 -->
@@ -302,6 +309,7 @@ const change = (val) => {
             v-if="config.type == 'datetime' && !config.isText"
             :disabled="config.isDisabled"
             value-format="YYYY-MM-DD hh:mm:ss"
+            v-bind="config.more"
             @change="change"
           />
           <!-- 日期时间范围 -->
@@ -314,6 +322,7 @@ const change = (val) => {
             value-format="YYYY-MM-DD hh:mm:ss"
             v-if="config.type == 'datetimerange' && !config.isText"
             :disabled="config.isDisabled"
+            v-bind="config.more"
             @change="change"
           />
         </div>

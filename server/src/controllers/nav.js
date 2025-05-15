@@ -41,7 +41,17 @@ export default {
     if (navs == "all") {
       list = alllist;
     } else {
-      list = alllist.filter((item) => navs.includes(item.id));
+      const getAllParents = (id) => {
+        const item = alllist.find((i) => i.id === id);
+        if (!item || !item.parentId) return [];
+        const parents = getAllParents(item.parentId);
+        return [...parents, item.parentId];
+      };
+
+      const allNavIds = [
+        ...new Set(navs.flatMap((id) => [id, ...getAllParents(id)])),
+      ];
+      list = alllist.filter((item) => allNavIds.includes(item.id));
     }
     res.json({
       code: 200,

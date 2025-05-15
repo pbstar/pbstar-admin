@@ -99,10 +99,12 @@ import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
 import { User, Lock, Postcard } from "@element-plus/icons-vue";
 import request from "@Passets/utils/request";
+import { useNavsStore } from "@/stores/navs";
 import useSharedStore from "@Passets/stores/shared";
 import pVerificationCode from "@Pcomponents/more/p-verificationCode/index.vue";
 
 const sharedStore = useSharedStore();
+const navsStore = useNavsStore();
 const router = useRouter();
 
 let title = ref(import.meta.env.PUBLIC_TITLE);
@@ -116,7 +118,7 @@ const loginForm = ref({
   password: "",
   captcha: "",
 });
-const handleSubmit = () => {
+const handleSubmit = async () => {
   if (loginForm.value.username == "") {
     ElMessage.error("请输入用户名");
     return;
@@ -133,31 +135,40 @@ const handleSubmit = () => {
     ElMessage.error("验证码错误");
     return;
   }
-  request
-    .post({
-      base: "base",
-      url: "/main/login",
-      data: {
-        username: loginForm.value.username,
-        password: loginForm.value.password,
-      },
-    })
-    .then((res) => {
-      if (res.code == 200 && res.data) {
-        localStorage.setItem("p_token", res.data.token);
-        sharedStore.userInfo = {
-          id: res.data.id,
-          name: res.data.name,
-          avatar: res.data.avatar,
-          username: res.data.username,
-          role: res.data.role,
-        };
-        router.push({ path: "/" });
-        ElMessage.success("登录成功");
-      } else {
-        ElMessage.error(res.msg);
-      }
-    });
+  const res = await request.post({
+    base: "base",
+    url: "/main/login",
+    data: {
+      username: loginForm.value.username,
+      password: loginForm.value.password,
+    },
+  });
+  if (res.code == 200 && res.data) {
+    localStorage.setItem("p_token", res.data.token);
+    sharedStore.userInfo = {
+      id: res.data.id,
+      name: res.data.name,
+      avatar: res.data.avatar,
+      username: res.data.username,
+      role: res.data.role,
+    };
+    request
+      .get({
+        base: "base",
+        url: "/main/getMyNavTreeList",
+      })
+      .then((r) => {
+        if (r.code === 200) {
+          navsStore.setNavs(r.data);
+          router.push({ path: "/" });
+          ElMessage.success("登录成功");
+        } else {
+          ElMessage.error(r.msg);
+        }
+      });
+  } else {
+    ElMessage.error(res.msg);
+  }
 };
 </script>
 <style scoped lang="scss">
