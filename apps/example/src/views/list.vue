@@ -42,10 +42,7 @@
       title="用户列表详情页"
       type="page"
       v-model="isDetail"
-      :botBtn="[
-        { label: '保存', key: 'save' },
-        { label: '返回', key: 'back' },
-      ]"
+      :botBtn="detailBotBtn"
       @botBtnClick="toBotBtnClick"
     >
       <Detail ref="detailRef" :type="detailType" :id="detailId"></Detail>
@@ -100,6 +97,7 @@ const isDetail = ref(false);
 const detailType = ref("");
 const detailId = ref("");
 const detailRef = ref(null);
+const detailBotBtn = ref([{ key: "back", label: "返回" }]);
 
 onMounted(() => {
   tableRef.value.toChangeColumnOptions({
@@ -147,6 +145,10 @@ const toTopBtnClick = ({ btn }) => {
   if (btn == "add") {
     detailType.value = "add";
     detailId.value = "";
+    detailBotBtn.value = [
+      { key: "back", label: "返回" },
+      { key: "save", label: "保存" },
+    ];
     isDetail.value = true;
   }
 };
@@ -154,6 +156,14 @@ const toRightBtnClick = ({ btn, row }) => {
   if (btn == "view" || btn == "edit") {
     detailType.value = btn;
     detailId.value = row.id;
+    if (btn == "view") {
+      detailBotBtn.value = [{ key: "back", label: "返回" }];
+    } else {
+      detailBotBtn.value = [
+        { key: "back", label: "返回" },
+        { key: "save", label: "保存" },
+      ];
+    }
     isDetail.value = true;
   } else if (btn == "delete") {
     ElMessageBox.confirm("确认删除吗?", "提示", {

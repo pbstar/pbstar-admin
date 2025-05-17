@@ -44,7 +44,10 @@ const createScript = (json) => {
 onBeforeMount(() => {
   if (props.type == "add") {
     tableTopBtn.value = [];
-    tableRightBtn.value = [];
+    tableRightBtn.value = [
+      { label: "编辑", key: "edit" },
+      { label: "删除", key: "delete" },
+    ];
   } else if (props.type == "view") {
     tableTopBtn.value = [];
     tableRightBtn.value = [];

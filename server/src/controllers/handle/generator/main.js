@@ -49,7 +49,7 @@ const createScript = (json) => {
   const searchValue = ref({});
   const tableColumn = ref(${JSON.stringify(tableColumn)});
   const tableData = ref([]);
-    const tableTopBtn = ref([
+  const tableTopBtn = ref([
     { key: "add", label: "新增" },
   ]);
   const tableRightBtn = ref([
@@ -66,6 +66,7 @@ const createScript = (json) => {
   const detailId = ref("");
   const isDetail = ref(false);
   const detailRef = ref(null);
+  const detailBotBtn = ref([{ key: "back", label: "返回" }]);
 
   onBeforeMount(() => {
     initTable();
@@ -104,6 +105,14 @@ const createScript = (json) => {
     if (btn == "view" || btn == "edit") {
       detailType.value = btn;
       detailId.value = row.id;
+      if (btn == "view") {
+        detailBotBtn.value = [{ key: "back", label: "返回" }];
+      } else {
+        detailBotBtn.value = [
+          { key: "back", label: "返回" },
+          { key: "save", label: "保存" },
+        ];
+      }
       isDetail.value = true;
     } else if (btn === "delete") {
       ElMessageBox.confirm("确认删除吗?", "提示", {
@@ -130,6 +139,10 @@ const createScript = (json) => {
     if (btn == "add") {
       detailType.value = "add";
       detailId.value = "";
+      detailBotBtn.value = [
+        { key: "back", label: "返回" },
+        { key: "save", label: "保存" },
+      ];
       isDetail.value = true;
     }
   };
@@ -211,10 +224,7 @@ const createHtml = (json) => {
       title="${json.title}详情页"
       type="${json.detailDiaType}"
       v-model="isDetail"
-      :botBtn="[
-        { label: '保存', key: 'save' },
-        { label: '返回', key: 'back' },
-      ]"
+      :botBtn="detailBotBtn"
       @botBtnClick="diaBotBtnClick"
     >
       <Detail ref="detailRef" :type="detailType" :id="detailId"></Detail>
