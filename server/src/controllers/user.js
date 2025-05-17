@@ -15,7 +15,7 @@ export default {
       user.token = token;
       res.json({
         code: 200,
-        data: { token },
+        data: user,
         msg: "登录成功",
       });
     } else {

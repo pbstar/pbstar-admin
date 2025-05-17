@@ -59,6 +59,7 @@ const historyList = ref([]); // 生成历史列表
 const isHistory = ref(false); // 是否显示生成历史
 const detailType = ref("");
 const isCodeView = ref(false); // 是否显示代码查看
+const codeViewTab = ref(0); // 代码查看tab
 const codeList = ref([]); // 代码
 
 const detailDiaTypeList = computed(() => {
@@ -503,16 +504,19 @@ const toHistoryUse = (row) => {
       @botBtnClick="isCodeView = false"
     >
       <div class="detail">
-        <p-collapse
-          :title="item.fileName"
-          v-for="(item, index) in codeList"
-          :key="index"
-        >
-          <p-codeView
-            :code="item.fileCode"
-            :filename="item.fileName"
-          ></p-codeView>
-        </p-collapse>
+        <el-tabs v-model="codeViewTab">
+          <el-tab-pane
+            v-for="(item, index) in codeList"
+            :key="index"
+            :label="item.fileName"
+            :name="index"
+          >
+            <p-codeView
+              :code="item.fileCode"
+              :filename="item.fileName"
+            ></p-codeView>
+          </el-tab-pane>
+        </el-tabs>
       </div>
     </p-dialog>
   </div>
@@ -563,6 +567,9 @@ const toHistoryUse = (row) => {
       padding-bottom: 5px;
       margin-bottom: 5px;
     }
+  }
+  :deep(.el-tabs__header) {
+    margin-bottom: 0;
   }
 }
 </style>

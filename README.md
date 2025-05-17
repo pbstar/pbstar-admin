@@ -8,10 +8,10 @@
 </div>
 
 <p align="center">
-	<a href="https://github.com/pbstar/pbstar-admin"><img src="https://img.shields.io/badge/PbstarAdmin-v0.0.0-brightgreen.svg"></a>
 	<a href="https://github.com/pbstar/pbstar-admin/blob/main/LICENSE"><img src="https://img.shields.io/github/license/mashape/apistatus.svg"></a>
     <a href="http://152.136.96.92:8799"><img src="https://img.shields.io/badge/官方文档-5672CD?style=flat"></a>
     <a href="https://github.com/pbstar/pbstar-admin"><img src="https://img.shields.io/badge/在线演示-FF5722?style=flat"></a>
+    <a href="https://github.com/pbstar/pbstar-admin"><img src="https://img.shields.io/badge/WeChat-P24612582-brightgreen.svg"></a>
 </p>
 
 ## 环境要求
@@ -76,7 +76,6 @@ pnpm remove <依赖名> --filter <包名>
 
 ## 致谢
 
-本项目参考了以下项目，在此表示感谢：
+本项目参考了以下优秀的开源项目，在此表示感谢：
 
-[vue-vben-admin](https://github.com/vbenjs/vue-vben-admin)、[Geeker-Admin](https://github.com/HalseySpicy/Geeker-Admin)
-、[gi-demo](https://github.com/lin-97/gi-demo)
+[vue-vben-admin](https://github.com/vbenjs/vue-vben-admin)、[Geeker-Admin](https://github.com/HalseySpicy/Geeker-Admin)、[gi-demo](https://github.com/lin-97/gi-demo)
