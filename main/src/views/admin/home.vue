@@ -239,20 +239,12 @@ const initR2r2Echarts = () => {
             <div class="news">
               <div class="news-item">
                 <p>
-                  2025-05-01：
-                  <span>
-                    新增：PbstarAdmin 正式发布 1.0.0
-                    版本，欢迎大家使用和反馈问题。
-                  </span>
+                  2025-05-01：PbstarAdmin 即将发布，欢迎大家使用和反馈问题。
                 </p>
               </div>
               <div class="news-item">
                 <p>
-                  2025-05-01：
-                  <span>
-                    新增：PbstarAdmin 正式发布 1.0.0
-                    版本，欢迎大家使用和反馈问题。
-                  </span>
+                  2025-05-01：PbstarAdmin 即将发布，欢迎大家使用和反馈问题。
                 </p>
               </div>
             </div>

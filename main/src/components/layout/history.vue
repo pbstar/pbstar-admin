@@ -1,11 +1,14 @@
 <script setup>
 import { House, Close } from "@element-plus/icons-vue";
 import { ElMessage } from "element-plus";
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import request from "@Passets/utils/request";
 import { useRouter, useRoute } from "vue-router";
+import { useNavsStore } from "@/stores/navs";
+import { flatten } from "@Passets/utils/array";
 const router = useRouter();
 const route = useRoute();
+const navsStore = useNavsStore();
 const path = ref("");
 const list = ref([]);
 const navList = ref([]);
@@ -45,24 +48,17 @@ const toPath = (url) => {
   if (url == path.value) return;
   router.push(url);
 };
-const getList = async () => {
-  request
-    .get({
-      base: "base",
-      url: "/main/getNavList",
-    })
-    .then((res) => {
-      if (res.code === 200) {
-        navList.value = res.data;
-        if (route.fullPath) {
-          addItem(route.fullPath);
-        }
-      } else {
-        ElMessage.error(res.msg || "获取菜单失败");
+watch(
+  () => navsStore.navsTree,
+  (newVal) => {
+    if (newVal && newVal.length > 0) {
+      navList.value = flatten(newVal);
+      if (route.fullPath) {
+        addItem(route.fullPath);
       }
-    });
-};
-getList();
+    }
+  },
+);
 
 router.afterEach((to, from) => {
   addItem(to.fullPath);
