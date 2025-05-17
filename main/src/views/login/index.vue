@@ -187,7 +187,6 @@ const handleSubmit = async () => {
 }
 .login-center {
   width: 520px;
-  height: 390px;
   padding: 36px 60px;
   background-color: #fff;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -247,5 +246,22 @@ const handleSubmit = async () => {
   width: 900px;
   overflow: hidden;
   z-index: -1;
+}
+@media screen and (max-width: 600px) {
+  .login-center {
+    width: 90%;
+    padding: 20px;
+  }
+  .login-lb {
+    bottom: -500px;
+    left: -300px;
+    width: 900px;
+    height: 800px;
+  }
+  .login-rt {
+    top: -600px;
+    right: -700px;
+    width: 900px;
+  }
 }
 </style>

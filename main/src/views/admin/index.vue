@@ -1,19 +1,21 @@
 <template>
   <div class="pa_page">
     <div class="top" v-show="!isFull">
-      <AdminTop />
+      <AdminTop v-show="!isMobile" />
+      <AdminTopMobile v-show="isMobile" />
     </div>
     <div class="main">
-      <div class="mLeft" v-show="!isFull">
+      <div class="mLeft" v-show="!isFull && !isMobile">
         <AdminNav />
       </div>
       <div class="mRight">
-        <history class="history" v-show="!isFull" />
+        <history class="history" v-show="!isFull && !isMobile" />
         <div style="height: 5px; width: 100%" v-show="isFull">
           <div class="unfull" @click="toUnFull">
             <el-icon><Close /></el-icon>
           </div>
         </div>
+        <div style="width: 100%; height: 10px" v-show="isMobile"></div>
         <div class="mApp">
           <RouterView />
         </div>
@@ -27,6 +29,7 @@ import { ElMessage } from "element-plus";
 import { RouterView, useRouter, useRoute } from "vue-router";
 import { Close } from "@element-plus/icons-vue";
 import AdminTop from "@/components/layout/top.vue";
+import AdminTopMobile from "@/components/layout/topMobile.vue";
 import AdminNav from "@/components/layout/nav.vue";
 import history from "@/components/layout/history.vue";
 import useSharedStore from "@Passets/stores/shared";
@@ -40,6 +43,9 @@ const router = useRouter();
 const route = useRoute();
 const isFull = computed(() => {
   return sharedStore.isFull;
+});
+const isMobile = computed(() => {
+  return document.body.clientWidth < 600;
 });
 const toUnFull = () => {
   sharedStore.isFull = false;
@@ -114,7 +120,7 @@ router.beforeEach((to, from, next) => {
   overflow: hidden;
 
   .top {
-    height: 50px;
+    height: 46px;
     width: 100%;
     flex-shrink: 0;
   }
