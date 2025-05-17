@@ -1,5 +1,5 @@
 <template>
-  <div class="page">
+  <div class="pa_page">
     <div class="top" v-show="!isFull">
       <AdminTop />
     </div>
@@ -105,7 +105,7 @@ router.beforeEach((to, from, next) => {
 });
 </script>
 <style scoped lang="scss">
-.page {
+.pa_page {
   height: 100vh;
   width: 100vw;
   display: flex;

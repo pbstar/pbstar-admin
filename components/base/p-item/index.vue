@@ -1,6 +1,7 @@
 <script setup>
 import { ref, watch } from "vue";
 import { useEnumStore } from "@Passets/stores/enum";
+import { structure } from "@Passets/utils/array";
 const enumStore = useEnumStore();
 const props = defineProps({
   config: {
@@ -20,6 +21,7 @@ const getPlaceholder = (config) => {
     inputNumber: "请输入",
     select: "请选择",
     selectMultiple: "请选择",
+    selectTree: "请选择",
     date: "请选择",
     daterange: "请选择",
     datetime: "请选择",
@@ -52,26 +54,6 @@ const changeText = (arr) => {
   } else {
     text.value = "";
   }
-};
-const toTree = (arr) => {
-  if (!arr || !Array.isArray(arr) || arr.length === 0) {
-    return [];
-  }
-  const tree = [];
-  const map = new Map();
-  arr.forEach((item) => map.set(item.id, { ...item }));
-  arr.forEach((item) => {
-    const parent = map.get(item.parentId);
-    if (parent) {
-      if (!parent.children) {
-        parent.children = [];
-      }
-      parent.children.push(map.get(item.id));
-    } else {
-      tree.push(map.get(item.id));
-    }
-  });
-  return tree;
 };
 
 watch(
@@ -127,7 +109,7 @@ watch(
         changeText(newVal);
       }
       if (config.value.type == "selectTree") {
-        selectTreeData.value = toTree(newVal);
+        selectTreeData.value = structure(newVal);
       }
     }
   },
