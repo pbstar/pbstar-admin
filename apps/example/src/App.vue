@@ -20,6 +20,10 @@ if (window.__POWERED_BY_WUJIE__) {
     }
   });
   window.$wujie?.props.path && router.push(window.$wujie.props.path);
+  if (window.$wujie?.props.isDark) {
+    document.documentElement.setAttribute("data-theme", "dark");
+    document.documentElement.classList.add("dark");
+  }
   window.$wujie?.bus.$on("subappRouteChange", (obj) => {
     if (obj && obj.path && obj.name == window.$wujie?.bus.id) {
       router.push(obj.path);
