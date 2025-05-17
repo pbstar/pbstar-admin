@@ -31,6 +31,11 @@
         </el-input>
         <el-button type="primary" @click="handleSubmit"> 登 录 </el-button>
       </div>
+      <div class="users">
+        <p>超管：admin/123456</p>
+        <p>普通管理员：common/123456</p>
+        <p>普通用户：user/123456</p>
+      </div>
     </div>
     <div class="login-lb">
       <svg
@@ -217,6 +222,13 @@ const handleSubmit = async () => {
   :deep(.el-button) {
     margin-top: 30px;
     width: 100%;
+  }
+  .users {
+    margin-top: 10px;
+    p {
+      font-size: 13px;
+      color: #999;
+    }
   }
 }
 .login-lb {

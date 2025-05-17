@@ -73,3 +73,10 @@ pnpm remove <依赖名> --filter <包名>
 ├── rsbuild.config.mjs     # 打包配置
 └── README.md              # 说明
 ```
+
+## 致谢
+
+本项目参考了以下项目，在此表示感谢：
+
+[vue-vben-admin](https://github.com/vbenjs/vue-vben-admin)、[Geeker-Admin](https://github.com/HalseySpicy/Geeker-Admin)
+、[gi-demo](https://github.com/lin-97/gi-demo)
