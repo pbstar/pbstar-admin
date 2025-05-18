@@ -481,5 +481,23 @@ const initR2r2Echarts = () => {
       }
     }
   }
+  @media screen and (max-width: 700px) {
+    .r2 {
+      flex-direction: column;
+      .r2Left {
+        width: 100%;
+        margin-bottom: 10px;
+        .r2l2 {
+          .news-item {
+            height: auto !important;
+            padding-bottom: 10px;
+          }
+        }
+      }
+      .r2Right {
+        width: 100%;
+      }
+    }
+  }
 }
 </style>

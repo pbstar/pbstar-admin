@@ -247,21 +247,17 @@ const handleSubmit = async () => {
   overflow: hidden;
   z-index: -1;
 }
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 700px) {
   .login-center {
     width: 90%;
     padding: 20px;
   }
   .login-lb {
-    bottom: -500px;
-    left: -300px;
-    width: 900px;
-    height: 800px;
+    left: -360px;
   }
   .login-rt {
-    top: -600px;
-    right: -700px;
-    width: 900px;
+    right: -550px;
+    top: -700px;
   }
 }
 </style>

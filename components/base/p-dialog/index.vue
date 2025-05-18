@@ -175,11 +175,14 @@ const emit = defineEmits(["update:modelValue", "botBtnClick"]);
 
 const dialogVisible = ref(props.modelValue);
 const zIndex = ref(1000);
+const isMobile = computed(() => {
+  return document.body.clientWidth <= 700;
+});
 const navWidth = computed(() => {
-  return sharedStore.isFull ? "0" : "200";
+  return sharedStore.isFull || isMobile.value ? "0" : "200";
 });
 const topHeight = computed(() => {
-  return sharedStore.isFull ? "0" : "90";
+  return sharedStore.isFull || isMobile.value ? "0" : "90";
 });
 
 watch(
@@ -255,7 +258,7 @@ const handleClickBot = (btn) => {
   right: 0;
 }
 .diadrawer {
-  width: 700px;
+  max-width: 100%;
   background-color: var(--c-bg-box);
   position: fixed;
   right: 0;
@@ -337,6 +340,7 @@ const handleClickBot = (btn) => {
   justify-content: center;
 }
 .diabox {
+  max-width: 100%;
   background: var(--c-bg);
   & > .header {
     width: 100%;

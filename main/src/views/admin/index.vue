@@ -45,7 +45,7 @@ const isFull = computed(() => {
   return sharedStore.isFull;
 });
 const isMobile = computed(() => {
-  return document.body.clientWidth < 600;
+  return document.body.clientWidth <= 700;
 });
 const toUnFull = () => {
   sharedStore.isFull = false;
@@ -120,7 +120,7 @@ router.beforeEach((to, from, next) => {
   overflow: hidden;
 
   .top {
-    height: 46px;
+    height: 50px;
     width: 100%;
     flex-shrink: 0;
   }
@@ -171,6 +171,11 @@ router.beforeEach((to, from, next) => {
         //上下跳动动画
         animation: upDown 1s infinite;
       }
+    }
+  }
+  @media screen and (max-width: 700px) {
+    .top {
+      height: 46px;
     }
   }
 }

@@ -57,7 +57,7 @@ const toChange = ({ value, index }) => {
       }
       &.active {
         color: var(--c-text);
-        font-weight: 600;
+        font-weight: bold;
         border-bottom: 3px solid var(--c-bg-theme);
       }
       &.onlyOne {
