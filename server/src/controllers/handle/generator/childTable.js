@@ -75,7 +75,7 @@ onBeforeMount(() => {
     request
       .get({
         base: "${json.apiBase}",
-        url: "${json.api.list}",
+        url: "/${json.appName}/${json.key}/getList",
         data: {
           ${json.childTableKey}: props.id,
         },
@@ -92,7 +92,7 @@ onBeforeMount(() => {
     if (btn === "edit") {
       request.get({
         base: "${json.apiBase}",
-        url: "${json.api.getOne}",
+        url: "/${json.appName}/${json.key}/getDetail",
         data: { id: row.id }
       }).then((res) => {
         if (res && res.code === 200 && res.data) {
@@ -110,7 +110,7 @@ onBeforeMount(() => {
         .then(() => {
           request.post({
             base: "${json.apiBase}",
-            url: "${json.api.delete}",
+            url: "/${json.appName}/${json.key}/delete",
             data: { idList: [row.id] }
           }).then((res) => {
             if (res && res.code === 200) {
@@ -137,8 +137,8 @@ onBeforeMount(() => {
     if (btn === "save") {
       const url =
         detailType.value == "add"
-          ? "${json.api.create}"
-          : "${json.api.update}";
+          ? "/${json.appName}/${json.key}/create"
+          : "/${json.appName}/${json.key}/update";
       request.post({
         base: "${json.apiBase}",
         url,

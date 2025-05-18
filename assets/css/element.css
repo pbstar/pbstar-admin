@@ -34,3 +34,10 @@ html.dark {
 .el-table th.el-table__cell {
   padding: 7px 0;
 }
+.el-radio,
+.el-checkbox {
+  margin-right: 20px;
+}
+.el-tabs__item {
+  padding: 0 10px;
+}

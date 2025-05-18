@@ -31,13 +31,7 @@ const defaultInfo = {
   childTableKey: "",
   title: "",
   apiBase: "",
-  api: {
-    list: "",
-    create: "",
-    update: "",
-    delete: "",
-    getOne: "",
-  },
+  appName: "",
   detailDiaType: "page",
   fields: [],
 };
@@ -151,8 +145,12 @@ const tableTopBtnClick = ({ btn }) => {
       info.value.template === "main" ||
       info.value.template === "childTable"
     ) {
-      if (!info.value.api.list) {
-        ElMessage.error("请输入列表接口");
+      if (!info.value.apiBase) {
+        ElMessage.error("请输入apiBase");
+        return;
+      }
+      if (!info.value.appName) {
+        ElMessage.error("请输入应用名称");
         return;
       }
     }
@@ -160,7 +158,7 @@ const tableTopBtnClick = ({ btn }) => {
       info.value.template === "childTable" ||
       info.value.template === "formTable"
     ) {
-      if (info.value.detailDiaType === "page") {
+      if (info.value.detailDiaType === "page" || !info.value.detailDiaType) {
         ElMessage.error("请选择详情页类型");
         return;
       }
@@ -291,50 +289,10 @@ const toHistoryUse = (row) => {
             class="item"
             :config="{
               type: 'input',
-              label: '列表接口',
-              placeholder: '请输入获取列表接口地址',
+              label: 'appName',
+              placeholder: '请输入应用名称',
             }"
-            v-model="info.api.list"
-          >
-          </p-item>
-          <p-item
-            class="item"
-            :config="{
-              type: 'input',
-              label: '新增接口',
-              placeholder: '请输入创建接口地址',
-            }"
-            v-model="info.api.create"
-          >
-          </p-item>
-          <p-item
-            class="item"
-            :config="{
-              type: 'input',
-              label: '修改接口',
-              placeholder: '请输入更新接口地址',
-            }"
-            v-model="info.api.update"
-          >
-          </p-item>
-          <p-item
-            class="item"
-            :config="{
-              type: 'input',
-              label: '删除接口',
-              placeholder: '请输入删除接口地址',
-            }"
-            v-model="info.api.delete"
-          >
-          </p-item>
-          <p-item
-            class="item"
-            :config="{
-              type: 'input',
-              label: '详情接口',
-              placeholder: '请输入获取单条接口地址',
-            }"
-            v-model="info.api.getOne"
+            v-model="info.appName"
           >
           </p-item>
         </div>
@@ -514,6 +472,7 @@ const toHistoryUse = (row) => {
             <p-codeView
               :code="item.fileCode"
               :filename="item.fileName"
+              :language="item.fileType"
             ></p-codeView>
           </el-tab-pane>
         </el-tabs>

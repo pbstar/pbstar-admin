@@ -1,12 +1,12 @@
-const create = async (json) => {
+const create = (json) => {
   let code = "";
-  code += await createScript(json);
-  code += await createHtml(json);
-  code += await createStyle(json);
+  code += createScript(json);
+  code += createHtml(json);
+  code += createStyle(json);
   return code;
 };
 
-const createScript = async (json) => {
+const createScript = (json) => {
   const tableColumn = [];
   json.fields.forEach((field) => {
     if (!field.showIn.includes("table")) return;
@@ -155,7 +155,7 @@ const createScript = async (json) => {
   return code;
 };
 
-const createHtml = async (json) => {
+const createHtml = (json) => {
   const formData = [];
   json.fields.forEach((field) => {
     if (!field.showIn.includes("form")) return;
@@ -236,7 +236,7 @@ const createHtml = async (json) => {
   return code;
 };
 
-const createStyle = async (json) => {
+const createStyle = (json) => {
   const code = `
 <style scoped lang="scss">
   .box {
