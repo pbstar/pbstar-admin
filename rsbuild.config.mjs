@@ -1,11 +1,13 @@
 import { defineConfig } from "@rsbuild/core";
 import { pluginVue } from "@rsbuild/plugin-vue";
 import { pluginSass } from "@rsbuild/plugin-sass";
+import { checkUniqueKeyPlugin } from "./build/plugins/checkUniqueKeyPlugin";
 import apps from "./apps/apps.json";
 
 const appsConfig = {};
 apps.forEach((item) => {
   appsConfig[item.name] = {
+    srcPah: `./apps/${item.name}/src`,
     source: {
       entry: {
         index: `./apps/${item.name}/src/main.js`,
@@ -13,7 +15,7 @@ apps.forEach((item) => {
     },
     output: {
       distPath: {
-        root: `./dist/${item.name}`,
+        root: `./build/dist/${item.name}`,
       },
     },
     resolve: {
@@ -21,20 +23,20 @@ apps.forEach((item) => {
         "@": `./apps/${item.name}/src`,
       },
     },
+    plugins: [
+      checkUniqueKeyPlugin({
+        checkPath: `./apps/${item.name}/src`,
+        checkKeys: ["tableKey", "table-key"],
+      }),
+    ],
   };
 });
 
 export default defineConfig({
-  plugins: [
-    pluginVue({
-      template: {
-        compilerOptions: {
-          isCustomElement: (tag) => /^micro-app/.test(tag),
-        },
-      },
-    }),
-    pluginSass(),
-  ],
+  plugins: [pluginVue(), pluginSass()],
+  output: {
+    legalComments: "none",
+  },
   resolve: {
     alias: {
       "@Pcomponents": "./components",
@@ -57,6 +59,7 @@ export default defineConfig({
         title: import.meta.env.PUBLIC_TITLE,
         favicon: "./main/src/assets/imgs/logo.png",
       },
+      srcPah: "./main/src",
       source: {
         entry: {
           index: "./main/src/main.js",
@@ -64,7 +67,7 @@ export default defineConfig({
       },
       output: {
         distPath: {
-          root: "./dist/main",
+          root: "./build/dist/main",
         },
       },
       resolve: {
@@ -72,6 +75,19 @@ export default defineConfig({
           "@": "./main/src",
         },
       },
+      plugins: [
+        pluginVue({
+          template: {
+            compilerOptions: {
+              isCustomElement: (tag) => /^micro-app/.test(tag),
+            },
+          },
+        }),
+        checkUniqueKeyPlugin({
+          checkPath: "./main/src",
+          checkKeys: ["tableKey", "table-key"],
+        }),
+      ],
     },
     ...appsConfig,
   },
