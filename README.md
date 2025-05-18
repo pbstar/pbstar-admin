@@ -64,6 +64,7 @@ pnpm remove <依赖名> --filter <包名>
 │ ├── system               # 系统管理
 │ └── example              # 示例应用
 ├── assets                 # 静态资源
+├── build                  # 打包脚本
 ├── cli                    # 脚手架
 ├── components             # 组件
 ├── main                   # 主应用

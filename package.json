@@ -41,6 +41,7 @@
     "@rsbuild/plugin-vue": "^1.0.7",
     "globby": "^14.1.0",
     "husky": "^9.1.7",
+    "jszip": "^3.10.1",
     "lint-staged": "^16.0.0",
     "prettier": "^3.5.3"
   },

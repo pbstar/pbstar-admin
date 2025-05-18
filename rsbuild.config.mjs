@@ -2,6 +2,7 @@ import { defineConfig } from "@rsbuild/core";
 import { pluginVue } from "@rsbuild/plugin-vue";
 import { pluginSass } from "@rsbuild/plugin-sass";
 import { checkUniqueKeyPlugin } from "./build/plugins/checkUniqueKeyPlugin";
+import { distZipPlugin } from "./build/plugins/distZipPlugin";
 import apps from "./apps/apps.json";
 
 const appsConfig = {};
@@ -33,7 +34,7 @@ apps.forEach((item) => {
 });
 
 export default defineConfig({
-  plugins: [pluginVue(), pluginSass()],
+  plugins: [pluginVue(), pluginSass(), distZipPlugin()],
   output: {
     legalComments: "none",
   },
