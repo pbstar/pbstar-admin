@@ -8,7 +8,6 @@ import apps from "./apps/apps.json";
 const appsConfig = {};
 apps.forEach((item) => {
   appsConfig[item.name] = {
-    srcPah: `./apps/${item.name}/src`,
     source: {
       entry: {
         index: `./apps/${item.name}/src/main.js`,
@@ -60,7 +59,6 @@ export default defineConfig({
         title: import.meta.env.PUBLIC_TITLE,
         favicon: "./main/src/assets/imgs/logo.png",
       },
-      srcPah: "./main/src",
       source: {
         entry: {
           index: "./main/src/main.js",

@@ -45,7 +45,7 @@ const isFull = computed(() => {
   return sharedStore.isFull;
 });
 const isMobile = computed(() => {
-  return document.body.clientWidth <= 700;
+  return window.innerWidth <= 700;
 });
 const toUnFull = () => {
   sharedStore.isFull = false;
@@ -89,6 +89,10 @@ if (!sharedStore.userInfo) {
         localStorage.removeItem("p_token");
         router.push({ path: "/login" });
       }
+    })
+    .catch((err) => {
+      localStorage.removeItem("p_token");
+      router.push({ path: "/login" });
     });
 }
 router.beforeEach((to, from, next) => {

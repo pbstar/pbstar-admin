@@ -176,7 +176,7 @@ const emit = defineEmits(["update:modelValue", "botBtnClick"]);
 const dialogVisible = ref(props.modelValue);
 const zIndex = ref(1000);
 const isMobile = computed(() => {
-  return document.body.clientWidth <= 700;
+  return window.innerWidth <= 700;
 });
 const navWidth = computed(() => {
   return sharedStore.isFull || isMobile.value ? "0" : "200";

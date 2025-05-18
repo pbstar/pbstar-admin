@@ -2,11 +2,11 @@
   {
     "name": "example",
     "devPort": 8801,
-    "proUrl": ""
+    "proUrl": "http://152.136.96.92:8801"
   },
   {
     "name": "system",
     "devPort": 8802,
-    "proUrl": ""
+    "proUrl": "http://152.136.96.92:8802"
   }
 ]
