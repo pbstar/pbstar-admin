@@ -96,6 +96,7 @@
         </g>
       </svg>
     </div>
+    <div class="login-footer">京ICP备2025125905号</div>
   </div>
 </template>
 <script setup>
@@ -246,6 +247,19 @@ const handleSubmit = async () => {
   width: 900px;
   overflow: hidden;
   z-index: -1;
+}
+.login-footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 13px;
+  background-color: rgba(245, 245, 245, 0.3);
+  height: 30px;
+  line-height: 30px;
+  color: #666;
+  z-index: 0;
 }
 @media screen and (max-width: 700px) {
   .login-center {

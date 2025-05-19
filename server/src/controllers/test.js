@@ -66,7 +66,7 @@ export default {
       msg: "成功",
     });
   },
-  // 获取教育经历子表列表
+  // 获取子表列表
   getEducationList: (req, res) => {
     const { testId } = req.query;
     const result = crud.getChildrenList(db, "edu", "testId", testId);
@@ -76,7 +76,7 @@ export default {
       msg: "成功",
     });
   },
-  // 获取教育经历子表详情
+  // 获取子表详情
   getEducationDetail: (req, res) => {
     const { id } = req.query;
     const result = crud.getChildrenById(db, "edu", id);
@@ -86,7 +86,7 @@ export default {
       msg: "成功",
     });
   },
-  // 新增教育经历子表
+  // 新增子表
   createEducation: (req, res) => {
     const { testId, eduName, dateRange, remark } = req.body;
     const newObj = { testId, eduName, dateRange, remark };
@@ -97,7 +97,7 @@ export default {
       msg: "成功",
     });
   },
-  // 修改教育经历子表
+  // 修改子表
   updateEducation: (req, res) => {
     const { id, testId, eduName, dateRange, remark } = req.body;
     const updatedObj = { id, testId, eduName, dateRange, remark };
@@ -108,7 +108,7 @@ export default {
       msg: "成功",
     });
   },
-  // 删除教育经历子表
+  // 删除子表
   deleteEducation: (req, res) => {
     const { idList } = req.body;
     const result = crud.deleteChildren(db, "edu", idList);

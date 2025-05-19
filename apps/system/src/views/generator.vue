@@ -129,12 +129,8 @@ const tableTopBtnClick = ({ btn }) => {
       ElMessage.error("请选择模板");
       return;
     }
-    if (info.value.template === "childTable" && !info.value.childTableKey) {
+    if (info.value.template !== "main" && !info.value.childTableKey) {
       ElMessage.error("请输入childTableKey");
-      return;
-    }
-    if (!info.value.key) {
-      ElMessage.error("请输入key");
       return;
     }
     if (!info.value.title) {
@@ -145,6 +141,10 @@ const tableTopBtnClick = ({ btn }) => {
       info.value.template === "main" ||
       info.value.template === "childTable"
     ) {
+      if (!info.value.key) {
+        ElMessage.error("请输入key");
+        return;
+      }
       if (!info.value.apiBase) {
         ElMessage.error("请输入apiBase");
         return;
@@ -167,34 +167,28 @@ const tableTopBtnClick = ({ btn }) => {
       ElMessage.error("请添加字段");
       return;
     }
-    ElMessageBox.confirm("确认生成吗?", "提示", {
-      type: "warning",
-    }).then(() => {
-      let time = getNowTime("yyyy-mm-dd hh:mm:ss");
-      historyList.value.unshift({
-        info: info.value,
-        name: info.value.title + "_" + info.value.template + "_" + time,
-      });
-      localStorage.setItem(
-        "p_codeGenerator",
-        JSON.stringify(historyList.value),
-      );
-      request
-        .post({
-          base: "base",
-          url: "/system/generator",
-          data: info.value,
-        })
-        .then((res) => {
-          if (res && res.code == 200) {
-            codeList.value = res.data;
-            isCodeView.value = true;
-            ElMessage.success(res.msg || "操作成功");
-          } else {
-            ElMessage.error(res.msg || "操作异常");
-          }
-        });
+    let time = getNowTime("yyyy-mm-dd hh:mm:ss");
+    historyList.value.unshift({
+      info: info.value,
+      name: info.value.title + "_" + info.value.template + "_" + time,
     });
+    localStorage.setItem("p_codeGenerator", JSON.stringify(historyList.value));
+    request
+      .post({
+        base: "base",
+        url: "/system/generator",
+        data: info.value,
+      })
+      .then((res) => {
+        if (res && res.code == 200) {
+          codeList.value = res.data;
+          codeViewTab.value = 0;
+          isCodeView.value = true;
+          ElMessage.success(res.msg || "操作成功");
+        } else {
+          ElMessage.error(res.msg || "操作异常");
+        }
+      });
   } else if (btn == "reset") {
     info.value = cloneDeep(defaultInfo);
   } else if (btn == "history") {
@@ -241,21 +235,25 @@ const toHistoryUse = (row) => {
           </p-item>
           <p-item
             class="item"
+            v-show="info.template === 'main' || info.template === 'childTable'"
             :config="{
               type: 'input',
               label: 'key',
-              placeholder: '作为唯一标识，请使用英文驼峰命名',
+              placeholder:
+                info.template === 'main' ? '作为唯一标识' : '请输入主表key',
             }"
             v-model="info.key"
           >
           </p-item>
           <p-item
             class="item"
-            v-show="info.template === 'childTable'"
+            v-show="
+              info.template === 'childTable' || info.template === 'formTable'
+            "
             :config="{
               type: 'input',
               label: 'childTableKey',
-              placeholder: '子表中关联主表id的字段',
+              placeholder: '子表名',
             }"
             v-model="info.childTableKey"
           >

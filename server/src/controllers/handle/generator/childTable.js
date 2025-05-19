@@ -7,6 +7,7 @@ const create = (json) => {
 };
 
 const createScript = (json) => {
+  const key = json.key.charAt(0).toUpperCase() + json.key.slice(1);
   const tableColumn = [];
   json.fields.forEach((field) => {
     if (!field.showIn.includes("table")) return;
@@ -75,9 +76,9 @@ onBeforeMount(() => {
     request
       .get({
         base: "${json.apiBase}",
-        url: "/${json.appName}/${json.key}/getList",
+        url: "/${json.appName}/${json.key}/get${key}List",
         data: {
-          ${json.childTableKey}: props.id,
+          ${json.key}Id: props.id,
         },
       })
       .then((res) => {
@@ -92,7 +93,7 @@ onBeforeMount(() => {
     if (btn === "edit") {
       request.get({
         base: "${json.apiBase}",
-        url: "/${json.appName}/${json.key}/getDetail",
+        url: "/${json.appName}/${json.key}/get${key}Detail",
         data: { id: row.id }
       }).then((res) => {
         if (res && res.code === 200 && res.data) {
@@ -110,7 +111,7 @@ onBeforeMount(() => {
         .then(() => {
           request.post({
             base: "${json.apiBase}",
-            url: "/${json.appName}/${json.key}/delete",
+            url: "/${json.appName}/${json.key}/delete${key}",
             data: { idList: [row.id] }
           }).then((res) => {
             if (res && res.code === 200) {
@@ -128,7 +129,7 @@ onBeforeMount(() => {
     if (btn === "add") {
       detailType.value = "add";
       detailInfo.value = {
-        ${json.childTableKey}: props.id,
+        ${json.key}Id: props.id,
       };
       isDetail.value = true;
     }
@@ -137,8 +138,8 @@ onBeforeMount(() => {
     if (btn === "save") {
       const url =
         detailType.value == "add"
-          ? "/${json.appName}/${json.key}/create"
-          : "/${json.appName}/${json.key}/update";
+          ? "/${json.appName}/${json.key}/create${key}"
+          : "/${json.appName}/${json.key}/update${key}";
       request.post({
         base: "${json.apiBase}",
         url,

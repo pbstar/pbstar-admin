@@ -5,6 +5,8 @@ import main_route from "./handle/generator/main_route.js";
 import main_s_route from "./handle/generator/main_s_route.js";
 import main_s_controller from "./handle/generator/main_s_controller.js";
 import childTable from "./handle/generator/childTable.js";
+import childTable_s_route from "./handle/generator/childTable_s_route.js";
+import childTable_s_controller from "./handle/generator/childTable_s_controller.js";
 import formTable from "./handle/generator/formTable.js";
 export default {
   toCreate: async (req, res) => {
@@ -58,15 +60,34 @@ export default {
         const code = childTable.create(jsonData);
         const formattedCode = await prettier.format(code, { parser: "vue" });
         arr.push({
-          fileName: `${jsonData.key}.vue`,
+          fileName: `${jsonData.childTableKey}.vue`,
           fileCode: formattedCode,
           fileType: "vue",
+        });
+        const code__s_route = childTable_s_route.create(jsonData);
+        const formattedCodeSRoute = await prettier.format(code__s_route, {
+          parser: "espree",
+        });
+        arr.push({
+          fileName: `${jsonData.childTableKey}_s_route.js`,
+          fileCode: formattedCodeSRoute,
+          fileType: "js",
+        });
+        const code__s_controller = childTable_s_controller.create(jsonData);
+        const formattedCodeSController = await prettier.format(
+          code__s_controller,
+          { parser: "espree" },
+        );
+        arr.push({
+          fileName: `${jsonData.childTableKey}_s_controller.js`,
+          fileCode: formattedCodeSController,
+          fileType: "js",
         });
       } else if (jsonData.template === "formTable") {
         const code = formTable.create(jsonData);
         const formattedCode = await prettier.format(code, { parser: "vue" });
         arr.push({
-          fileName: `${jsonData.key}.vue`,
+          fileName: `${jsonData.childTableKey}.vue`,
           fileCode: formattedCode,
           fileType: "vue",
         });

@@ -24,7 +24,7 @@ const tableTopBtn = ref([{ key: "add", label: "新增" }]);
 const tableRightBtn = ref([
   { key: "view", label: "查看" },
   { key: "edit", label: "编辑" },
-  { key: "delete", label: "删除" },
+  { key: "delete", label: "删除", show: (row) => row.id != 1 },
 ]);
 const pagination = ref({
   pageNumber: 1,

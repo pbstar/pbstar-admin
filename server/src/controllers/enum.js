@@ -85,7 +85,7 @@ export default {
       msg: "成功",
     });
   },
-  // 获取教育经历子表列表
+  // 获取子表列表
   getEnumList: (req, res) => {
     const { enumId } = req.query;
     const result = crud.getChildrenList(db, "enum", "enumId", enumId);
@@ -95,7 +95,7 @@ export default {
       msg: "成功",
     });
   },
-  // 获取教育经历子表详情
+  // 获取子表详情
   getEnumDetail: (req, res) => {
     const { id } = req.query;
     const result = crud.getChildrenById(db, "enum", id);
@@ -105,7 +105,7 @@ export default {
       msg: "成功",
     });
   },
-  // 新增教育经历子表
+  // 新增子表
   createEnum: (req, res) => {
     const { enumId, label, value } = req.body;
     const newObj = { enumId, label, value };
@@ -116,7 +116,7 @@ export default {
       msg: "成功",
     });
   },
-  // 修改教育经历子表
+  // 修改子表
   updateEnum: (req, res) => {
     const { id, enumId, label, value } = req.body;
     const updatedObj = { id, enumId, label, value };
@@ -127,7 +127,7 @@ export default {
       msg: "成功",
     });
   },
-  // 删除教育经历子表
+  // 删除子表
   deleteEnum: (req, res) => {
     const { idList } = req.body;
     const result = crud.deleteChildren(db, "enum", idList);

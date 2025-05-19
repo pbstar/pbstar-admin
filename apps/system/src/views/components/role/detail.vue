@@ -96,6 +96,7 @@ defineExpose({
             isText: detailType == 'view',
             type: 'input',
             label: '角色Key',
+            isDisabled: detailInfo.id == '1',
           }"
           v-model="detailInfo.key"
         />
@@ -106,6 +107,7 @@ defineExpose({
             type: 'selectTree',
             label: '菜单权限',
             options: navList,
+            isDisabled: detailInfo.id == '1',
             more: {
               showCheckbox: true,
               multiple: true,

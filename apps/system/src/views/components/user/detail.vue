@@ -105,6 +105,7 @@ defineExpose({
             isText: detailType == 'view',
             type: 'input',
             label: '账号',
+            isDisabled: detailInfo.id == '1',
           }"
           v-model="detailInfo.username"
         />
@@ -125,6 +126,7 @@ defineExpose({
             type: 'select',
             label: '角色',
             options: roleList,
+            isDisabled: detailInfo.id == '1',
           }"
           v-model="detailInfo.role"
         />
