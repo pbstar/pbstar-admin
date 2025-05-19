@@ -19,56 +19,35 @@ const docs = ref([
   {
     text: "简介",
     items: [
-      {
-        text: "什么是 PbstarAdmin ?",
-        link: "http://152.136.96.92:8799/docs/what.html",
-      },
-      {
-        text: "目录结构",
-        link: "http://152.136.96.92:8799/docs/structure.html",
-      },
-      { text: "快速开始", link: "http://152.136.96.92:8799/docs/start.html" },
+      { text: "什么是 PbstarAdmin ?", link: "/docs/what.html" },
+      { text: "目录结构", link: "/docs/structure.html" },
+      { text: "快速开始", link: "/docs/start.html" },
     ],
   },
   {
     text: "指南",
     items: [
-      { text: "Cli 脚手架", link: "http://152.136.96.92:8799/docs/cli.html" },
-      {
-        text: "Components 组件库",
-        link: "http://152.136.96.92:8799/docs/components.html",
-      },
-      {
-        text: "Assets 静态资源",
-        link: "http://152.136.96.92:8799/docs/assets.html",
-      },
-      { text: "Main 主应用", link: "http://152.136.96.92:8799/docs/main.html" },
-      { text: "Apps 子应用", link: "http://152.136.96.92:8799/docs/apps.html" },
+      { text: "Cli 脚手架", link: "/docs/cli.html" },
+      { text: "Components 组件库", link: "/docs/components.html" },
+      { text: "Assets 静态资源", link: "/docs/assets.html" },
+      { text: "Main 主应用", link: "/docs/main.html" },
+      { text: "Apps 子应用", link: "/docs/apps.html" },
     ],
   },
   {
     text: "进阶",
     items: [
-      {
-        text: "Generator 代码生成器",
-        link: "http://152.136.96.92:8799/docs/generator.html",
-      },
-      {
-        text: "Server 服务端",
-        link: "http://152.136.96.92:8799/docs/server.html",
-      },
+      { text: "Generator 代码生成器", link: "/docs/generator.html" },
+      { text: "Server 服务端", link: "/docs/server.html" },
     ],
   },
   {
     text: "其他",
     items: [
-      { text: "常见问题", link: "http://152.136.96.92:8799/docs/faq.html" },
-      { text: "开发计划", link: "http://152.136.96.92:8799/docs/plan.html" },
-      {
-        text: "参与贡献",
-        link: "http://152.136.96.92:8799/docs/contribute.html",
-      },
-      { text: "赞助支持", link: "http://152.136.96.92:8799/docs/sponsor.html" },
+      { text: "常见问题", link: "/docs/faq.html" },
+      { text: "开发计划", link: "/docs/plan.html" },
+      { text: "参与贡献", link: "/docs/contribute.html" },
+      { text: "赞助支持", link: "/docs/sponsor.html" },
     ],
   },
 ]);
@@ -224,7 +203,7 @@ const initR2r2Echarts = () => {
                   <a
                     v-for="(item, iIndex) in group.items"
                     :key="iIndex"
-                    :href="item.link"
+                    :href="'http://pbstar-admin-docs.pbstar.cn' + item.link"
                     target="_blank"
                   >
                     {{ item.text }}

@@ -9,8 +9,8 @@
 
 <p align="center">
 	<a href="https://github.com/pbstar/pbstar-admin/blob/main/LICENSE"><img src="https://img.shields.io/github/license/mashape/apistatus.svg"></a>
-    <a href="http://152.136.96.92:8799"><img src="https://img.shields.io/badge/官方文档-5672CD?style=flat"></a>
-    <a href="https://github.com/pbstar/pbstar-admin"><img src="https://img.shields.io/badge/在线演示-FF5722?style=flat"></a>
+    <a href="http://pbstar-admin-docs.pbstar.cn/"><img src="https://img.shields.io/badge/官方文档-5672CD?style=flat"></a>
+    <a href="http://pbstar-admin.pbstar.cn/"><img src="https://img.shields.io/badge/在线演示-FF5722?style=flat"></a>
     <a href="https://github.com/pbstar/pbstar-admin"><img src="https://img.shields.io/badge/WeChat-P24612582-brightgreen.svg"></a>
 </p>
 

@@ -2,11 +2,11 @@
   {
     "name": "example",
     "devPort": 8801,
-    "proUrl": "http://152.136.96.92:8801"
+    "proUrl": "http://pbstar-admin-example.pbstar.cn/"
   },
   {
     "name": "system",
     "devPort": 8802,
-    "proUrl": "http://152.136.96.92:8802"
+    "proUrl": "http://pbstar-admin-system.pbstar.cn/"
   }
 ]
