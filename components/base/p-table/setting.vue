@@ -66,8 +66,7 @@ const handleColumnList = (type) => {
   const columnList = [];
   allColumn.value.forEach((item) => {
     if (item.isChecked) {
-      const obj = { ...item };
-      delete obj.isChecked;
+      const obj = props.column.find((i) => i.key == item.key);
       columnList.push(obj);
     }
   });

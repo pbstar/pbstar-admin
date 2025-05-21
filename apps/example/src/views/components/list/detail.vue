@@ -1,9 +1,9 @@
 <script setup>
-import { ref, onBeforeMount } from "vue";
+import { ref, onBeforeMount, nextTick } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import request from "@Passets/utils/request";
 import PCollapse from "@Pcomponents/base/p-collapse/index.vue";
-import PItem from "@Pcomponents/base/p-item/index.vue";
+import PForm from "@Pcomponents/base/p-form/index.vue";
 import hobbyTable from "./hobbyTable.vue";
 import eduTable from "./eduTable.vue";
 
@@ -20,6 +20,53 @@ const props = defineProps({
 const detailInfo = ref({});
 const detailType = ref("");
 const detailId = ref("");
+const formRef = ref(null);
+const formData = ref([
+  {
+    key: "name",
+    label: "姓名",
+    type: "input",
+    isText: detailType.value == "view",
+    isRequired: true,
+  },
+  {
+    key: "age",
+    label: "年龄",
+    type: "inputNumber",
+    isText: detailType.value == "view",
+    isRequired: true,
+  },
+  {
+    key: "sex",
+    label: "性别",
+    type: "select",
+    isText: detailType.value == "view",
+    isRequired: true,
+    options: [
+      { label: "男", value: "1" },
+      { label: "女", value: "2" },
+    ],
+  },
+  {
+    key: "ethnic",
+    label: "民族",
+    type: "select",
+    enumKey: "p_ethnic",
+    isText: detailType == "view",
+  },
+  {
+    key: "isHealthy",
+    label: "是否健康",
+    type: "select",
+    enumKey: "p_boolean",
+    isText: detailType == "view",
+  },
+  {
+    key: "hobbyList",
+    label: "兴趣爱好",
+    type: "slot",
+  },
+]);
 
 onBeforeMount(() => {
   detailType.value = props.type;
@@ -41,13 +88,21 @@ const getDetailInfo = () => {
     .then((res) => {
       if (res && res.code == 200) {
         detailInfo.value = res.data;
+        nextTick(() => {
+          formRef.value && formRef.value.toChangeValue(res.data);
+        });
       } else {
         ElMessage.error(res.msg || "操作异常");
       }
     });
 };
 const getFormValue = () => {
-  return detailInfo.value;
+  const res = formRef.value && formRef.value.getFormValue();
+  if (res && res.errMsg) {
+    ElMessage.error(res.errMsg);
+    return false;
+  }
+  return res.value;
 };
 
 defineExpose({
@@ -58,69 +113,11 @@ defineExpose({
 <template>
   <div class="detail">
     <p-collapse title="基础信息" :isControl="false" :showDownLine="false">
-      <div class="items">
-        <p-item
-          class="dtItem"
-          :config="{
-            isText: detailType == 'view',
-            type: 'input',
-            label: '姓名',
-          }"
-          v-model="detailInfo.name"
-        />
-        <p-item
-          class="dtItem"
-          :config="{
-            isText: detailType == 'view',
-            type: 'inputNumber',
-            label: '年龄',
-          }"
-          v-model="detailInfo.age"
-        />
-        <p-item
-          class="dtItem"
-          :config="{
-            isText: detailType == 'view',
-            type: 'select',
-            label: '性别',
-            options: [
-              { label: '男', value: '1' },
-              { label: '女', value: '2' },
-            ],
-          }"
-          v-model="detailInfo.sex"
-        />
-        <p-item
-          class="dtItem"
-          :config="{
-            isText: detailType == 'view',
-            type: 'select',
-            label: '民族',
-            enumKey: 'p_ethnic',
-          }"
-          v-model="detailInfo.ethnic"
-        />
-        <p-item
-          class="dtItem"
-          :config="{
-            isText: detailType == 'view',
-            type: 'select',
-            label: '是否健康',
-            enumKey: 'p_boolean',
-          }"
-          v-model="detailInfo.isHealthy"
-        />
-        <p-item
-          class="dtItem"
-          style="width: 96%"
-          :config="{
-            type: 'slot',
-            label: '兴趣爱好',
-          }"
-        >
+      <p-form :data="formData" :spanList="[4, 4, 4, 4, 4, 12]" ref="formRef">
+        <template #hobbyList>
           <hobbyTable :type="detailType" v-model="detailInfo.hobbyList" />
-        </p-item>
-      </div>
+        </template>
+      </p-form>
     </p-collapse>
     <p-collapse title="教育背景">
       <eduTable :type="detailType" :id="detailId" />
@@ -128,17 +125,4 @@ defineExpose({
   </div>
 </template>
 
-<style scoped lang="scss">
-.detail {
-  .items {
-    display: flex;
-    flex-wrap: wrap;
-
-    .dtItem {
-      width: 30%;
-      margin-right: 3%;
-      margin-bottom: 10px;
-    }
-  }
-}
-</style>
+<style scoped lang="scss"></style>

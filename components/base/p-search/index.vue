@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch } from "vue";
+import { ref } from "vue";
 import formItem from "@Pcomponents/base/p-item/index.vue";
 const props = defineProps({
   data: {
@@ -12,58 +12,42 @@ const props = defineProps({
   },
 });
 const emit = defineEmits(["change", "btnClick"]);
-const data = ref([]);
+const data = ref(props.data);
+const valueObj = ref({});
 const handleChange = (val) => {
   emit("change", val);
 };
-watch(
-  () => props.data,
-  (newVal) => {
-    data.value = newVal.map((item) => {
-      if (item.isRequired !== true) {
-        item.isRequired = false;
-      }
-      return { ...item };
-    });
-  },
-  {
-    immediate: true,
-  }
-);
-
 const toSearch = () => {
-  const obj = {};
-  data.value.forEach((item) => {
-    if (item.value || item.value == 0 || item.value == false) {
-      obj[item.key] = item.value;
-    }
-  });
   emit("btnClick", {
     type: "search",
-    data: obj,
+    data: valueObj.value,
   });
 };
 const toReset = () => {
-  const obj = {};
-  data.value.forEach((item) => {
-    delete item.value;
-  });
+  valueObj.value = {};
   emit("btnClick", {
     type: "reset",
-    data: obj,
+    data: valueObj.value,
   });
 };
-const toChangeDataOptions = ({ key, options }) => {
-  if (!key || !options) {
-    return;
-  }
-  const index = data.value.findIndex((item) => item.key == key);
-  if (index > -1) {
-    data.value[index].options = options;
-  }
+const toChangeData = (list) => {
+  list.forEach((item) => {
+    if (!item.key) {
+      console.warn("toChangeData方法的数组参数中必须包含key");
+      return;
+    }
+    const index = data.value.findIndex((it) => it.key == item.key);
+    if (index > -1) {
+      data.value[index] = { ...data.value[index], ...item };
+    }
+  });
+};
+const toChangeValue = (obj) => {
+  valueObj.value = { ...valueObj.value, ...obj };
 };
 defineExpose({
-  toChangeDataOptions,
+  toChangeData,
+  toChangeValue,
 });
 </script>
 <template>
@@ -73,9 +57,13 @@ defineExpose({
       v-for="(item, index) in data"
       :key="index"
       :config="item"
-      v-model="item.value"
+      v-model="valueObj[item.key]"
       @change="handleChange"
-    ></formItem>
+    >
+      <template v-if="item.type === 'slot'" #[item.key]>
+        <slot :name="item.key"></slot>
+      </template>
+    </formItem>
     <div class="item" style="width: 160px; height: 30px"></div>
     <div class="searchBtn">
       <el-button type="primary" plain @click="toSearch">搜索</el-button>

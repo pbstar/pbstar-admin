@@ -100,20 +100,24 @@ const detailRef = ref(null);
 const detailBotBtn = ref([{ key: "back", label: "返回" }]);
 
 onMounted(() => {
-  tableRef.value.toChangeColumnOptions({
-    key: "sex",
-    options: [
-      { label: "男", value: "1" },
-      { label: "女", value: "2" },
-    ],
-  });
-  searchRef.value.toChangeDataOptions({
-    key: "sex",
-    options: [
-      { label: "男", value: "1" },
-      { label: "女", value: "2" },
-    ],
-  });
+  tableRef.value.toChangeColumn([
+    {
+      key: "sex",
+      options: [
+        { label: "男", value: "1" },
+        { label: "女", value: "2" },
+      ],
+    },
+  ]);
+  searchRef.value.toChangeData([
+    {
+      key: "sex",
+      options: [
+        { label: "男", value: "1" },
+        { label: "女", value: "2" },
+      ],
+    },
+  ]);
   initTable();
 });
 const toSearch = ({ data }) => {

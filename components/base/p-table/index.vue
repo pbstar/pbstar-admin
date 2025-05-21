@@ -16,7 +16,7 @@
         <setting
           v-if="props.showSetting && props.tableKey"
           :tableKey="props.tableKey"
-          :column="props.column"
+          :column="allColumn"
           @change="settingChange"
         />
         <slot name="topRight"></slot>
@@ -59,7 +59,7 @@
           </template>
         </el-table-column>
         <el-table-column
-          v-else-if="optionsMap[item.key] && optionsMap[item.key].length > 0"
+          v-else-if="item.options"
           :prop="item.key"
           :label="item.label"
           :width="item.width"
@@ -67,8 +67,10 @@
         >
           <template #default="scope">
             {{
-              optionsMap[item.key].find((it) => it.value == scope.row[item.key])
-                ?.label || ""
+              item.options.find((it) => it.value == scope.row[item.key])
+                ?.label ||
+              scope.row[item.key] ||
+              ""
             }}
           </template>
         </el-table-column>
@@ -174,7 +176,8 @@ const props = defineProps({
 });
 const emit = defineEmits(["rightBtnClick", "topBtnClick", "paginationChange"]);
 
-const columnList = ref(props.column);
+const columnList = ref([]);
+const allColumn = ref(props.column);
 const dataList = ref([]);
 const pageNumber = ref(1);
 const pageSize = ref(10);
@@ -189,11 +192,36 @@ const columnItemDefault = {
   options: [], //枚举值（优先级高于枚举类型）
   slot: null, //插槽名（非必填）
 };
-const optionsMap = ref([]);
 const exportLoading = ref(false);
 
 if (props.showSetting && !props.tableKey) {
   console.error("showSetting为true时必须传入tableKey");
+}
+const enumKeyList = [];
+allColumn.value.forEach((item) => {
+  item = Object.assign(columnItemDefault, item);
+  if (
+    item.enumKey &&
+    !enumKeyList.includes(item.enumKey) &&
+    (!item.options || item.options.length == 0)
+  ) {
+    enumKeyList.push(item.enumKey);
+  }
+});
+columnList.value = allColumn.value;
+if (enumKeyList.length > 0) {
+  let str = enumKeyList.join(",");
+  enumStore.getEnum(str).then((res) => {
+    if (res) {
+      for (const enumKey in res) {
+        allColumn.value.forEach((item) => {
+          if (item.enumKey == enumKey) {
+            item.options = res[enumKey];
+          }
+        });
+      }
+    }
+  });
 }
 
 const getIndex = (index) => {
@@ -231,11 +259,17 @@ const settingChange = (val) => {
 const handleSelectionChange = (val) => {
   selectionList.value = val;
 };
-const toChangeColumnOptions = ({ key, options }) => {
-  if (!key || !options) {
-    return;
-  }
-  optionsMap.value[key] = options;
+const toChangeColumn = (list) => {
+  list.forEach((item) => {
+    if (!item.key) {
+      console.warn("toChangeColumn方法的数组参数中必须包含key");
+      return;
+    }
+    const index = allColumn.value.findIndex((it) => it.key == item.key);
+    if (index > -1) {
+      allColumn.value[index] = Object.assign(allColumn.value[index], item);
+    }
+  });
 };
 const toExport = () => {
   exportLoading.value = true;
@@ -246,7 +280,7 @@ const toExport = () => {
       return;
     }
     const rows = [];
-    const thCells = props.column.map((item) => {
+    const thCells = allColumn.value.map((item) => {
       return item.label;
     });
     rows.push({
@@ -254,11 +288,9 @@ const toExport = () => {
     });
     dataList.value.forEach((item) => {
       const row = [];
-      props.column.forEach((col) => {
-        if (optionsMap.value[col.key] && optionsMap.value[col.key].length > 0) {
-          const obj = optionsMap.value[col.key].find(
-            (it) => it.value == item[col.key],
-          );
+      allColumn.value.forEach((col) => {
+        if (col.options) {
+          const obj = col.options.find((it) => it.value == item[col.key]);
           if (obj) {
             row.push(obj.label);
             return;
@@ -293,41 +325,6 @@ const toExport = () => {
       });
   });
 };
-
-// 动态更新column
-watch(
-  () => props.column,
-  async (val) => {
-    const enumKeyList = [];
-    props.column.forEach((item) => {
-      item = { ...columnItemDefault, ...item };
-      if (item.options && item.options.length > 0) {
-        optionsMap.value[item.key] = item.options;
-      } else if (
-        item.enumKey &&
-        !enumKeyList.includes(item.enumKey) &&
-        !optionsMap.value[item.key]
-      ) {
-        enumKeyList.push(item.enumKey);
-      }
-    });
-    if (enumKeyList.length > 0) {
-      let str = enumKeyList.join(",");
-      const res = await enumStore.getEnum(str);
-      for (const enumKey in res) {
-        props.column.forEach((item) => {
-          if (item.enumKey == enumKey) {
-            optionsMap.value[item.key] = res[enumKey];
-          }
-        });
-      }
-    }
-  },
-  {
-    deep: true,
-    immediate: true,
-  },
-);
 // 动态处理data
 watch(
   () => props.data,
@@ -356,7 +353,7 @@ watch(
   },
 );
 defineExpose({
-  toChangeColumnOptions,
+  toChangeColumn,
 });
 </script>
 <style scoped>
