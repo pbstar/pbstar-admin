@@ -7,7 +7,7 @@ const create = (json) => {
 };
 
 const createScript = (json) => {
-  const key = json.key.charAt(0).toUpperCase() + json.key.slice(1);
+  const key = json.childKey.charAt(0).toUpperCase() + json.childKey.slice(1);
   const tableColumn = [];
   json.fields.forEach((field) => {
     if (!field.showIn.includes("table")) return;
@@ -75,8 +75,8 @@ onBeforeMount(() => {
     tableData.value = [];
     request
       .get({
-        base: "${json.apiBase}",
-        url: "/${json.appName}/${json.key}/get${key}List",
+        base: "${json.apiKey}",
+        url: "/${json.apiBase}/${json.key}/get${key}List",
         data: {
           ${json.key}Id: props.id,
         },
@@ -92,8 +92,8 @@ onBeforeMount(() => {
   const tableRightBtnClick = ({row, btn}) => {
     if (btn === "edit") {
       request.get({
-        base: "${json.apiBase}",
-        url: "/${json.appName}/${json.key}/get${key}Detail",
+        base: "${json.apiKey}",
+        url: "/${json.apiBase}/${json.key}/get${key}Detail",
         data: { id: row.id }
       }).then((res) => {
         if (res && res.code === 200 && res.data) {
@@ -110,8 +110,8 @@ onBeforeMount(() => {
       })
         .then(() => {
           request.post({
-            base: "${json.apiBase}",
-            url: "/${json.appName}/${json.key}/delete${key}",
+            base: "${json.apiKey}",
+            url: "/${json.apiBase}/${json.key}/delete${key}",
             data: { idList: [row.id] }
           }).then((res) => {
             if (res && res.code === 200) {
@@ -138,10 +138,10 @@ onBeforeMount(() => {
     if (btn === "save") {
       const url =
         detailType.value == "add"
-          ? "/${json.appName}/${json.key}/create${key}"
-          : "/${json.appName}/${json.key}/update${key}";
+          ? "/${json.apiBase}/${json.key}/create${key}"
+          : "/${json.apiBase}/${json.key}/update${key}";
       request.post({
-        base: "${json.apiBase}",
+        base: "${json.apiKey}",
         url,
         data: detailInfo.value,
       }).then((res) => {

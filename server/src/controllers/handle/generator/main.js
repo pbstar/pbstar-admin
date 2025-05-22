@@ -89,8 +89,8 @@ const createScript = (json) => {
     };
     tableData.value = [];
     request.post({
-      base: "${json.apiBase}",
-      url: "/${json.appName}/${json.key}/getList",
+      base: "${json.apiKey}",
+      url: "/${json.apiBase}/${json.key}/getList",
       data: params
     }).then((res) => {
       if (res && res.code === 200) {
@@ -120,8 +120,8 @@ const createScript = (json) => {
       })
         .then(() => {
           request.post({
-            base: "${json.apiBase}",
-            url: "/${json.appName}/${json.key}/delete",
+            base: "${json.apiKey}",
+            url: "/${json.apiBase}/${json.key}/delete",
             data: { idList: [row.id] }
           }).then((res) => {
             if (res && res.code === 200) {
@@ -151,11 +151,11 @@ const createScript = (json) => {
       const detailInfo = detailRef.value.getFormValue();
       const url =
         detailType.value == "add"
-          ? "/${json.appName}/${json.key}/create"
-          : "/${json.appName}/${json.key}/update";
+          ? "/${json.apiBase}/${json.key}/create"
+          : "/${json.apiBase}/${json.key}/update";
       request
         .post({
-          base: "${json.apiBase}",
+          base: "${json.apiKey}",
           url,
           data: detailInfo,
         })

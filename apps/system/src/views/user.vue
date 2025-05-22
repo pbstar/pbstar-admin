@@ -90,15 +90,17 @@ const getRoleList = () => {
     })
     .then((res) => {
       if (res.code === 200 && res.data) {
-        tableRef.value.toChangeColumnOptions({
-          key: "role",
-          options: res.data.list.map((item) => {
-            return {
-              label: item.name,
-              value: item.key,
-            };
-          }),
-        });
+        tableRef.value.toChangeColumn([
+          {
+            key: "role",
+            options: res.data.list.map((item) => {
+              return {
+                label: item.name,
+                value: item.key,
+              };
+            }),
+          },
+        ]);
       } else {
         ElMessage.error(res.msg || "获取角色列表失败");
       }

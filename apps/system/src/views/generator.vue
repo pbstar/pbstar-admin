@@ -28,10 +28,10 @@ const tableColumn = ref([
 const defaultInfo = {
   key: "",
   template: "main",
-  childTableKey: "",
+  childKey: "",
   title: "",
+  apiKey: "",
   apiBase: "",
-  appName: "",
   detailDiaType: "page",
   fields: [],
 };
@@ -129,8 +129,8 @@ const tableTopBtnClick = ({ btn }) => {
       ElMessage.error("请选择模板");
       return;
     }
-    if (info.value.template !== "main" && !info.value.childTableKey) {
-      ElMessage.error("请输入childTableKey");
+    if (info.value.template !== "main" && !info.value.childKey) {
+      ElMessage.error("请输入childKey");
       return;
     }
     if (!info.value.title) {
@@ -145,11 +145,11 @@ const tableTopBtnClick = ({ btn }) => {
         ElMessage.error("请输入key");
         return;
       }
-      if (!info.value.apiBase) {
-        ElMessage.error("请输入apiBase");
+      if (!info.value.apiKey) {
+        ElMessage.error("请输入apiKey");
         return;
       }
-      if (!info.value.appName) {
+      if (!info.value.apiBase) {
         ElMessage.error("请输入应用名称");
         return;
       }
@@ -238,7 +238,7 @@ const toHistoryUse = (row) => {
             v-show="info.template === 'main' || info.template === 'childTable'"
             :config="{
               type: 'input',
-              label: 'key',
+              label: '主表key',
               placeholder:
                 info.template === 'main' ? '作为唯一标识' : '请输入主表key',
             }"
@@ -252,10 +252,10 @@ const toHistoryUse = (row) => {
             "
             :config="{
               type: 'input',
-              label: 'childTableKey',
+              label: 'childKey',
               placeholder: '子表名',
             }"
-            v-model="info.childTableKey"
+            v-model="info.childKey"
           >
           </p-item>
           <p-item
@@ -277,20 +277,20 @@ const toHistoryUse = (row) => {
             class="item"
             :config="{
               type: 'input',
-              label: 'apiBase',
-              placeholder: '请输入接口Base',
+              label: 'apiKey',
+              placeholder: '请输入接口Key',
             }"
-            v-model="info.apiBase"
+            v-model="info.apiKey"
           >
           </p-item>
           <p-item
             class="item"
             :config="{
               type: 'input',
-              label: 'appName',
-              placeholder: '请输入应用名称',
+              label: 'apiBase',
+              placeholder: '请输入apiBase',
             }"
-            v-model="info.appName"
+            v-model="info.apiBase"
           >
           </p-item>
         </div>

@@ -1,6 +1,6 @@
 const create = (json) => {
   //首字母大写
-  const key = json.key.charAt(0).toUpperCase() + json.key.slice(1);
+  const key = json.childKey.charAt(0).toUpperCase() + json.childKey.slice(1);
   return `
       import ${json.key}Controller from "../controllers/${json.key}.js";
   

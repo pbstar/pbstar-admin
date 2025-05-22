@@ -60,7 +60,7 @@ export default {
         const code = childTable.create(jsonData);
         const formattedCode = await prettier.format(code, { parser: "vue" });
         arr.push({
-          fileName: `${jsonData.childTableKey}.vue`,
+          fileName: `${jsonData.childKey}.vue`,
           fileCode: formattedCode,
           fileType: "vue",
         });
@@ -69,7 +69,7 @@ export default {
           parser: "espree",
         });
         arr.push({
-          fileName: `${jsonData.childTableKey}_s_route.js`,
+          fileName: `${jsonData.childKey}_s_route.js`,
           fileCode: formattedCodeSRoute,
           fileType: "js",
         });
@@ -79,7 +79,7 @@ export default {
           { parser: "espree" },
         );
         arr.push({
-          fileName: `${jsonData.childTableKey}_s_controller.js`,
+          fileName: `${jsonData.childKey}_s_controller.js`,
           fileCode: formattedCodeSController,
           fileType: "js",
         });
@@ -87,7 +87,7 @@ export default {
         const code = formTable.create(jsonData);
         const formattedCode = await prettier.format(code, { parser: "vue" });
         arr.push({
-          fileName: `${jsonData.childTableKey}.vue`,
+          fileName: `${jsonData.childKey}.vue`,
           fileCode: formattedCode,
           fileType: "vue",
         });
