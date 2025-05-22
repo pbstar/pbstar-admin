@@ -125,29 +125,104 @@ watch(
 .navBox {
   width: 100%;
   height: 100%;
-  background-color: var(--c-bg);
+  background: var(--c-menu-gradient);
   overflow: hidden;
 }
+
 .navBox .menu {
   height: 100%;
-  padding: 5px 0;
+  padding: 10px 0;
   overflow-y: auto;
   border-right: 0;
+  background: transparent !important;
 }
 
+/* 菜单项基础样式 */
 .navBox :deep(.el-menu-item),
-.navBox :deep(.el-sub-menu__title),
-.navBox :deep(.el-menu-item-group__title) {
+.navBox :deep(.el-sub-menu__title) {
   font-size: 14px;
-  height: 34px;
-  line-height: 34px;
+  height: 36px;
+  line-height: 36px;
+  margin: 4px 12px;
+  border-radius: 8px;
+  color: var(--c-text);
+  padding: 0 12px !important;
 }
+
+/* 激活状态样式 */
+.navBox :deep(.el-menu-item.is-active) {
+  background: var(--c-menu-active-bg) !important;
+  color: var(--c-text3) !important;
+  font-weight: 500;
+  position: relative;
+}
+
+.navBox :deep(.el-menu-item.is-active)::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 24px;
+  background: var(--c-text3);
+  border-radius: 2px;
+}
+
+/* 悬停效果 */
 .navBox :deep(.el-menu-item:hover),
-.navBox :deep(.el-sub-menu__title:hover),
-.navBox .items :deep(.el-menu-item:hover),
-.navBox .itemss :deep(.el-menu-item:hover),
-.navBox .items :deep(.el-sub-menu__title:hover),
-.navBox .itemss :deep(.el-sub-menu__title:hover) {
-  background-color: transparent;
+.navBox :deep(.el-sub-menu__title:hover) {
+  background: var(--c-menu-hover-bg) !important;
+}
+
+/* 子菜单缩进 */
+.navBox :deep(.el-sub-menu .el-menu-item) {
+  padding-left: 50px !important;
+  color: var(--c-text2);
+}
+
+/* 孙菜单缩进 */
+.navBox :deep(.items .el-sub-menu__title) {
+  padding-left: 50px !important;
+}
+.navBox :deep(.items .el-sub-menu .el-menu-item) {
+  padding-left: 60px !important;
+}
+
+/* 图标样式 */
+.navBox :deep(.el-icon) {
+  font-size: 18px;
+  vertical-align: middle;
+  color: var(--c-text3);
+}
+
+/* 层级指示线 */
+.navBox :deep(.el-sub-menu .el-menu) {
+  background: var(--c-menu-sub-bg);
+  padding: 4px 0;
+}
+
+/* 子菜单箭头 */
+.navBox :deep(.el-sub-menu__icon-arrow) {
+  color: var(--c-text2);
+  margin-right: 0;
+  top: 16px;
+  right: 12px;
+  /* transition: transform 0.3s; */
+}
+
+/* 滚动条美化 */
+.navBox .menu::-webkit-scrollbar {
+  width: 6px;
+}
+
+.navBox .menu::-webkit-scrollbar-track {
+  background: var(--c-scrollbar-track);
+  border-radius: 4px;
+}
+
+.navBox .menu::-webkit-scrollbar-thumb {
+  background: var(--c-scrollbar-thumb);
+  border-radius: 4px;
 }
 </style>

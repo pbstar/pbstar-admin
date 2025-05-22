@@ -14,14 +14,22 @@
   /* ========== 其他 ========== */
   --c-scrollbar-thumb: #6ea6ff; /* 滚动条 */
   --c-scrollbar-track: #b1b9c3; /* 滚动条轨道 */
+  --c-menu-gradient: linear-gradient(
+    150deg,
+    var(--c-bg-box) -20%,
+    var(--c-bg-theme-light) 120%
+  );
+  --c-menu-active-bg: rgba(59, 130, 246, 0.2);
+  --c-menu-hover-bg: rgba(59, 130, 246, 0.18);
+  --c-menu-sub-bg: rgba(59, 130, 246, 0.12);
 }
 
 html[data-theme="dark"] {
   /* ========== 背景色 ========== */
   --c-bg: #1e293b; /* 主背景 */
   --c-bg-box: #2c384d; /* 容器背景 */
-  --c-bg-theme: #092042; /* 主题背景 */
-  --c-bg-theme-light: #001533; /* 主题背景-浅 */
+  --c-bg-theme: #0e2344; /* 主题背景 */
+  --c-bg-theme-light: #041938; /* 主题背景-浅 */
   /* ========== 文字色 ========== */
   --c-text: #f8fafc; /* 主文字 */
   --c-text2: #9ca3af; /* 次要文字 */
@@ -34,4 +42,12 @@ html[data-theme="dark"] {
   /* ========== 其他 ========== */
   --c-scrollbar-thumb: #56657d; /* 滚动条 */
   --c-scrollbar-track: #8599b6; /* 滚动条轨道 */
+  --c-menu-gradient: linear-gradient(
+    150deg,
+    var(--c-bg-box) -20%,
+    var(--c-bg-theme-light) 120%
+  );
+  --c-menu-active-bg: rgba(124, 136, 156, 0.2);
+  --c-menu-hover-bg: rgba(124, 136, 156, 0.18);
+  --c-menu-sub-bg: rgba(124, 136, 156, 0.12);
 }
