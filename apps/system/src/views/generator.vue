@@ -363,6 +363,7 @@ const toHistoryUse = (row) => {
                 label: 'type',
                 placeholder: '请输入',
                 options: [
+                  { label: 'slot', value: 'slot' },
                   { label: 'input', value: 'input' },
                   { label: 'textarea', value: 'textarea' },
                   { label: 'inputNumber', value: 'inputNumber' },
@@ -420,6 +421,11 @@ const toHistoryUse = (row) => {
                 label: 'enumKey',
                 placeholder: '请输入',
               }"
+              v-show="
+                ['radio', 'checkbox', 'select', 'selectMultiple'].includes(
+                  detailInfo.type,
+                )
+              "
               v-model="detailInfo.enumKey"
             >
             </p-item>

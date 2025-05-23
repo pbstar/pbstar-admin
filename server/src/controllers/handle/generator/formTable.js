@@ -2,22 +2,35 @@ const create = (json) => {
   let code = "";
   code += createScript(json);
   code += createHtml(json);
-  code += createStyle(json);
+  code += createStyle();
   return code;
 };
 
 const createScript = (json) => {
   const tableColumn = [];
+  const formData = [];
   json.fields.forEach((field) => {
-    if (!field.showIn.includes("table")) return;
-    let obj = {
-      label: field.label,
-      key: field.key,
-    };
-    if (field.enumKey) {
-      obj = { ...obj, enumKey: field.enumKey };
+    if (field.showIn.includes("table")) {
+      let obj = {
+        label: field.label,
+        key: field.key,
+      };
+      if (field.enumKey) {
+        obj = { ...obj, enumKey: field.enumKey };
+      }
+      tableColumn.push(obj);
+    } else if (field.showIn.includes("form")) {
+      let obj = {
+        label: field.label,
+        type: field.type,
+        key: field.key,
+        isText: 'detailType.value == "view"',
+      };
+      if (field.enumKey) {
+        obj = { ...obj, enumKey: field.enumKey };
+      }
+      formData.push(obj);
     }
-    tableColumn.push(obj);
   });
 
   let code = `
@@ -28,7 +41,7 @@ const createScript = (json) => {
     import PTable from "@Pcomponents/base/p-table/index.vue";
     import PDialog from "@Pcomponents/base/p-dialog/index.vue";
     ${json.detailDiaType !== "box" ? `import PCollapse from "@Pcomponents/base/p-collapse/index.vue";` : ""}
-    import PItem from "@Pcomponents/base/p-item/index.vue";
+    import PForm from "@Pcomponents/base/p-form/index.vue";
   
     const props = defineProps({
       type: {
@@ -59,6 +72,8 @@ const createScript = (json) => {
     const detailType = ref("");
     const detailInfo = ref({});
     const isDetail = ref(false);
+    const formRef = ref(null);
+    const formData = ref(${JSON.stringify(formData)});
     
     const getWebId = () => {
       const timestamp = Date.now();
@@ -156,23 +171,9 @@ const createScript = (json) => {
 };
 
 const createHtml = (json) => {
-  const formData = [];
-  json.fields.forEach((field) => {
-    if (!field.showIn.includes("form")) return;
-    let obj = {
-      label: field.label,
-      type: field.type,
-      key: field.key,
-    };
-    if (field.enumKey) {
-      obj = { ...obj, enumKey: field.enumKey };
-    }
-    formData.push(obj);
-  });
-
   const topCode = `
   <template>
-    <div class="box">
+    <div class="childBox">
   `;
 
   const contentCode = `
@@ -197,29 +198,17 @@ const createHtml = (json) => {
         ]"
         @botBtnClick="diaBotBtnClick"
       >
-        ${
-          json.detailDiaType === "drawer"
-            ? `<div class="detail"><p-collapse title="基础信息" :isControl="false" :showDownLine="false">`
-            : ""
-        }
-          <div class="items">
-            ${formData
-              .map(
-                (field) => `
-            <formItem
-              class="dtItem"
-              :config="{
-                key: '${field.key}',
-                type: '${field.type}',
-                label: '${field.label}',
-                ${field.enumKey ? `enumKey: '${field.enumKey}',` : ""}
-              }"
-              v-model="detailInfo.${field.key}"
-            />`,
-              )
-              .join("")}
-          </div>
-          ${json.detailDiaType === "drawer" ? `</p-collapse></div>` : ""}
+      ${
+        json.detailDiaType === "page" || json.detailDiaType === "drawer"
+          ? '<div style="padding: 0 10px;"><p-collapse title="基础信息" :isControl="false" :showDownLine="false">'
+          : ""
+      }
+          <p-form :data="formData" :spanList="${JSON.stringify(spanList)}" ref="formRef">
+      ${
+        json.detailDiaType === "page" || json.detailDiaType === "drawer"
+          ? "</p-collapse></div>"
+          : ""
+      }
       </p-dialog>
   `;
 
@@ -236,25 +225,12 @@ const createHtml = (json) => {
   return code;
 };
 
-const createStyle = (json) => {
+const createStyle = () => {
   const code = `
 <style scoped lang="scss">
-  .box {
+  .childBox {
     width: 100%;
     padding-top: 10px;
-    ${json.detailDiaType === "drawer" ? `.detail { padding: 0 10px;` : ""}
-    
-    .items {
-      ${json.detailDiaType === "box" ? `padding: 20px;` : ""}
-      display: flex;
-      flex-direction: column;
-      
-      .dtItem {
-        width: 100%;
-        margin-bottom: 10px;
-      }
-    }
-    ${json.detailDiaType === "drawer" ? `}` : ""}
   }
 </style>
   `;

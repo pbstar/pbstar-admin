@@ -2,18 +2,32 @@ const create = (json) => {
   let code = "";
   code += createScript(json);
   code += createHtml(json);
-  code += createStyle(json);
+  code += createStyle();
   return code;
 };
 
 const createScript = (json) => {
+  const formData = [];
+  json.fields.forEach((field) => {
+    if (!field.showIn.includes("form")) return;
+    let obj = {
+      label: field.label,
+      type: field.type,
+      key: field.key,
+      isText: 'detailType.value == "view"',
+    };
+    if (field.enumKey) {
+      obj = { ...obj, enumKey: field.enumKey };
+    }
+    formData.push(obj);
+  });
   let code = `
   <script setup>
-    import { ref, onBeforeMount } from "vue";
+    import { ref, onBeforeMount, nextTick } from "vue";
     import { ElMessage, ElMessageBox } from "element-plus";
     import request from "@Passets/utils/request";
     ${json.detailDiaType === "page" || json.detailDiaType === "drawer" ? 'import PCollapse from "@Pcomponents/base/p-collapse/index.vue";' : ""}
-    import PItem from "@Pcomponents/base/p-item/index.vue";
+    import PForm from "@Pcomponents/base/p-form/index.vue";
 
     const props = defineProps({
       type: {
@@ -28,6 +42,8 @@ const createScript = (json) => {
     const detailInfo = ref({});
     const detailType = ref("");
     const detailId = ref("");
+    const formRef = ref(null);
+    const formData = ref(${JSON.stringify(formData)});
   
     onBeforeMount(() => {
       detailType.value = props.type;
@@ -49,13 +65,21 @@ const createScript = (json) => {
         .then((res) => {
           if (res && res.code == 200) {
             detailInfo.value = res.data;
+            nextTick(() => {
+              formRef.value && formRef.value.toChangeValue(res.data);
+            });
           } else {
           ElMessage.error(res.msg || "操作异常");
         }
       });
     };
     const getFormValue = () => {
-      return detailInfo.value;
+      const res = formRef.value && formRef.value.getFormValue();
+      if (res && res.errMsg) {
+        ElMessage.error(res.errMsg);
+        return false;
+      }
+      return res.value;
     };
 
     defineExpose({
@@ -67,80 +91,42 @@ const createScript = (json) => {
 };
 
 const createHtml = (json) => {
-  const formData = [];
+  const spanList = [];
+  const w100TypeList = ["textarea", "slot"];
   json.fields.forEach((field) => {
     if (!field.showIn.includes("form")) return;
-    let obj = {
-      label: field.label,
-      type: field.type,
-      key: field.key,
-    };
-    if (field.enumKey) {
-      obj = { ...obj, enumKey: field.enumKey };
+    if (w100TypeList.includes(field.type)) {
+      spanList.push(12);
+    } else {
+      if (json.detailDiaType === "page") {
+        spanList.push(4);
+      } else {
+        spanList.push(12);
+      }
     }
-    formData.push(obj);
   });
 
   const code = `
   <template>
     ${
       json.detailDiaType === "page" || json.detailDiaType === "drawer"
-        ? `<div class="detail">
-              <p-collapse title="基础信息" :isControl="false" :showDownLine="false">`
+        ? '<div style="padding: 0 10px;"><p-collapse title="基础信息" :isControl="false" :showDownLine="false">'
         : ""
     }
-        <div class="items">
-          ${formData
-            .map(
-              (field) => `
-          <p-item
-            class="dtItem"
-            :config="{
-              isText: detailType == 'view',
-              type: '${field.type}',
-              label: '${field.label}',
-              ${field.enumKey ? `enumKey: '${field.enumKey}',` : ""}
-            }"
-            v-model="detailInfo.${field.key}"
-          />`,
-            )
-            .join("")}
-        </div>
-        ${
-          json.detailDiaType === "page" || json.detailDiaType === "drawer"
-            ? `</p-collapse>
-                </div>`
-            : ""
-        }
+        <p-form :data="formData" :spanList="${JSON.stringify(spanList)}" ref="formRef">
+    ${
+      json.detailDiaType === "page" || json.detailDiaType === "drawer"
+        ? "</p-collapse></div>"
+        : ""
+    }
   </template>
   `;
   return code;
 };
 
-const createStyle = (json) => {
+const createStyle = () => {
   const code = `
   <style scoped lang="scss">
-  .detail {
-    padding: 0 10px;
-    .items {
-      ${json.detailDiaType === "box" ? `padding: 10px 0;` : ""}
-      display: flex;
-      ${
-        json.detailDiaType === "page"
-          ? `flex-wrap: wrap;`
-          : `flex-direction: column;`
-      }
-      
-      .dtItem {
-        ${
-          json.detailDiaType === "page"
-            ? `width: 30%; margin-right: 3%;`
-            : `width: 100%;`
-        }
-        margin-bottom: 10px;
-      }
-    }
-  }
   </style>
   `;
   return code;

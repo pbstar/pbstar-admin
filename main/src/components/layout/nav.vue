@@ -177,16 +177,16 @@ watch(
 
 /* 子菜单缩进 */
 .navBox :deep(.el-sub-menu .el-menu-item) {
-  padding-left: 50px !important;
+  padding-left: 24px !important;
   color: var(--c-text2);
 }
 
 /* 孙菜单缩进 */
 .navBox :deep(.items .el-sub-menu__title) {
-  padding-left: 50px !important;
+  padding-left: 24px !important;
 }
 .navBox :deep(.items .el-sub-menu .el-menu-item) {
-  padding-left: 60px !important;
+  padding-left: 36px !important;
 }
 
 /* 图标样式 */
