@@ -1,0 +1,108 @@
+<!doctype html>
+<html>
+  <head></head>
+  <body>
+    <div id="<%= mountId %>">
+      <style>
+        #p_app_loading_mask {
+          position: fixed;
+          left: 0;
+          top: 0;
+          height: 100vh;
+          width: 100vw;
+          background: #fff;
+          user-select: none;
+          z-index: 9999;
+          overflow: hidden;
+        }
+
+        #p_app_loading_mask .loading-wrapper {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -100%);
+        }
+
+        #p_app_loading_mask .loading-dot {
+          animation: cr_app_loading_antRotate 1.2s infinite linear;
+          transform: rotate(45deg);
+          position: relative;
+          display: inline-block;
+          font-size: 64px;
+          width: 64px;
+          height: 64px;
+          box-sizing: border-box;
+        }
+
+        #p_app_loading_mask .loading-dot i {
+          width: 22px;
+          height: 22px;
+          position: absolute;
+          display: block;
+          background-color: #1890ff;
+          border-radius: 100%;
+          transform: scale(0.75);
+          transform-origin: 50% 50%;
+          opacity: 0.3;
+          animation: cr_app_loading_antSpinMove 1s infinite linear alternate;
+        }
+
+        #p_app_loading_mask .loading-dot i:nth-child(1) {
+          top: 0;
+          left: 0;
+        }
+
+        #p_app_loading_mask .loading-dot i:nth-child(2) {
+          top: 0;
+          right: 0;
+          -webkit-animation-delay: 0.4s;
+          animation-delay: 0.4s;
+        }
+
+        #p_app_loading_mask .loading-dot i:nth-child(3) {
+          right: 0;
+          bottom: 0;
+          -webkit-animation-delay: 0.8s;
+          animation-delay: 0.8s;
+        }
+
+        #p_app_loading_mask .loading-dot i:nth-child(4) {
+          bottom: 0;
+          left: 0;
+          -webkit-animation-delay: 1.2s;
+          animation-delay: 1.2s;
+        }
+
+        @keyframes cr_app_loading_antRotate {
+          to {
+            -webkit-transform: rotate(405deg);
+            transform: rotate(405deg);
+          }
+        }
+        @-webkit-keyframes cr_app_loading_antRotate {
+          to {
+            -webkit-transform: rotate(405deg);
+            transform: rotate(405deg);
+          }
+        }
+        @keyframes cr_app_loading_antSpinMove {
+          to {
+            opacity: 1;
+          }
+        }
+        @-webkit-keyframes cr_app_loading_antSpinMove {
+          to {
+            opacity: 1;
+          }
+        }
+      </style>
+      <div id="p_app_loading_mask">
+        <div class="loading-wrapper">
+          <span class="loading-dot loading-dot-spin">
+            <i></i><i></i><i></i><i></i>
+          </span>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

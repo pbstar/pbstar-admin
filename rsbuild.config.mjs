@@ -56,6 +56,7 @@ export default defineConfig({
   environments: {
     main: {
       html: {
+        template: "./main/src/assets/html/index.html",
         title: import.meta.env.PUBLIC_TITLE,
         favicon: "./main/src/assets/imgs/logo.png",
       },

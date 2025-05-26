@@ -25,22 +25,18 @@ const formData = ref([
   {
     key: "name",
     label: "姓名",
-    type: "input",
-    isText: detailType.value == "view",
     isRequired: true,
   },
   {
     key: "age",
     label: "年龄",
     type: "inputNumber",
-    isText: detailType.value == "view",
     isRequired: true,
   },
   {
     key: "sex",
     label: "性别",
     type: "select",
-    isText: detailType.value == "view",
     isRequired: true,
     options: [
       { label: "男", value: "1" },
@@ -52,14 +48,12 @@ const formData = ref([
     label: "民族",
     type: "select",
     enumKey: "p_ethnic",
-    isText: detailType == "view",
   },
   {
     key: "isHealthy",
     label: "是否健康",
     type: "select",
     enumKey: "p_boolean",
-    isText: detailType == "view",
   },
   {
     key: "hobbyList",
@@ -71,6 +65,17 @@ const formData = ref([
 onBeforeMount(() => {
   detailType.value = props.type;
   detailId.value = props.id;
+  if (detailType.value == "view") {
+    const data = formData.value.map((item) => {
+      return {
+        key: item.key,
+        isText: true,
+      };
+    });
+    nextTick(() => {
+      formRef.value && formRef.value.toChangeData(data);
+    });
+  }
   if (detailType.value == "view" || detailType.value == "edit") {
     getDetailInfo();
   }

@@ -1,9 +1,7 @@
 <script setup>
 import { onMounted, ref, watch, nextTick } from "vue";
 import { useRouter } from "vue-router";
-// import { ElMessage } from "element-plus";
 import { Plus } from "@element-plus/icons-vue";
-import * as echarts from "echarts";
 import useSharedStore from "@Passets/stores/shared";
 import PCollapse from "@Pcomponents/base/p-collapse/index.vue";
 import PItem from "@Pcomponents/base/p-item/index.vue";
@@ -55,8 +53,6 @@ const navs = ref([]);
 const navAddOptions = ref([]);
 const isNavAdd = ref(false);
 const navAddValue = ref("");
-const r2r2Tab = ref("1");
-const r2r2EchartsRef = ref(null);
 
 onMounted(() => {
   const diyNavs = localStorage.getItem("p_diyNavs");
@@ -64,7 +60,6 @@ onMounted(() => {
     navs.value = JSON.parse(diyNavs);
   }
   hello.value = getHello();
-  initR2r2Echarts();
 });
 watch(
   () => sharedStore.userInfo,
@@ -120,57 +115,6 @@ const toNavAdd = () => {
     }
   }
   isNavAdd.value = false;
-};
-const handleClickR2r2Tab = () => {
-  nextTick(() => {
-    initR2r2Echarts();
-  });
-};
-const initR2r2Echarts = () => {
-  const myEcharts = echarts.init(r2r2EchartsRef.value);
-  const data = [];
-  for (let i = 0; i < 6; i++) {
-    data.push(Math.floor(Math.random() * 100 + 100) * r2r2Tab.value);
-  }
-  const option = {
-    //做个柱状图
-    tooltip: {
-      trigger: "axis",
-      axisPointer: {
-        type: "shadow",
-      },
-    },
-    grid: {
-      top: "10px",
-      left: "10px",
-      right: "10px",
-      bottom: "10px",
-      containLabel: true,
-    },
-    xAxis: [
-      {
-        type: "category",
-        data: ["掘金", "CSDN", "简书", "知乎", "思否", "Github"],
-        axisTick: {
-          alignWithLabel: true,
-        },
-      },
-    ],
-    yAxis: [
-      {
-        type: "value",
-      },
-    ],
-    series: [
-      {
-        name: "访问量",
-        type: "bar",
-        barWidth: "30%",
-        data: data,
-      },
-    ],
-  };
-  myEcharts.setOption(option);
 };
 </script>
 <template>
@@ -275,20 +219,8 @@ const initR2r2Echarts = () => {
           </p-collapse>
         </div>
         <div class="r2r2 iBox">
-          <p-collapse title="访问来源" :isControl="false">
-            <div class="r2r2Box">
-              <el-tabs
-                style="margin: 0 10px"
-                v-model="r2r2Tab"
-                @tab-click="handleClickR2r2Tab"
-              >
-                <el-tab-pane label="近一周" name="1"></el-tab-pane>
-                <el-tab-pane label="近一个月" name="2"></el-tab-pane>
-                <el-tab-pane label="近半年" name="3"></el-tab-pane>
-                <el-tab-pane label="近一年" name="4"></el-tab-pane>
-              </el-tabs>
-              <div class="r2r2Echarts" ref="r2r2EchartsRef"></div>
-            </div>
+          <p-collapse title="其他内容" :isControl="false">
+            <span>其他内容</span>
           </p-collapse>
         </div>
       </div>
@@ -395,14 +327,11 @@ const initR2r2Echarts = () => {
           justify-content: space-between;
           .news-item {
             width: 100%;
-            height: 30px;
             border-bottom: 1px solid var(--c-border);
-            margin-top: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+            padding: 10px 5px;
 
             p {
+              line-height: 18px;
               font-size: 14px;
               color: var(--c-text);
             }
@@ -446,16 +375,11 @@ const initR2r2Echarts = () => {
       }
       .r2r2 {
         width: 100%;
-        height: 350px;
-        .r2r2Box {
-          width: 100%;
-          height: 300px;
-          display: flex;
-          flex-direction: column;
-          .r2r2Echarts {
-            width: 100%;
-            height: 240px;
-          }
+        height: 230px;
+        padding-bottom: 15px;
+        span {
+          font-size: 14px;
+          color: var(--c-text);
         }
       }
     }
@@ -468,7 +392,6 @@ const initR2r2Echarts = () => {
         margin-bottom: 10px;
         .r2l2 {
           .news-item {
-            height: auto !important;
             padding-bottom: 10px;
           }
         }
