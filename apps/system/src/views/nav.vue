@@ -181,7 +181,6 @@ const getIcon = (iconName) => {
           </el-icon>
           <span>{{ scope.row.icon }}</span>
         </div>
-        <span v-else>--</span>
       </template>
     </p-table>
 

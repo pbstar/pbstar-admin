@@ -4,6 +4,7 @@ import { ElMessage, ElMessageBox } from "element-plus";
 import request from "@Passets/utils/request";
 import PCollapse from "@Pcomponents/base/p-collapse/index.vue";
 import PItem from "@Pcomponents/base/p-item/index.vue";
+import * as ElementPlusIconsVue from "@element-plus/icons-vue";
 
 const props = defineProps({
   type: {
@@ -19,6 +20,7 @@ const detailInfo = ref({});
 const detailType = ref("");
 const detailId = ref("");
 const navList = ref([]); // 菜单树结构
+const icons = ref([]);
 
 onBeforeMount(() => {
   detailType.value = props.type;
@@ -27,7 +29,16 @@ onBeforeMount(() => {
   if (detailType.value == "view" || detailType.value == "edit") {
     getDetailInfo();
   }
+  icons.value = Object.keys(ElementPlusIconsVue);
 });
+
+const getIcon = (iconName) => {
+  if (!ElementPlusIconsVue[iconName]) {
+    console.error(`ElementPlusIconsVue 中不存在名为 ${iconName} 的图标`);
+    return null; // 或者返回一个默认的图标组件
+  }
+  return ElementPlusIconsVue[iconName];
+};
 
 const getNavList = () => {
   request
@@ -114,12 +125,40 @@ defineExpose({
         <p-item
           class="dtItem"
           :config="{
-            isText: detailType == 'view',
-            type: 'input',
+            type: 'slot',
             label: '菜单图标',
           }"
-          v-model="detailInfo.icon"
-        />
+        >
+          <el-popover placement="bottom-start" width="254" trigger="click">
+            <div
+              style="
+                max-height: 220px;
+                overflow-y: auto;
+                display: flex;
+                flex-wrap: wrap;
+              "
+            >
+              <el-icon
+                v-for="(item, index) in icons"
+                :key="index"
+                @click="detailInfo.icon = item"
+                style="font-size: 16px; margin: 3px 4px; cursor: pointer"
+              >
+                <component :is="getIcon(item)"></component>
+              </el-icon>
+            </div>
+            <template #reference>
+              <el-button
+                type="primary"
+                :icon="
+                  detailInfo.icon ? getIcon(detailInfo.icon) : 'el-icon-more'
+                "
+              >
+                {{ detailInfo.icon ? detailInfo.icon : "选择图标" }}
+              </el-button>
+            </template>
+          </el-popover>
+        </p-item>
       </div>
     </p-collapse>
   </div>

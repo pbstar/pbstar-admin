@@ -255,11 +255,13 @@ const handleSubmit = async () => {
   right: 0;
   text-align: center;
   font-size: 13px;
-  background-color: rgba(245, 245, 245, 0.3);
-  height: 30px;
-  line-height: 30px;
+  background-color: rgba(255, 255, 255, 0.8);
+  height: 36px;
+  line-height: 36px;
   color: #666;
   z-index: 0;
+  border-top: 1px solid #f0f0f0;
+  backdrop-filter: blur(5px);
 }
 @media screen and (max-width: 700px) {
   .login-center {
