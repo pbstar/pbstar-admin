@@ -7,21 +7,15 @@
   /* ========== 文字色 ========== */
   --c-text: #1e293b; /* 主文字 */
   --c-text2: #4b5563; /* 次要文字 */
-  --c-text3: #1e74ff; /* 重要文字 */
+  --c-text3: #0376fa; /* 重要文字 */
   --c-text-theme: #ffffff; /* 主题文字 */
   /* ========== 边框色 ========== */
   --c-border: #e2e8f0; /* 主边框 */
   /* ========== 其他 ========== */
   --c-scrollbar-thumb: #6ea6ff; /* 滚动条 */
   --c-scrollbar-track: #b1b9c3; /* 滚动条轨道 */
-  --c-menu-gradient: linear-gradient(
-    150deg,
-    var(--c-bg-box) -20%,
-    var(--c-bg-theme-light) 120%
-  );
-  --c-menu-active-bg: rgba(59, 130, 246, 0.2);
-  --c-menu-hover-bg: rgba(59, 130, 246, 0.18);
-  --c-menu-sub-bg: rgba(59, 130, 246, 0.12);
+  --c-menu-active-bg: rgba(59, 130, 246, 0.15);
+  --c-menu-hover-bg: rgba(59, 130, 246, 0.1);
 }
 
 html[data-theme="dark"] {
@@ -33,7 +27,7 @@ html[data-theme="dark"] {
   /* ========== 文字色 ========== */
   --c-text: #f8fafc; /* 主文字 */
   --c-text2: #9ca3af; /* 次要文字 */
-  --c-text3: #1e74ff; /* 重要文字 */
+  --c-text3: #3292ff; /* 重要文字 */
   --c-text-theme: #ffffff; /* 主题文字 */
 
   /* ========== 边框色 ========== */
@@ -42,12 +36,6 @@ html[data-theme="dark"] {
   /* ========== 其他 ========== */
   --c-scrollbar-thumb: #56657d; /* 滚动条 */
   --c-scrollbar-track: #8599b6; /* 滚动条轨道 */
-  --c-menu-gradient: linear-gradient(
-    150deg,
-    var(--c-bg-box) -20%,
-    var(--c-bg-theme-light) 120%
-  );
-  --c-menu-active-bg: rgba(124, 136, 156, 0.2);
-  --c-menu-hover-bg: rgba(124, 136, 156, 0.18);
-  --c-menu-sub-bg: rgba(124, 136, 156, 0.12);
+  --c-menu-active-bg: rgba(124, 136, 156, 0.15);
+  --c-menu-hover-bg: rgba(124, 136, 156, 0.1);
 }

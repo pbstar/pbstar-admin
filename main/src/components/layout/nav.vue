@@ -125,7 +125,7 @@ watch(
 .navBox {
   width: 100%;
   height: 100%;
-  background: var(--c-menu-gradient);
+  background: var(--c-bg);
   overflow: hidden;
 }
 
@@ -143,7 +143,8 @@ watch(
   font-size: 14px;
   height: 36px;
   line-height: 36px;
-  margin: 4px 12px;
+  margin: 0 12px;
+  margin-bottom: 4px;
   border-radius: 8px;
   color: var(--c-text);
   padding: 0 12px !important;
@@ -153,7 +154,6 @@ watch(
 .navBox :deep(.el-menu-item.is-active) {
   background: var(--c-menu-active-bg) !important;
   color: var(--c-text3) !important;
-  font-weight: 500;
   position: relative;
 }
 
@@ -178,7 +178,6 @@ watch(
 /* 子菜单缩进 */
 .navBox :deep(.el-sub-menu .el-menu-item) {
   padding-left: 24px !important;
-  color: var(--c-text2);
 }
 
 /* 孙菜单缩进 */
@@ -196,19 +195,12 @@ watch(
   color: var(--c-text3);
 }
 
-/* 层级指示线 */
-.navBox :deep(.el-sub-menu .el-menu) {
-  background: var(--c-menu-sub-bg);
-  padding: 4px 0;
-}
-
 /* 子菜单箭头 */
 .navBox :deep(.el-sub-menu__icon-arrow) {
-  color: var(--c-text2);
+  color: var(--c-text);
   margin-right: 0;
   top: 16px;
   right: 12px;
-  /* transition: transform 0.3s; */
 }
 
 /* 滚动条美化 */

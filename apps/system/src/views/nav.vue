@@ -7,6 +7,7 @@ import PSearch from "@Pcomponents/base/p-search/index.vue";
 import PTitle from "@Pcomponents/base/p-title/index.vue";
 import PDialog from "@Pcomponents/base/p-dialog/index.vue";
 import Detail from "./components/nav/detail.vue";
+import * as ElementPlusIconsVue from "@element-plus/icons-vue";
 
 const searchData = ref([
   { label: "菜单名称", key: "name", type: "input" },
@@ -17,8 +18,7 @@ const searchValue = ref({});
 const tableColumn = ref([
   { label: "菜单名称", key: "name" },
   { label: "菜单链接", key: "url" },
-  // { label: "上级菜单", key: "parentId" },
-  { label: "菜单图标", key: "icon" },
+  { label: "菜单图标", key: "icon", slot: "icon" },
 ]);
 const tableData = ref([]);
 const tableTopBtn = ref([{ key: "add", label: "新增" }]);
@@ -131,6 +131,13 @@ const diaBotBtnClick = ({ btn }) => {
     isDetail.value = false;
   }
 };
+const getIcon = (iconName) => {
+  if (!ElementPlusIconsVue[iconName]) {
+    console.error(`ElementPlusIconsVue 中不存在名为 ${iconName} 的图标`);
+    return null; // 或者返回一个默认的图标组件
+  }
+  return ElementPlusIconsVue[iconName];
+};
 </script>
 
 <template>
@@ -166,7 +173,17 @@ const diaBotBtnClick = ({ btn }) => {
       @paginationChange="tablePaginationChange"
       @topBtnClick="tableTopBtnClick"
       @rightBtnClick="tableRightBtnClick"
-    ></p-table>
+    >
+      <template #icon="scope">
+        <div v-if="scope.row.icon" style="display: flex; align-items: center">
+          <el-icon style="margin-right: 5px; font-size: 16px">
+            <component :is="getIcon(scope.row.icon)"></component>
+          </el-icon>
+          <span>{{ scope.row.icon }}</span>
+        </div>
+        <span v-else>--</span>
+      </template>
+    </p-table>
 
     <p-dialog
       title="菜单管理详情页"
