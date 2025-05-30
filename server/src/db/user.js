@@ -3,7 +3,8 @@ const db = {
     {
       id: 1,
       name: "管理员",
-      avatar: "",
+      avatar:
+        "https://p9-passport.byteacctimg.com/img/user-avatar/20aafa059387952c765dbfdd421298ed~80x80.awebp",
       username: "admin",
       password: "123456",
       role: "admin",

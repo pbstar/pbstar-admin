@@ -151,7 +151,9 @@ defineExpose({
               <el-button
                 type="primary"
                 :icon="
-                  detailInfo.icon ? getIcon(detailInfo.icon) : 'el-icon-more'
+                  detailInfo.icon
+                    ? getIcon(detailInfo.icon)
+                    : getIcon('Promotion')
                 "
               >
                 {{ detailInfo.icon ? detailInfo.icon : "选择图标" }}

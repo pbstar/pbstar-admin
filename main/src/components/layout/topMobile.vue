@@ -13,10 +13,9 @@ const sharedStore = useSharedStore();
 const navsStore = useNavsStore();
 const router = useRouter();
 const route = useRoute();
-const userInfo = sharedStore.userInfo || {};
 const title = ref(import.meta.env.PUBLIC_TITLE);
-const userName = ref(userInfo.name || "管理员");
-const userImg = ref(userInfo.avatar || "");
+const userName = ref(sharedStore.userInfo?.name || "管理员");
+const userImg = ref(sharedStore.userInfo?.avatar || "");
 const theme = ref(false);
 const isMore = ref(false);
 const list = ref([]);
@@ -121,6 +120,15 @@ watch(
     }
   },
   { deep: true, immediate: true },
+);
+watch(
+  () => sharedStore.userInfo,
+  (newVal, oldVal) => {
+    if (newVal) {
+      userName.value = newVal.name || "管理员";
+      userImg.value = newVal.avatar || "";
+    }
+  },
 );
 </script>
 <template>

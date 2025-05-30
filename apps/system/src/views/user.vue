@@ -17,7 +17,7 @@ const showSearch = ref(true);
 const searchValue = ref({});
 const tableColumn = ref([
   { label: "姓名", key: "name" },
-  { label: "头像", key: "avatar" },
+  { label: "头像", key: "avatar", slot: "avatar" },
   { label: "账号", key: "username" },
   //   { label: "密码", key: "password" },
   { label: "角色", key: "role" },
@@ -201,7 +201,18 @@ const diaBotBtnClick = ({ btn }) => {
       @paginationChange="tablePaginationChange"
       @topBtnClick="tableTopBtnClick"
       @rightBtnClick="tableRightBtnClick"
-    ></p-table>
+    >
+      <template #avatar="{ row }">
+        <div style="display: flex">
+          <img
+            style="width: 26px; height: 26px; border-radius: 50%"
+            v-if="row.avatar"
+            :src="row.avatar"
+            alt=""
+          />
+        </div>
+      </template>
+    </p-table>
 
     <p-dialog
       title="用户管理详情页"

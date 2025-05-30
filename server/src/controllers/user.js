@@ -71,8 +71,8 @@ export default {
 
   // 创建用户
   create: (req, res) => {
-    const { username, password, name, role } = req.body;
-    const newUser = { username, password, name, role };
+    const { username, password, avatar, name, role } = req.body;
+    const newUser = { username, password, avatar, name, role };
     const result = crud.create(db, newUser);
 
     res.json({
@@ -84,8 +84,8 @@ export default {
 
   // 更新用户
   update: (req, res) => {
-    const { id, username, password, name, role } = req.body;
-    const updatedUser = { id, username, password, name, role };
+    const { id, username, password, avatar, name, role } = req.body;
+    const updatedUser = { id, username, password, avatar, name, role };
     const result = crud.update(db, updatedUser);
 
     res.json({

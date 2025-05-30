@@ -12,8 +12,8 @@
   /* ========== 边框色 ========== */
   --c-border: #e2e8f0; /* 主边框 */
   /* ========== 其他 ========== */
-  --c-scrollbar-thumb: #6ea6ff; /* 滚动条 */
-  --c-scrollbar-track: #b1b9c3; /* 滚动条轨道 */
+  --c-scrollbar-thumb: #a8c9ff; /* 滚动条 */
+  --c-scrollbar-track: #d9e1eb; /* 滚动条轨道 */
   --c-menu-active-bg: rgba(59, 130, 246, 0.15);
   --c-menu-hover-bg: rgba(59, 130, 246, 0.1);
 }

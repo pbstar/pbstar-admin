@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import { CaretBottom, FullScreen, Moon, Sunny } from "@element-plus/icons-vue";
 import useSharedStore from "@Passets/stores/shared";
@@ -8,10 +8,9 @@ import request from "@Passets/utils/request";
 const { bus } = WujieVue;
 const sharedStore = useSharedStore();
 const router = useRouter();
-const userInfo = sharedStore.userInfo || {};
 const title = ref(import.meta.env.PUBLIC_TITLE);
-const userName = ref(userInfo.name || "管理员");
-const userImg = ref(userInfo.avatar || "");
+const userName = ref(sharedStore.userInfo?.name || "管理员");
+const userImg = ref(sharedStore.userInfo?.avatar || "");
 const theme = ref(false);
 const toUserInfo = () => {};
 const themeChange = () => {
@@ -46,6 +45,15 @@ const toLoginOut = () => {
       }
     });
 };
+watch(
+  () => sharedStore.userInfo,
+  (newVal, oldVal) => {
+    if (newVal) {
+      userName.value = newVal.name || "管理员";
+      userImg.value = newVal.avatar || "";
+    }
+  },
+);
 </script>
 <template>
   <div class="box">
@@ -132,6 +140,9 @@ const toLoginOut = () => {
         color: var(--c-text-theme);
         cursor: pointer;
         img {
+          width: 32px;
+          height: 32px;
+          border-radius: 50%;
           margin-right: 8px;
         }
         .icon {
