@@ -1,8 +1,6 @@
 <script setup>
 import { House, Close } from "@element-plus/icons-vue";
-import { ElMessage } from "element-plus";
 import { ref, watch } from "vue";
-import request from "@Passets/utils/request";
 import { useRouter, useRoute } from "vue-router";
 import { useNavsStore } from "@/stores/navs";
 import { flatten } from "@Passets/utils/array";
@@ -57,6 +55,9 @@ watch(
         addItem(route.fullPath);
       }
     }
+  },
+  {
+    immediate: true,
   },
 );
 

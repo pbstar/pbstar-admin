@@ -1,7 +1,7 @@
 <script setup>
 import { onMounted, ref, watch, nextTick } from "vue";
 import { useRouter } from "vue-router";
-import { Plus } from "@element-plus/icons-vue";
+import { Plus, Close } from "@element-plus/icons-vue";
 import useSharedStore from "@Passets/stores/shared";
 import PCollapse from "@Pcomponents/base/p-collapse/index.vue";
 import PItem from "@Pcomponents/base/p-item/index.vue";
@@ -116,6 +116,10 @@ const toNavAdd = () => {
   }
   isNavAdd.value = false;
 };
+const removeNav = (index) => {
+  navs.value.splice(index, 1);
+  localStorage.setItem("p_diyNavs", JSON.stringify(navs.value));
+};
 </script>
 <template>
   <div class="page">
@@ -184,7 +188,10 @@ const toNavAdd = () => {
                 :key="index"
                 @click="toNav(item)"
               >
-                {{ item.name }}
+                <span>{{ item.name }}</span>
+                <el-icon class="delete-icon" @click.stop="removeNav(index)"
+                  ><Close />
+                </el-icon>
               </div>
               <el-popover
                 placement="bottom"
@@ -309,8 +316,10 @@ const toNavAdd = () => {
                 margin-right: 20px;
                 font-size: 14px;
                 color: var(--c-text);
+                text-decoration: none;
                 &:hover {
                   color: var(--c-text3);
+                  text-decoration: underline;
                 }
               }
             }
@@ -367,8 +376,27 @@ const toNavAdd = () => {
             display: flex;
             align-items: center;
             justify-content: center;
+            position: relative;
             &:hover {
               color: var(--c-text3);
+              .delete-icon {
+                display: block;
+              }
+            }
+            .delete-icon {
+              width: 20px;
+              height: 20px;
+              color: var(--c-text);
+              background-color: var(--c-bg);
+              display: none;
+              position: absolute;
+              top: 2px;
+              right: 2px;
+              font-size: 12px;
+              border-radius: 50%;
+              line-height: 22px;
+              text-align: center;
+              cursor: pointer;
             }
           }
         }
