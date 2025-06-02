@@ -1,10 +1,11 @@
 <script setup>
-import { ref, onBeforeMount, watch } from "vue";
+import { ref, onBeforeMount, watch, nextTick } from "vue";
 import { cloneDeep } from "es-toolkit/object";
 import { ElMessage, ElMessageBox } from "element-plus";
 import PTable from "@Pcomponents/base/p-table/index.vue";
 import PDialog from "@Pcomponents/base/p-dialog/index.vue";
-import PItem from "@Pcomponents/base/p-item/index.vue";
+
+import PForm from "@Pcomponents/base/p-form/index.vue";
 
 const props = defineProps({
   type: {
@@ -41,6 +42,11 @@ const tableTopBtn = ref([]);
 const detailType = ref("");
 const detailInfo = ref({});
 const isDetail = ref(false);
+const formRef = ref(null);
+const formData = ref([
+  { label: "爱好", type: "input", key: "hobby" },
+  { label: "爱好描述", type: "textarea", key: "hobbyDesc" },
+]);
 
 const getWebId = () => {
   const timestamp = Date.now();
@@ -64,10 +70,13 @@ const tableRightBtnClick = ({ row, btn }) => {
     const index = tableData.value.findIndex((item) => {
       return item.webId == row.webId;
     });
+    isDetail.value = true;
     if (index > -1) {
       detailInfo.value = cloneDeep(tableData.value[index]);
+      nextTick(() => {
+        formRef.value && formRef.value.toChangeValue(detailInfo.value);
+      });
     }
-    isDetail.value = true;
   } else if (btn === "delete") {
     ElMessageBox.confirm("确认删除吗?", "提示", {
       type: "warning",
@@ -96,6 +105,12 @@ const tableTopBtnClick = ({ btn }) => {
 
 const diaBotBtnClick = ({ btn }) => {
   if (btn === "save") {
+    const res = formRef.value && formRef.value.getFormValue();
+    if (res && res.errMsg) {
+      ElMessage.error(res.errMsg);
+      return false;
+    }
+    detailInfo.value = { ...detailInfo.value, ...res.value };
     if (detailType.value === "add") {
       tableData.value.push(detailInfo.value);
     } else if (detailType.value === "edit") {
@@ -130,12 +145,12 @@ watch(
   {
     deep: true,
     immediate: true,
-  }
+  },
 );
 </script>
 
 <template>
-  <div class="box">
+  <div class="childBox">
     <p-table
       :column="tableColumn"
       :data="tableData"
@@ -146,8 +161,8 @@ watch(
     />
 
     <p-dialog
-      title="爱好详情页"
       type="box"
+      title="爱好详情页"
       v-model="isDetail"
       :botBtn="[
         { label: '保存', key: 'save' },
@@ -155,41 +170,15 @@ watch(
       ]"
       @botBtnClick="diaBotBtnClick"
     >
-      <div class="items">
-        <p-item
-          class="dtItem"
-          :config="{
-            type: 'input',
-            label: '爱好',
-          }"
-          v-model="detailInfo.hobby"
-        />
-        <p-item
-          class="dtItem"
-          :config="{
-            type: 'textarea',
-            label: '爱好描述',
-          }"
-          v-model="detailInfo.hobbyDesc"
-        />
+      <div style="padding: 10px 0">
+        <p-form :data="formData" :spanList="[12, 12]" ref="formRef"></p-form>
       </div>
     </p-dialog>
   </div>
 </template>
 
 <style scoped lang="scss">
-.box {
+.childBox {
   width: 100%;
-
-  .items {
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-
-    .dtItem {
-      width: 100%;
-      margin-bottom: 10px;
-    }
-  }
 }
 </style>

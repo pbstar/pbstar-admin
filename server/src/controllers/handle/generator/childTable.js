@@ -20,7 +20,8 @@ const createScript = (json) => {
         obj = { ...obj, enumKey: field.enumKey };
       }
       tableColumn.push(obj);
-    } else if (field.showIn.includes("form")) {
+    }
+    if (field.showIn.includes("form")) {
       let obj = {
         label: field.label,
         type: field.type,
@@ -35,7 +36,7 @@ const createScript = (json) => {
 
   let code = `
 <script setup>
-  import { ref, onBeforeMount, watch } from "vue";
+  import { ref, onBeforeMount, watch, nextTick } from "vue";
   import { ElMessage, ElMessageBox } from "element-plus";
   import request from "@Passets/utils/request";
   import PTable from "@Pcomponents/base/p-table/index.vue";
@@ -114,6 +115,9 @@ onBeforeMount(() => {
           detailType.value = btn;
           detailInfo.value = res.data;
           isDetail.value = true;
+          nextTick(() => {
+            formRef.value && formRef.value.toChangeValue(res.data);
+          });
         } else {
           ElMessage.error(res?.msg || "操作异常");
         }
@@ -154,6 +158,12 @@ onBeforeMount(() => {
         detailType.value == "add"
           ? "/${json.apiBase}/${json.key}/create${key}"
           : "/${json.apiBase}/${json.key}/update${key}";
+      const res = formRef.value && formRef.value.getFormValue();
+      if (res && res.errMsg) {
+        ElMessage.error(res.errMsg);
+        return false;
+      }
+      detailInfo.value = { ...detailInfo.value, ...res.value };
       request.post({
         base: "${json.apiKey}",
         url,
@@ -186,6 +196,20 @@ onBeforeMount(() => {
 };
 
 const createHtml = (json) => {
+  const spanList = [];
+  const w100TypeList = ["textarea", "slot"];
+  json.fields.forEach((field) => {
+    if (!field.showIn.includes("form")) return;
+    if (w100TypeList.includes(field.type)) {
+      spanList.push(12);
+    } else {
+      if (json.detailDiaType === "page") {
+        spanList.push(4);
+      } else {
+        spanList.push(12);
+      }
+    }
+  });
   const topCode = `
 <template>
   <div class="childBox">
@@ -216,13 +240,13 @@ const createHtml = (json) => {
     ${
       json.detailDiaType === "page" || json.detailDiaType === "drawer"
         ? '<div style="padding: 0 10px;"><p-collapse title="基础信息" :isControl="false" :showDownLine="false">'
-        : ""
+        : '<div style="padding: 10px 0">'
     }
-        <p-form :data="formData" :spanList="${JSON.stringify(spanList)}" ref="formRef">
+        <p-form :data="formData" :spanList="${JSON.stringify(spanList)}" ref="formRef"></p-form>
     ${
       json.detailDiaType === "page" || json.detailDiaType === "drawer"
         ? "</p-collapse></div>"
-        : ""
+        : "</div>"
     }
     </p-dialog>
 `;

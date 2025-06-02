@@ -14,7 +14,7 @@ const createScript = (json) => {
       label: field.label,
       type: field.type,
       key: field.key,
-      isText: 'detailType.value == "view"',
+      isText: `detailType.value == "view"`,
     };
     if (field.enumKey) {
       obj = { ...obj, enumKey: field.enumKey };
@@ -111,13 +111,13 @@ const createHtml = (json) => {
     ${
       json.detailDiaType === "page" || json.detailDiaType === "drawer"
         ? '<div style="padding: 0 10px;"><p-collapse title="基础信息" :isControl="false" :showDownLine="false">'
-        : ""
+        : '<div style="padding: 10px 0">'
     }
-        <p-form :data="formData" :spanList="${JSON.stringify(spanList)}" ref="formRef">
+        <p-form :data="formData" :spanList="${JSON.stringify(spanList)}" ref="formRef"></p-form>
     ${
       json.detailDiaType === "page" || json.detailDiaType === "drawer"
         ? "</p-collapse></div>"
-        : ""
+        : "</div>"
     }
   </template>
   `;

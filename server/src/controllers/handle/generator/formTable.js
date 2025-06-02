@@ -19,12 +19,12 @@ const createScript = (json) => {
         obj = { ...obj, enumKey: field.enumKey };
       }
       tableColumn.push(obj);
-    } else if (field.showIn.includes("form")) {
+    }
+    if (field.showIn.includes("form")) {
       let obj = {
         label: field.label,
         type: field.type,
         key: field.key,
-        isText: 'detailType.value == "view"',
       };
       if (field.enumKey) {
         obj = { ...obj, enumKey: field.enumKey };
@@ -35,9 +35,9 @@ const createScript = (json) => {
 
   let code = `
   <script setup>
-    import { ref, onBeforeMount, watch } from "vue";
+    import { ref, onBeforeMount, watch, nextTick } from "vue";
     import { cloneDeep } from "es-toolkit/object";
-    import { ElMessageBox } from "element-plus";
+    import { ElMessage, ElMessageBox } from "element-plus";
     import PTable from "@Pcomponents/base/p-table/index.vue";
     import PDialog from "@Pcomponents/base/p-dialog/index.vue";
     ${json.detailDiaType !== "box" ? `import PCollapse from "@Pcomponents/base/p-collapse/index.vue";` : ""}
@@ -60,8 +60,8 @@ const createScript = (json) => {
         tableTopBtn.value = [];
         tableRightBtn.value = [];
       } else {
-        tableTopBtn.value = [{ label: "新增", value: "add"}];
-        tableRightBtn.value = [{ label: "编辑", value: "edit"}, { label: "删除", value: "delete"}];
+        tableTopBtn.value = [{ label: "新增", key: "add"}];
+        tableRightBtn.value = [{ label: "编辑", key: "edit"}, { label: "删除", key: "delete"}];
       }
     });
   
@@ -97,10 +97,13 @@ const createScript = (json) => {
         const index = tableData.value.findIndex((item) => {
           return item.webId == row.webId;
         });
+        isDetail.value = true;
         if (index > -1) {
           detailInfo.value = cloneDeep(tableData.value[index]);
+          nextTick(() => {
+            formRef.value && formRef.value.toChangeValue(detailInfo.value);
+          });
         }
-        isDetail.value = true;
       } else if (btn === "delete") {
         ElMessageBox.confirm("确认删除吗?", "提示", {
           type: "warning",
@@ -129,6 +132,12 @@ const createScript = (json) => {
     
     const diaBotBtnClick = ({btn}) => {
       if (btn === "save") {
+        const res = formRef.value && formRef.value.getFormValue();
+        if (res && res.errMsg) {
+          ElMessage.error(res.errMsg);
+          return false;
+        }
+        detailInfo.value = { ...detailInfo.value, ...res.value };
         if (detailType.value === "add") {
           tableData.value.push(detailInfo.value);
         } else if (detailType.value === "edit") {
@@ -171,6 +180,20 @@ const createScript = (json) => {
 };
 
 const createHtml = (json) => {
+  const spanList = [];
+  const w100TypeList = ["textarea", "slot"];
+  json.fields.forEach((field) => {
+    if (!field.showIn.includes("form")) return;
+    if (w100TypeList.includes(field.type)) {
+      spanList.push(12);
+    } else {
+      if (json.detailDiaType === "page") {
+        spanList.push(4);
+      } else {
+        spanList.push(12);
+      }
+    }
+  });
   const topCode = `
   <template>
     <div class="childBox">
@@ -201,13 +224,13 @@ const createHtml = (json) => {
       ${
         json.detailDiaType === "page" || json.detailDiaType === "drawer"
           ? '<div style="padding: 0 10px;"><p-collapse title="基础信息" :isControl="false" :showDownLine="false">'
-          : ""
+          : '<div style="padding: 10px 0">'
       }
-          <p-form :data="formData" :spanList="${JSON.stringify(spanList)}" ref="formRef">
+          <p-form :data="formData" :spanList="${JSON.stringify(spanList)}" ref="formRef"></p-form>
       ${
         json.detailDiaType === "page" || json.detailDiaType === "drawer"
           ? "</p-collapse></div>"
-          : ""
+          : "</div>"
       }
       </p-dialog>
   `;
@@ -230,7 +253,6 @@ const createStyle = () => {
 <style scoped lang="scss">
   .childBox {
     width: 100%;
-    padding-top: 10px;
   }
 </style>
   `;

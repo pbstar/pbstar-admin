@@ -107,7 +107,13 @@ const getFormValue = () => {
     ElMessage.error(res.errMsg);
     return false;
   }
-  return res.value;
+  return {
+    ...detailInfo.value,
+    ...res.value,
+    ...{
+      hobbyList: detailInfo.value.hobbyList,
+    },
+  };
 };
 
 defineExpose({

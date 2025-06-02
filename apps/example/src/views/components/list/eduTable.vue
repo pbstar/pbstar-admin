@@ -1,10 +1,11 @@
 <script setup>
-import { ref, onBeforeMount } from "vue";
+import { ref, onBeforeMount, watch, nextTick } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import request from "@Passets/utils/request";
 import PTable from "@Pcomponents/base/p-table/index.vue";
 import PDialog from "@Pcomponents/base/p-dialog/index.vue";
-import PItem from "@Pcomponents/base/p-item/index.vue";
+
+import PForm from "@Pcomponents/base/p-form/index.vue";
 
 const props = defineProps({
   type: {
@@ -49,6 +50,12 @@ const tableTopBtn = ref([]);
 const detailType = ref("");
 const detailInfo = ref({});
 const isDetail = ref(false);
+const formRef = ref(null);
+const formData = ref([
+  { label: "名称", type: "input", key: "eduName" },
+  { label: "时间", type: "daterange", key: "dateRange" },
+  { label: "备注", type: "textarea", key: "remark" },
+]);
 
 const initTable = () => {
   tableData.value = [];
@@ -68,22 +75,22 @@ const initTable = () => {
       }
     });
 };
-
 const tableRightBtnClick = ({ row, btn }) => {
   if (btn === "edit") {
     request
       .get({
         base: "base",
         url: "/example/test/getEducationDetail",
-        data: {
-          id: row.id,
-        },
+        data: { id: row.id },
       })
       .then((res) => {
         if (res && res.code === 200 && res.data) {
           detailType.value = btn;
           detailInfo.value = res.data;
           isDetail.value = true;
+          nextTick(() => {
+            formRef.value && formRef.value.toChangeValue(res.data);
+          });
         } else {
           ElMessage.error(res?.msg || "操作异常");
         }
@@ -97,9 +104,7 @@ const tableRightBtnClick = ({ row, btn }) => {
           .post({
             base: "base",
             url: "/example/test/deleteEducation",
-            data: {
-              idList: [row.id],
-            },
+            data: { idList: [row.id] },
           })
           .then((res) => {
             if (res && res.code === 200) {
@@ -113,7 +118,6 @@ const tableRightBtnClick = ({ row, btn }) => {
       .catch(() => {});
   }
 };
-
 const tableTopBtnClick = ({ btn }) => {
   if (btn === "add") {
     detailType.value = "add";
@@ -123,20 +127,22 @@ const tableTopBtnClick = ({ btn }) => {
     isDetail.value = true;
   }
 };
-
 const diaBotBtnClick = ({ btn }) => {
   if (btn === "save") {
-    let url = "";
-    if (detailType.value === "add") {
-      url = "/example/test/createEducation";
-    } else if (detailType.value === "edit") {
-      url = "/example/test/updateEducation";
+    const url =
+      detailType.value == "add"
+        ? "/example/test/createEducation"
+        : "/example/test/updateEducation";
+    const res = formRef.value && formRef.value.getFormValue();
+    if (res && res.errMsg) {
+      ElMessage.error(res.errMsg);
+      return false;
     }
-
+    detailInfo.value = { ...detailInfo.value, ...res.value };
     request
       .post({
         base: "base",
-        url: url,
+        url,
         data: detailInfo.value,
       })
       .then((res) => {
@@ -152,10 +158,19 @@ const diaBotBtnClick = ({ btn }) => {
     isDetail.value = false;
   }
 };
+
+watch(
+  () => props.id,
+  (newVal, oldVal) => {
+    if (newVal) {
+      initTable();
+    }
+  },
+);
 </script>
 
 <template>
-  <div class="box">
+  <div class="childBox">
     <p-table
       :column="tableColumn"
       :data="tableData"
@@ -166,8 +181,8 @@ const diaBotBtnClick = ({ btn }) => {
     />
 
     <p-dialog
-      title="教育背景详情页"
       type="box"
+      title="教育背景详情页"
       v-model="isDetail"
       :botBtn="[
         { label: '保存', key: 'save' },
@@ -175,50 +190,20 @@ const diaBotBtnClick = ({ btn }) => {
       ]"
       @botBtnClick="diaBotBtnClick"
     >
-      <div class="items">
-        <p-item
-          class="dtItem"
-          :config="{
-            type: 'input',
-            label: '名称',
-          }"
-          v-model="detailInfo.eduName"
-        />
-        <p-item
-          class="dtItem"
-          :config="{
-            type: 'daterange',
-            label: '时间',
-          }"
-          v-model="detailInfo.dateRange"
-        />
-        <p-item
-          class="dtItem"
-          :config="{
-            type: 'textarea',
-            label: '备注',
-          }"
-          v-model="detailInfo.remark"
-        />
+      <div style="padding: 10px 0">
+        <p-form
+          :data="formData"
+          :spanList="[12, 12, 12]"
+          ref="formRef"
+        ></p-form>
       </div>
     </p-dialog>
   </div>
 </template>
 
 <style scoped lang="scss">
-.box {
+.childBox {
   width: 100%;
   padding-top: 10px;
-
-  .items {
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-
-    .dtItem {
-      width: 100%;
-      margin-bottom: 10px;
-    }
-  }
 }
 </style>

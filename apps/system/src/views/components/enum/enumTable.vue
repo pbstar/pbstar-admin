@@ -1,10 +1,11 @@
 <script setup>
-import { ref, onBeforeMount, watch } from "vue";
+import { ref, onBeforeMount, watch, nextTick } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import request from "@Passets/utils/request";
 import PTable from "@Pcomponents/base/p-table/index.vue";
 import PDialog from "@Pcomponents/base/p-dialog/index.vue";
-import PItem from "@Pcomponents/base/p-item/index.vue";
+
+import PForm from "@Pcomponents/base/p-form/index.vue";
 
 const props = defineProps({
   type: {
@@ -20,7 +21,10 @@ const props = defineProps({
 onBeforeMount(() => {
   if (props.type == "add") {
     tableTopBtn.value = [];
-    tableRightBtn.value = [];
+    tableRightBtn.value = [
+      { label: "编辑", key: "edit" },
+      { label: "删除", key: "delete" },
+    ];
   } else if (props.type == "view") {
     tableTopBtn.value = [];
     tableRightBtn.value = [];
@@ -45,6 +49,11 @@ const tableTopBtn = ref([]);
 const detailType = ref("");
 const detailInfo = ref({});
 const isDetail = ref(false);
+const formRef = ref(null);
+const formData = ref([
+  { label: "枚举label", type: "input", key: "label" },
+  { label: "枚举value", type: "input", key: "value" },
+]);
 
 const initTable = () => {
   tableData.value = [];
@@ -77,6 +86,9 @@ const tableRightBtnClick = ({ row, btn }) => {
           detailType.value = btn;
           detailInfo.value = res.data;
           isDetail.value = true;
+          nextTick(() => {
+            formRef.value && formRef.value.toChangeValue(res.data);
+          });
         } else {
           ElMessage.error(res?.msg || "操作异常");
         }
@@ -119,6 +131,12 @@ const diaBotBtnClick = ({ btn }) => {
       detailType.value == "add"
         ? "/system/enum/createEnum"
         : "/system/enum/updateEnum";
+    const res = formRef.value && formRef.value.getFormValue();
+    if (res && res.errMsg) {
+      ElMessage.error(res.errMsg);
+      return false;
+    }
+    detailInfo.value = { ...detailInfo.value, ...res.value };
     request
       .post({
         base: "base",
@@ -150,7 +168,7 @@ watch(
 </script>
 
 <template>
-  <div class="box">
+  <div class="childBox">
     <p-table
       :column="tableColumn"
       :data="tableData"
@@ -162,7 +180,7 @@ watch(
 
     <p-dialog
       type="box"
-      title="枚举详细详情页"
+      title="枚举值详情页"
       v-model="isDetail"
       :botBtn="[
         { label: '保存', key: 'save' },
@@ -170,44 +188,16 @@ watch(
       ]"
       @botBtnClick="diaBotBtnClick"
     >
-      <div class="items">
-        <p-item
-          class="dtItem"
-          :config="{
-            key: 'label',
-            type: 'input',
-            label: '枚举label',
-          }"
-          v-model="detailInfo.label"
-        />
-        <p-item
-          class="dtItem"
-          :config="{
-            key: 'value',
-            type: 'input',
-            label: '枚举value',
-          }"
-          v-model="detailInfo.value"
-        />
+      <div style="padding: 10px 0">
+        <p-form :data="formData" :spanList="[12, 12]" ref="formRef"></p-form>
       </div>
     </p-dialog>
   </div>
 </template>
 
 <style scoped lang="scss">
-.box {
+.childBox {
   width: 100%;
   padding-top: 10px;
-
-  .items {
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-
-    .dtItem {
-      width: 100%;
-      margin-bottom: 10px;
-    }
-  }
 }
 </style>
