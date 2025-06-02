@@ -177,15 +177,15 @@ watch(
 
 /* 子菜单缩进 */
 .navBox :deep(.el-sub-menu .el-menu-item) {
-  padding-left: 24px !important;
+  margin-left: 24px;
 }
 
 /* 孙菜单缩进 */
 .navBox :deep(.items .el-sub-menu__title) {
-  padding-left: 24px !important;
+  margin-left: 24px;
 }
 .navBox :deep(.items .el-sub-menu .el-menu-item) {
-  padding-left: 36px !important;
+  margin-left: 36px;
 }
 
 /* 图标样式 */

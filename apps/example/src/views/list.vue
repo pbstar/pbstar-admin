@@ -243,7 +243,7 @@ const toExport = (callBack) => {
     });
 };
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .page {
   width: 100%;
   padding: 0 10px;
