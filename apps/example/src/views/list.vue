@@ -197,6 +197,9 @@ const toRightBtnClick = ({ btn, row }) => {
 const toBotBtnClick = ({ btn }) => {
   if (btn == "save") {
     const detailInfo = detailRef.value.getFormValue();
+    if (!detailInfo) {
+      return;
+    }
     const url =
       detailType.value == "add"
         ? "/example/test/create"

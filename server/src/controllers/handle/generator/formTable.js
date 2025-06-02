@@ -35,9 +35,9 @@ const createScript = (json) => {
 
   let code = `
   <script setup>
-    import { ref, onBeforeMount, watch, nextTick } from "vue";
+    import { ref, onBeforeMount, watch } from "vue";
     import { cloneDeep } from "es-toolkit/object";
-    import { ElMessage, ElMessageBox } from "element-plus";
+    import { ElMessageBox } from "element-plus";
     import PTable from "@Pcomponents/base/p-table/index.vue";
     import PDialog from "@Pcomponents/base/p-dialog/index.vue";
     ${json.detailDiaType !== "box" ? `import PCollapse from "@Pcomponents/base/p-collapse/index.vue";` : ""}
@@ -72,7 +72,6 @@ const createScript = (json) => {
     const detailType = ref("");
     const detailInfo = ref({});
     const isDetail = ref(false);
-    const formRef = ref(null);
     const formData = ref(${JSON.stringify(formData)});
     
     const getWebId = () => {
@@ -100,9 +99,6 @@ const createScript = (json) => {
         isDetail.value = true;
         if (index > -1) {
           detailInfo.value = cloneDeep(tableData.value[index]);
-          nextTick(() => {
-            formRef.value && formRef.value.toChangeValue(detailInfo.value);
-          });
         }
       } else if (btn === "delete") {
         ElMessageBox.confirm("确认删除吗?", "提示", {
@@ -132,12 +128,6 @@ const createScript = (json) => {
     
     const diaBotBtnClick = ({btn}) => {
       if (btn === "save") {
-        const res = formRef.value && formRef.value.getFormValue();
-        if (res && res.errMsg) {
-          ElMessage.error(res.errMsg);
-          return false;
-        }
-        detailInfo.value = { ...detailInfo.value, ...res.value };
         if (detailType.value === "add") {
           tableData.value.push(detailInfo.value);
         } else if (detailType.value === "edit") {
@@ -226,7 +216,7 @@ const createHtml = (json) => {
           ? '<div style="padding: 0 10px;"><p-collapse title="基础信息" :isControl="false" :showDownLine="false">'
           : '<div style="padding: 10px 0">'
       }
-          <p-form :data="formData" :spanList="${JSON.stringify(spanList)}" ref="formRef"></p-form>
+          <p-form :data="formData" :spanList="${JSON.stringify(spanList)}" v-model="detailInfo"></p-form>
       ${
         json.detailDiaType === "page" || json.detailDiaType === "drawer"
           ? "</p-collapse></div>"

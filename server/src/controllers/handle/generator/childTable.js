@@ -36,7 +36,7 @@ const createScript = (json) => {
 
   let code = `
 <script setup>
-  import { ref, onBeforeMount, watch, nextTick } from "vue";
+  import { ref, onBeforeMount, watch } from "vue";
   import { ElMessage, ElMessageBox } from "element-plus";
   import request from "@Passets/utils/request";
   import PTable from "@Pcomponents/base/p-table/index.vue";
@@ -83,7 +83,6 @@ onBeforeMount(() => {
   const detailType = ref("");
   const detailInfo = ref({});
   const isDetail = ref(false);
-  const formRef = ref(null);
   const formData = ref(${JSON.stringify(formData)});
   
   const initTable = () => {
@@ -115,9 +114,6 @@ onBeforeMount(() => {
           detailType.value = btn;
           detailInfo.value = res.data;
           isDetail.value = true;
-          nextTick(() => {
-            formRef.value && formRef.value.toChangeValue(res.data);
-          });
         } else {
           ElMessage.error(res?.msg || "操作异常");
         }
@@ -158,12 +154,6 @@ onBeforeMount(() => {
         detailType.value == "add"
           ? "/${json.apiBase}/${json.key}/create${key}"
           : "/${json.apiBase}/${json.key}/update${key}";
-      const res = formRef.value && formRef.value.getFormValue();
-      if (res && res.errMsg) {
-        ElMessage.error(res.errMsg);
-        return false;
-      }
-      detailInfo.value = { ...detailInfo.value, ...res.value };
       request.post({
         base: "${json.apiKey}",
         url,
@@ -242,7 +232,7 @@ const createHtml = (json) => {
         ? '<div style="padding: 0 10px;"><p-collapse title="基础信息" :isControl="false" :showDownLine="false">'
         : '<div style="padding: 10px 0">'
     }
-        <p-form :data="formData" :spanList="${JSON.stringify(spanList)}" ref="formRef"></p-form>
+        <p-form :data="formData" :spanList="${JSON.stringify(spanList)}" v-model="detailInfo"></p-form>
     ${
       json.detailDiaType === "page" || json.detailDiaType === "drawer"
         ? "</p-collapse></div>"

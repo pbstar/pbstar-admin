@@ -23,8 +23,8 @@ const createScript = (json) => {
   });
   let code = `
   <script setup>
-    import { ref, onBeforeMount, nextTick } from "vue";
-    import { ElMessage, ElMessageBox } from "element-plus";
+    import { ref, onBeforeMount } from "vue";
+    import { ElMessage } from "element-plus";
     import request from "@Passets/utils/request";
     ${json.detailDiaType === "page" || json.detailDiaType === "drawer" ? 'import PCollapse from "@Pcomponents/base/p-collapse/index.vue";' : ""}
     import PForm from "@Pcomponents/base/p-form/index.vue";
@@ -42,7 +42,6 @@ const createScript = (json) => {
     const detailInfo = ref({});
     const detailType = ref("");
     const detailId = ref("");
-    const formRef = ref(null);
     const formData = ref(${JSON.stringify(formData)});
   
     onBeforeMount(() => {
@@ -65,21 +64,13 @@ const createScript = (json) => {
         .then((res) => {
           if (res && res.code == 200) {
             detailInfo.value = res.data;
-            nextTick(() => {
-              formRef.value && formRef.value.toChangeValue(res.data);
-            });
           } else {
           ElMessage.error(res.msg || "操作异常");
         }
       });
     };
     const getFormValue = () => {
-      const res = formRef.value && formRef.value.getFormValue();
-      if (res && res.errMsg) {
-        ElMessage.error(res.errMsg);
-        return false;
-      }
-      return res.value;
+      return detailInfo.value;
     };
 
     defineExpose({
@@ -113,7 +104,7 @@ const createHtml = (json) => {
         ? '<div style="padding: 0 10px;"><p-collapse title="基础信息" :isControl="false" :showDownLine="false">'
         : '<div style="padding: 10px 0">'
     }
-        <p-form :data="formData" :spanList="${JSON.stringify(spanList)}" ref="formRef"></p-form>
+        <p-form :data="formData" :spanList="${JSON.stringify(spanList)}" v-model="detailInfo"></p-form>
     ${
       json.detailDiaType === "page" || json.detailDiaType === "drawer"
         ? "</p-collapse></div>"

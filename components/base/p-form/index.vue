@@ -1,5 +1,6 @@
 <script setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
+import { ElMessage } from "element-plus";
 import PItem from "@Pcomponents/base/p-item/index.vue";
 const props = defineProps({
   data: {
@@ -10,12 +11,17 @@ const props = defineProps({
     type: Array,
     default: () => [],
   },
+  modelValue: {
+    type: Object,
+    default: () => {},
+  },
 });
-const emit = defineEmits(["change"]);
+const emit = defineEmits(["change", "update:modelValue"]);
 const data = ref(props.data);
 const valueObj = ref({});
 const handleChange = (val) => {
   emit("change", val);
+  emit("update:modelValue", valueObj.value);
 };
 const toChangeData = (list) => {
   list.forEach((item) => {
@@ -29,26 +35,23 @@ const toChangeData = (list) => {
     }
   });
 };
-const toChangeValue = (obj) => {
-  valueObj.value = { ...valueObj.value, ...obj };
-};
-const getFormValue = () => {
-  const errList = [];
+//必填校验
+const toCheckRequired = () => {
+  const errs = [];
   data.value.forEach((item) => {
     if (item.isRequired) {
       const value = valueObj.value[item.key];
       if (!value && value !== 0 && value !== false) {
-        errList.push(item);
+        errs.push(item.label);
       }
     }
   });
-  const errlabels = errList.map((item) => item.label).join("、");
-  const errMsg = errlabels ? `${errlabels}不能为空` : "";
-  return {
-    errList,
-    errMsg,
-    value: valueObj.value,
-  };
+  if (errs.length > 0) {
+    ElMessage.error(`${errs.join(",")}为必填项`);
+    return false;
+  } else {
+    return true;
+  }
 };
 const getWidth = (index) => {
   let span = props.spanList[index] || 6;
@@ -58,10 +61,19 @@ const getWidth = (index) => {
   }
   return `calc(${(span * 100) / 12}% - 20px)`;
 };
+watch(
+  () => props.modelValue,
+  (newVal) => {
+    valueObj.value = { ...valueObj.value, ...newVal };
+  },
+  {
+    immediate: true,
+    deep: true,
+  },
+);
 defineExpose({
   toChangeData,
-  toChangeValue,
-  getFormValue,
+  toCheckRequired,
 });
 </script>
 <template>

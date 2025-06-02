@@ -67,9 +67,7 @@ const getDetailInfo = () => {
     });
 };
 const getFormValue = () => {
-  return {
-    ...detailInfo.value,
-  };
+  return detailInfo.value;
 };
 
 defineExpose({

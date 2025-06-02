@@ -1,6 +1,6 @@
 <script setup>
-import { ref, onBeforeMount, nextTick } from "vue";
-import { ElMessage, ElMessageBox } from "element-plus";
+import { ref, onBeforeMount } from "vue";
+import { ElMessage } from "element-plus";
 import request from "@Passets/utils/request";
 import PCollapse from "@Pcomponents/base/p-collapse/index.vue";
 import PForm from "@Pcomponents/base/p-form/index.vue";
@@ -25,13 +25,16 @@ const formData = ref([
   {
     key: "name",
     label: "姓名",
+    type: "input",
     isRequired: true,
+    isText: detailType.value == "view",
   },
   {
     key: "age",
     label: "年龄",
     type: "inputNumber",
     isRequired: true,
+    isText: detailType.value == "view",
   },
   {
     key: "sex",
@@ -42,18 +45,21 @@ const formData = ref([
       { label: "男", value: "1" },
       { label: "女", value: "2" },
     ],
+    isText: detailType.value == "view",
   },
   {
     key: "ethnic",
     label: "民族",
     type: "select",
     enumKey: "p_ethnic",
+    isText: detailType.value == "view",
   },
   {
     key: "isHealthy",
     label: "是否健康",
     type: "select",
     enumKey: "p_boolean",
+    isText: detailType.value == "view",
   },
   {
     key: "hobbyList",
@@ -65,17 +71,6 @@ const formData = ref([
 onBeforeMount(() => {
   detailType.value = props.type;
   detailId.value = props.id;
-  if (detailType.value == "view") {
-    const data = formData.value.map((item) => {
-      return {
-        key: item.key,
-        isText: true,
-      };
-    });
-    nextTick(() => {
-      formRef.value && formRef.value.toChangeData(data);
-    });
-  }
   if (detailType.value == "view" || detailType.value == "edit") {
     getDetailInfo();
   }
@@ -93,27 +88,17 @@ const getDetailInfo = () => {
     .then((res) => {
       if (res && res.code == 200) {
         detailInfo.value = res.data;
-        nextTick(() => {
-          formRef.value && formRef.value.toChangeValue(res.data);
-        });
       } else {
         ElMessage.error(res.msg || "操作异常");
       }
     });
 };
 const getFormValue = () => {
-  const res = formRef.value && formRef.value.getFormValue();
-  if (res && res.errMsg) {
-    ElMessage.error(res.errMsg);
+  const isRequired = formRef.value && formRef.value.toCheckRequired();
+  if (!isRequired) {
     return false;
   }
-  return {
-    ...detailInfo.value,
-    ...res.value,
-    ...{
-      hobbyList: detailInfo.value.hobbyList,
-    },
-  };
+  return detailInfo.value;
 };
 
 defineExpose({
@@ -124,7 +109,12 @@ defineExpose({
 <template>
   <div class="detail">
     <p-collapse title="基础信息" :isControl="false" :showDownLine="false">
-      <p-form :data="formData" :spanList="[4, 4, 4, 4, 4, 12]" ref="formRef">
+      <p-form
+        :data="formData"
+        :spanList="[4, 4, 4, 4, 4, 12]"
+        ref="formRef"
+        v-model="detailInfo"
+      >
         <template #hobbyList>
           <hobbyTable :type="detailType" v-model="detailInfo.hobbyList" />
         </template>

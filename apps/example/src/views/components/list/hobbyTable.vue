@@ -1,7 +1,7 @@
 <script setup>
-import { ref, onBeforeMount, watch, nextTick } from "vue";
+import { ref, onBeforeMount, watch } from "vue";
 import { cloneDeep } from "es-toolkit/object";
-import { ElMessage, ElMessageBox } from "element-plus";
+import { ElMessageBox } from "element-plus";
 import PTable from "@Pcomponents/base/p-table/index.vue";
 import PDialog from "@Pcomponents/base/p-dialog/index.vue";
 
@@ -42,7 +42,6 @@ const tableTopBtn = ref([]);
 const detailType = ref("");
 const detailInfo = ref({});
 const isDetail = ref(false);
-const formRef = ref(null);
 const formData = ref([
   { label: "爱好", type: "input", key: "hobby" },
   { label: "爱好描述", type: "textarea", key: "hobbyDesc" },
@@ -73,9 +72,6 @@ const tableRightBtnClick = ({ row, btn }) => {
     isDetail.value = true;
     if (index > -1) {
       detailInfo.value = cloneDeep(tableData.value[index]);
-      nextTick(() => {
-        formRef.value && formRef.value.toChangeValue(detailInfo.value);
-      });
     }
   } else if (btn === "delete") {
     ElMessageBox.confirm("确认删除吗?", "提示", {
@@ -105,12 +101,6 @@ const tableTopBtnClick = ({ btn }) => {
 
 const diaBotBtnClick = ({ btn }) => {
   if (btn === "save") {
-    const res = formRef.value && formRef.value.getFormValue();
-    if (res && res.errMsg) {
-      ElMessage.error(res.errMsg);
-      return false;
-    }
-    detailInfo.value = { ...detailInfo.value, ...res.value };
     if (detailType.value === "add") {
       tableData.value.push(detailInfo.value);
     } else if (detailType.value === "edit") {
@@ -171,7 +161,11 @@ watch(
       @botBtnClick="diaBotBtnClick"
     >
       <div style="padding: 10px 0">
-        <p-form :data="formData" :spanList="[12, 12]" ref="formRef"></p-form>
+        <p-form
+          :data="formData"
+          :spanList="[12, 12]"
+          v-model="detailInfo"
+        ></p-form>
       </div>
     </p-dialog>
   </div>

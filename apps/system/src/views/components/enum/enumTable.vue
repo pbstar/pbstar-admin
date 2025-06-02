@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onBeforeMount, watch, nextTick } from "vue";
+import { ref, onBeforeMount, watch } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import request from "@Passets/utils/request";
 import PTable from "@Pcomponents/base/p-table/index.vue";
@@ -49,7 +49,6 @@ const tableTopBtn = ref([]);
 const detailType = ref("");
 const detailInfo = ref({});
 const isDetail = ref(false);
-const formRef = ref(null);
 const formData = ref([
   { label: "枚举label", type: "input", key: "label" },
   { label: "枚举value", type: "input", key: "value" },
@@ -86,9 +85,6 @@ const tableRightBtnClick = ({ row, btn }) => {
           detailType.value = btn;
           detailInfo.value = res.data;
           isDetail.value = true;
-          nextTick(() => {
-            formRef.value && formRef.value.toChangeValue(res.data);
-          });
         } else {
           ElMessage.error(res?.msg || "操作异常");
         }
@@ -131,12 +127,6 @@ const diaBotBtnClick = ({ btn }) => {
       detailType.value == "add"
         ? "/system/enum/createEnum"
         : "/system/enum/updateEnum";
-    const res = formRef.value && formRef.value.getFormValue();
-    if (res && res.errMsg) {
-      ElMessage.error(res.errMsg);
-      return false;
-    }
-    detailInfo.value = { ...detailInfo.value, ...res.value };
     request
       .post({
         base: "base",
@@ -189,7 +179,11 @@ watch(
       @botBtnClick="diaBotBtnClick"
     >
       <div style="padding: 10px 0">
-        <p-form :data="formData" :spanList="[12, 12]" ref="formRef"></p-form>
+        <p-form
+          :data="formData"
+          :spanList="[12, 12]"
+          v-model="detailInfo"
+        ></p-form>
       </div>
     </p-dialog>
   </div>
