@@ -274,7 +274,7 @@ const toChangeColumn = (list) => {
 const toExport = () => {
   exportLoading.value = true;
   props.export((data) => {
-    if (!data) {
+    if (!data || !data.data) {
       ElMessage.error("导出失败");
       exportLoading.value = false;
       return;
@@ -286,7 +286,7 @@ const toExport = () => {
     rows.push({
       cells: thCells,
     });
-    dataList.value.forEach((item) => {
+    data.data.forEach((item) => {
       const row = [];
       allColumn.value.forEach((col) => {
         if (col.options) {
