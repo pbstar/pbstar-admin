@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch } from "vue";
+import { ref, watch, computed } from "vue";
 import { ElMessage } from "element-plus";
 import PItem from "@Pcomponents/base/p-item/index.vue";
 const props = defineProps({
@@ -18,6 +18,9 @@ const props = defineProps({
 });
 const emit = defineEmits(["change", "update:modelValue"]);
 const data = ref(props.data);
+const isMobile = computed(() => {
+  return window.innerWidth <= 700;
+});
 const valueObj = ref({});
 const handleChange = (val) => {
   emit("change", val);
@@ -58,6 +61,10 @@ const getWidth = (index) => {
   if (span > 12 || span < 1) {
     console.warn("[p-form]span的值必须在1-12之间");
     span = 6;
+  }
+  if (isMobile.value) {
+    span = 12; //移动端全部占满宽度
+    return `calc(${(span * 100) / 12}% - 10px)`;
   }
   return `calc(${(span * 100) / 12}% - 20px)`;
 };
@@ -103,6 +110,11 @@ defineExpose({
     flex-shrink: 0;
     margin-right: 20px;
     margin-bottom: 10px;
+  }
+  @media screen and (max-width: 700px) {
+    .item {
+      margin-right: 10px;
+    }
   }
 }
 </style>
