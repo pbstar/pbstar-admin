@@ -15,11 +15,10 @@
             width: width || '500px',
           }"
         >
-          <div class="header"></div>
           <div class="top">
             <div class="title">{{ title }}</div>
             <img
-              src="@Passets/imgs/icons14/close2.png"
+              src="@Passets/imgs/icons14/close.png"
               alt=""
               @click="toClose"
             />
@@ -31,7 +30,6 @@
             <el-button
               v-for="(item, index) in botBtn"
               :key="index"
-              size="small"
               :type="item.type || 'primary'"
               @click="handleClickBot(item.key)"
             >
@@ -230,21 +228,23 @@ const handleClickBot = (btn) => {
 .diapage {
   width: calc(100% - 10px);
   height: calc(100%);
-  padding: 0 10px;
   background-color: var(--c-bg);
 
   & > .top {
     width: 100%;
     height: 42px;
+    padding: 0 10px;
   }
   & > .mid {
     width: 100%;
     height: calc(100% - 90px);
+    padding: 0 10px;
     overflow-y: auto;
   }
   & > .bot {
     width: 100%;
     height: 48px;
+    padding: 0 10px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -338,29 +338,26 @@ const handleClickBot = (btn) => {
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow-y: auto;
 }
 .diabox {
   max-width: 100%;
   background: var(--c-bg);
-  & > .header {
-    width: 100%;
-    height: 5px;
-    background: var(--c-bg-theme);
-  }
+  border-radius: 6px;
+  overflow: hidden;
   & > .top {
     width: 100%;
     padding: 0 10px;
-    height: 35px;
-    border-bottom: 1px solid var(--c-border);
+    height: 42px;
+    background: var(--c-bg-theme);
     display: flex;
     justify-content: space-between;
     align-items: center;
     .title {
       display: inline-block;
-      font-weight: bold;
       font-size: 16px;
       line-height: 20px;
-      color: var(--c-text);
+      color: var(--c-text-theme);
     }
     img {
       cursor: pointer;
@@ -373,7 +370,7 @@ const handleClickBot = (btn) => {
   }
   & > .bot {
     width: 100%;
-    height: 36px;
+    height: 42px;
     background-color: var(--c-bg-box);
     display: flex;
     align-items: center;
