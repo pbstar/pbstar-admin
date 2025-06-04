@@ -138,9 +138,7 @@ const change = (val) => {
 <template>
   <div class="item">
     <div class="label" v-if="config.label" :style="config.labelStyle">
-      <span
-        v-show="config.isRequired && !config.isText && !config.isDisabled"
-        style="color: red"
+      <span v-show="config.isRequired && !config.isText && !config.isDisabled"
         >*</span
       >
       <span>{{ config.label }}</span>
@@ -324,15 +322,23 @@ const change = (val) => {
   display: flex;
 }
 .label {
-  height: 20px;
+  height: 30px;
   width: 100px;
-  line-height: 20px;
+  line-height: 16px;
   margin-right: 6px;
-  text-align: right;
-  margin-top: 6px;
   flex-shrink: 0;
   font-size: 14px;
   color: var(--c-text);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  span:nth-child(1) {
+    margin-right: 4px;
+    color: red;
+  }
+  span:nth-child(2) {
+    text-align: right;
+  }
 }
 .value {
   min-width: 150px;
@@ -375,6 +381,11 @@ const change = (val) => {
     line-height: 16px;
     color: var(--c-text2);
     margin-top: 4px;
+  }
+}
+@media screen and (max-width: 700px) {
+  .label {
+    width: 80px;
   }
 }
 </style>

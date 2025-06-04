@@ -64,7 +64,6 @@ const getWidth = (index) => {
   }
   if (isMobile.value) {
     span = 12; //移动端全部占满宽度
-    return `calc(${(span * 100) / 12}% - 10px)`;
   }
   return `calc(${(span * 100) / 12}% - 20px)`;
 };
@@ -114,6 +113,7 @@ defineExpose({
   @media screen and (max-width: 700px) {
     .item {
       margin-right: 10px;
+      margin-left: 10px;
     }
   }
 }
