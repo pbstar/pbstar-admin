@@ -21,7 +21,7 @@ export default {
     } else {
       res.json({
         code: 401,
-        msg: "用户名或密码错误",
+        msg: "账号或密码错误",
       });
     }
   },
@@ -151,6 +151,46 @@ export default {
     res.json({
       code: 200,
       msg: "登出成功",
+    });
+  },
+
+  // 修改个人信息
+  updateMyInfo: (req, res) => {
+    const token = req.headers.token;
+    if (!token) {
+      return res.json({
+        code: 401,
+        msg: "未登录",
+      });
+    }
+    const { id } = parseToken(token);
+    if (!id) {
+      return res.json({
+        code: 401,
+        msg: "token无效",
+      });
+    }
+    const updatedUser = {
+      id: id,
+    };
+    if (req.body.username) {
+      updatedUser.username = req.body.username;
+    }
+    if (req.body.password) {
+      updatedUser.password = req.body.password;
+    }
+    if (req.body.avatar) {
+      updatedUser.avatar = req.body.avatar;
+    }
+    if (req.body.name) {
+      updatedUser.name = req.body.name;
+    }
+    const result = crud.update(db, updatedUser);
+
+    res.json({
+      code: 200,
+      data: result,
+      msg: "更新成功",
     });
   },
 };

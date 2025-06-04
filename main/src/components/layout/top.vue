@@ -12,7 +12,9 @@ const title = ref(import.meta.env.PUBLIC_TITLE);
 const userName = ref(sharedStore.userInfo?.name || "管理员");
 const userImg = ref(sharedStore.userInfo?.avatar || "");
 const theme = ref(false);
-const toUserInfo = () => {};
+const toUserInfo = () => {
+  router.push({ path: "/admin/pUser" });
+};
 const themeChange = () => {
   if (theme.value) {
     sharedStore.isDark = true;

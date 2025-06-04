@@ -30,12 +30,17 @@ const router = createRouter({
       path: "/admin",
       name: "admin",
       component: () => import("@/views/admin/index.vue"),
-      redirect: "/admin/home",
+      redirect: "/admin/pHome",
       children: [
         {
-          path: "home",
-          name: "admin_home",
+          path: "pHome",
+          name: "admin_pHome",
           component: () => import("@/views/admin/home.vue"),
+        },
+        {
+          path: "pUser",
+          name: "admin_pUser",
+          component: () => import("@/views/admin/user.vue"),
         },
         ...appsRouter,
       ],

@@ -4,7 +4,7 @@ const db = {
       id: 1,
       name: "首页",
       parentId: null,
-      url: "/admin/home",
+      url: "/admin/pHome",
       icon: "HomeFilled",
     },
     {

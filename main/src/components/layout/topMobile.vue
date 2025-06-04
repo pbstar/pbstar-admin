@@ -72,7 +72,10 @@ const findIndexByUrl = (url) => {
   return index;
 };
 
-const toUserInfo = () => {};
+const toUserInfo = () => {
+  isMore.value = false;
+  router.push({ path: "/admin/pUser" });
+};
 
 const themeChange = () => {
   if (theme.value) {

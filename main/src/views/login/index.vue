@@ -8,7 +8,7 @@
       <div class="formBox">
         <el-input
           v-model="loginForm.username"
-          placeholder="请输入用户名"
+          placeholder="请输入账号"
           :prefix-icon="User"
         ></el-input>
         <el-input
@@ -126,7 +126,7 @@ const loginForm = ref({
 });
 const handleSubmit = async () => {
   if (loginForm.value.username == "") {
-    ElMessage.error("请输入用户名");
+    ElMessage.error("请输入账号");
     return;
   }
   if (loginForm.value.password == "") {

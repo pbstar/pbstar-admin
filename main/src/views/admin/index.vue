@@ -47,6 +47,8 @@ const isFull = computed(() => {
 const isMobile = computed(() => {
   return window.innerWidth <= 700;
 });
+// 白名单
+const whiteList = ["/login", "/admin/pUser", "/404", "/403"];
 const toUnFull = () => {
   sharedStore.isFull = false;
   bus.$emit("changeSharedPinia", { isFull: false });
@@ -75,7 +77,10 @@ if (!sharedStore.userInfo) {
           .then((r) => {
             if (r.code === 200) {
               navsStore.setNavs(r.data);
-              if (!navsStore.hasNav(route.fullPath)) {
+              if (
+                !whiteList.includes(route.fullPath) &&
+                !navsStore.hasNav(route.fullPath)
+              ) {
                 ElMessage.error("无权限访问");
                 router.push({ path: "/403" });
                 return false;
@@ -96,8 +101,6 @@ if (!sharedStore.userInfo) {
     });
 }
 router.beforeEach((to, from, next) => {
-  // 白名单
-  const whiteList = ["/login", "/404", "/403"];
   if (whiteList.includes(to.path)) {
     next();
   } else {
