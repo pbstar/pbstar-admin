@@ -64,8 +64,29 @@ const db = {
       url: "/admin/example?example=%2Fecharts",
       icon: "",
     },
+    {
+      id: 11,
+      name: "编辑器",
+      parentId: 2,
+      url: "",
+      icon: "",
+    },
+    {
+      id: 12,
+      name: "Markdown编辑器",
+      parentId: 11,
+      url: "/admin/example?example=%2FeditorMd",
+      icon: "",
+    },
+    {
+      id: 13,
+      name: "富文本编辑器",
+      parentId: 11,
+      url: "/admin/example?example=%2FeditorRt",
+      icon: "",
+    },
   ],
-  lastId: 10,
+  lastId: 13,
 };
 
 export default db;
