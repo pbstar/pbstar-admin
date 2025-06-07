@@ -1,9 +1,12 @@
 @import "./color.css";
 @import "./element.css";
 html,
-body {
+body,
+#root {
   width: 100%;
   height: 100%;
+}
+#root {
   position: relative;
 }
 *,

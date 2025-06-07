@@ -8,9 +8,15 @@
       <div class="mLeft" v-show="!isFull && !isMobile">
         <AdminNav />
       </div>
-      <div class="mRight">
+      <div
+        class="mRight"
+        :style="{
+          paddingLeft: isFull ? '0' : '10px',
+          paddingRight: isFull ? '0' : '10px',
+        }"
+      >
         <history class="history" v-show="!isFull && !isMobile" />
-        <div style="height: 5px; width: 100%" v-show="isFull">
+        <div style="height: 0; width: 100%" v-show="isFull">
           <div class="unfull" @click="toUnFull">
             <el-icon><Close /></el-icon>
           </div>
@@ -143,8 +149,6 @@ router.beforeEach((to, from, next) => {
     }
     .mRight {
       height: 100%;
-      padding-left: 10px;
-      padding-right: 10px;
       flex: 1;
       overflow: auto;
       display: flex;
