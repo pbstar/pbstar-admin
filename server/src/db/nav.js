@@ -85,8 +85,15 @@ const db = {
       url: "/admin/example?example=%2FeditorRt",
       icon: "",
     },
+    {
+      id: 14,
+      name: "大屏可视化",
+      parentId: 2,
+      url: "/admin/example?example=%2FbigScreen",
+      icon: "",
+    },
   ],
-  lastId: 13,
+  lastId: 14,
 };
 
 export default db;

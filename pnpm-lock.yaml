@@ -66,6 +66,9 @@ importers:
       echarts:
         specifier: ^5.6.0
         version: 5.6.0
+      fitview:
+        specifier: ^0.3.0
+        version: 0.3.0
       md-editor-v3:
         specifier: ^5.6.1
         version: 5.6.1(vue@3.5.13)
@@ -1243,6 +1246,9 @@ packages:
   finalhandler@2.1.0:
     resolution: {integrity: sha512-/t88Ty3d5JWQbWYgaOGCCYfXRwV1+be02WqYYlL6h0lEiUAMPM8o8qKGO01YIkOHzka2up08wvgYD0mDiI+q3Q==}
     engines: {node: '>= 0.8'}
+
+  fitview@0.3.0:
+    resolution: {integrity: sha512-D1SWbparwgtizdaCEN+F5xEB9UhJ9vFOX97Ay5U9+WbM9NqfRh7qCAlUBlSwgtqPbENu7lHr8X+QJcVf6ZojhQ==}
 
   follow-redirects@1.15.9:
     resolution: {integrity: sha512-gew4GsXizNgdoRyqmyfMHyAmXsZDk6mHkSxZFCzW9gwlbtOW44CDtYavM+y+72qD/Vq2l550kMF52DT8fOLJqQ==}
@@ -3849,6 +3855,8 @@ snapshots:
       statuses: 2.0.1
     transitivePeerDependencies:
       - supports-color
+
+  fitview@0.3.0: {}
 
   follow-redirects@1.15.9: {}
 
