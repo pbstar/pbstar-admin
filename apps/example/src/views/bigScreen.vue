@@ -4,71 +4,20 @@
       <div class="content">
         <!-- 大屏内容区域 -->
         <div class="header">
-          <h1>数据大屏</h1>
+          <div class="left"></div>
+          <div class="title">数字化智能管理系统</div>
+          <div class="right">
+            <img src="@/assets/imgs/msg.png" alt="" />
+          </div>
         </div>
-        <div class="dashboard">
-          <div class="row">
-            <div class="card">
-              <h2>销售额</h2>
-              <p>￥500,000</p>
+        <div class="body">
+          <div class="left" ref="echarts1Ref"></div>
+          <div class="right">
+            <div class="r-top">
+              <div class="r-t-left" ref="echarts2Ref"></div>
+              <div class="r-t-right" ref="echarts3Ref"></div>
             </div>
-            <div class="card">
-              <h2>利润</h2>
-              <p>￥100,000</p>
-            </div>
-            <div class="card">
-              <h2>订单量</h2>
-              <p>10,000</p>
-            </div>
-          </div>
-          <div class="row">
-            <div class="chart">
-              <h2>销售额趋势</h2>
-              <div ref="salesChart" style="width: 100%; height: 300px"></div>
-            </div>
-            <div class="chart">
-              <h2>利润趋势</h2>
-              <div ref="profitChart" style="width: 100%; height: 300px"></div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="table">
-              <h2>最新订单</h2>
-              <table>
-                <thead>
-                  <tr>
-                    <th>订单号</th>
-                    <th>客户</th>
-                    <th>金额</th>
-                    <th>日期</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>1001</td>
-                    <td>客户A</td>
-                    <td>￥100</td>
-                    <td>2025-06-01</td>
-                  </tr>
-                  <tr>
-                    <td>1002</td>
-                    <td>客户B</td>
-                    <td>￥200</td>
-                    <td>2025-06-02</td>
-                  </tr>
-                  <tr>
-                    <td>1003</td>
-                    <td>客户C</td>
-                    <td>￥300</td>
-                    <td>2025-06-03</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <div class="chart">
-              <h2>订单量分布</h2>
-              <div ref="orderChart" style="width: 100%; height: 300px"></div>
-            </div>
+            <div class="r-bot" ref="echarts4Ref"></div>
           </div>
         </div>
       </div>
@@ -77,114 +26,144 @@
 </template>
 
 <script setup>
-import { ref, onMounted, nextTick } from "vue";
+import { ref, onMounted } from "vue";
 import fitview from "fitview";
 import * as echarts from "echarts";
 
 const fitviewRef = ref(null);
-const salesChart = ref(null);
-const profitChart = ref(null);
-const orderChart = ref(null);
+const echarts1Ref = ref(null);
+const echarts2Ref = ref(null);
+const echarts3Ref = ref(null);
+const echarts4Ref = ref(null);
+const fv = ref(null);
 
 onMounted(() => {
-  fitviewRef.value && new fitview({ el: fitviewRef.value });
+  fv.value = new fitview({ el: fitviewRef.value });
   initEcharts();
 });
 function initEcharts() {
-  // 销售额趋势
-  const salesChartInstance = echarts.init(salesChart.value);
-  const salesOption = {
+  // 初始化左侧柱状图
+  const chart1 = echarts.init(echarts1Ref.value);
+  chart1.setOption({
     title: {
-      text: "销售额趋势",
+      text: "数据统计",
+      left: "center",
+      top: "30px",
+      textStyle: { color: "#ffffff" },
     },
-    tooltip: {
-      trigger: "axis",
+    grid: {
+      top: "80px",
+      left: "40px",
+      right: "60px",
+      bottom: "40px",
+      containLabel: true,
     },
+    tooltip: {},
     xAxis: {
       type: "category",
-      data: ["6月1日", "6月2日", "6月3日", "6月4日", "6月5日"],
+      data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+      axisLine: { lineStyle: { color: "#ffffff" } },
+      axisLabel: { color: "#ffffff" },
     },
     yAxis: {
       type: "value",
+      axisLine: { lineStyle: { color: "#ffffff" } },
+      axisLabel: { color: "#ffffff" },
+      splitLine: { lineStyle: { color: "rgba(255, 255, 255, 0.2)" } },
     },
     series: [
       {
-        data: [10000, 12000, 15000, 18000, 20000],
-        type: "line",
-        smooth: true,
-        lineStyle: {
-          width: 3,
-          color: "#4bc0c0",
-        },
-        itemStyle: {
-          color: "#4bc0c0",
-        },
+        data: [120, 200, 150, 80, 70, 110, 130],
+        type: "bar",
+        itemStyle: { color: "#00e5ff" },
+        label: { show: true, position: "top", color: "#ffffff" },
       },
     ],
-  };
-  salesChartInstance.setOption(salesOption);
+  });
 
-  // 利润趋势
-  const profitChartInstance = echarts.init(profitChart.value);
-  const profitOption = {
-    title: {
-      text: "利润趋势",
+  // 初始化右上折线图
+  const chart2 = echarts.init(echarts2Ref.value);
+  chart2.setOption({
+    grid: {
+      top: "80px",
+      left: "40px",
+      right: "60px",
+      bottom: "40px",
+      containLabel: true,
     },
-    tooltip: {
-      trigger: "axis",
+    title: {
+      text: "趋势分析",
+      left: "center",
+      top: "30px",
+      textStyle: { color: "#ffffff" },
     },
     xAxis: {
       type: "category",
-      data: ["6月1日", "6月2日", "6月3日", "6月4日", "6月5日"],
+      data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+      axisLine: { lineStyle: { color: "#ffffff" } },
+      axisLabel: { color: "#ffffff" },
     },
     yAxis: {
       type: "value",
+      axisLine: { lineStyle: { color: "#ffffff" } },
+      axisLabel: { color: "#ffffff" },
+      splitLine: { lineStyle: { color: "rgba(255, 255, 255, 0.2)" } },
     },
     series: [
       {
-        data: [2000, 2400, 3000, 3600, 4000],
+        data: [820, 932, 901, 934, 1290, 1330, 1320],
         type: "line",
         smooth: true,
-        lineStyle: {
-          width: 3,
-          color: "#ff9f40",
-        },
-        itemStyle: {
-          color: "#ff9f40",
-        },
+        lineStyle: { width: 3, color: "#00e5ff" },
+        itemStyle: { color: "#ffffff" },
+        areaStyle: { color: "rgba(0, 229, 255, 0.3)" },
       },
     ],
-  };
-  profitChartInstance.setOption(profitOption);
+  });
 
-  // 订单量分布
-  const orderChartInstance = echarts.init(orderChart.value);
-  const orderOption = {
+  // 初始化右下饼图
+  const chart3 = echarts.init(echarts3Ref.value);
+  chart3.setOption({
+    grid: {
+      top: "20px",
+      left: "40px",
+      right: "60px",
+      bottom: "300px",
+      containLabel: true,
+    },
     title: {
-      text: "订单量分布",
+      text: "占比分析",
+      left: "center",
+      top: "30px",
+      textStyle: { color: "#ffffff" },
     },
     tooltip: {
       trigger: "item",
+      textStyle: { color: "#333333" },
+    },
+    legend: {
+      orient: "vertical",
+      right: "center",
+      bottom: "30px",
+      textStyle: { color: "#ffffff" },
     },
     series: [
       {
-        name: "订单来源",
         type: "pie",
-        radius: "70%",
+        radius: "50%",
         data: [
-          { value: 4000, name: "线上" },
-          { value: 3000, name: "线下" },
-          { value: 2000, name: "代理商" },
-          { value: 1000, name: "其他" },
+          {
+            value: 1048,
+            name: "Search Engine",
+            itemStyle: { color: "#00e5ff" },
+          },
+          { value: 735, name: "Direct", itemStyle: { color: "#00b4ff" } },
+          { value: 580, name: "Email", itemStyle: { color: "#0082ff" } },
+          { value: 484, name: "Union Ads", itemStyle: { color: "#0055ff" } },
+          { value: 300, name: "Video Ads", itemStyle: { color: "#002bff" } },
         ],
-        itemStyle: {
-          borderRadius: 5,
-          borderColor: "#1a1a1a",
-          borderWidth: 2,
-        },
-        label: {
-          color: "#ccc",
-        },
+        label: { color: "#ffffff" },
+        labelLine: { lineStyle: { color: "rgba(255, 255, 255, 0.3)" } },
         emphasis: {
           itemStyle: {
             shadowBlur: 10,
@@ -194,8 +173,57 @@ function initEcharts() {
         },
       },
     ],
-  };
-  orderChartInstance.setOption(orderOption);
+  });
+
+  // 初始化底部表格区域
+  const chart4 = echarts.init(echarts4Ref.value);
+  chart4.setOption({
+    title: {
+      text: "详细数据",
+      left: "center",
+      top: "30px",
+      textStyle: { color: "#ffffff" },
+    },
+    tooltip: {
+      trigger: "axis",
+      axisPointer: { type: "shadow" },
+      textStyle: { color: "#333333" },
+    },
+    grid: {
+      top: "80px",
+      left: "40px",
+      right: "60px",
+      bottom: "40px",
+      containLabel: true,
+    },
+    xAxis: {
+      type: "value",
+      boundaryGap: [0, 0.01],
+      axisLine: { lineStyle: { color: "#ffffff" } },
+      axisLabel: { color: "#ffffff" },
+      splitLine: { lineStyle: { color: "rgba(255, 255, 255, 0.2)" } },
+    },
+    yAxis: {
+      type: "category",
+      data: ["Brazil", "Indonesia", "USA", "India", "China"],
+      axisLine: { lineStyle: { color: "#ffffff" } },
+      axisLabel: { color: "#ffffff" },
+      splitLine: { lineStyle: { color: "rgba(255, 255, 255, 0.2)" } },
+    },
+    series: [
+      {
+        type: "bar",
+        data: [18203, 23489, 29034, 104970, 131744],
+        itemStyle: {
+          color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [
+            { offset: 0, color: "#00e5ff" },
+            { offset: 1, color: "#0082ff" },
+          ]),
+        },
+        label: { show: true, position: "right", color: "#ffffff" },
+      },
+    ],
+  });
 }
 </script>
 
@@ -203,7 +231,7 @@ function initEcharts() {
 .page {
   width: 100%;
   height: 100%;
-  background-color: #000;
+  background-color: rgb(17, 30, 99);
 
   .box {
     width: 100%;
@@ -212,93 +240,92 @@ function initEcharts() {
     .content {
       width: 1920px;
       height: 1080px;
-      display: flex;
-      flex-direction: column;
-      background-color: #000;
-      color: #ccc;
-      padding: 20px;
-
       .header {
-        text-align: center;
-        font-size: 40px;
-        margin-bottom: 20px;
-        color: #4bc0c0; /* 更亮的标题颜色 */
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* 添加文字阴影 */
+        width: 100%;
+        height: 100px;
+        background-image: url("@/assets/imgs/header.png");
+        background-size: 100% 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
       }
 
-      .dashboard {
-        flex: 1;
+      .header .title {
+        font-size: 40px;
+        font-weight: bold;
+        color: rgb(0, 229, 255);
+        line-height: 100px;
+        text-align: center;
+      }
+
+      .header .left,
+      .header .right {
+        width: 500px;
+      }
+
+      .header .right {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        padding-right: 50px;
+        color: rgb(0, 229, 255);
+      }
+
+      .header .right img {
+        width: 30px;
+      }
+
+      .body {
+        display: flex;
+        justify-content: space-between;
+        padding-top: 20px;
+      }
+
+      .body .left {
+        width: 500px;
+        height: 940px;
+        overflow: hidden;
+        background-image: url("@/assets/imgs/body-left-bg.png");
+        background-size: 100% 100%;
+      }
+
+      .body .right {
+        width: 1400px;
+        height: 940px;
         display: flex;
         flex-direction: column;
-        gap: 20px;
+        justify-content: space-between;
+      }
 
-        .row {
-          display: flex;
-          gap: 20px;
+      .body .right .r-top {
+        width: 100%;
+        height: 620px;
+        display: flex;
+        justify-content: space-between;
+      }
 
-          .card {
-            flex: 1;
-            background-color: #1a1a1a;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
+      .body .right .r-top .r-t-left {
+        width: 1000px;
+        height: 100%;
+        background-image: url("@/assets/imgs/body-r-t-left.png");
+        background-size: 100% 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
 
-            h2 {
-              margin-bottom: 10px;
-              font-size: 24px;
-              color: #ccc; /* 卡片标题颜色 */
-            }
+      .body .right .r-top .r-t-right {
+        width: 380px;
+        height: 100%;
+        background-image: url("@/assets/imgs/body-r-t-right.png");
+        background-size: 100% 100%;
+      }
 
-            p {
-              font-size: 36px;
-              font-weight: bold;
-              color: #4bc0c0; /* 卡片内容颜色 */
-            }
-          }
-
-          .chart {
-            flex: 1;
-            background-color: #1a1a1a;
-            padding: 20px;
-            border-radius: 10px;
-
-            h2 {
-              margin-bottom: 10px;
-              font-size: 24px;
-              color: #ccc; /* 图表标题颜色 */
-            }
-          }
-
-          .table {
-            flex: 1;
-            background-color: #1a1a1a;
-            padding: 20px;
-            border-radius: 10px;
-
-            h2 {
-              margin-bottom: 10px;
-              font-size: 24px;
-              color: #ccc; /* 表格标题颜色 */
-            }
-
-            table {
-              width: 100%;
-              border-collapse: collapse;
-
-              th,
-              td {
-                padding: 10px;
-                text-align: center;
-                border: 1px solid #333;
-                color: #ccc; /* 表格文字颜色 */
-              }
-
-              th {
-                background-color: #222; /* 表头背景颜色 */
-              }
-            }
-          }
-        }
+      .body .right .r-bot {
+        width: 100%;
+        height: 300px;
+        background-image: url("@/assets/imgs/body-r-bot.png");
+        background-size: 100% 100%;
       }
     }
   }
