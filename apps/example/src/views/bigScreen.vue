@@ -26,7 +26,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, onBeforeUnmount } from "vue";
 import fitview from "fitview";
 import * as echarts from "echarts";
 
@@ -41,6 +41,10 @@ onMounted(() => {
   fv.value = new fitview({ el: fitviewRef.value });
   initEcharts();
 });
+onBeforeUnmount(() => {
+  fv.value && fv.value.api.destroyResize();
+});
+
 function initEcharts() {
   // 初始化左侧柱状图
   const chart1 = echarts.init(echarts1Ref.value);

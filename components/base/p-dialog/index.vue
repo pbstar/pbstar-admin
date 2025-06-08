@@ -341,7 +341,7 @@ const handleClickBot = (btn) => {
   overflow-y: auto;
 }
 .diabox {
-  max-width: 100%;
+  max-width: calc(100% - 20px);
   background: var(--c-bg);
   border-radius: 6px;
   overflow: hidden;

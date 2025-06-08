@@ -56,6 +56,6 @@ router.afterEach((to) => {
 <style scoped lang="scss">
 .subapp {
   width: 100%;
-  min-height: 500px;
+  min-height: 100%;
 }
 </style>
