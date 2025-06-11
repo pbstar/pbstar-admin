@@ -67,8 +67,8 @@ importers:
         specifier: ^5.6.0
         version: 5.6.0
       fitview:
-        specifier: ^0.3.1
-        version: 0.3.1
+        specifier: ^0.3.3
+        version: 0.3.3
       md-editor-v3:
         specifier: ^5.6.1
         version: 5.6.1(vue@3.5.13)
@@ -1247,8 +1247,8 @@ packages:
     resolution: {integrity: sha512-/t88Ty3d5JWQbWYgaOGCCYfXRwV1+be02WqYYlL6h0lEiUAMPM8o8qKGO01YIkOHzka2up08wvgYD0mDiI+q3Q==}
     engines: {node: '>= 0.8'}
 
-  fitview@0.3.1:
-    resolution: {integrity: sha512-z/3x+qiEPQ9vuXFxxVEDPCU/hHL47ZBur0+eao6O+YDZ/kqIRKgouh1VrPmH/3ejw8gaBaSpiRMZgmgzOmFqdw==}
+  fitview@0.3.3:
+    resolution: {integrity: sha512-lKXAZ6wdYtj5k8YpClBzWh+dZoSxDFq6LoVfK1qMdC0li02d1I4i+EkG6RaNgSmf50WfzJd5H85cUuuLjaBltQ==}
 
   follow-redirects@1.15.9:
     resolution: {integrity: sha512-gew4GsXizNgdoRyqmyfMHyAmXsZDk6mHkSxZFCzW9gwlbtOW44CDtYavM+y+72qD/Vq2l550kMF52DT8fOLJqQ==}
@@ -3856,7 +3856,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  fitview@0.3.1: {}
+  fitview@0.3.3: {}
 
   follow-redirects@1.15.9: {}
 
