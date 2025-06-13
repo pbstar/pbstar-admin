@@ -109,7 +109,7 @@ watch(
         changeText(newVal);
       }
       if (config.value.type == "selectTree") {
-        selectTreeData.value = structure(newVal);
+        selectTreeData.value = structure(newVal, "parentId", "value");
       }
     }
   },

@@ -16,13 +16,13 @@ export function flatten(arr, listKey = "children") {
   return result;
 }
 // 数组结构化
-export function structure(arr, pidKey = "parentId") {
+export function structure(arr, pidKey = "parentId", idKey = "id") {
   const map = new Map();
   const tree = [];
 
   // 先构建映射关系
   arr.forEach((item) => {
-    const id = item.id;
+    const id = item[idKey];
     const pid = item[pidKey];
 
     if (!map.has(id)) {
