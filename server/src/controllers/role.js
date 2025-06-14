@@ -46,8 +46,8 @@ export default {
 
   // 创建角色
   create: (req, res) => {
-    const { name, key, navs } = req.body;
-    const newRole = { name, key, navs };
+    const { name, key, navs, btns } = req.body;
+    const newRole = { name, key, navs, btns };
     const result = crud.create(db, newRole);
 
     res.json({
@@ -59,8 +59,8 @@ export default {
 
   // 更新角色
   update: (req, res) => {
-    const { id, name, key, navs } = req.body;
-    const updatedRole = { id, name, key, navs };
+    const { id, name, key, navs, btns } = req.body;
+    const updatedRole = { id, name, key, navs, btns };
     const result = crud.update(db, updatedRole);
 
     res.json({

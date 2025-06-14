@@ -2,7 +2,7 @@
   <div class="tabulation">
     <div class="topBtn">
       <div class="tLeft">
-        <topBtn :btns="props.topBtn" @btnClick="handleClickTop" />
+        <topBtn :btns="topBtnList" @btnClick="handleClickTop" />
       </div>
       <div class="tRight">
         <el-button
@@ -26,7 +26,7 @@
       class="table"
       :style="{
         marginTop:
-          props.topBtn.length > 0 || (props.showSetting && props.tableKey)
+          topBtnList.length > 0 || (props.showSetting && props.tableKey)
             ? '10px'
             : '0px',
       }"
@@ -86,12 +86,12 @@
         fixed="right"
         label="操作"
         width="160"
-        v-if="props.rightBtn.length > 0"
+        v-if="rightBtnList.length > 0"
       >
         <template #default="scope">
           <rightBtn
             :data="scope.row"
-            :btns="props.rightBtn"
+            :btns="rightBtnList"
             @btnClick="handleClick"
           />
         </template>
@@ -126,7 +126,9 @@ import topBtn from "./topBtn.vue";
 import rightBtn from "./rightBtn.vue";
 import setting from "./setting.vue";
 import { useEnumStore } from "@Passets/stores/enum";
+import useSharedStore from "@Passets/stores/shared";
 const enumStore = useEnumStore();
+const sharedStore = useSharedStore();
 
 const props = defineProps({
   data: {
@@ -193,6 +195,9 @@ const columnItemDefault = {
   slot: null, //插槽名（非必填）
 };
 const exportLoading = ref(false);
+const topBtnList = ref([]);
+const rightBtnList = ref([]);
+const mybtns = ref(sharedStore.userInfo?.btns);
 
 if (props.showSetting && !props.tableKey) {
   console.error("showSetting为true时必须传入tableKey");
@@ -325,6 +330,36 @@ const toExport = () => {
       });
   });
 };
+// 处理btn权限
+const handleBtn = () => {
+  topBtnList.value = [];
+  rightBtnList.value = [];
+  props.topBtn.forEach((item) => {
+    if (!item.auth) {
+      topBtnList.value.push(item);
+      return;
+    }
+    if (!mybtns.value) {
+      return;
+    }
+    if (mybtns.value == "all" || mybtns.value.includes(item.auth)) {
+      topBtnList.value.push(item);
+    }
+  });
+  props.rightBtn.forEach((item) => {
+    if (!item.auth) {
+      rightBtnList.value.push(item);
+      return;
+    }
+    if (!mybtns.value) {
+      return;
+    }
+    if (mybtns.value == "all" || mybtns.value.includes(item.auth)) {
+      rightBtnList.value.push(item);
+    }
+  });
+};
+handleBtn();
 // 动态处理data
 watch(
   () => props.data,
@@ -352,6 +387,15 @@ watch(
     immediate: true,
   },
 );
+watch(
+  () => sharedStore.userInfo,
+  (newVal, oldVal) => {
+    if (newVal) {
+      mybtns.value = newVal.btns;
+      handleBtn();
+    }
+  },
+);
 defineExpose({
   toChangeColumn,
 });
@@ -369,6 +413,7 @@ defineExpose({
       align-items: center;
     }
     .tRight {
+      padding-top: 6px;
       display: flex;
       align-items: center;
       justify-content: flex-end;

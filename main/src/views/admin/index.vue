@@ -59,52 +59,47 @@ const toUnFull = () => {
   sharedStore.isFull = false;
   bus.$emit("changeSharedPinia", { isFull: false });
 };
+const getUserInfo = async () => {
+  const userRes = await request.post({
+    base: "base",
+    url: "/main/loginByToken",
+  });
+  if (userRes.code != 200 || !userRes.data) {
+    ElMessage.error(userRes.msg || "获取用户信息失败");
+    localStorage.removeItem("p_token");
+    router.push({ path: "/login" });
+    return false;
+  }
+  localStorage.setItem("p_token", userRes.data.token);
+  sharedStore.userInfo = {
+    id: userRes.data.id,
+    name: userRes.data.name,
+    avatar: userRes.data.avatar,
+    username: userRes.data.username,
+    role: userRes.data.role,
+    btns: userRes.data.btns,
+  };
+  bus.$emit("changeSharedPinia", { userInfo: sharedStore.userInfo });
+  const navRes = await request.get({
+    base: "base",
+    url: "/main/getMyNavTreeList",
+  });
+  if (navRes.code != 200 || !navRes.data) {
+    ElMessage.error(navRes.msg || "获取导航失败");
+    return false;
+  }
+  navsStore.setNavs(navRes.data);
+  if (
+    !whiteList.includes(route.fullPath) &&
+    !navsStore.hasNav(route.fullPath)
+  ) {
+    ElMessage.error("无权限访问");
+    router.push({ path: "/403" });
+    return false;
+  }
+};
 if (!sharedStore.userInfo) {
-  request
-    .post({
-      base: "base",
-      url: "/main/loginByToken",
-    })
-    .then((res) => {
-      if (res.code == 200 && res.data) {
-        localStorage.setItem("p_token", res.data.token);
-        sharedStore.userInfo = {
-          id: res.data.id,
-          name: res.data.name,
-          avatar: res.data.avatar,
-          username: res.data.username,
-          role: res.data.role,
-        };
-        request
-          .get({
-            base: "base",
-            url: "/main/getMyNavTreeList",
-          })
-          .then((r) => {
-            if (r.code === 200) {
-              navsStore.setNavs(r.data);
-              if (
-                !whiteList.includes(route.fullPath) &&
-                !navsStore.hasNav(route.fullPath)
-              ) {
-                ElMessage.error("无权限访问");
-                router.push({ path: "/403" });
-                return false;
-              }
-            } else {
-              ElMessage.error(r.msg);
-            }
-          });
-      } else {
-        ElMessage.error(res.msg);
-        localStorage.removeItem("p_token");
-        router.push({ path: "/login" });
-      }
-    })
-    .catch((err) => {
-      localStorage.removeItem("p_token");
-      router.push({ path: "/login" });
-    });
+  getUserInfo();
 }
 router.beforeEach((to, from, next) => {
   if (whiteList.includes(to.path)) {

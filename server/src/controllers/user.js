@@ -1,4 +1,5 @@
 import db from "../db/user.js";
+import roleDb from "../db/role.js";
 import crud from "../utils/crud.js";
 import { generateToken, parseToken } from "../utils/token.js";
 
@@ -12,7 +13,9 @@ export default {
 
     if (user) {
       const token = generateToken(user.id);
+      const role = crud.findAll(roleDb).find((item) => item.key === user.role);
       user.token = token;
+      user.btns = role.btns || [];
       res.json({
         code: 200,
         data: user,
@@ -126,6 +129,8 @@ export default {
     const user = crud.findById(db, id);
 
     if (user && user.token === token) {
+      const role = crud.findAll(roleDb).find((item) => item.key === user.role);
+      user.navs = role.navs || [];
       res.json({
         code: 200,
         data: user,

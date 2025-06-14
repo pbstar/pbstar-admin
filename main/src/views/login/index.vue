@@ -157,6 +157,7 @@ const handleSubmit = async () => {
       avatar: res.data.avatar,
       username: res.data.username,
       role: res.data.role,
+      btns: res.data.btns,
     };
     request
       .get({

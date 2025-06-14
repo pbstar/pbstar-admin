@@ -4,6 +4,7 @@ import { ElMessage, ElMessageBox } from "element-plus";
 import request from "@Passets/utils/request";
 import PCollapse from "@Pcomponents/base/p-collapse/index.vue";
 import PItem from "@Pcomponents/base/p-item/index.vue";
+import { useBtnStore } from "@Passets/stores/btn";
 
 const props = defineProps({
   type: {
@@ -15,14 +16,17 @@ const props = defineProps({
     default: "",
   },
 });
+const btnStore = useBtnStore();
 const detailInfo = ref({});
 const detailType = ref("");
 const detailId = ref("");
 const navList = ref([]);
+const btnList = ref([]);
 
 onBeforeMount(() => {
   detailType.value = props.type;
   detailId.value = props.id;
+  btnList.value = btnStore.getBtnList();
   getNavList();
   if (detailType.value == "view" || detailType.value == "edit") {
     getDetailInfo();
@@ -113,6 +117,22 @@ defineExpose({
             },
           }"
           v-model="detailInfo.navs"
+        />
+        <p-item
+          class="dtItem"
+          :config="{
+            isText: detailType == 'view',
+            type: 'selectTree',
+            label: '按钮权限',
+            options: btnList,
+            isDisabled: detailInfo.id == '1',
+            more: {
+              showCheckbox: true,
+              multiple: true,
+              checkStrictly: false,
+            },
+          }"
+          v-model="detailInfo.btns"
         />
       </div>
     </p-collapse>

@@ -66,7 +66,7 @@ const column = ref([
   { key: "ethnic", label: "民族", enumKey: "p_ethnic" },
   { key: "isHealthy", label: "是否健康", enumKey: "p_boolean" },
 ]);
-const topBtn = ref([{ key: "add", label: "新增" }]);
+const topBtn = ref([{ key: "add", label: "新增", auth: "list_add" }]);
 const rightBtn = ref([
   { key: "view", label: "查看" },
   { key: "edit", label: "编辑" },

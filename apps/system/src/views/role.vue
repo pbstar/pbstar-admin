@@ -18,6 +18,7 @@ const tableColumn = ref([
   { label: "角色名称", key: "name" },
   { label: "角色Key", key: "key" },
   { label: "菜单权限", key: "navs" },
+  { label: "按钮权限", key: "btns" },
 ]);
 const tableData = ref([]);
 const tableTopBtn = ref([{ key: "add", label: "新增" }]);
