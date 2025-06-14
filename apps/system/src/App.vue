@@ -5,7 +5,7 @@ const sharedStore = useSharedStore();
 const router = useRouter();
 // 子应用中添加处理
 if (window.__POWERED_BY_WUJIE__) {
-  window.$wujie?.bus.$on("changeSharedPinia", (e) => {
+  const handleSharedPinia = (e) => {
     for (const key in e) {
       sharedStore[key] = e[key];
       if (key == "isDark") {
@@ -18,11 +18,13 @@ if (window.__POWERED_BY_WUJIE__) {
         }
       }
     }
+  };
+  window.$wujie?.bus.$on("changeSharedPinia", (e) => {
+    handleSharedPinia(e);
   });
   window.$wujie?.props.path && router.push(window.$wujie.props.path);
-  if (window.$wujie?.props.isDark) {
-    document.documentElement.setAttribute("data-theme", "dark");
-    document.documentElement.classList.add("dark");
+  if (window.$wujie?.props.sharedPinia) {
+    handleSharedPinia(window.$wujie.props.sharedPinia);
   }
   window.$wujie?.bus.$on("subappRouteChange", (obj) => {
     if (obj && obj.path && obj.name == window.$wujie?.bus.id) {

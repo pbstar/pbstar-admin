@@ -19,7 +19,7 @@ const toChangeApp = (to) => {
   if (to.query && to.query[appName.value]) {
     props.value = {
       path: to.query[appName.value],
-      isDark: sharedStore.isDark,
+      sharedPinia: sharedStore,
     };
   }
 };
