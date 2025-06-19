@@ -34,8 +34,6 @@ pnpm install
 pnpm run dev
 # 启动应用包
 pnpm run dev:<包名>
-# 启动后端server服务
-pnpm run server
 ```
 
 ## 创建子应用
@@ -68,7 +66,6 @@ pnpm remove <依赖名> --filter <包名>
 ├── cli                    # 脚手架
 ├── components             # 组件
 ├── main                   # 主应用
-├── server                 # 服务端
 ├── package.json           # 依赖
 ├── pnpm-workspace.yaml    # 工作区配置
 ├── rsbuild.config.mjs     # 打包配置
