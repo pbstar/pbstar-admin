@@ -85,7 +85,7 @@ const getHello = () => {
   } else {
     text = "你好";
   }
-  text = text + "，" + userInfo.value.name || "管理员";
+  text = text + "，" + userInfo.value?.name || "管理员";
   return text;
 };
 const toNav = (item) => {
@@ -126,7 +126,7 @@ const removeNav = (index) => {
     <div class="r1 iBox">
       <div class="r1Left">
         <div class="avatar">
-          <img v-if="userInfo.avatar" :src="userInfo.avatar" alt="" />
+          <img v-if="userInfo?.avatar" :src="userInfo.avatar" alt="" />
           <img v-else src="@/assets/imgs/user.png" alt="" />
         </div>
         <div class="more">

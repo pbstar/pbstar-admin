@@ -117,6 +117,7 @@ router.beforeEach((to, from, next) => {
     next();
   }
 });
+bus.$on("changeSharedPinia", (e) => {});
 </script>
 <style scoped lang="scss">
 .pa_page {

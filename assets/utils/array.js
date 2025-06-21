@@ -26,7 +26,7 @@ export function structure(arr, pidKey = "parentId", idKey = "id") {
     const pid = item[pidKey];
 
     if (!map.has(id)) {
-      map.set(id, { ...item, children: [] });
+      map.set(id, { ...item });
     } else {
       map.set(id, { ...map.get(id), ...item });
     }
@@ -36,6 +36,9 @@ export function structure(arr, pidKey = "parentId", idKey = "id") {
     } else {
       if (!map.has(pid)) {
         map.set(pid, { children: [] });
+      }
+      if (!map.get(pid).children) {
+        map.get(pid).children = [];
       }
       map.get(pid).children.push(map.get(id));
     }
