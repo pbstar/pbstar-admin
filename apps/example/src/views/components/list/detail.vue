@@ -51,14 +51,14 @@ const formData = ref([
     key: "ethnic",
     label: "民族",
     type: "select",
-    enumKey: "p_ethnic",
+    enumKey: "ethnic",
     isText: detailType.value == "view",
   },
   {
     key: "isHealthy",
     label: "是否健康",
     type: "select",
-    enumKey: "p_boolean",
+    enumKey: "boolean",
     isText: detailType.value == "view",
   },
   {
