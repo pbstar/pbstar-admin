@@ -8,6 +8,7 @@ import PTitle from "@Pcomponents/base/p-title/index.vue";
 import PDialog from "@Pcomponents/base/p-dialog/index.vue";
 import Detail from "./components/nav/detail.vue";
 import * as ElementPlusIconsVue from "@element-plus/icons-vue";
+import { structure } from "@Passets/utils/array";
 
 const searchData = ref([
   { label: "菜单名称", key: "name", type: "input" },
@@ -27,11 +28,6 @@ const tableRightBtn = ref([
   { key: "edit", label: "编辑" },
   { key: "delete", label: "删除" },
 ]);
-const pagination = ref({
-  pageNumber: 1,
-  pageSize: 10,
-  total: 0,
-});
 const detailType = ref("");
 const detailId = ref("");
 const isDetail = ref(false);
@@ -45,15 +41,8 @@ const toSearch = ({ data }) => {
   searchValue.value = data;
   initTable();
 };
-const tablePaginationChange = ({ pageNumber, pageSize }) => {
-  pagination.value.pageNumber = pageNumber;
-  pagination.value.pageSize = pageSize;
-  initTable();
-};
 const initTable = () => {
   const params = {
-    pageNumber: pagination.value.pageNumber,
-    pageSize: pagination.value.pageSize,
     ...searchValue.value,
   };
   tableData.value = [];
@@ -65,8 +54,7 @@ const initTable = () => {
     })
     .then((res) => {
       if (res && res.code === 200) {
-        tableData.value = res.data.list;
-        pagination.value.total = res.data.total;
+        tableData.value = structure(res.data);
       } else {
         ElMessage.error(res?.msg || "操作异常");
       }
@@ -169,8 +157,6 @@ const getIcon = (iconName) => {
       :rightBtn="tableRightBtn"
       tableKey="nav_1"
       showSetting
-      :pagination="pagination"
-      @paginationChange="tablePaginationChange"
       @topBtnClick="tableTopBtnClick"
       @rightBtnClick="tableRightBtnClick"
     >

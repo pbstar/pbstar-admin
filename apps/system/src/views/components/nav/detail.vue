@@ -44,7 +44,7 @@ const getNavList = () => {
   request
     .get({
       base: "base",
-      url: "/nav/getAllList",
+      url: "/system/nav/getAllList",
     })
     .then((res) => {
       if (res.code === 200) {

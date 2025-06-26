@@ -39,6 +39,7 @@ const detailType = ref("");
 const detailId = ref("");
 const isDetail = ref(false);
 const detailRef = ref(null);
+const searchRef = ref(null);
 
 onBeforeMount(() => {
   initTable();
@@ -80,25 +81,28 @@ const initTable = () => {
 };
 const getRoleList = () => {
   request
-    .post({
+    .get({
       base: "base",
-      url: "/system/role/getList",
-      data: {
-        pageNumber: 1,
-        pageSize: 1000,
-      },
+      url: "/system/role/getAllList",
     })
     .then((res) => {
       if (res.code === 200 && res.data) {
+        const roleOptions = res.data.map((item) => {
+          return {
+            label: item.name,
+            value: item.role_key,
+          };
+        });
         tableRef.value.toChangeColumn([
           {
             key: "role",
-            options: res.data.list.map((item) => {
-              return {
-                label: item.name,
-                value: item.key,
-              };
-            }),
+            options: roleOptions,
+          },
+        ]);
+        searchRef.value.toChangeData([
+          {
+            key: "role",
+            options: roleOptions,
           },
         ]);
       } else {
@@ -186,6 +190,7 @@ const diaBotBtnClick = ({ btn }) => {
       style="margin-top: 10px"
       :data="searchData"
       @btnClick="toSearch"
+      ref="searchRef"
     ></p-search>
 
     <p-table

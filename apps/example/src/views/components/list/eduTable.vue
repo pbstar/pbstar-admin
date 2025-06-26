@@ -59,11 +59,11 @@ const formData = ref([
 const initTable = () => {
   tableData.value = [];
   request
-    .get({
+    .post({
       base: "base",
-      url: "/example/test/getEducationList",
+      url: "/example/person/getEducationList",
       data: {
-        testId: props.id,
+        personId: props.id,
       },
     })
     .then((res) => {
@@ -79,7 +79,7 @@ const tableRightBtnClick = ({ row, btn }) => {
     request
       .get({
         base: "base",
-        url: "/example/test/getEducationDetail",
+        url: "/example/person/getEducationDetail",
         data: { id: row.id },
       })
       .then((res) => {
@@ -99,7 +99,7 @@ const tableRightBtnClick = ({ row, btn }) => {
         request
           .post({
             base: "base",
-            url: "/example/test/deleteEducation",
+            url: "/example/person/deleteEducation",
             data: { idList: [row.id] },
           })
           .then((res) => {
@@ -118,7 +118,7 @@ const tableTopBtnClick = ({ btn }) => {
   if (btn === "add") {
     detailType.value = "add";
     detailInfo.value = {
-      testId: props.id,
+      personId: props.id,
     };
     isDetail.value = true;
   }
@@ -127,8 +127,8 @@ const diaBotBtnClick = ({ btn }) => {
   if (btn === "save") {
     const url =
       detailType.value == "add"
-        ? "/example/test/createEducation"
-        : "/example/test/updateEducation";
+        ? "/example/person/createEducation"
+        : "/example/person/updateEducation";
     request
       .post({
         base: "base",

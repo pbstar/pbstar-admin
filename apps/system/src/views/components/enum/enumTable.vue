@@ -57,7 +57,7 @@ const formData = ref([
 const initTable = () => {
   tableData.value = [];
   request
-    .get({
+    .post({
       base: "base",
       url: "/system/enum/getEnumList",
       data: {

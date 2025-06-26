@@ -30,20 +30,16 @@ onBeforeMount(() => {
 });
 const getRoleList = () => {
   request
-    .post({
+    .get({
       base: "base",
-      url: "/system/role/getList",
-      data: {
-        pageNumber: 1,
-        pageSize: 1000,
-      },
+      url: "/system/role/getAllList",
     })
     .then((res) => {
       if (res.code === 200 && res.data) {
-        roleList.value = res.data.list.map((item) => {
+        roleList.value = res.data.map((item) => {
           return {
             label: item.name,
-            value: item.key,
+            value: item.role_key,
           };
         });
       } else {

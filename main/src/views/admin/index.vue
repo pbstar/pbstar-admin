@@ -60,41 +60,47 @@ const toUnFull = () => {
   bus.$emit("changeSharedPinia", { isFull: false });
 };
 const getUserInfo = async () => {
-  const userRes = await request.post({
-    base: "base",
-    url: "/main/loginByToken",
-  });
-  if (userRes.code != 200 || !userRes.data) {
-    ElMessage.error(userRes.msg || "获取用户信息失败");
-    localStorage.removeItem("p_token");
+  try {
+    const userRes = await request.post({
+      base: "base",
+      url: "/main/loginByToken",
+    });
+    if (userRes.code != 200 || !userRes.data) {
+      ElMessage.error(userRes.msg || "获取用户信息失败");
+      localStorage.removeItem("p_token");
+      router.push({ path: "/login" });
+      return false;
+    }
+    localStorage.setItem("p_token", userRes.data.token);
+    sharedStore.userInfo = {
+      id: userRes.data.id,
+      name: userRes.data.name,
+      avatar: userRes.data.avatar,
+      username: userRes.data.username,
+      role: userRes.data.role,
+      btns: userRes.data.btns,
+    };
+    bus.$emit("changeSharedPinia", { userInfo: sharedStore.userInfo });
+    const navRes = await request.get({
+      base: "base",
+      url: "/main/getMyNavTreeList",
+    });
+    if (navRes.code != 200 || !navRes.data) {
+      ElMessage.error(navRes.msg || "获取导航失败");
+      return false;
+    }
+    navsStore.setNavs(navRes.data);
+    if (
+      !whiteList.includes(route.fullPath) &&
+      !navsStore.hasNav(route.fullPath)
+    ) {
+      ElMessage.error("无权限访问");
+      router.push({ path: "/403" });
+      return false;
+    }
+  } catch (error) {
+    console.log(error);
     router.push({ path: "/login" });
-    return false;
-  }
-  localStorage.setItem("p_token", userRes.data.token);
-  sharedStore.userInfo = {
-    id: userRes.data.id,
-    name: userRes.data.name,
-    avatar: userRes.data.avatar,
-    username: userRes.data.username,
-    role: userRes.data.role,
-    btns: userRes.data.btns,
-  };
-  bus.$emit("changeSharedPinia", { userInfo: sharedStore.userInfo });
-  const navRes = await request.get({
-    base: "base",
-    url: "/main/getMyNavTreeList",
-  });
-  if (navRes.code != 200 || !navRes.data) {
-    ElMessage.error(navRes.msg || "获取导航失败");
-    return false;
-  }
-  navsStore.setNavs(navRes.data);
-  if (
-    !whiteList.includes(route.fullPath) &&
-    !navsStore.hasNav(route.fullPath)
-  ) {
-    ElMessage.error("无权限访问");
-    router.push({ path: "/403" });
     return false;
   }
 };

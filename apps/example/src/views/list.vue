@@ -133,7 +133,7 @@ const initTable = () => {
   request
     .post({
       base: "base",
-      url: "/example/test/getList",
+      url: "/example/person/getList",
       data: { ...searchValue.value, ...pagination.value },
     })
     .then((res) => {
@@ -176,7 +176,7 @@ const toRightBtnClick = ({ btn, row }) => {
       request
         .post({
           base: "base",
-          url: "/example/test/delete",
+          url: "/example/person/delete",
           data: {
             idList: [row.id],
           },
@@ -202,8 +202,8 @@ const toBotBtnClick = ({ btn }) => {
     }
     const url =
       detailType.value == "add"
-        ? "/example/test/create"
-        : "/example/test/update";
+        ? "/example/person/create"
+        : "/example/person/update";
     request
       .post({
         base: "base",
@@ -227,7 +227,7 @@ const toExport = (callBack) => {
   request
     .post({
       base: "base",
-      url: "/example/test/getList",
+      url: "/example/person/getList",
       data: {
         pageNumber: 1,
         pageSize: 10000,

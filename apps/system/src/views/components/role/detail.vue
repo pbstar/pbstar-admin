@@ -36,7 +36,7 @@ const getNavList = () => {
   request
     .get({
       base: "base",
-      url: "/nav/getAllList",
+      url: "/system/nav/getAllList",
     })
     .then((res) => {
       if (res.code === 200) {
@@ -65,13 +65,28 @@ const getDetailInfo = () => {
     .then((res) => {
       if (res && res.code == 200) {
         detailInfo.value = res.data;
+        if (detailInfo.value.navs) {
+          detailInfo.value.navs = detailInfo.value.navs.split(",");
+        }
+        if (detailInfo.value.btns) {
+          detailInfo.value.btns = detailInfo.value.btns.split(",");
+        }
       } else {
         ElMessage.error(res.msg || "操作异常");
       }
     });
 };
 const getFormValue = () => {
-  return detailInfo.value;
+  const info = {
+    ...detailInfo.value,
+  };
+  if (info.navs) {
+    info.navs = info.navs.join(",");
+  }
+  if (info.btns) {
+    info.btns = info.btns.join(",");
+  }
+  return info;
 };
 
 defineExpose({
