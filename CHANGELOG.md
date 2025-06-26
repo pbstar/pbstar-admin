@@ -1,5 +1,10 @@
 # 更新日志
 
+## v0.1.0 2025-06-26
+
+- 抽离server模块为独立项目[pbstar-admin-nodejs](https://github.com/pbstar/pbstar-admin-nodejs)
+- 修复已知bug
+
 ## v0.0.4 2025-06-14
 
 - 新增按钮权限控制功能
