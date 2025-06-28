@@ -29,6 +29,11 @@ const router = createRouter({
       component: () => import("@/views/role.vue"),
     },
     {
+      path: "/log",
+      name: "log",
+      component: () => import("@/views/log.vue"),
+    },
+    {
       path: "/:pathMatch(.*)*",
       name: "notFound",
       component: () => import("@Pcomponents/page/default/404.vue"),

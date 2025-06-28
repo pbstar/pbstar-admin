@@ -147,7 +147,13 @@ const change = (val) => {
       <div class="valBox" v-if="config.type != 'slot'">
         <div class="input">
           <!-- 文本 -->
-          <div class="text" v-if="config.isText">
+          <div
+            :class="{
+              text: config.type != 'textarea',
+              textBig: config.type == 'textarea',
+            }"
+            v-if="config.isText"
+          >
             <div v-show="text">{{ text }}</div>
             <div v-show="!text">{{ value }}</div>
           </div>
@@ -367,6 +373,15 @@ const change = (val) => {
           width: 2px;
           height: 2px;
         }
+      }
+      .textBig {
+        height: auto;
+        padding: 5px 6px;
+        line-height: 20px;
+        color: var(--c-text);
+        border-bottom: 1px solid var(--c-border);
+        //单词换行
+        word-break: break-word;
       }
     }
     .rightText {
