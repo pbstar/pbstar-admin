@@ -30,7 +30,7 @@ const defaultInfo = {
   template: "main",
   childKey: "",
   title: "",
-  apiKey: "",
+  apiKey: "base",
   apiBase: "",
   detailDiaType: "page",
   fields: [],
@@ -146,11 +146,11 @@ const tableTopBtnClick = ({ btn }) => {
         return;
       }
       if (!info.value.apiKey) {
-        ElMessage.error("请输入apiKey");
+        ElMessage.error("请选择apiKey");
         return;
       }
       if (!info.value.apiBase) {
-        ElMessage.error("请输入应用名称");
+        ElMessage.error("请选择apiBase");
         return;
       }
     }
@@ -276,9 +276,10 @@ const toHistoryUse = (row) => {
           <p-item
             class="item"
             :config="{
-              type: 'input',
+              type: 'select',
               label: 'apiKey',
-              placeholder: '请输入接口Key',
+              placeholder: '请选择接口Key',
+              options: [{ label: 'base', value: 'base' }],
             }"
             v-model="info.apiKey"
           >
@@ -286,9 +287,14 @@ const toHistoryUse = (row) => {
           <p-item
             class="item"
             :config="{
-              type: 'input',
+              type: 'select',
               label: 'apiBase',
               placeholder: '请输入apiBase',
+              options: [
+                { label: 'main', value: 'main' },
+                { label: 'system', value: 'system' },
+                { label: 'example', value: 'example' },
+              ],
             }"
             v-model="info.apiBase"
           >
