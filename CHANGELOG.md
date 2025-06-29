@@ -1,5 +1,11 @@
 # 更新日志
 
+## v0.1.1 2025-06-29
+
+- 代码生成器升级，支持后端代码和SQL脚本生成
+- 添加操作日志模块
+- 修复已知bug
+
 ## v0.1.0 2025-06-26
 
 - 抽离server模块为独立项目[pbstar-admin-nodejs](https://github.com/pbstar/pbstar-admin-nodejs)
