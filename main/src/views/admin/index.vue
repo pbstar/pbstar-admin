@@ -30,7 +30,7 @@
   </div>
 </template>
 <script setup>
-import { computed } from "vue";
+import { computed, onBeforeMount } from "vue";
 import { ElMessage } from "element-plus";
 import { RouterView, useRouter, useRoute } from "vue-router";
 import { Close } from "@element-plus/icons-vue";
@@ -55,6 +55,11 @@ const isMobile = computed(() => {
 });
 // 白名单
 const whiteList = ["/login", "/admin/pUser", "/404", "/403"];
+onBeforeMount(async () => {
+  if (!sharedStore.userInfo) {
+    await getUserInfo();
+  }
+});
 const toUnFull = () => {
   sharedStore.isFull = false;
   bus.$emit("changeSharedPinia", { isFull: false });
@@ -104,9 +109,6 @@ const getUserInfo = async () => {
     return false;
   }
 };
-if (!sharedStore.userInfo) {
-  getUserInfo();
-}
 router.beforeEach((to, from, next) => {
   if (whiteList.includes(to.path)) {
     next();
