@@ -28,7 +28,7 @@
           </div>
           <div class="bot">
             <el-button
-              v-for="(item, index) in botBtn"
+              v-for="(item, index) in botBtnList"
               :key="index"
               :type="item.type || 'primary'"
               @click="handleClickBot(item.key)"
@@ -86,7 +86,7 @@
         </div>
         <div class="bot">
           <el-button
-            v-for="(item, index) in botBtn"
+            v-for="(item, index) in botBtnList"
             :key="index"
             :type="item.type || 'primary'"
             @click="handleClickBot(item.key)"
@@ -122,7 +122,7 @@
           </div>
           <div class="bot">
             <el-button
-              v-for="(item, index) in botBtn"
+              v-for="(item, index) in botBtnList"
               :key="index"
               :type="item.type || 'primary'"
               @click="handleClickBot(item.key)"
@@ -182,7 +182,27 @@ const navWidth = computed(() => {
 const topHeight = computed(() => {
   return sharedStore.isFull || isMobile.value ? "0" : "90";
 });
+const mybtns = ref(sharedStore.userInfo?.btns);
+const botBtnList = ref([]);
 
+watch(
+  () => props.botBtn,
+  (newVal) => {
+    botBtnList.value = [];
+    if (newVal.length) {
+      newVal.forEach((item) => {
+        if (
+          !item.auth ||
+          mybtns.value == "all" ||
+          mybtns.value.includes(item.auth)
+        ) {
+          botBtnList.value.push(item);
+        }
+      });
+    }
+  },
+  { immediate: true },
+);
 watch(
   () => props.modelValue,
   (newVal) => {

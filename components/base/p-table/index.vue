@@ -335,26 +335,20 @@ const handleBtn = () => {
   topBtnList.value = [];
   rightBtnList.value = [];
   props.topBtn.forEach((item) => {
-    if (!item.auth) {
-      topBtnList.value.push(item);
-      return;
-    }
-    if (!mybtns.value) {
-      return;
-    }
-    if (mybtns.value == "all" || mybtns.value.includes(item.auth)) {
+    if (
+      !item.auth ||
+      mybtns.value == "all" ||
+      mybtns.value.includes(item.auth)
+    ) {
       topBtnList.value.push(item);
     }
   });
   props.rightBtn.forEach((item) => {
-    if (!item.auth) {
-      rightBtnList.value.push(item);
-      return;
-    }
-    if (!mybtns.value) {
-      return;
-    }
-    if (mybtns.value == "all" || mybtns.value.includes(item.auth)) {
+    if (
+      !item.auth ||
+      mybtns.value == "all" ||
+      mybtns.value.includes(item.auth)
+    ) {
       rightBtnList.value.push(item);
     }
   });
