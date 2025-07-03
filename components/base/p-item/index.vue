@@ -141,7 +141,18 @@ const change = (val) => {
       <span v-show="config.isRequired && !config.isText && !config.isDisabled"
         >*</span
       >
-      <span>{{ config.label }}</span>
+      <el-tooltip
+        effect="dark"
+        :content="config.label"
+        placement="bottom"
+        v-if="config.label.length > 8"
+      >
+        <span
+          style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis"
+          >{{ config.label }}</span
+        >
+      </el-tooltip>
+      <span v-if="config.label.length <= 8">{{ config.label }}</span>
     </div>
     <div class="value">
       <div class="valBox" v-if="config.type != 'slot'">
