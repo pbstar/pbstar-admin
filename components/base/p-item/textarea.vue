@@ -1,5 +1,5 @@
 <template>
-  <div class="text" v-if="props.config.isText">
+  <div class="textBig" v-if="props.config.isText">
     {{ value }}
   </div>
   <el-input
