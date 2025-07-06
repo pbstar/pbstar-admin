@@ -13,7 +13,7 @@ const searchData = ref([
   {
     label: "操作时间",
     key: "createTime",
-    type: "daterange",
+    type: "dateRange",
   },
 ]);
 const showSearch = ref(true);

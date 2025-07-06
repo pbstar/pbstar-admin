@@ -51,7 +51,7 @@ const formData = ref([
   },
   {
     label: "操作时间",
-    type: "datetime",
+    type: "dateTime",
     key: "createTime",
     isText: 'detailType.value == "view"',
   },

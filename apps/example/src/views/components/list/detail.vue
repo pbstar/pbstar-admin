@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onBeforeMount } from "vue";
+import { ref, onBeforeMount, onMounted } from "vue";
 import { ElMessage } from "element-plus";
 import request from "@Passets/utils/request";
 import PCollapse from "@Pcomponents/base/p-collapse/index.vue";
@@ -27,14 +27,12 @@ const formData = ref([
     label: "姓名",
     type: "input",
     isRequired: true,
-    isText: detailType.value == "view",
   },
   {
     key: "age",
     label: "年龄",
     type: "inputNumber",
     isRequired: true,
-    isText: detailType.value == "view",
   },
   {
     key: "sex",
@@ -45,21 +43,18 @@ const formData = ref([
       { label: "男", value: "1" },
       { label: "女", value: "2" },
     ],
-    isText: detailType.value == "view",
   },
   {
     key: "ethnic",
     label: "民族",
     type: "select",
     enumKey: "ethnic",
-    isText: detailType.value == "view",
   },
   {
     key: "isHealthy",
     label: "是否健康",
     type: "select",
     enumKey: "boolean",
-    isText: detailType.value == "view",
   },
   {
     key: "hobbyList",
@@ -73,6 +68,20 @@ onBeforeMount(() => {
   detailId.value = props.id;
   if (detailType.value == "view" || detailType.value == "edit") {
     getDetailInfo();
+  }
+});
+onMounted(() => {
+  if (detailType.value == "view") {
+    const arr = [];
+    formData.value.forEach((item) => {
+      if (item.type != "slot") {
+        arr.push({
+          key: item.key,
+          isText: true,
+        });
+      }
+    });
+    formRef.value.toChangeData(arr);
   }
 });
 

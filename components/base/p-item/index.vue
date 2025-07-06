@@ -1,8 +1,18 @@
 <script setup>
 import { ref, watch } from "vue";
-import { useEnumStore } from "@Passets/stores/enum";
-import { structure } from "@Passets/utils/array";
-const enumStore = useEnumStore();
+import pInput from "./input.vue";
+import pTextarea from "./textarea.vue";
+import pInputNumber from "./inputNumber.vue";
+import pSelect from "./select.vue";
+import pSelectMultiple from "./selectMultiple.vue";
+import pSelectTree from "./selectTree.vue";
+import pRadio from "./radio.vue";
+import pCheckbox from "./checkbox.vue";
+import pDate from "./date.vue";
+import pDateRange from "./dateRange.vue";
+import pDateTime from "./dateTime.vue";
+import pDateTimeRange from "./dateTimeRange.vue";
+
 const props = defineProps({
   config: {
     type: Object,
@@ -14,62 +24,41 @@ const props = defineProps({
   },
 });
 const emit = defineEmits(["change", "update:modelValue"]);
-const getPlaceholder = (config) => {
-  const placeholderMap = {
-    input: "请输入",
-    textarea: "请输入",
-    inputNumber: "请输入",
-    select: "请选择",
-    selectMultiple: "请选择",
-    selectTree: "请选择",
-    date: "请选择",
-    daterange: "请选择",
-    datetime: "请选择",
-    datetimerange: "请选择",
-  };
-  return placeholderMap[config.type] || "";
+const components = {
+  input: pInput,
+  textarea: pTextarea,
+  inputNumber: pInputNumber,
+  select: pSelect,
+  selectMultiple: pSelectMultiple,
+  selectTree: pSelectTree,
+  radio: pRadio,
+  checkbox: pCheckbox,
+  date: pDate,
+  dateRange: pDateRange,
+  dateTime: pDateTime,
+  dateTimeRange: pDateTimeRange,
 };
 const config = ref({
   key: "",
   label: "",
   type: "input",
-  placeholder: getPlaceholder(props.config),
+  placeholder: "",
   isText: false,
   isRequired: false,
   isDisabled: false,
-  options: [],
-  labelStyle: "",
-  enumKey: "",
   tipText: "",
   rightText: "",
+  labelStyle: "",
+  options: [],
+  enumKey: "",
   more: {},
 });
-const value = ref("");
-const text = ref("");
-const selectTreeData = ref([]); //树形结构数据
-const changeText = (arr) => {
-  let obj = arr.find((it) => it.value == value.value);
-  if (obj) {
-    text.value = obj.label;
-  } else {
-    text.value = "";
-  }
-};
+const value = ref(props.modelValue);
 
 watch(
   () => props.modelValue,
   (newVal) => {
     value.value = newVal;
-    if (
-      config.value.isText &&
-      config.value.options &&
-      config.value.options.length > 0
-    ) {
-      changeText(config.value.options);
-    }
-  },
-  {
-    immediate: true,
   },
 );
 watch(
@@ -82,57 +71,10 @@ watch(
     deep: true,
   },
 );
-watch(
-  () => config.value.enumKey,
-  (newVal) => {
-    if (newVal) {
-      enumStore.getEnum(config.value.enumKey).then((res) => {
-        if (res) {
-          let list = res[config.value.enumKey];
-          config.value.options = list;
-          if (config.value.isText) {
-            changeText(config.value.options);
-          }
-        }
-      });
-    }
-  },
-  {
-    immediate: true,
-  },
-);
-watch(
-  () => config.value.options,
-  (newVal) => {
-    if (newVal && newVal.length > 0) {
-      if (config.value.isText) {
-        changeText(newVal);
-      }
-      if (config.value.type == "selectTree") {
-        selectTreeData.value = structure(newVal, "parentId", "value");
-      }
-    }
-  },
-  {
-    immediate: true,
-    deep: true,
-  },
-);
+
 const change = (val) => {
-  const obj = {
-    value: val,
-  };
-  if (config.value.key) {
-    obj.key = config.value.key;
-  }
-  if (config.value.options && config.value.options.length > 0) {
-    const row = config.value.options.find((it) => it.value == value.value);
-    if (row) {
-      obj.row = row;
-    }
-  }
   emit("update:modelValue", value.value);
-  emit("change", obj);
+  emit("change", val);
 };
 </script>
 <template>
@@ -157,169 +99,10 @@ const change = (val) => {
     <div class="value">
       <div class="valBox" v-if="config.type != 'slot'">
         <div class="input">
-          <!-- 文本 -->
-          <div
-            :class="{
-              text: config.type != 'textarea',
-              textBig: config.type == 'textarea',
-            }"
-            v-if="config.isText"
-          >
-            <div v-show="text">{{ text }}</div>
-            <div v-show="!text">{{ value }}</div>
-          </div>
-          <!-- 输入框 -->
-          <el-input
+          <component
+            :is="components[config.type]"
             v-model="value"
-            :placeholder="config.placeholder"
-            :disabled="config.isDisabled"
-            v-bind="config.more"
-            v-if="config.type == 'input' && !config.isText"
-            @change="change"
-          />
-          <!-- 文本域 -->
-          <el-input
-            v-model="value"
-            type="textarea"
-            :placeholder="config.placeholder"
-            :disabled="config.isDisabled"
-            v-bind="config.more"
-            v-if="config.type == 'textarea' && !config.isText"
-            @change="change"
-          />
-          <!-- 数字输入框 -->
-          <el-input
-            v-model="value"
-            type="number"
-            :placeholder="config.placeholder"
-            :disabled="config.isDisabled"
-            v-bind="config.more"
-            v-if="config.type == 'inputNumber' && !config.isText"
-            @change="change"
-          />
-          <!-- 下拉框 -->
-          <el-select
-            v-model="value"
-            :placeholder="config.placeholder"
-            v-if="config.type == 'select' && !config.isText"
-            :disabled="config.isDisabled"
-            v-bind="config.more"
-            @change="change"
-          >
-            <el-option
-              v-for="(it, index) in config.options"
-              :key="index"
-              :label="it.label"
-              :value="it.value"
-            />
-          </el-select>
-          <!-- 多选下拉框 -->
-          <el-select
-            v-model="value"
-            :placeholder="config.placeholder"
-            v-if="config.type == 'selectMultiple' && !config.isText"
-            :disabled="config.isDisabled"
-            v-bind="config.more"
-            @change="change"
-            multiple
-            collapse-tags
-            collapse-tags-tooltip
-          >
-            <el-option
-              v-for="(it, index) in config.options"
-              :key="index"
-              :label="it.label"
-              :value="it.value"
-            />
-          </el-select>
-          <!-- 树形下拉框 -->
-          <el-tree-select
-            v-model="value"
-            :placeholder="config.placeholder"
-            v-if="config.type == 'selectTree' && !config.isText"
-            :disabled="config.isDisabled"
-            @change="change"
-            :data="selectTreeData"
-            v-bind="config.more"
-            collapse-tags
-            collapse-tags-tooltip
-          />
-          <!-- 单选框 -->
-          <el-radio-group
-            v-model="value"
-            v-if="config.type == 'radio' && !config.isText"
-            :disabled="config.isDisabled"
-            v-bind="config.more"
-            @change="change"
-          >
-            <el-radio
-              v-for="(it, index) in config.options"
-              :key="index"
-              :label="it.label"
-              :value="it.value"
-            />
-          </el-radio-group>
-          <!-- 多选框 -->
-          <el-checkbox-group
-            v-model="value"
-            v-if="config.type == 'checkbox' && !config.isText"
-            :disabled="config.isDisabled"
-            v-bind="config.more"
-            @change="change"
-          >
-            <el-checkbox
-              v-for="(it, index) in config.options"
-              :key="index"
-              :label="it.label"
-              :value="it.value"
-            />
-          </el-checkbox-group>
-          <!-- 日期 -->
-          <el-date-picker
-            v-model="value"
-            type="date"
-            placeholder="选择日期"
-            value-format="YYYY-MM-DD"
-            v-if="config.type == 'date' && !config.isText"
-            :disabled="config.isDisabled"
-            v-bind="config.more"
-            @change="change"
-          />
-          <!-- 日期范围 -->
-          <el-date-picker
-            v-model="value"
-            type="daterange"
-            range-separator="至"
-            value-format="YYYY-MM-DD"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期"
-            v-if="config.type == 'daterange' && !config.isText"
-            :disabled="config.isDisabled"
-            v-bind="config.more"
-            @change="change"
-          />
-          <!-- 日期时间 -->
-          <el-date-picker
-            v-model="value"
-            type="datetime"
-            placeholder="选择日期时间"
-            v-if="config.type == 'datetime' && !config.isText"
-            :disabled="config.isDisabled"
-            value-format="YYYY-MM-DD hh:mm:ss"
-            v-bind="config.more"
-            @change="change"
-          />
-          <!-- 日期时间范围 -->
-          <el-date-picker
-            v-model="value"
-            type="datetimerange"
-            range-separator="至"
-            start-placeholder="开始日期时间"
-            end-placeholder="结束日期时间"
-            value-format="YYYY-MM-DD hh:mm:ss"
-            v-if="config.type == 'datetimerange' && !config.isText"
-            :disabled="config.isDisabled"
-            v-bind="config.more"
+            :config="config"
             @change="change"
           />
         </div>
@@ -371,29 +154,6 @@ const change = (val) => {
     .input {
       max-width: 100%;
       flex: 1;
-      .text {
-        height: 30px;
-        padding: 0 6px;
-        line-height: 30px;
-        color: var(--c-text);
-        border-bottom: 1px solid var(--c-border);
-        overflow-x: auto;
-        overflow-y: hidden;
-        white-space: nowrap;
-        &::-webkit-scrollbar {
-          width: 2px;
-          height: 2px;
-        }
-      }
-      .textBig {
-        height: auto;
-        padding: 5px 6px;
-        line-height: 20px;
-        color: var(--c-text);
-        border-bottom: 1px solid var(--c-border);
-        //单词换行
-        word-break: break-word;
-      }
     }
     .rightText {
       flex-shrink: 0;

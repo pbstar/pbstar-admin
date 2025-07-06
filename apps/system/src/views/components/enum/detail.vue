@@ -17,7 +17,7 @@ const props = defineProps({
   },
 });
 const detailInfo = ref({});
-const detailType = ref("");
+const detailType = ref(props.type);
 const detailId = ref("");
 const formData = ref([
   {
@@ -35,7 +35,6 @@ const formData = ref([
 ]);
 
 onBeforeMount(() => {
-  detailType.value = props.type;
   detailId.value = props.id;
   if (detailType.value == "view" || detailType.value == "edit") {
     getDetailInfo();

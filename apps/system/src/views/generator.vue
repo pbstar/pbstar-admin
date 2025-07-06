@@ -379,9 +379,9 @@ const toHistoryUse = (row) => {
                   { label: 'radio', value: 'radio' },
                   { label: 'checkbox', value: 'checkbox' },
                   { label: 'date', value: 'date' },
-                  { label: 'daterange', value: 'daterange' },
-                  { label: 'datetime', value: 'datetime' },
-                  { label: 'datetimerange', value: 'datetimerange' },
+                  { label: 'dateRange', value: 'dateRange' },
+                  { label: 'dateTime', value: 'dateTime' },
+                  { label: 'dateTimeRange', value: 'dateTimeRange' },
                 ],
               }"
               v-model="detailInfo.type"

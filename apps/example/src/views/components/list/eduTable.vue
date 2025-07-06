@@ -52,7 +52,7 @@ const detailInfo = ref({});
 const isDetail = ref(false);
 const formData = ref([
   { label: "名称", type: "input", key: "eduName" },
-  { label: "时间", type: "daterange", key: "dateRange" },
+  { label: "时间", type: "dateRange", key: "dateRange" },
   { label: "备注", type: "textarea", key: "remark" },
 ]);
 
