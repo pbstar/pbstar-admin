@@ -18,7 +18,7 @@
         <history class="history" v-show="!isFull && !isMobile" />
         <div style="height: 0; width: 100%" v-show="isFull">
           <div class="unfull" @click="toUnFull">
-            <el-icon><Close /></el-icon>
+            <p-icon name="el-icon-close" />
           </div>
         </div>
         <div style="width: 100%; height: 10px" v-show="isMobile"></div>
@@ -33,7 +33,7 @@
 import { computed, onBeforeMount } from "vue";
 import { ElMessage } from "element-plus";
 import { RouterView, useRouter, useRoute } from "vue-router";
-import { Close } from "@element-plus/icons-vue";
+import PIcon from "@Pcomponents/base/p-icon/index.vue";
 import AdminTop from "@/components/layout/top.vue";
 import AdminTopMobile from "@/components/layout/topMobile.vue";
 import AdminNav from "@/components/layout/nav.vue";

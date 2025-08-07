@@ -9,10 +9,11 @@
           v-if="props.export"
           size="small"
           :loading="exportLoading"
-          :icon="Download"
           circle
           @click="toExport"
-        />
+        >
+          <p-icon name="el-icon-download" />
+        </el-button>
         <setting
           v-if="props.showSetting && props.tableKey"
           :tableKey="props.tableKey"
@@ -120,8 +121,8 @@
 <script setup>
 import { ref, watch } from "vue";
 import { ElMessage } from "element-plus";
-import { Download } from "@element-plus/icons-vue";
 import pExportExcel from "p-export-excel";
+import PIcon from "@Pcomponents/base/p-icon/index.vue";
 import topBtn from "./topBtn.vue";
 import rightBtn from "./rightBtn.vue";
 import setting from "./setting.vue";

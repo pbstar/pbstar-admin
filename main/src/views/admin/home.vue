@@ -1,9 +1,9 @@
 <script setup>
 import { onMounted, ref, watch, nextTick } from "vue";
 import { useRouter } from "vue-router";
-import { Plus, Close } from "@element-plus/icons-vue";
 import useSharedStore from "@Passets/stores/shared";
 import PCollapse from "@Pcomponents/base/p-collapse/index.vue";
+import PIcon from "@Pcomponents/base/p-icon/index.vue";
 import PItem from "@Pcomponents/base/p-item/index.vue";
 import { useNavsStore } from "@/stores/navs";
 import { flatten } from "@Passets/utils/array";
@@ -189,9 +189,11 @@ const removeNav = (index) => {
                 @click="toNav(item)"
               >
                 <span>{{ item.name }}</span>
-                <el-icon class="delete-icon" @click.stop="removeNav(index)"
-                  ><Close />
-                </el-icon>
+                <p-icon
+                  name="el-icon-close"
+                  class="delete-icon"
+                  @click.stop="removeNav(index)"
+                />
               </div>
               <el-popover
                 placement="bottom"
@@ -202,7 +204,7 @@ const removeNav = (index) => {
               >
                 <template #reference>
                   <div class="nav-add" @click="showNavAdd">
-                    <el-icon><Plus /></el-icon>
+                    <p-icon name="el-icon-plus" />
                   </div>
                 </template>
                 <template #default>

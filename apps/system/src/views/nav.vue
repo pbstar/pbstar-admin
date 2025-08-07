@@ -7,7 +7,7 @@ import PSearch from "@Pcomponents/base/p-search/index.vue";
 import PTitle from "@Pcomponents/base/p-title/index.vue";
 import PDialog from "@Pcomponents/base/p-dialog/index.vue";
 import Detail from "./components/nav/detail.vue";
-import * as ElementPlusIconsVue from "@element-plus/icons-vue";
+import PIcon from "@Pcomponents/base/p-icon/index.vue";
 import { structure } from "@Passets/utils/array";
 
 const searchData = ref([
@@ -119,13 +119,6 @@ const diaBotBtnClick = ({ btn }) => {
     isDetail.value = false;
   }
 };
-const getIcon = (iconName) => {
-  if (!ElementPlusIconsVue[iconName]) {
-    console.error(`ElementPlusIconsVue 中不存在名为 ${iconName} 的图标`);
-    return null; // 或者返回一个默认的图标组件
-  }
-  return ElementPlusIconsVue[iconName];
-};
 </script>
 
 <template>
@@ -162,9 +155,10 @@ const getIcon = (iconName) => {
     >
       <template #icon="scope">
         <div v-if="scope.row.icon" style="display: flex; align-items: center">
-          <el-icon style="margin-right: 5px; font-size: 16px">
-            <component :is="getIcon(scope.row.icon)"></component>
-          </el-icon>
+          <p-icon
+            style="margin-right: 5px; font-size: 16px"
+            :name="scope.row.icon"
+          />
           <span>{{ scope.row.icon }}</span>
         </div>
       </template>

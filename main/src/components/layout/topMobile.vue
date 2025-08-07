@@ -1,12 +1,11 @@
 <script setup>
 import { ref, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
-import * as ElementPlusIconsVue from "@element-plus/icons-vue";
-import { Moon, Sunny, MoreFilled, CloseBold } from "@element-plus/icons-vue";
 import useSharedStore from "@Passets/stores/shared";
 import { useNavsStore } from "@/stores/navs";
 import WujieVue from "wujie-vue3";
 import request from "@Passets/utils/request";
+import PIcon from "@Pcomponents/base/p-icon/index.vue";
 
 const { bus } = WujieVue;
 const sharedStore = useSharedStore();
@@ -20,14 +19,6 @@ const theme = ref(false);
 const isMore = ref(false);
 const list = ref([]);
 const activeIndex = ref("1");
-
-const getIcon = (iconName) => {
-  if (!ElementPlusIconsVue[iconName]) {
-    console.error(`ElementPlusIconsVue 中不存在名为 ${iconName} 的图标`);
-    return null;
-  }
-  return ElementPlusIconsVue[iconName];
-};
 
 const select = (val) => {
   activeIndex.value = val;
@@ -142,25 +133,27 @@ watch(
     </div>
     <div class="right">
       <div class="btn">
-        <el-icon v-show="!isMore" @click="isMore = true"
-          ><MoreFilled
-        /></el-icon>
-        <el-icon v-show="isMore" @click="isMore = false"><CloseBold /></el-icon>
+        <p-icon
+          name="el-icon-MoreFilled"
+          v-show="!isMore"
+          @click="isMore = true"
+        />
+        <p-icon
+          name="el-icon-CloseBold"
+          v-show="isMore"
+          @click="isMore = false"
+        />
       </div>
       <div class="content" v-show="isMore">
         <el-menu class="menu" :default-active="activeIndex" @select="select">
           <div class="item" v-for="(item, index) in list" :key="index">
             <el-menu-item :index="item.id.toString()" v-if="!item.children">
-              <el-icon v-if="item.icon">
-                <component :is="getIcon(item.icon)" />
-              </el-icon>
+              <p-icon v-if="item.icon" :name="item.icon" />
               <span>{{ item.name }}</span>
             </el-menu-item>
             <el-sub-menu :index="item.id.toString()" v-if="item.children">
               <template #title>
-                <el-icon v-if="item.icon">
-                  <component :is="getIcon(item.icon)" />
-                </el-icon>
+                <p-icon v-if="item.icon" :name="item.icon" />
                 <span>{{ item.name }}</span>
               </template>
               <div
@@ -198,15 +191,20 @@ watch(
             inline-prompt
             active-text="深色"
             inactive-text="浅色"
-            :active-action-icon="Moon"
-            :inactive-action-icon="Sunny"
             style="
               border-color: #fff;
               --el-switch-on-color: #2c384d;
               --el-switch-off-color: #2165c9;
             "
             @change="themeChange"
-          />
+          >
+            <template #active-action>
+              <p-icon name="el-icon-moon" />
+            </template>
+            <template #inactive-action>
+              <p-icon name="el-icon-sunny" />
+            </template>
+          </el-switch>
           <div class="userBox" @click="toUserInfo">
             <img v-if="userImg" :src="userImg" alt="" />
             <img v-else src="@/assets/imgs/user.png" alt="" />

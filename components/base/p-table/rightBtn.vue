@@ -23,9 +23,7 @@
         size="small"
       >
         <span>更多</span>
-        <el-icon>
-          <arrow-down />
-        </el-icon>
+        <p-icon name="el-icon-arrow-down" />
       </el-button>
 
       <template #dropdown>
@@ -44,7 +42,7 @@
 </template>
 <script setup>
 import { ref, watch } from "vue";
-import { ArrowDown } from "@element-plus/icons-vue";
+import PIcon from "@Pcomponents/base/p-icon/index.vue";
 const props = defineProps({
   btns: {
     type: Array,
@@ -103,7 +101,7 @@ watch(
   {
     deep: true,
     immediate: true,
-  }
+  },
 );
 </script>
 <style lang="scss" scoped>

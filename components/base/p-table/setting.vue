@@ -1,10 +1,7 @@
 <template>
-  <el-button
-    size="small"
-    :icon="Operation"
-    circle
-    @click="handleClickSetting()"
-  />
+  <el-button size="small" circle @click="handleClickSetting()">
+    <p-icon name="el-icon-operation" />
+  </el-button>
   <p-dialog
     type="drawer"
     title="定制表头"
@@ -34,7 +31,7 @@
       >
         <div class="item" v-for="item in allColumn" :key="item.key">
           <el-checkbox v-model="item.isChecked" :label="item.label" />
-          <el-icon class="handle"><Sort /></el-icon>
+          <p-icon class="handle" name="el-icon-sort" />
         </div>
       </VueDraggable>
     </div>
@@ -43,7 +40,7 @@
 <script setup>
 import { ref } from "vue";
 import { ElMessage } from "element-plus";
-import { Sort, Operation } from "@element-plus/icons-vue";
+import PIcon from "@Pcomponents/base/p-icon/index.vue";
 import { VueDraggable } from "vue-draggable-plus";
 import pDialog from "@Pcomponents/base/p-dialog/index.vue";
 import { useTableStore } from "@Passets/stores/base";

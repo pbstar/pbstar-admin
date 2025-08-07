@@ -1,10 +1,10 @@
 <script setup>
 import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
-import { CaretBottom, FullScreen, Moon, Sunny } from "@element-plus/icons-vue";
 import useSharedStore from "@Passets/stores/shared";
 import WujieVue from "wujie-vue3";
 import request from "@Passets/utils/request";
+import PIcon from "@Pcomponents/base/p-icon/index.vue";
 const { bus } = WujieVue;
 const sharedStore = useSharedStore();
 const router = useRouter();
@@ -64,28 +64,33 @@ watch(
       <div class="title">{{ title }}</div>
     </div>
     <div class="right">
-      <el-icon class="full" @click="toFull"><FullScreen /></el-icon>
+      <p-icon class="full" name="el-icon-full-screen" @click="toFull" />
       <el-switch
         v-model="theme"
         inline-prompt
         active-text="深色"
         inactive-text="浅色"
-        :active-action-icon="Moon"
-        :inactive-action-icon="Sunny"
         style="
           border-color: #fff;
           --el-switch-on-color: #2c384d;
           --el-switch-off-color: #2165c9;
         "
         @change="themeChange"
-      />
+      >
+        <template #active-action>
+          <p-icon name="el-icon-moon" />
+        </template>
+        <template #inactive-action>
+          <p-icon name="el-icon-sunny" />
+        </template>
+      </el-switch>
       <div class="user">
         <el-dropdown trigger="click">
           <div class="userBox">
             <img v-if="userImg" :src="userImg" alt="" />
             <img v-else src="@/assets/imgs/user.png" alt="" />
             {{ userName }}
-            <el-icon class="icon"><CaretBottom /></el-icon>
+            <p-icon class="icon" name="el-icon-caret-bottom" />
           </div>
           <template #dropdown>
             <el-dropdown-menu>

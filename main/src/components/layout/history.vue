@@ -1,5 +1,5 @@
 <script setup>
-import { House, Close } from "@element-plus/icons-vue";
+import PIcon from "@Pcomponents/base/p-icon/index.vue";
 import { ref, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useNavsStore } from "@/stores/navs";
@@ -68,7 +68,7 @@ router.afterEach((to, from) => {
 <template>
   <div class="historyBox">
     <div class="home" @click="toPath('/')">
-      <el-icon><House /></el-icon>
+      <p-icon name="el-icon-house" />
     </div>
     <div class="list">
       <div
@@ -79,9 +79,7 @@ router.afterEach((to, from) => {
         @click="toPath(item.path)"
       >
         <span>{{ item.name }}</span>
-        <el-icon class="icon" @click.stop="delItem(item.path)"
-          ><Close
-        /></el-icon>
+        <p-icon name="el-icon-close" @click.stop="delItem(item.path)" />
       </div>
     </div>
   </div>

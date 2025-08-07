@@ -6,22 +6,24 @@
         <h3>{{ title }}</h3>
       </div>
       <div class="formBox">
-        <el-input
-          v-model="loginForm.username"
-          placeholder="请输入账号"
-          :prefix-icon="User"
-        ></el-input>
+        <el-input v-model="loginForm.username" placeholder="请输入账号">
+          <template #prefix>
+            <p-icon name="el-icon-user" />
+          </template>
+        </el-input>
         <el-input
           v-model="loginForm.password"
           placeholder="请输入密码"
-          :prefix-icon="Lock"
           type="password"
-        ></el-input>
-        <el-input
-          v-model="loginForm.captcha"
-          placeholder="请输入验证码"
-          :prefix-icon="Postcard"
         >
+          <template #prefix>
+            <p-icon name="el-icon-lock" />
+          </template>
+        </el-input>
+        <el-input v-model="loginForm.captcha" placeholder="请输入验证码">
+          <template #prefix>
+            <p-icon name="el-icon-postcard" />
+          </template>
           <template #suffix>
             <p-verificationCode
               identifyCodes="23456789"
@@ -103,7 +105,7 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
-import { User, Lock, Postcard } from "@element-plus/icons-vue";
+import PIcon from "@Pcomponents/base/p-icon/index.vue";
 import request from "@Passets/utils/request";
 import { useNavsStore } from "@/stores/navs";
 import useSharedStore from "@Passets/stores/shared";
