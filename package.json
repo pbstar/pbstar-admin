@@ -6,6 +6,8 @@
   "type": "module",
   "scripts": {
     "prepare": "husky",
+    "preinstall": "npx only-allow pnpm",
+    "predev": "npx only-allow pnpm",
     "create": "pnpm run -filter cli create",
     "dev": "rsbuild dev --environment main --port 8800 --open",
     "build": "rsbuild build --environment main",
@@ -18,9 +20,6 @@
     "*.{js,vue,css,json,md}": [
       "prettier --write",
       "git add"
-    ],
-    "*.ts": [
-      "echo '禁止提交ts文件' && false"
     ]
   },
   "dependencies": {
@@ -40,12 +39,14 @@
     "husky": "^9.1.7",
     "jszip": "^3.10.1",
     "lint-staged": "^16.0.0",
+    "only-allow": "^1.2.1",
     "prettier": "^3.5.3"
   },
   "engines": {
-    "node": ">=18",
-    "pnpm": ">=9"
+    "node": ">=18.12.0",
+    "pnpm": ">=9.15.0"
   },
+  "packageManager": "pnpm@9.15.0",
   "keywords": [
     "vue-admin",
     "vue3-admin",
