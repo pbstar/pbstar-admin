@@ -26,17 +26,6 @@ program
       const answers = await inquirer.prompt([
         {
           type: "input",
-          name: "appName",
-          message: "子应用名称:",
-          validate: (input) => {
-            if (input.trim() === "") {
-              return "请输入子应用名称";
-            }
-            return true;
-          },
-        },
-        {
-          type: "input",
           name: "appKey",
           message: "子应用Key:",
           validate: (input) => {
@@ -55,7 +44,7 @@ program
         },
       ]);
 
-      const { appName, appKey } = answers;
+      const { appKey } = answers;
 
       const appPath = path.join(OUTPUT_DIR, appKey);
 
@@ -85,7 +74,6 @@ program
           process.exit(1);
         }
         appsJson.push({
-          name: appName,
           key: appKey,
           devPort: port,
           proUrl: "",
@@ -93,7 +81,7 @@ program
         fs.writeJsonSync(appsJsonPath, appsJson, { spaces: 2 });
       }
 
-      console.log(chalk.blue(`创建子应用: ${appName}`));
+      console.log(chalk.blue(`创建子应用: ${appKey}`));
 
       // 创建项目目录
       fs.mkdirSync(appPath);

@@ -1,12 +1,10 @@
 [
   {
-    "name": "示例应用",
     "key": "example",
     "devPort": 8801,
     "proUrl": "http://pbstar-admin-example.pbstar.cn/"
   },
   {
-    "name": "系统管理",
     "key": "system",
     "devPort": 8802,
     "proUrl": "http://pbstar-admin-system.pbstar.cn/"
