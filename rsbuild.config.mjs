@@ -7,25 +7,25 @@ import apps from "./apps/apps.json";
 
 const appsConfig = {};
 apps.forEach((item) => {
-  appsConfig[item.name] = {
+  appsConfig[item.key] = {
     source: {
       entry: {
-        index: `./apps/${item.name}/src/main.js`,
+        index: `./apps/${item.key}/src/main.js`,
       },
     },
     output: {
       distPath: {
-        root: `./build/dist/${item.name}`,
+        root: `./build/dist/${item.key}`,
       },
     },
     resolve: {
       alias: {
-        "@": `./apps/${item.name}/src`,
+        "@": `./apps/${item.key}/src`,
       },
     },
     plugins: [
       checkUniqueKeyPlugin({
-        checkPath: `./apps/${item.name}/src`,
+        checkPath: `./apps/${item.key}/src`,
         checkKeys: ["tableKey", "table-key"],
       }),
     ],

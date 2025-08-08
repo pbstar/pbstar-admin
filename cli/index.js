@@ -29,23 +29,35 @@ program
           name: "appName",
           message: "子应用名称:",
           validate: (input) => {
-            const blackList = ["main", "components"];
             if (input.trim() === "") {
               return "请输入子应用名称";
             }
+            return true;
+          },
+        },
+        {
+          type: "input",
+          name: "appKey",
+          message: "子应用Key:",
+          validate: (input) => {
+            const blackList = ["main", "components"];
+            if (input.trim() === "") {
+              return "请输入子应用Key";
+            }
             if (blackList.includes(input)) {
-              return "子应用名称不能为" + input;
+              return "子应用Key不能为" + input;
             }
             if (!/^[a-z0-9-]+$/.test(input)) {
-              return "子应用名称只能包含小写字母、数字和连字符";
+              return "子应用Key只能包含小写字母、数字和连字符";
             }
             return true;
           },
         },
       ]);
 
-      const { appName } = answers;
-      const appPath = path.join(OUTPUT_DIR, appName);
+      const { appName, appKey } = answers;
+
+      const appPath = path.join(OUTPUT_DIR, appKey);
 
       // 检查目录是否存在
       if (fs.existsSync(appPath)) {
@@ -74,6 +86,7 @@ program
         }
         appsJson.push({
           name: appName,
+          key: appKey,
           devPort: port,
           proUrl: "",
         });
@@ -91,8 +104,8 @@ program
       // 更新占位符
       await replaceInFile({
         files: [appPath + "/**/*"],
-        from: [/P{name}/g],
-        to: [appName],
+        from: [/P{key}/g],
+        to: [appKey],
       });
 
       // package.json文件中添加子应用配置
@@ -102,16 +115,16 @@ program
         if (!packageJson.scripts) {
           packageJson.scripts = {};
         }
-        packageJson.scripts[`dev:${appName}`] =
-          `rsbuild dev --environment ${appName} --port ${port}`;
-        packageJson.scripts[`build:${appName}`] =
-          `rsbuild build --environment ${appName}`;
+        packageJson.scripts[`dev:${appKey}`] =
+          `rsbuild dev --environment ${appKey} --port ${port}`;
+        packageJson.scripts[`build:${appKey}`] =
+          `rsbuild build --environment ${appKey}`;
         fs.writeJsonSync(packageJsonPath, packageJson, { spaces: 2 });
       }
 
       console.log(chalk.green("子应用创建成功!"));
       console.log(chalk.blue("\n下一步:"));
-      console.log("  启动子应用: pnpm run dev:" + appName);
+      console.log("  启动子应用: pnpm run dev:" + appKey);
     } catch (err) {
       console.error(chalk.red("Error creating project:"), err);
       process.exit(1);

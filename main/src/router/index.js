@@ -3,11 +3,11 @@ import apps from "../../../apps/apps.json";
 const isDev = import.meta.env.DEV;
 const appsRouter = apps.map((item) => {
   return {
-    path: item.name,
-    name: "admin_" + item.name,
+    path: item.key,
+    name: "admin_" + item.key,
     component: () => import(`@/views/admin/app.vue`),
     meta: {
-      appName: item.name,
+      appKey: item.key,
       appUrl: isDev ? `http://localhost:${item.devPort}/` : item.proUrl,
     },
   };
