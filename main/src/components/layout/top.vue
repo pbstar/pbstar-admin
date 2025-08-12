@@ -5,6 +5,7 @@ import useSharedStore from "@Passets/stores/shared";
 import WujieVue from "wujie-vue3";
 import request from "@Passets/utils/request";
 import PIcon from "@Pcomponents/base/p-icon/index.vue";
+// import Apps from "../more/apps.vue"
 const { bus } = WujieVue;
 const sharedStore = useSharedStore();
 const router = useRouter();
@@ -60,10 +61,11 @@ watch(
 <template>
   <div class="box">
     <div class="left">
-      <img src="@/assets/imgs/logo-w.png" alt="" />
+      <img src="@/assets/imgs/logo-w.png" alt="" class="logo" />
       <div class="title">{{ title }}</div>
     </div>
     <div class="right">
+      <!-- <apps class="apps" /> -->
       <p-icon class="full" name="el-icon-full-screen" @click="toFull" />
       <el-switch
         v-model="theme"
@@ -111,6 +113,8 @@ watch(
   color: var(--c-text-theme);
   display: flex;
   justify-content: space-between;
+  align-items: center;
+
   .left {
     height: 100%;
     display: flex;
@@ -132,6 +136,9 @@ watch(
     display: flex;
     align-items: center;
     padding-right: 20px;
+    .apps {
+      margin-right: 20px;
+    }
     .full {
       margin-right: 20px;
       font-size: 20px;

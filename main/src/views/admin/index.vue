@@ -47,6 +47,7 @@ const sharedStore = useSharedStore();
 const navsStore = useNavsStore();
 const router = useRouter();
 const route = useRoute();
+const freeLogin = import.meta.env.PUBLIC_FREE_LOGIN;
 const isFull = computed(() => {
   return sharedStore.isFull;
 });
@@ -56,7 +57,7 @@ const isMobile = computed(() => {
 // 白名单
 const whiteList = ["/login", "/admin/pUser", "/404", "/403"];
 onBeforeMount(async () => {
-  if (!sharedStore.userInfo) {
+  if (!sharedStore.userInfo && !freeLogin) {
     await getUserInfo();
   }
 });
@@ -110,20 +111,20 @@ const getUserInfo = async () => {
   }
 };
 router.beforeEach((to, from, next) => {
-  if (whiteList.includes(to.path)) {
-    next();
-  } else {
-    if (!localStorage.getItem("p_token")) {
-      next({ path: "/login" });
-      return false;
-    }
-    if (!navsStore.hasNav(to.fullPath)) {
-      ElMessage.error("无权限访问");
-      next({ path: "/403" });
-      return false;
-    }
-    next();
+  if (freeLogin) {
+    return next();
   }
+  if (whiteList.includes(to.path)) {
+    return next();
+  }
+  if (!localStorage.getItem("p_token")) {
+    return next({ path: "/login" });
+  }
+  if (!navsStore.hasNav(to.fullPath)) {
+    ElMessage.error("无权限访问");
+    return next({ path: "/403" });
+  }
+  next();
 });
 bus.$on("changeSharedPinia", (e) => {});
 </script>

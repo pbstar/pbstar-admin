@@ -15,7 +15,7 @@ const props = defineProps({
   // 图标名称
   name: {
     type: String,
-    required: true,
+    default: "",
   },
   // 图标大小
   size: {
