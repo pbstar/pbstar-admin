@@ -76,13 +76,6 @@ export default defineConfig({
         },
       },
       plugins: [
-        pluginVue({
-          template: {
-            compilerOptions: {
-              isCustomElement: (tag) => /^micro-app/.test(tag),
-            },
-          },
-        }),
         checkUniqueKeyPlugin({
           checkPath: "./main/src",
           checkKeys: ["tableKey", "table-key"],

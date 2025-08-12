@@ -1,21 +1,27 @@
 <template>
   <!-- Element Plus 图标 -->
-  <el-icon v-if="isElIcon" :size="size" :color="color">
-    <component :is="elIconComponent" />
+  <el-icon v-if="iconType == 'ep'" :size="size" :color="color">
+    <component :is="epComponent" />
   </el-icon>
   <!-- Iconfont 图标 -->
-  <i v-else class="iconfont" :class="[iconClass]" :style="iconStyle"></i>
+  <i
+    v-else-if="iconType == 'icon'"
+    class="iconfont"
+    :class="name"
+    :style="iconStyle"
+  ></i>
 </template>
 
 <script setup>
 import { computed } from "vue";
 import * as ElIcons from "@element-plus/icons-vue";
+import "@Passets/iconfont/iconfont.css";
 
 const props = defineProps({
   // 图标名称
   name: {
     type: String,
-    default: "",
+    default: "el-icon-loading",
   },
   // 图标大小
   size: {
@@ -29,22 +35,21 @@ const props = defineProps({
   },
 });
 
-// 判断是否是Element Plus图标
-const isElIcon = computed(() => props.name.startsWith("el-icon-"));
-
-// 获取Element Plus图标组件
-const elIconComponent = computed(() => {
-  if (!isElIcon.value) return null;
-  const iconName = props.name.replace("el-icon", "");
-  // 首字母大写转换
-  const formattedName = iconName.replace(/-(\w)/g, (_, c) => c.toUpperCase());
-  return ElIcons[formattedName] || null;
+const iconType = computed(() => {
+  if (props.name.startsWith("el-icon-")) {
+    return "ep";
+  } else if (props.name.startsWith("p-icon-")) {
+    return "icon";
+  }
 });
 
-// Iconfont图标类名
-const iconClass = computed(() => {
-  if (isElIcon.value) return "";
-  return `icon-${props.name}`;
+// 获取Element Plus图标组件
+const epComponent = computed(() => {
+  if (iconType.value != "ep") return null;
+  const iconName = props.name
+    .replace("el-icon", "")
+    .replace(/-(\w)/g, (_, c) => c.toUpperCase());
+  return ElIcons[iconName] || null;
 });
 
 // 图标样式

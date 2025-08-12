@@ -119,7 +119,7 @@ defineExpose({
             label: '菜单图标',
           }"
         >
-          <PIconSelect :title="选择图标" v-model="detailInfo.icon" />
+          <PIconSelect title="选择图标" v-model="detailInfo.icon" />
         </p-item>
       </div>
     </p-collapse>

@@ -362,6 +362,7 @@ const handleClickBot = (btn) => {
 }
 .diabox {
   max-width: calc(100% - 20px);
+  max-height: calc(100% - 20px);
   background: var(--c-bg);
   border-radius: 6px;
   overflow: hidden;
@@ -386,7 +387,9 @@ const handleClickBot = (btn) => {
   & > .mid {
     width: 100%;
     min-height: 200px;
+    max-height: calc(100vh - 104px);
     padding-bottom: 20px;
+    overflow-y: auto;
   }
   & > .bot {
     width: 100%;

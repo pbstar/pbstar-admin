@@ -13,12 +13,16 @@ body {
 *:before,
 *:after {
   box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+*:not(.iconfont),
+*:not(.iconfont):before,
+*:not(.iconfont):after {
   font-family:
     PingFangSC,
     PingFang SC,
     Microsoft YaHei;
-  padding: 0;
-  margin: 0;
 }
 div::-webkit-scrollbar {
   width: 6px;
