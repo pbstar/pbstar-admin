@@ -57,7 +57,7 @@ const isMobile = computed(() => {
 // 白名单
 const whiteList = ["/login", "/admin/pUser", "/404", "/403"];
 onBeforeMount(async () => {
-  if (!sharedStore.userInfo && !freeLogin) {
+  if (!sharedStore.userInfo && freeLogin !== "T") {
     await getUserInfo();
   }
 });
