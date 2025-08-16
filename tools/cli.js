@@ -50,7 +50,6 @@ program
       ]);
 
       const { appType, appKey } = answers;
-
       const appPath = path.join(OUTPUT_DIR, appType, appKey);
 
       // 检查目录是否存在
