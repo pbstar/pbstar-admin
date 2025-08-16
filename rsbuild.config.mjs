@@ -3,7 +3,7 @@ import { pluginVue } from "@rsbuild/plugin-vue";
 import { pluginSass } from "@rsbuild/plugin-sass";
 import { checkUniqueKeyPlugin } from "./tools/plugins/checkUniqueKeyPlugin";
 import { distZipPlugin } from "./tools/plugins/distZipPlugin";
-import apps from "./apps/apps.json";
+import apps from "./apps/apps.json" with { type: "json" };
 
 const appsConfig = {};
 apps.forEach((item) => {

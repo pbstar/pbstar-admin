@@ -8,10 +8,15 @@ export const distZipPlugin = () => ({
     api.onAfterBuild(async () => {
       const distPath = api.context.distPath;
       const distName = path.basename(distPath);
-      const zipPath =
-        api.context.rootPath +
-        `/build/distZip/` +
-        `${distName + getNowTime("yyyymmddhhmm")}.zip`;
+      const zipDir = path.join(api.context.rootPath, "build", "distZip");
+      const zipPath = path.join(
+        zipDir,
+        `${distName + getNowTime("yyyymmddhhmm")}.zip`,
+      );
+
+      // 确保目录存在
+      await fs.ensureDir(zipDir);
+
       // 准备压缩
       const zip = new JSZip();
       await fs.ensureDir(distPath);

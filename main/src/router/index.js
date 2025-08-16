@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
-import apps from "../../../apps/apps.json";
+import apps from "../../../apps/apps.json" with { type: "json" };
 const isDev = import.meta.env.DEV;
 const appsRouter = apps.map((item) => {
   return {

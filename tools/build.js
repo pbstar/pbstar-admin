@@ -1,5 +1,8 @@
 import { execSync } from "child_process";
-import apps from "./apps/apps.json";
+import { program } from "commander";
+import inquirer from "inquirer";
+import chalk from "chalk";
+import apps from "../apps/apps.json" with { type: "json" };
 
 const list = ["main", ...apps.map((item) => item.key)];
 
@@ -21,16 +24,9 @@ program
 
       const { appKey } = answers;
 
-      if (!appKey) {
-        console.error(chalk.red("错误: 请选择要构建的应用模块。"));
-        process.exit(1);
-      }
-
-      console.log(chalk.blue(`构建应用模块: ${appKey}`));
-
       const command = `rsbuild build --environment ${appKey}`;
 
-      execSync(command, { stdio: "inherit" });
+      execSync(command, { stdio: "inherit", cwd: "../" });
 
       console.log(chalk.green(`应用模块 ${appKey} 构建完成`));
     } catch (err) {
