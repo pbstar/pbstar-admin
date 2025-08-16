@@ -4,7 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "create": "node ./index.js"
+    "create": "node ./cli.js",
+    "build": "node ./build.js",
+    "dev": "node ./dev.js"
   },
   "dependencies": {
     "chalk": "^5.4.1",

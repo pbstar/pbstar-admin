@@ -14,7 +14,6 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 // 定义路径
 const TEMPLATE_DIR = path.join(__dirname, "./template");
 const OUTPUT_DIR = path.join(__dirname, "../apps");
-const PROJECT_DIR = path.join(__dirname, "../");
 
 // 定义命令
 program
@@ -24,6 +23,12 @@ program
     try {
       // 交互式问答
       const answers = await inquirer.prompt([
+        {
+          type: "list",
+          name: "appType",
+          message: "子应用类型:",
+          choices: ["in", "out"],
+        },
         {
           type: "input",
           name: "appKey",
@@ -44,9 +49,9 @@ program
         },
       ]);
 
-      const { appKey } = answers;
+      const { appType, appKey } = answers;
 
-      const appPath = path.join(OUTPUT_DIR, appKey);
+      const appPath = path.join(OUTPUT_DIR, appType, appKey);
 
       // 检查目录是否存在
       if (fs.existsSync(appPath)) {
@@ -75,6 +80,7 @@ program
         }
         appsJson.push({
           key: appKey,
+          type: appType,
           devPort: port,
           proUrl: "",
         });
@@ -95,20 +101,6 @@ program
         from: [/P{key}/g],
         to: [appKey],
       });
-
-      // package.json文件中添加子应用配置
-      const packageJsonPath = path.join(PROJECT_DIR, "package.json");
-      if (fs.existsSync(packageJsonPath)) {
-        const packageJson = fs.readJsonSync(packageJsonPath);
-        if (!packageJson.scripts) {
-          packageJson.scripts = {};
-        }
-        packageJson.scripts[`dev:${appKey}`] =
-          `rsbuild dev --environment ${appKey} --port ${port}`;
-        packageJson.scripts[`build:${appKey}`] =
-          `rsbuild build --environment ${appKey}`;
-        fs.writeJsonSync(packageJsonPath, packageJson, { spaces: 2 });
-      }
 
       console.log(chalk.green("子应用创建成功!"));
       console.log(chalk.blue("\n下一步:"));

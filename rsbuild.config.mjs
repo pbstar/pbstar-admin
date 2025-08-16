@@ -1,16 +1,17 @@
 import { defineConfig } from "@rsbuild/core";
 import { pluginVue } from "@rsbuild/plugin-vue";
 import { pluginSass } from "@rsbuild/plugin-sass";
-import { checkUniqueKeyPlugin } from "./build/plugins/checkUniqueKeyPlugin";
-import { distZipPlugin } from "./build/plugins/distZipPlugin";
+import { checkUniqueKeyPlugin } from "./tools/plugins/checkUniqueKeyPlugin";
+import { distZipPlugin } from "./tools/plugins/distZipPlugin";
 import apps from "./apps/apps.json";
 
 const appsConfig = {};
 apps.forEach((item) => {
+  const base = `./apps/${item.type}/${item.key}`;
   appsConfig[item.key] = {
     source: {
       entry: {
-        index: `./apps/${item.key}/src/main.js`,
+        index: `${base}/src/main.js`,
       },
     },
     output: {
@@ -20,12 +21,12 @@ apps.forEach((item) => {
     },
     resolve: {
       alias: {
-        "@": `./apps/${item.key}/src`,
+        "@": `${base}/src`,
       },
     },
     plugins: [
       checkUniqueKeyPlugin({
-        checkPath: `./apps/${item.key}/src`,
+        checkPath: `${base}/src`,
         checkKeys: ["tableKey", "table-key"],
       }),
     ],
@@ -40,7 +41,6 @@ export default defineConfig({
   resolve: {
     alias: {
       "@Pcomponents": "./components",
-      "@Pconfig": "./config",
       "@Passets": "./assets",
     },
   },

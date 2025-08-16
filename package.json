@@ -7,14 +7,12 @@
   "scripts": {
     "prepare": "husky",
     "preinstall": "npx only-allow pnpm",
+    "create": "pnpm run -filter tools create",
+    "precreate": "npx only-allow pnpm",
+    "dev": "pnpm run -filter tools dev",
     "predev": "npx only-allow pnpm",
-    "create": "pnpm run -filter cli create",
-    "dev": "rsbuild dev --environment main --port 8800 --open",
-    "build": "rsbuild build --environment main",
-    "dev:example": "rsbuild dev --environment example --port 8801",
-    "build:example": "rsbuild build --environment example",
-    "dev:system": "rsbuild dev --environment system --port 8802",
-    "build:system": "rsbuild build --environment system"
+    "build": "pnpm run -filter tools build",
+    "prebuild": "npx only-allow pnpm"
   },
   "lint-staged": {
     "*.{js,vue,css,json,md}": [

@@ -1,5 +1,6 @@
 packages:
-  - "apps/*"
   - "main"
   - "components"
-  - "cli"
+  - "tools"
+  - "apps/in/*"
+  - "apps/out/*"
