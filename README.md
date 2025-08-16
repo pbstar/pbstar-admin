@@ -30,10 +30,8 @@ cd pbstar-admin
 npm install -g pnpm
 # 安装依赖
 pnpm install
-# 启动main包
+# 启动项目
 pnpm run dev
-# 启动应用包
-pnpm run dev:<包名>
 ```
 
 ## 创建子应用
@@ -59,13 +57,14 @@ pnpm remove <依赖名> --filter <包名>
 
 ```
 ├── apps                   # 子应用
-│ ├── system               # 系统管理
-│ └── example              # 示例应用
+│ ├── inner                # 内部应用
+│ ├── outer                # 外部应用
+│ └── apps.json            # 子应用配置
 ├── assets                 # 静态资源
-├── build                  # 打包脚本
-├── cli                    # 脚手架
+├── build                  # 打包产物
 ├── components             # 组件
 ├── main                   # 主应用
+├── tools                  # 工具
 ├── package.json           # 依赖
 ├── pnpm-workspace.yaml    # 工作区配置
 ├── rsbuild.config.mjs     # 打包配置
