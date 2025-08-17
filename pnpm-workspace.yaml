@@ -2,6 +2,5 @@ packages:
   - "main"
   - "components"
   - "tools"
-  - "apps/in/*"
-  - "apps/out/*"
+  - "apps/*"
   - "../pbstar-admin-apps/*"
