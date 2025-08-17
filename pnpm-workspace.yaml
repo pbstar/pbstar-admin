@@ -4,3 +4,4 @@ packages:
   - "tools"
   - "apps/in/*"
   - "apps/out/*"
+  - "../pbstar-admin-apps/*"

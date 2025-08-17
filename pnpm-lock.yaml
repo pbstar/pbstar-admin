@@ -58,6 +58,8 @@ importers:
         specifier: ^3.5.3
         version: 3.5.3
 
+  ../pbstar-admin-apps/equipment: {}
+
   apps/in/example:
     dependencies:
       '@wangeditor-next/editor':

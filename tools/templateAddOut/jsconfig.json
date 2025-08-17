@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "module": "esnext",
+    "target": "esnext",
+    "baseUrl": "./",
+    "jsx": "preserve"
+  },
+  "exclude": ["node_modules"]
+}

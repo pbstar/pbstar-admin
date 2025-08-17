@@ -1,13 +1,24 @@
 import { defineConfig } from "@rsbuild/core";
+import fs from "fs-extra";
 import { pluginVue } from "@rsbuild/plugin-vue";
 import { pluginSass } from "@rsbuild/plugin-sass";
 import { checkUniqueKeyPlugin } from "./tools/plugins/checkUniqueKeyPlugin";
 import { distZipPlugin } from "./tools/plugins/distZipPlugin";
+import { outAppRegisterPackages } from "./tools/plugins/outAppRegisterPackages";
+
 import apps from "./apps/apps.json" with { type: "json" };
+import rootPackage from "./package.json" with { type: "json" };
 
 const appsConfig = {};
 apps.forEach((item) => {
-  const base = `./apps/${item.type}/${item.key}`;
+  let base = "";
+  let appPackage = null;
+  if (item.type === "in") {
+    base = `./apps/${item.key}`;
+  } else {
+    base = `../pbstar-admin-apps/${item.key}`;
+    appPackage = fs.readJsonSync(`${base}/package.json`);
+  }
   appsConfig[item.key] = {
     source: {
       entry: {
@@ -22,6 +33,7 @@ apps.forEach((item) => {
     resolve: {
       alias: {
         "@": `${base}/src`,
+        ...(appPackage ? outAppRegisterPackages(rootPackage, appPackage) : {}),
       },
     },
     plugins: [
