@@ -14,6 +14,10 @@
     <a href="https://github.com/pbstar/pbstar-admin"><img src="https://img.shields.io/badge/WeChat-P24612582-brightgreen.svg"></a>
 </p>
 
+## 架构图
+
+![架构图](https://github.com/pbstar/pbstar-admin-docs/blob/main/public/architecture.png)
+
 ## 环境要求
 
 - node >= 18.12.0
