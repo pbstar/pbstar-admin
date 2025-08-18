@@ -1,6 +1,7 @@
 packages:
   - "main"
   - "components"
+  - "assets"
   - "tools"
   - "apps/*"
   - "../pbstar-admin-apps/*"

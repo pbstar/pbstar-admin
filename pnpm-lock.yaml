@@ -60,7 +60,7 @@ importers:
 
   ../pbstar-admin-apps/equipment: {}
 
-  apps/in/example:
+  apps/example:
     dependencies:
       '@wangeditor-next/editor':
         specifier: ^5.6.34
@@ -78,7 +78,9 @@ importers:
         specifier: ^5.6.1
         version: 5.6.1(vue@3.5.13)
 
-  apps/in/system: {}
+  apps/system: {}
+
+  assets: {}
 
   components:
     dependencies:
