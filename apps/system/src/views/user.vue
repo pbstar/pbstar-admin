@@ -66,7 +66,6 @@ const initTable = () => {
   tableData.value = [];
   request
     .post({
-      base: "base",
       url: "/system/user/getList",
       data: params,
     })
@@ -82,7 +81,6 @@ const initTable = () => {
 const getRoleList = () => {
   request
     .get({
-      base: "base",
       url: "/system/role/getAllList",
     })
     .then((res) => {
@@ -122,7 +120,6 @@ const tableRightBtnClick = ({ row, btn }) => {
       .then(() => {
         request
           .post({
-            base: "base",
             url: "/system/user/delete",
             data: { idList: [row.id] },
           })
@@ -152,7 +149,6 @@ const diaBotBtnClick = ({ btn }) => {
       detailType.value == "add" ? "/system/user/create" : "/system/user/update";
     request
       .post({
-        base: "base",
         url,
         data: detailInfo,
       })

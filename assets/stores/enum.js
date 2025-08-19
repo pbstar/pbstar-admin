@@ -19,7 +19,6 @@ export const useEnumStore = defineStore("enum", () => {
         const str = types.filter((type) => !enums.value[type]).join(",");
         request
           .get({
-            base: "base",
             url: "/main/getEnum",
             data: { enumKey: str },
           })

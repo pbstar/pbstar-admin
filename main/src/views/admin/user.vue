@@ -58,7 +58,6 @@ const formData = ref([
 const toSave = () => {
   request
     .post({
-      base: "base",
       url: "/main/updateMyInfo",
       data: detailInfo.value,
     })

@@ -144,7 +144,6 @@ const handleSubmit = async () => {
     return;
   }
   const res = await request.post({
-    base: "base",
     url: "/main/login",
     data: {
       username: loginForm.value.username,
@@ -163,7 +162,6 @@ const handleSubmit = async () => {
     };
     request
       .get({
-        base: "base",
         url: "/main/getMyNavTreeList",
       })
       .then((r) => {

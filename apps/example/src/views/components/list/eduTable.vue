@@ -60,7 +60,6 @@ const initTable = () => {
   tableData.value = [];
   request
     .post({
-      base: "base",
       url: "/example/person/getEducationList",
       data: {
         personId: props.id,
@@ -78,7 +77,6 @@ const tableRightBtnClick = ({ row, btn }) => {
   if (btn === "edit") {
     request
       .get({
-        base: "base",
         url: "/example/person/getEducationDetail",
         data: { id: row.id },
       })
@@ -98,7 +96,6 @@ const tableRightBtnClick = ({ row, btn }) => {
       .then(() => {
         request
           .post({
-            base: "base",
             url: "/example/person/deleteEducation",
             data: { idList: [row.id] },
           })
@@ -131,7 +128,6 @@ const diaBotBtnClick = ({ btn }) => {
         : "/example/person/updateEducation";
     request
       .post({
-        base: "base",
         url,
         data: detailInfo.value,
       })

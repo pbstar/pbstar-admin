@@ -30,7 +30,6 @@ const defaultInfo = {
   template: "main",
   childKey: "",
   title: "",
-  apiKey: "base",
   apiBase: "",
   detailDiaType: "page",
   fields: [],
@@ -143,10 +142,6 @@ const tableTopBtnClick = ({ btn }) => {
     ) {
       if (!info.value.key) {
         ElMessage.error("请输入key");
-        return;
-      }
-      if (!info.value.apiKey) {
-        ElMessage.error("请选择apiKey");
         return;
       }
       if (!info.value.apiBase) {
@@ -273,17 +268,6 @@ const toHistoryUse = (row) => {
           class="tRow"
           v-show="info.template === 'main' || info.template === 'childTable'"
         >
-          <p-item
-            class="item"
-            :config="{
-              type: 'select',
-              label: 'apiKey',
-              placeholder: '请选择接口Key',
-              options: [{ label: 'base', value: 'base' }],
-            }"
-            v-model="info.apiKey"
-          >
-          </p-item>
           <p-item
             class="item"
             :config="{

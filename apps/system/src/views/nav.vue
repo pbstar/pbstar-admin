@@ -48,7 +48,6 @@ const initTable = () => {
   tableData.value = [];
   request
     .post({
-      base: "base",
       url: "/system/nav/getList",
       data: params,
     })
@@ -72,7 +71,6 @@ const tableRightBtnClick = ({ row, btn }) => {
       .then(() => {
         request
           .post({
-            base: "base",
             url: "/system/nav/delete",
             data: { idList: [row.id] },
           })
@@ -102,7 +100,6 @@ const diaBotBtnClick = ({ btn }) => {
       detailType.value == "add" ? "/system/nav/create" : "/system/nav/update";
     request
       .post({
-        base: "base",
         url,
         data: detailInfo,
       })

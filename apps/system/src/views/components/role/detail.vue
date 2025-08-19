@@ -35,7 +35,6 @@ onBeforeMount(() => {
 const getNavList = () => {
   request
     .get({
-      base: "base",
       url: "/system/nav/getAllList",
     })
     .then((res) => {
@@ -56,7 +55,6 @@ const getNavList = () => {
 const getDetailInfo = () => {
   request
     .get({
-      base: "base",
       url: "/system/role/getDetail",
       data: {
         id: detailId.value,

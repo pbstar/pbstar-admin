@@ -31,7 +31,6 @@ onBeforeMount(() => {
 const getRoleList = () => {
   request
     .get({
-      base: "base",
       url: "/system/role/getAllList",
     })
     .then((res) => {
@@ -50,7 +49,6 @@ const getRoleList = () => {
 const getDetailInfo = () => {
   request
     .get({
-      base: "base",
       url: "/system/user/getDetail",
       data: {
         id: detailId.value,

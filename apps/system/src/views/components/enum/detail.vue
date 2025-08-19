@@ -44,7 +44,6 @@ onBeforeMount(() => {
 const getDetailInfo = () => {
   request
     .get({
-      base: "base",
       url: "/system/enum/getDetail",
       data: {
         id: detailId.value,

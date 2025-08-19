@@ -37,12 +37,7 @@ const request = (config) => {
     config.headers.token = token;
   }
 
-  let baseUrl = "";
-  if (config.url.includes("http")) {
-    baseUrl = "";
-  } else {
-    baseUrl = `/api_${config.base}` || "";
-  }
+  const baseUrl = config.url.startsWith("http") ? "" : "/api";
   const conf = {
     baseURL: baseUrl,
     timeout: 6000,
@@ -63,20 +58,18 @@ const request = (config) => {
       });
   });
 };
-const get = ({ base, url, data, config }) => {
+const get = ({ url, data, config }) => {
   const conf = {
     method: "get",
-    base,
     url,
     params: data,
     ...config,
   };
   return request(conf);
 };
-const post = ({ base, url, data, config }) => {
+const post = ({ url, data, config }) => {
   const conf = {
     method: "post",
-    base,
     url,
     data,
     ...config,

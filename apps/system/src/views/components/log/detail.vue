@@ -68,7 +68,6 @@ onBeforeMount(() => {
 const getDetailInfo = () => {
   request
     .get({
-      base: "base",
       url: "/system/log/getDetail",
       data: {
         id: detailId.value,

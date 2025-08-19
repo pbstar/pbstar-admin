@@ -58,7 +58,6 @@ const initTable = () => {
   tableData.value = [];
   request
     .post({
-      base: "base",
       url: "/system/enum/getList",
       data: params,
     })
@@ -91,7 +90,6 @@ const tableRightBtnClick = ({ row, btn }) => {
       .then(() => {
         request
           .post({
-            base: "base",
             url: "/system/enum/delete",
             data: { idList: [row.id] },
           })
@@ -125,7 +123,6 @@ const diaBotBtnClick = ({ btn }) => {
       detailType.value == "add" ? "/system/enum/create" : "/system/enum/update";
     request
       .post({
-        base: "base",
         url,
         data: detailInfo,
       })

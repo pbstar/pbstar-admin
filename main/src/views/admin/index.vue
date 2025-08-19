@@ -68,7 +68,6 @@ const toUnFull = () => {
 const getUserInfo = async () => {
   try {
     const userRes = await request.post({
-      base: "base",
       url: "/main/loginByToken",
     });
     if (userRes.code != 200 || !userRes.data) {
@@ -88,7 +87,6 @@ const getUserInfo = async () => {
     };
     bus.$emit("changeSharedPinia", { userInfo: sharedStore.userInfo });
     const navRes = await request.get({
-      base: "base",
       url: "/main/getMyNavTreeList",
     });
     if (navRes.code != 200 || !navRes.data) {

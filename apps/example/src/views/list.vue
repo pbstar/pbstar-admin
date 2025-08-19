@@ -132,7 +132,6 @@ const toPageChange = ({ pageNumber, pageSize }) => {
 const initTable = () => {
   request
     .post({
-      base: "base",
       url: "/example/person/getList",
       data: { ...searchValue.value, ...pagination.value },
     })
@@ -175,7 +174,6 @@ const toRightBtnClick = ({ btn, row }) => {
     }).then(() => {
       request
         .post({
-          base: "base",
           url: "/example/person/delete",
           data: {
             idList: [row.id],
@@ -206,7 +204,6 @@ const toBotBtnClick = ({ btn }) => {
         : "/example/person/update";
     request
       .post({
-        base: "base",
         url,
         data: detailInfo,
       })
@@ -226,7 +223,6 @@ const toBotBtnClick = ({ btn }) => {
 const toExport = (callBack) => {
   request
     .post({
-      base: "base",
       url: "/example/person/getList",
       data: {
         pageNumber: 1,

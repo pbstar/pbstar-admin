@@ -58,9 +58,9 @@ export default defineConfig({
   },
   server: {
     proxy: {
-      "/api_base": {
+      "/api": {
         target: import.meta.env.PUBLIC_API_BASE_URL,
-        pathRewrite: { "^/api_base": "" },
+        pathRewrite: { "^/api": "" },
         changeOrigin: true,
       },
     },

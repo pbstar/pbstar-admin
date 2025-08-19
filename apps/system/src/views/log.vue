@@ -64,7 +64,6 @@ const initTable = () => {
   tableData.value = [];
   request
     .post({
-      base: "base",
       url: "/system/log/getList",
       data: params,
     })
@@ -97,7 +96,6 @@ const tableRightBtnClick = ({ row, btn }) => {
       .then(() => {
         request
           .post({
-            base: "base",
             url: "/system/log/delete",
             data: { idList: [row.id] },
           })
@@ -131,7 +129,6 @@ const diaBotBtnClick = ({ btn }) => {
       detailType.value == "add" ? "/system/log/create" : "/system/log/update";
     request
       .post({
-        base: "base",
         url,
         data: detailInfo,
       })

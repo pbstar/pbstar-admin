@@ -58,7 +58,6 @@ const initTable = () => {
   tableData.value = [];
   request
     .post({
-      base: "base",
       url: "/system/enum/getEnumList",
       data: {
         enumId: props.id,
@@ -76,7 +75,6 @@ const tableRightBtnClick = ({ row, btn }) => {
   if (btn === "edit") {
     request
       .get({
-        base: "base",
         url: "/system/enum/getEnumDetail",
         data: { id: row.id },
       })
@@ -96,7 +94,6 @@ const tableRightBtnClick = ({ row, btn }) => {
       .then(() => {
         request
           .post({
-            base: "base",
             url: "/system/enum/deleteEnum",
             data: { idList: [row.id] },
           })
@@ -129,7 +126,6 @@ const diaBotBtnClick = ({ btn }) => {
         : "/system/enum/updateEnum";
     request
       .post({
-        base: "base",
         url,
         data: detailInfo.value,
       })

@@ -36,7 +36,6 @@ const toFull = () => {
 const toLoginOut = () => {
   request
     .post({
-      base: "base",
       url: "/main/logout",
     })
     .then((res) => {

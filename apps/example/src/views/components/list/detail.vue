@@ -88,7 +88,6 @@ onMounted(() => {
 const getDetailInfo = () => {
   request
     .get({
-      base: "base",
       url: "/example/person/getDetail",
       data: {
         id: detailId.value,
