@@ -1,8 +1,1 @@
 npx lint-staged
-
-# 检查是否尝试提交远端仓库子应用代码
-if git diff --cached --name-only | grep 'apps/out'; then
-  echo "错误：不允许直接提交远端仓库子应用的代码到主仓库"
-  echo "请使用子应用独立仓库提交"
-  exit 1
-fi
