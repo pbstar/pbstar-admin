@@ -8,6 +8,9 @@
     <template #prefix>
       <p-icon :name="input" />
     </template>
+    <template #suffix>
+      <p-icon name="el-icon-arrow-down" />
+    </template>
   </el-input>
   <p-dialog
     :title="props.title"

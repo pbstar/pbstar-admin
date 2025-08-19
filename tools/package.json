@@ -4,9 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "create": "node --no-warnings ./cli.mjs",
-    "build": "node --no-warnings ./build.mjs",
-    "dev": "node --no-warnings ./dev.mjs"
+    "create": "node ./cli.mjs",
+    "build": "node ./build.mjs",
+    "dev": "node ./dev.mjs"
   },
   "dependencies": {
     "chalk": "^5.4.1",
