@@ -21,7 +21,7 @@ const props = defineProps({
   // 图标名称
   name: {
     type: String,
-    default: "el-icon-loading",
+    default: "",
   },
   // 图标大小
   size: {
@@ -57,7 +57,9 @@ const iconStyle = computed(() => {
   const style = {};
   if (props.size) {
     style.fontSize =
-      typeof props.size === "number" ? `${props.size}px` : props.size;
+      typeof props.size === "number" || !props.size.includes("px")
+        ? `${props.size}px`
+        : props.size;
   }
   if (props.color) {
     style.color = props.color;

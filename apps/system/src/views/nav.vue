@@ -32,11 +32,35 @@ const detailType = ref("");
 const detailId = ref("");
 const isDetail = ref(false);
 const detailRef = ref(null);
+const currentNode = ref("");
+const data = ref([]);
 
 onBeforeMount(() => {
+  initTree();
   initTable();
 });
-
+const initTree = () => {
+  data.value = [
+    {
+      value: 1,
+      label: "应用中心",
+      type: "group",
+      children: [
+        {
+          value: 2,
+          label: "系统应用",
+          type: "app",
+        },
+        {
+          value: 3,
+          label: "示例应用",
+          type: "app",
+        },
+      ],
+    },
+  ];
+  currentNode.value = 2;
+};
 const toSearch = ({ data }) => {
   searchValue.value = data;
   initTable();
@@ -116,6 +140,14 @@ const diaBotBtnClick = ({ btn }) => {
     isDetail.value = false;
   }
 };
+const handleNodeClick = (data) => {
+  currentNode.value = data.value;
+  if (data.type == "app") {
+    initTable();
+  } else {
+    tableData.value = [];
+  }
+};
 </script>
 
 <template>
@@ -123,7 +155,17 @@ const diaBotBtnClick = ({ btn }) => {
     <p-title :list="['菜单管理']"></p-title>
 
     <p-left-right class="content">
-      <template #left>1111</template>
+      <template #left>
+        <el-tree
+          style="margin-top: 10px"
+          :data="data"
+          node-key="value"
+          highlight-current
+          default-expand-all
+          @node-click="handleNodeClick"
+          :current-node-key="currentNode"
+        />
+      </template>
       <template #right>
         <p-search
           style="margin-top: 10px"

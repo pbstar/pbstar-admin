@@ -5,7 +5,7 @@ import useSharedStore from "@Passets/stores/shared";
 import WujieVue from "wujie-vue3";
 import request from "@Passets/utils/request";
 import PIcon from "@Pcomponents/base/p-icon/index.vue";
-// import AppSelect from "../more/appSelect.vue"
+import AppSelect from "../more/appSelect.vue";
 const { bus } = WujieVue;
 const sharedStore = useSharedStore();
 const router = useRouter();
@@ -64,7 +64,7 @@ watch(
       <div class="title">{{ title }}</div>
     </div>
     <div class="right">
-      <!-- <apps-select class="apps" /> -->
+      <app-select class="appSelect" />
       <p-icon class="full" name="el-icon-full-screen" @click="toFull" />
       <el-switch
         v-model="theme"
@@ -135,7 +135,7 @@ watch(
     display: flex;
     align-items: center;
     padding-right: 20px;
-    .apps {
+    .appSelect {
       margin-right: 20px;
     }
     .full {
