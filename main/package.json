@@ -6,6 +6,6 @@
   "scripts": {},
   "dependencies": {
     "wujie-polyfill": "^1.1.3",
-    "wujie-vue3": "^1.0.28"
+    "wujie-vue3": "^1.0.29"
   }
 }

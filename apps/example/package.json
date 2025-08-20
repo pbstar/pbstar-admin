@@ -5,10 +5,10 @@
   "type": "module",
   "scripts": {},
   "dependencies": {
-    "@wangeditor-next/editor": "^5.6.34",
+    "@wangeditor-next/editor": "^5.6.43",
     "@wangeditor-next/editor-for-vue": "^5.1.14",
     "echarts": "^5.6.0",
     "fitview": "^0.3.3",
-    "md-editor-v3": "^5.6.1"
+    "md-editor-v3": "^5.8.4"
   }
 }
