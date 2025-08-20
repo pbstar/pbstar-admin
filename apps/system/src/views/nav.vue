@@ -6,6 +6,7 @@ import PTable from "@Pcomponents/base/p-table/index.vue";
 import PSearch from "@Pcomponents/base/p-search/index.vue";
 import PTitle from "@Pcomponents/base/p-title/index.vue";
 import PDialog from "@Pcomponents/base/p-dialog/index.vue";
+import PLeftRight from "@Pcomponents/layout/p-leftRight/index.vue";
 import Detail from "./components/nav/detail.vue";
 import PIcon from "@Pcomponents/base/p-icon/index.vue";
 import { structure } from "@Passets/utils/array";
@@ -14,7 +15,6 @@ const searchData = ref([
   { label: "菜单名称", key: "name", type: "input" },
   { label: "菜单链接", key: "url", type: "input" },
 ]);
-const showSearch = ref(true);
 const searchValue = ref({});
 const tableColumn = ref([
   { label: "菜单名称", key: "name" },
@@ -120,46 +120,43 @@ const diaBotBtnClick = ({ btn }) => {
 
 <template>
   <div class="page">
-    <p-title :list="['菜单管理']">
-      <el-button
-        type="primary"
-        size="small"
-        text
-        style="margin-bottom: -8px"
-        @click="showSearch = !showSearch"
-      >
-        {{ showSearch ? "收起" : "查询" }}
-      </el-button>
-    </p-title>
+    <p-title :list="['菜单管理']"></p-title>
 
-    <p-search
-      v-show="showSearch"
-      style="margin-top: 10px"
-      :data="searchData"
-      @btnClick="toSearch"
-    ></p-search>
+    <p-left-right class="content">
+      <template #left>1111</template>
+      <template #right>
+        <p-search
+          style="margin-top: 10px"
+          :data="searchData"
+          @btnClick="toSearch"
+        ></p-search>
 
-    <p-table
-      style="margin-top: 10px"
-      :data="tableData"
-      :column="tableColumn"
-      :topBtn="tableTopBtn"
-      :rightBtn="tableRightBtn"
-      tableKey="nav_1"
-      showSetting
-      @topBtnClick="tableTopBtnClick"
-      @rightBtnClick="tableRightBtnClick"
-    >
-      <template #icon="scope">
-        <div v-if="scope.row.icon" style="display: flex; align-items: center">
-          <p-icon
-            style="margin-right: 5px; font-size: 16px"
-            :name="scope.row.icon"
-          />
-          <span>{{ scope.row.icon }}</span>
-        </div>
+        <p-table
+          style="margin-top: 10px"
+          :data="tableData"
+          :column="tableColumn"
+          :topBtn="tableTopBtn"
+          :rightBtn="tableRightBtn"
+          tableKey="nav_1"
+          showSetting
+          @topBtnClick="tableTopBtnClick"
+          @rightBtnClick="tableRightBtnClick"
+        >
+          <template #icon="scope">
+            <div
+              v-if="scope.row.icon"
+              style="display: flex; align-items: center"
+            >
+              <p-icon
+                style="margin-right: 5px; font-size: 16px"
+                :name="scope.row.icon"
+              />
+              <span>{{ scope.row.icon }}</span>
+            </div>
+          </template>
+        </p-table>
       </template>
-    </p-table>
+    </p-left-right>
 
     <p-dialog
       title="菜单管理详情页"
@@ -179,7 +176,13 @@ const diaBotBtnClick = ({ btn }) => {
 <style scoped lang="scss">
 .page {
   width: 100%;
+  height: 100%;
   padding: 0 10px;
   background-color: var(--c-bg);
+  display: flex;
+  flex-direction: column;
+  .content {
+    flex: 1;
+  }
 }
 </style>

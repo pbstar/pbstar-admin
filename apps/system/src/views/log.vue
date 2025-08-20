@@ -16,7 +16,6 @@ const searchData = ref([
     type: "dateRange",
   },
 ]);
-const showSearch = ref(true);
 const searchValue = ref({});
 const tableColumn = ref([
   { label: "用户名", key: "userName" },
@@ -149,20 +148,9 @@ const diaBotBtnClick = ({ btn }) => {
 
 <template>
   <div class="page">
-    <p-title :list="['操作日志']">
-      <el-button
-        type="primary"
-        size="small"
-        text
-        style="margin-bottom: -8px"
-        @click="showSearch = !showSearch"
-      >
-        {{ showSearch ? "收起" : "查询" }}
-      </el-button>
-    </p-title>
+    <p-title :list="['操作日志']"></p-title>
 
     <p-search
-      v-show="showSearch"
       style="margin-top: 10px"
       :data="searchData"
       @btnClick="toSearch"

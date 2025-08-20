@@ -13,7 +13,6 @@ const searchData = ref([
   { label: "账号", key: "username", type: "input" },
   { label: "角色", key: "role", type: "select" },
 ]);
-const showSearch = ref(true);
 const searchValue = ref({});
 const tableColumn = ref([
   { label: "姓名", key: "name" },
@@ -169,20 +168,9 @@ const diaBotBtnClick = ({ btn }) => {
 
 <template>
   <div class="page">
-    <p-title :list="['用户管理']">
-      <el-button
-        type="primary"
-        size="small"
-        text
-        style="margin-bottom: -8px"
-        @click="showSearch = !showSearch"
-      >
-        {{ showSearch ? "收起" : "查询" }}
-      </el-button>
-    </p-title>
+    <p-title :list="['用户管理']"></p-title>
 
     <p-search
-      v-show="showSearch"
       style="margin-top: 10px"
       :data="searchData"
       @btnClick="toSearch"

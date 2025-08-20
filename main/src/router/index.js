@@ -48,12 +48,12 @@ const router = createRouter({
     {
       path: "/403",
       name: "403",
-      component: () => import("@Pcomponents/page/default/403.vue"),
+      component: () => import("@Pcomponents/page/403.vue"),
     },
     {
       path: "/:pathMatch(.*)*",
       name: "notFound",
-      component: () => import("@Pcomponents/page/default/404.vue"),
+      component: () => import("@Pcomponents/page/404.vue"),
     },
   ],
 });

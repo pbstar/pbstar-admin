@@ -1,18 +1,7 @@
 <template>
   <div class="page">
-    <p-title :list="['用户列表']">
-      <el-button
-        type="primary"
-        size="small"
-        text
-        style="margin-bottom: -8px"
-        @click="showSearch = !showSearch"
-      >
-        {{ showSearch ? "收起" : "查询" }}
-      </el-button>
-    </p-title>
+    <p-title :list="['用户列表']"></p-title>
     <p-search
-      v-show="showSearch"
       style="margin-top: 10px"
       ref="searchRef"
       :data="searchData"
@@ -80,7 +69,6 @@ const pagination = ref({
   total: 0,
 });
 const searchRef = ref(null);
-const showSearch = ref(true);
 const searchData = ref([
   { key: "name", label: "姓名", type: "input" },
   { key: "age", label: "年龄", type: "inputNumber" },
