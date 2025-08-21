@@ -5,51 +5,66 @@ import { pluginSass } from "@rsbuild/plugin-sass";
 import { checkUniqueKeyPlugin } from "./tools/plugins/checkUniqueKeyPlugin";
 import { distZipPlugin } from "./tools/plugins/distZipPlugin";
 import { outAppRegisterPackages } from "./tools/plugins/outAppRegisterPackages";
-
 import apps from "./apps/apps.json" with { type: "json" };
 import rootPackage from "./package.json" with { type: "json" };
 
-const appsConfig = {};
-apps.forEach((item) => {
-  let base = "";
-  let appPackage = null;
-  if (item.type === "in") {
-    base = `./apps/${item.key}`;
-  } else {
-    base = `../pbstar-admin-apps/${item.key}`;
-    appPackage = fs.readJsonSync(`${base}/package.json`);
-  }
-  appsConfig[item.key] = {
+const createAppConfig = (app) => {
+  const isInternal = app.type === "in";
+  const basePath = isInternal
+    ? `./apps/${app.key}`
+    : `../pbstar-admin-apps/${app.key}`;
+  const appPackage = isInternal
+    ? null
+    : fs.readJsonSync(`${basePath}/package.json`);
+
+  return {
     source: {
-      entry: {
-        index: `${base}/src/main.js`,
-      },
+      entry: { index: `${basePath}/src/main.js` },
     },
     output: {
-      distPath: {
-        root: `./build/dist/${item.key}`,
-      },
+      distPath: { root: `./build/dist/${app.key}` },
     },
     resolve: {
       alias: {
-        "@": `${base}/src`,
+        "@": basePath + "/src",
         ...(appPackage ? outAppRegisterPackages(rootPackage, appPackage) : {}),
       },
     },
     plugins: [
       checkUniqueKeyPlugin({
-        checkPath: `${base}/src`,
+        checkPath: `${basePath}/src`,
         checkKeys: ["tableKey", "table-key"],
       }),
     ],
   };
-});
+};
+
+const mainConfig = {
+  html: {
+    template: "./main/src/assets/html/index.html",
+    title: import.meta.env.PUBLIC_TITLE,
+    favicon: "./main/src/assets/imgs/logo.png",
+  },
+  source: {
+    entry: { index: "./main/src/main.js" },
+  },
+  output: {
+    distPath: { root: "./build/dist/main" },
+  },
+  resolve: {
+    alias: { "@": "./main/src" },
+  },
+  plugins: [
+    checkUniqueKeyPlugin({
+      checkPath: "./main/src",
+      checkKeys: ["tableKey", "table-key"],
+    }),
+  ],
+};
 
 export default defineConfig({
   plugins: [pluginVue(), pluginSass(), distZipPlugin()],
-  output: {
-    legalComments: "none",
-  },
+  output: { legalComments: "none" },
   resolve: {
     alias: {
       "@Pcomponents": "./components",
@@ -66,34 +81,7 @@ export default defineConfig({
     },
   },
   environments: {
-    main: {
-      html: {
-        template: "./main/src/assets/html/index.html",
-        title: import.meta.env.PUBLIC_TITLE,
-        favicon: "./main/src/assets/imgs/logo.png",
-      },
-      source: {
-        entry: {
-          index: "./main/src/main.js",
-        },
-      },
-      output: {
-        distPath: {
-          root: "./build/dist/main",
-        },
-      },
-      resolve: {
-        alias: {
-          "@": "./main/src",
-        },
-      },
-      plugins: [
-        checkUniqueKeyPlugin({
-          checkPath: "./main/src",
-          checkKeys: ["tableKey", "table-key"],
-        }),
-      ],
-    },
-    ...appsConfig,
+    main: mainConfig,
+    ...Object.fromEntries(apps.map((app) => [app.key, createAppConfig(app)])),
   },
 });
