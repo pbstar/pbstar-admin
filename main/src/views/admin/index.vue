@@ -30,7 +30,7 @@
   </div>
 </template>
 <script setup>
-import { computed, onBeforeMount } from "vue";
+import { computed, onBeforeMount, onUnmounted } from "vue";
 import { ElMessage } from "element-plus";
 import { RouterView, useRouter, useRoute } from "vue-router";
 import PIcon from "@Pcomponents/base/p-icon/index.vue";
@@ -125,6 +125,9 @@ router.beforeEach((to, from, next) => {
   next();
 });
 bus.$on("changeSharedPinia", (e) => {});
+onUnmounted(() => {
+  bus.$off("changeSharedPinia");
+});
 </script>
 <style scoped lang="scss">
 .pa_page {

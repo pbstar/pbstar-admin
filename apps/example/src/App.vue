@@ -1,39 +1,36 @@
 <script setup>
 import { RouterView, useRouter } from "vue-router";
+import { onUnmounted } from "vue";
 import useSharedStore from "@Passets/stores/shared";
+import { changeTheme } from "@Passets/utils/theme";
+
 const sharedStore = useSharedStore();
 const router = useRouter();
 // 子应用中添加处理
-if (window.__POWERED_BY_WUJIE__) {
-  const handleSharedPinia = (e) => {
-    for (const key in e) {
-      sharedStore[key] = e[key];
-      if (key == "isDark") {
-        if (e[key]) {
-          document.documentElement.setAttribute("data-theme", "dark");
-          document.documentElement.classList.add("dark");
-        } else {
-          document.documentElement.removeAttribute("data-theme");
-          document.documentElement.classList.remove("dark");
-        }
-      }
+const handleSharedPinia = (e) => {
+  for (const key in e) {
+    sharedStore[key] = e[key];
+    if (key == "isDark") {
+      changeTheme(e[key]);
     }
-  };
-  window.$wujie?.bus.$on("changeSharedPinia", (e) => {
-    handleSharedPinia(e);
-  });
-  window.$wujie?.props.path && router.push(window.$wujie.props.path);
-  if (window.$wujie?.props.sharedPinia) {
-    handleSharedPinia(window.$wujie.props.sharedPinia);
   }
-  window.$wujie?.bus.$on("subappRouteChange", (obj) => {
-    if (obj && obj.path && obj.name == window.$wujie?.bus.id) {
-      router.push(obj.path);
-    }
-  });
-} else {
-  sharedStore.isFull = true;
+};
+window.$wujie?.props.path && router.push(window.$wujie.props.path);
+if (window.$wujie?.props.sharedPinia) {
+  handleSharedPinia(window.$wujie.props.sharedPinia);
 }
+window.$wujie?.bus.$on("changeSharedPinia", (e) => {
+  handleSharedPinia(e);
+});
+window.$wujie?.bus.$on("subappRouteChange", (obj) => {
+  if (obj && obj.path && obj.key == window.$wujie?.bus.id) {
+    router.push(obj.path);
+  }
+});
+onUnmounted(() => {
+  window.$wujie?.bus.$off("changeSharedPinia");
+  window.$wujie?.bus.$off("subappRouteChange");
+});
 </script>
 
 <template>

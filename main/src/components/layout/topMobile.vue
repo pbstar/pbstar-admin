@@ -6,6 +6,7 @@ import { useNavsStore } from "@/stores/navs";
 import WujieVue from "wujie-vue3";
 import request from "@Passets/utils/request";
 import PIcon from "@Pcomponents/base/p-icon/index.vue";
+import { changeTheme } from "@Passets/utils/theme";
 
 const { bus } = WujieVue;
 const sharedStore = useSharedStore();
@@ -69,17 +70,9 @@ const toUserInfo = () => {
 };
 
 const themeChange = () => {
-  if (theme.value) {
-    sharedStore.isDark = true;
-    bus.$emit("changeSharedPinia", { isDark: true });
-    document.documentElement.setAttribute("data-theme", "dark");
-    document.documentElement.classList.add("dark");
-  } else {
-    sharedStore.isDark = false;
-    bus.$emit("changeSharedPinia", { isDark: false });
-    document.documentElement.removeAttribute("data-theme");
-    document.documentElement.classList.remove("dark");
-  }
+  changeTheme(theme.value);
+  sharedStore.isDark = theme.value;
+  bus.$emit("changeSharedPinia", { isDark: theme.value });
 };
 
 const toLoginOut = () => {
