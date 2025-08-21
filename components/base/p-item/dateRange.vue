@@ -21,7 +21,7 @@ import { ref, watch, computed } from "vue";
 
 const props = defineProps({
   modelValue: {
-    type: [Array],
+    type: [Array, String],
     default: [],
   },
   config: {
@@ -31,7 +31,7 @@ const props = defineProps({
 });
 const emits = defineEmits(["update:modelValue", "change"]);
 
-const value = ref(props.modelValue);
+const value = ref(props.modelValue || []);
 
 const change = (val) => {
   emits("update:modelValue", value.value);
@@ -46,7 +46,7 @@ const getLabel = computed(() => {
 watch(
   () => props.modelValue,
   (newVal) => {
-    value.value = newVal;
+    value.value = newVal || [];
   },
 );
 </script>

@@ -9,8 +9,10 @@
     <el-collapse v-model="activeName">
       <el-collapse-item title="Consistency" name="1" :disabled="!isControl">
         <template #title>
-          <img src="@Passets/imgs/sa_quan.png" alt="" />
-          <div class="title">{{ props.title }}</div>
+          <div class="title">
+            <img src="@Passets/imgs/sa_quan.png" alt="" />
+            <span>{{ props.title }}</span>
+          </div>
         </template>
         <template #icon="{ isActive }">
           <img
@@ -75,12 +77,14 @@ const activeName = ref(props.isCollapse ? "" : "1");
     padding: 0;
   }
   .title {
-    flex: 1;
     display: flex;
-    color: var(--c-text);
-    font-weight: bold;
-    font-size: 14px;
-    margin-left: 9px;
+    align-items: center;
+    span {
+      color: var(--c-text);
+      font-weight: bold;
+      font-size: 14px;
+      margin-left: 9px;
+    }
   }
 }
 .collapse.control {

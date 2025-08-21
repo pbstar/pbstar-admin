@@ -50,6 +50,15 @@ const findIndexByUrl = (url) => {
   findIndex(list.value);
   return index;
 };
+// 屏蔽无界嵌套引起的vue路由警告
+const originalWarn = console.warn;
+console.warn = (msg, ...args) => {
+  // 如果警告信息包含特定字符串，则忽略
+  if (msg.includes("history.state") && msg.includes("manually replaced")) {
+    return;
+  }
+  originalWarn.apply(console, [msg, ...args]);
+};
 
 router.afterEach((to, from) => {
   if (to.fullPath) {

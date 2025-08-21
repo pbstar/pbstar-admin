@@ -25,7 +25,7 @@ import { useEnumStore } from "@Passets/stores/enum";
 const enumStore = useEnumStore();
 const props = defineProps({
   modelValue: {
-    type: [Array],
+    type: [Array, String],
     default: [],
   },
   config: {
@@ -35,7 +35,7 @@ const props = defineProps({
 });
 const emits = defineEmits(["update:modelValue", "change"]);
 
-const value = ref(props.modelValue);
+const value = ref(props.modelValue || []);
 const options = ref(props.config.options);
 
 const change = (val) => {
@@ -60,7 +60,7 @@ const getLabel = computed(() => {
 watch(
   () => props.modelValue,
   (newVal) => {
-    value.value = newVal;
+    value.value = newVal || [];
   },
 );
 watch(

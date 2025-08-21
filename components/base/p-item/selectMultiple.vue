@@ -29,8 +29,8 @@ import { useEnumStore } from "@Passets/stores/enum";
 const enumStore = useEnumStore();
 const props = defineProps({
   modelValue: {
-    type: [Array],
-    default: [],
+    type: [Array, String],
+    default: () => [],
   },
   config: {
     type: Object,
@@ -39,8 +39,8 @@ const props = defineProps({
 });
 const emits = defineEmits(["update:modelValue", "change"]);
 
-const value = ref(props.modelValue);
-const options = ref(props.config.options);
+const value = ref(props.modelValue || []);
+const options = ref(props.config.options || []);
 
 const change = (val) => {
   emits("update:modelValue", value.value);
@@ -64,13 +64,13 @@ const getLabel = computed(() => {
 watch(
   () => props.modelValue,
   (newVal) => {
-    value.value = newVal;
+    value.value = newVal || [];
   },
 );
 watch(
   () => props.config.options,
   (newVal) => {
-    options.value = newVal;
+    options.value = newVal || [];
   },
   {
     deep: true,
@@ -83,7 +83,7 @@ watch(
       enumStore.getEnum(props.config.enumKey).then((res) => {
         if (res) {
           let list = res[props.config.enumKey];
-          options.value = list;
+          options.value = list || [];
         }
       });
     }
