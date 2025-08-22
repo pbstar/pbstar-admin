@@ -20,7 +20,7 @@ import {
   commonProps,
   commonEmits,
   textStyles,
-} from "./hooks/useFormItem.js";
+} from "../hooks/useFormItem.js";
 
 const props = defineProps({
   ...commonProps,

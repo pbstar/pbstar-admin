@@ -15,7 +15,11 @@
           <div class="dialog-body box-body">
             <slot></slot>
           </div>
-          <DialogFooter :buttons="botBtnList" @button-click="handleClickBot" />
+          <DialogFooter
+            :type="type"
+            :buttons="botBtnList"
+            @button-click="handleClickBot"
+          />
         </div>
       </div>
     </transition>
@@ -43,7 +47,11 @@
             <slot></slot>
           </div>
         </div>
-        <DialogFooter :buttons="botBtnList" @button-click="handleClickBot" />
+        <DialogFooter
+          :type="type"
+          :buttons="botBtnList"
+          @button-click="handleClickBot"
+        />
       </div>
     </transition>
   </template>
@@ -65,7 +73,11 @@
           <div class="dialog-body page-body">
             <slot></slot>
           </div>
-          <DialogFooter :buttons="botBtnList" @button-click="handleClickBot" />
+          <DialogFooter
+            :type="type"
+            :buttons="botBtnList"
+            @button-click="handleClickBot"
+          />
         </div>
       </div>
     </transition>

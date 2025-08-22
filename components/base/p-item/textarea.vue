@@ -17,7 +17,7 @@ import {
   commonProps,
   commonEmits,
   textBigStyles,
-} from "./hooks/useFormItem.js";
+} from "../hooks/useFormItem.js";
 
 const props = defineProps(commonProps);
 const emits = defineEmits(commonEmits);

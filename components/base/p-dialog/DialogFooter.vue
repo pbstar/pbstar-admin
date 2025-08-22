@@ -1,5 +1,5 @@
 <template>
-  <div class="dialog-footer">
+  <div class="dialog-footer" :style="footerStyle">
     <el-button
       v-for="(item, index) in buttons"
       :key="index"
@@ -12,7 +12,13 @@
 </template>
 
 <script setup>
-defineProps({
+import { computed } from "vue";
+
+const props = defineProps({
+  type: {
+    type: String,
+    default: "box",
+  },
   buttons: {
     type: Array,
     default: () => [],
@@ -20,15 +26,32 @@ defineProps({
 });
 
 defineEmits(["button-click"]);
+
+const footerStyle = computed(() => {
+  if (props.type === "drawer") {
+    return {
+      height: "40px",
+      justifyContent: "center",
+    };
+  } else if (props.type === "page") {
+    return {
+      height: "48px",
+      justifyContent: "center",
+    };
+  } else if (props.type === "box") {
+    return {
+      height: "42px",
+      backgroundColor: "var(--c-bg-box)",
+      justifyContent: "flex-end",
+      paddingRight: "10px",
+    };
+  }
+});
 </script>
 <style lang="scss" scoped>
 .dialog-footer {
   width: 100%;
-  height: 42px;
-  background-color: var(--c-bg-box);
   display: flex;
   align-items: center;
-  justify-content: center;
-  padding: 0 10px;
 }
 </style>

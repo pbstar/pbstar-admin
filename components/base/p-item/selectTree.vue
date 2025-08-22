@@ -15,7 +15,7 @@
 
 <script setup>
 import { structure } from "@Passets/utils/array";
-import { useFormItem, commonProps, commonEmits } from "./hooks/useFormItem.js";
+import { useFormItem, commonProps, commonEmits } from "../hooks/useFormItem.js";
 
 const props = defineProps(commonProps);
 const emits = defineEmits(commonEmits);
