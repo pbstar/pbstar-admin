@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch } from "vue";
+import { ref, watch, computed } from "vue";
 import pInput from "./input.vue";
 import pTextarea from "./textarea.vue";
 import pInputNumber from "./inputNumber.vue";
@@ -13,18 +13,8 @@ import pDateRange from "./dateRange.vue";
 import pDateTime from "./dateTime.vue";
 import pDateTimeRange from "./dateTimeRange.vue";
 
-const props = defineProps({
-  config: {
-    type: Object,
-    default: () => {},
-  },
-  modelValue: {
-    type: [Number, String, Boolean, Array, Object],
-    default: "",
-  },
-});
-const emit = defineEmits(["change", "update:modelValue"]);
-const components = {
+// 组件映射
+const componentMap = {
   input: pInput,
   textarea: pTextarea,
   inputNumber: pInputNumber,
@@ -38,7 +28,24 @@ const components = {
   dateTime: pDateTime,
   dateTimeRange: pDateTimeRange,
 };
-const config = ref({
+
+// Props 定义
+const props = defineProps({
+  config: {
+    type: Object,
+    default: () => ({}),
+  },
+  modelValue: {
+    type: [Number, String, Boolean, Array, Object],
+    default: "",
+  },
+});
+
+// Emits 定义
+const emit = defineEmits(["change", "update:modelValue"]);
+
+// 默认配置
+const defaultConfig = {
   key: "",
   label: "",
   type: "input",
@@ -52,75 +59,88 @@ const config = ref({
   options: [],
   enumKey: "",
   more: {},
-});
+};
+
+// 状态管理
+const config = ref({ ...defaultConfig });
 const value = ref(props.modelValue);
 
+// 监听属性变化
 watch(
   () => props.modelValue,
-  (newVal) => {
-    value.value = newVal;
-  },
+  (val) => (value.value = val),
 );
 watch(
   () => props.config,
-  (newVal) => {
-    config.value = { ...config.value, ...newVal };
+  (val) => {
+    config.value = { ...defaultConfig, ...val };
   },
-  {
-    immediate: true,
-    deep: true,
-  },
+  { immediate: true, deep: true },
 );
 
-const change = (val) => {
+// 事件处理
+const handleChange = (val) => {
   emit("update:modelValue", value.value);
   emit("change", val);
 };
+
+// 计算属性
+const currentComponent = computed(() => componentMap[config.value.type]);
 </script>
+
 <template>
   <div class="item">
-    <div class="label" v-if="config.label" :style="config.labelStyle">
-      <span v-show="config.isRequired && !config.isText && !config.isDisabled"
+    <!-- 标签区域 -->
+    <div v-if="config.label" class="label" :style="config.labelStyle">
+      <span
+        v-show="config.isRequired && !config.isText && !config.isDisabled"
+        class="required"
         >*</span
       >
+
       <el-tooltip
+        v-if="config.label.length > 8"
         effect="dark"
         :content="config.label"
         placement="bottom"
-        v-if="config.label.length > 8"
       >
-        <span
-          style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis"
-          >{{ config.label }}</span
-        >
+        <span class="label-text">{{ config.label }}</span>
       </el-tooltip>
-      <span v-if="config.label.length <= 8">{{ config.label }}</span>
+
+      <span v-else class="label-text">{{ config.label }}</span>
     </div>
+
+    <!-- 内容区域 -->
     <div class="value">
-      <div class="valBox" v-if="config.type != 'slot'">
+      <div v-if="config.type !== 'slot'" class="val-box">
         <div class="input">
           <component
-            :is="components[config.type]"
+            :is="currentComponent"
             v-model="value"
             :config="config"
-            @change="change"
+            @change="handleChange"
           />
         </div>
-        <div class="rightText" v-if="config.rightText">
+
+        <div v-if="config.rightText" class="right-text">
           {{ config.rightText }}
         </div>
       </div>
-      <slot v-else></slot>
-      <div class="tipBox" v-if="config.tipText">
+
+      <slot v-else />
+
+      <div v-if="config.tipText" class="tip-box">
         {{ config.tipText }}
       </div>
     </div>
   </div>
 </template>
+
 <style scoped lang="scss">
 .item {
   display: flex;
 }
+
 .label {
   height: 30px;
   width: 100px;
@@ -132,43 +152,54 @@ const change = (val) => {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  span:nth-child(1) {
+
+  .required {
     margin-right: 4px;
     color: red;
   }
-  span:nth-child(2) {
+
+  .label-text {
     text-align: right;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
+
 .value {
   min-width: 150px;
   max-width: 100%;
   flex: 1;
   display: flex;
   flex-direction: column;
-  .valBox {
+
+  .val-box {
     display: flex;
     align-items: center;
     justify-content: space-between;
     max-width: 100%;
+
     .input {
       max-width: 100%;
       flex: 1;
     }
-    .rightText {
+
+    .right-text {
       flex-shrink: 0;
       font-size: 14px;
       color: var(--c-text);
       margin-left: 6px;
     }
   }
-  .tipBox {
+
+  .tip-box {
     font-size: 12px;
     line-height: 16px;
     color: var(--c-text2);
     margin-top: 4px;
   }
 }
+
 @media screen and (max-width: 700px) {
   .label {
     width: 80px;

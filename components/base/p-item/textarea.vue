@@ -1,54 +1,26 @@
 <template>
-  <div class="textBig" v-if="props.config.isText">
-    {{ value }}
-  </div>
+  <div :style="textBigStyles" v-if="config.isText">{{ value }}</div>
   <el-input
+    v-else
     v-model="value"
     type="textarea"
-    :disabled="props.config.isDisabled"
-    :placeholder="props.config.placeholder || '请输入'"
-    v-bind="props.config.more"
-    v-else
-    @change="change"
+    :placeholder="config.placeholder || '请输入'"
+    :disabled="config.isDisabled"
+    v-bind="config.more"
+    @change="handleChange"
   />
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
-const props = defineProps({
-  modelValue: {
-    type: [String, Number],
-    default: "",
-  },
-  config: {
-    type: Object,
-    default: () => {},
-  },
-});
-const emits = defineEmits(["update:modelValue", "change"]);
+import {
+  useFormItem,
+  commonProps,
+  commonEmits,
+  textBigStyles,
+} from "./hooks/useFormItem.js";
 
-const value = ref(props.modelValue);
+const props = defineProps(commonProps);
+const emits = defineEmits(commonEmits);
 
-const change = (val) => {
-  emits("update:modelValue", value.value);
-  emits("change", val);
-};
-
-watch(
-  () => props.modelValue,
-  (newVal) => {
-    value.value = newVal;
-  },
-);
+const { value, handleChange } = useFormItem(props, emits);
 </script>
-<style scoped lang="scss">
-.textBig {
-  height: auto;
-  padding: 5px 6px;
-  line-height: 20px;
-  color: var(--c-text);
-  border-bottom: 1px solid var(--c-border);
-  //单词换行
-  word-break: break-word;
-}
-</style>

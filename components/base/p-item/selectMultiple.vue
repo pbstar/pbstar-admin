@@ -1,111 +1,44 @@
 <template>
-  <div class="text" v-if="props.config.isText">
-    {{ getLabel }}
-  </div>
+  <div :style="textStyles" v-if="config.isText">{{ getLabel }}</div>
   <el-select
-    v-model="value"
-    :placeholder="props.config.placeholder || '请选择'"
-    :disabled="props.config.isDisabled"
-    v-bind="props.config.more"
     v-else
-    @change="change"
+    v-model="value"
+    :placeholder="config.placeholder || '请选择'"
+    :disabled="config.isDisabled"
+    v-bind="config.more"
+    @change="handleChange"
     multiple
     collapse-tags
     collapse-tags-tooltip
   >
     <el-option
-      v-for="(it, index) in options"
+      v-for="(item, index) in options"
       :key="index"
-      :label="it.label"
-      :value="it.value"
+      :label="item.label"
+      :value="item.value"
     />
   </el-select>
 </template>
 
 <script setup>
-import { ref, watch, computed } from "vue";
-import { useEnumStore } from "@Passets/stores/enum";
+import {
+  useFormItem,
+  commonProps,
+  commonEmits,
+  textStyles,
+} from "./hooks/useFormItem.js";
 
-const enumStore = useEnumStore();
 const props = defineProps({
+  ...commonProps,
   modelValue: {
     type: [Array, String],
     default: () => [],
   },
-  config: {
-    type: Object,
-    default: () => {},
-  },
 });
-const emits = defineEmits(["update:modelValue", "change"]);
+const emits = defineEmits(commonEmits);
 
-const value = ref(props.modelValue || []);
-const options = ref(props.config.options || []);
-
-const change = (val) => {
-  emits("update:modelValue", value.value);
-  emits("change", val);
-};
-const getLabel = computed(() => {
-  let str = "";
-  if (value.value && value.value.length > 0) {
-    value.value.forEach((it) => {
-      const row = options.value.find((item) => item.value == it);
-      if (row) {
-        str += row.label + ",";
-      } else {
-        str += it + ",";
-      }
-    });
-  }
-  return str ? str.substring(0, str.length - 1) : str;
+const { value, options, handleChange, getLabel } = useFormItem(props, emits, {
+  handleOptions: true,
+  handleArray: true,
 });
-
-watch(
-  () => props.modelValue,
-  (newVal) => {
-    value.value = newVal || [];
-  },
-);
-watch(
-  () => props.config.options,
-  (newVal) => {
-    options.value = newVal || [];
-  },
-  {
-    deep: true,
-  },
-);
-watch(
-  () => props.config.enumKey,
-  (newVal) => {
-    if (newVal) {
-      enumStore.getEnum(props.config.enumKey).then((res) => {
-        if (res) {
-          let list = res[props.config.enumKey];
-          options.value = list || [];
-        }
-      });
-    }
-  },
-  {
-    immediate: true,
-  },
-);
 </script>
-<style scoped lang="scss">
-.text {
-  height: 30px;
-  padding: 0 6px;
-  line-height: 30px;
-  color: var(--c-text);
-  border-bottom: 1px solid var(--c-border);
-  overflow-x: auto;
-  overflow-y: hidden;
-  white-space: nowrap;
-  &::-webkit-scrollbar {
-    width: 2px;
-    height: 2px;
-  }
-}
-</style>
