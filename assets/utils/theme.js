@@ -1,9 +1,15 @@
-export function changeTheme(e) {
-  if (e) {
-    document.documentElement.setAttribute("data-theme", "dark");
-    document.documentElement.classList.add("dark");
+/**
+ * 切换主题
+ * @param {boolean} isDark 是否为暗色主题
+ */
+export function changeTheme(isDark) {
+  const htmlElement = document.documentElement;
+
+  if (isDark) {
+    htmlElement.setAttribute("data-theme", "dark");
+    htmlElement.classList.add("dark");
   } else {
-    document.documentElement.removeAttribute("data-theme");
-    document.documentElement.classList.remove("dark");
+    htmlElement.removeAttribute("data-theme");
+    htmlElement.classList.remove("dark");
   }
 }

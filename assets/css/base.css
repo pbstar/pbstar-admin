@@ -1,37 +1,50 @@
+/* 基础样式 */
 @import "./color.css";
 @import "./element.css";
+
+/* 全局布局 */
 html,
 body,
 #root {
   width: 100%;
   height: 100%;
 }
+
 body {
   position: relative;
 }
+
+/* 全局重置 */
 *,
-*:before,
-*:after {
+*::before,
+*::after {
   box-sizing: border-box;
   padding: 0;
   margin: 0;
 }
+
+/* 字体设置 */
 *:not(.iconfont),
-*:not(.iconfont):before,
-*:not(.iconfont):after {
+*:not(.iconfont)::before,
+*:not(.iconfont)::after {
   font-family:
     PingFangSC,
     PingFang SC,
-    Microsoft YaHei;
+    Microsoft YaHei,
+    sans-serif;
 }
+
+/* 滚动条样式 */
 div::-webkit-scrollbar {
   width: 6px;
   height: 4px;
 }
+
 div::-webkit-scrollbar-thumb {
   border-radius: 2px;
   background: var(--c-scrollbar-thumb);
 }
+
 div::-webkit-scrollbar-track {
   border-radius: 2px;
   background: var(--c-scrollbar-track);

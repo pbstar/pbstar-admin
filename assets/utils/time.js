@@ -1,34 +1,31 @@
-//获取当前时间
+/**
+ * 格式化数字，确保两位数
+ * @param {number} num 要格式化的数字
+ * @returns {string} 格式化后的字符串
+ */
+const formatNumber = (num) => num.toString().padStart(2, "0");
+
+/**
+ * 获取当前时间并格式化
+ * @param {string} format 格式字符串
+ * @returns {string|Date} 格式化后的时间字符串或Date对象
+ */
 export function getNowTime(format) {
-  const date = new Date();
-  const year = date.getFullYear();
-  const month = date.getMonth() + 1;
-  const day = date.getDate();
-  const hour = date.getHours();
-  const minute = date.getMinutes();
-  const second = date.getSeconds();
-  function formatNumber(n) {
-    return n < 10 ? "0" + n : n;
-  }
-  if (format === "yyyy-mm-dd") {
-    return `${year}-${formatNumber(month)}-${formatNumber(day)}`;
-  } else if (format === "hh:mm:ss") {
-    return `${formatNumber(hour)}:${formatNumber(minute)}:${formatNumber(
-      second
-    )}`;
-  } else if (format === "yyyy-mm-dd hh:mm:ss") {
-    return `${year}-${formatNumber(month)}-${formatNumber(day)} ${formatNumber(
-      hour
-    )}:${formatNumber(minute)}:${formatNumber(second)}`;
-  } else if (format === "yyyymmddhhmmss") {
-    return `${year}${formatNumber(month)}${formatNumber(day)}${formatNumber(
-      hour
-    )}${formatNumber(minute)}${formatNumber(second)}`;
-  } else if (format === "yyyymmddhhmm") {
-    return `${year}${formatNumber(month)}${formatNumber(day)}${formatNumber(
-      hour
-    )}${formatNumber(minute)}`;
-  } else {
-    return date;
-  }
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = formatNumber(now.getMonth() + 1);
+  const day = formatNumber(now.getDate());
+  const hour = formatNumber(now.getHours());
+  const minute = formatNumber(now.getMinutes());
+  const second = formatNumber(now.getSeconds());
+
+  const formats = {
+    "yyyy-mm-dd": `${year}-${month}-${day}`,
+    "hh:mm:ss": `${hour}:${minute}:${second}`,
+    "yyyy-mm-dd hh:mm:ss": `${year}-${month}-${day} ${hour}:${minute}:${second}`,
+    yyyymmddhhmmss: `${year}${month}${day}${hour}${minute}${second}`,
+    yyyymmddhhmm: `${year}${month}${day}${hour}${minute}`,
+  };
+
+  return formats[format] || now;
 }

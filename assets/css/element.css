@@ -1,43 +1,60 @@
+/* Element Plus 主题变量 */
 :root {
   --el-color-primary: var(--c-bg-theme);
 }
+
 html.dark {
   --el-bg-color: var(--c-bg);
   --el-fill-color-lighter: var(--c-bg);
   --el-fill-color-light: var(--c-bg);
 }
+
+/* 表单元素高度统一 */
 .el-button:not(.is-link),
 .el-select,
 .el-input {
   height: 30px;
   line-height: 30px;
 }
+
 .el-select__wrapper {
   min-height: 30px;
 }
+
 .el-input__wrapper {
   padding-top: 0px;
   padding-bottom: 0px;
   height: 30px;
 }
+
+/* 小号按钮 */
 .el-button--small:not(.is-link) {
   height: 24px;
   line-height: 24px;
 }
+
+/* 日期选择器宽度 */
 .el-date-editor.el-input,
 .el-date-editor.el-input__wrapper {
   width: 100%;
 }
+
+/* 表格样式 */
 .el-table .el-table__cell {
   padding: 6px 0;
 }
+
 .el-table th.el-table__cell {
   padding: 7px 0;
 }
+
+/* 单选/复选框间距 */
 .el-radio,
 .el-checkbox {
   margin-right: 20px;
 }
+
+/* 标签页内边距 */
 .el-tabs__item {
   padding: 0 10px;
 }

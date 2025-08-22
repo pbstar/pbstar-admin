@@ -1,43 +1,53 @@
-//数组扁平化
+/**
+ * 数组扁平化
+ * @param {Array} arr 要扁平化的数组
+ * @param {string} listKey 子数组的键名，默认为'children'
+ * @returns {Array} 扁平化后的数组
+ */
 export function flatten(arr, listKey = "children") {
-  const result = []; // 存储扁平化后的数组
-  const toChange = (arr) => {
-    // 递归函数
-    arr.forEach((item) => {
-      // 遍历数组
-      result.push(item); // 将当前项添加到结果数组中
-      if (item[listKey] && Array.isArray(item[listKey])) {
-        // 如果当前项是数组
-        toChange(item[listKey]); // 递归调用
+  const result = [];
+
+  const flattenRecursive = (array) => {
+    array.forEach((item) => {
+      result.push(item);
+      if (Array.isArray(item[listKey])) {
+        flattenRecursive(item[listKey]);
       }
     });
   };
-  toChange(arr); // 调用递归函数
+
+  flattenRecursive(arr);
   return result;
 }
-// 数组结构化
+
+/**
+ * 数组结构化（构建树形结构）
+ * @param {Array} arr 要结构化的数组
+ * @param {string} pidKey 父节点ID的键名，默认为'parentId'
+ * @param {string} idKey 节点ID的键名，默认为'id'
+ * @returns {Array} 结构化后的树形数组
+ */
 export function structure(arr, pidKey = "parentId", idKey = "id") {
-  const map = new Map();
+  const nodeMap = new Map();
   const tree = [];
 
-  // 先构建所有节点的映射
+  // 创建节点映射
   arr.forEach((item) => {
-    const id = item[idKey];
-    map.set(id, { ...item });
+    nodeMap.set(item[idKey], { ...item });
   });
 
   // 构建树结构
   arr.forEach((item) => {
-    const id = item[idKey];
-    const pid = item[pidKey];
+    const node = nodeMap.get(item[idKey]);
+    const parentNode = nodeMap.get(item[pidKey]);
 
-    if (pid === null || pid === undefined || !map.has(pid)) {
-      tree.push(map.get(id));
+    if (!parentNode) {
+      tree.push(node);
     } else {
-      if (!map.get(pid).children) {
-        map.get(pid).children = [];
+      if (!parentNode.children) {
+        parentNode.children = [];
       }
-      map.get(pid).children.push(map.get(id));
+      parentNode.children.push(node);
     }
   });
 

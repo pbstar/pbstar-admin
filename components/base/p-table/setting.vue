@@ -69,7 +69,7 @@ const handleColumnList = (type) => {
   });
   if (type == "save") {
     const list = columnList.map((item) => item.key);
-    tableStore.changeSetting(props.tableKey, list);
+    tableStore.updateSetting(props.tableKey, list);
   } else if (type == "reset") {
     tableStore.removeSetting(props.tableKey);
   }
