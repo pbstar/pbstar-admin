@@ -1,11 +1,9 @@
 <template>
-  <!-- Element Plus 图标 -->
-  <el-icon v-if="iconType == 'ep'" :size="size" :color="color">
-    <component :is="epComponent" />
+  <el-icon v-if="iconType === 'ep'" :size="size" :color="color">
+    <component :is="epIcon" />
   </el-icon>
-  <!-- Iconfont 图标 -->
   <i
-    v-else-if="iconType == 'icon'"
+    v-else-if="iconType === 'icon'"
     class="iconfont"
     :class="name"
     :style="iconStyle"
@@ -18,54 +16,34 @@ import * as ElIcons from "@element-plus/icons-vue";
 import "@Passets/iconfont/iconfont.css";
 
 const props = defineProps({
-  // 图标名称
-  name: {
-    type: String,
-    default: "",
-  },
-  // 图标大小
-  size: {
-    type: [String, Number],
-    default: 16,
-  },
-  // 图标颜色
-  color: {
-    type: String,
-    default: "",
-  },
+  name: { type: String, default: "" },
+  size: { type: [String, Number], default: 16 },
+  color: { type: String, default: "" },
 });
 
-const iconType = computed(() => {
-  if (props.name.startsWith("el-icon-")) {
-    return "ep";
-  } else if (props.name.startsWith("p-icon-")) {
-    return "icon";
-  }
-});
+const iconType = computed(() =>
+  props.name.startsWith("el-icon-")
+    ? "ep"
+    : props.name.startsWith("p-icon-")
+      ? "icon"
+      : "",
+);
 
-// 获取Element Plus图标组件
-const epComponent = computed(() => {
-  if (iconType.value != "ep") return null;
+const epIcon = computed(() => {
+  if (iconType.value !== "ep") return null;
   const iconName = props.name
     .replace("el-icon", "")
     .replace(/-(\w)/g, (_, c) => c.toUpperCase());
   return ElIcons[iconName] || null;
 });
 
-// 图标样式
-const iconStyle = computed(() => {
-  const style = {};
-  if (props.size) {
-    style.fontSize =
-      typeof props.size === "number" || !props.size.includes("px")
-        ? `${props.size}px`
-        : props.size;
-  }
-  if (props.color) {
-    style.color = props.color;
-  }
-  return style;
-});
+const iconStyle = computed(() => ({
+  fontSize:
+    typeof props.size === "number" || !props.size.includes("px")
+      ? `${props.size}px`
+      : props.size,
+  color: props.color,
+}));
 </script>
 
 <style lang="scss" scoped>

@@ -1,77 +1,82 @@
 <template>
-  <div class="box">
-    <div class="left">
+  <div class="p-title">
+    <div class="tabs">
       <div
-        :class="{
-          active: activeIndex === index,
-          item: true,
-          onlyOne: props.list.length === 1,
-        }"
-        v-for="(item, index) in props.list"
-        :key="index"
-        @click="toChange({ value: item, index })"
+        v-for="(tab, i) in list"
+        :key="i"
+        :class="[
+          'tab',
+          { active: activeTab === i, disabled: list.length === 1 },
+        ]"
+        @click="selectTab(i)"
       >
-        {{ item }}
+        {{ tab }}
       </div>
     </div>
-    <div class="right">
-      <slot></slot>
+    <div class="actions">
+      <slot />
     </div>
   </div>
 </template>
+
 <script setup>
 import { ref } from "vue";
 const props = defineProps({
-  list: {
-    type: Array,
-    default: () => [],
-  },
+  list: { type: Array, default: () => [] },
 });
+
 const emit = defineEmits(["change"]);
-const activeIndex = ref(0);
-const toChange = ({ value, index }) => {
-  activeIndex.value = index;
-  emit("change", { value, index });
+const activeTab = ref(0);
+
+const selectTab = (index) => {
+  if (props.list.length === 1) return;
+  activeTab.value = index;
+  emit("change", { value: props.list[index], index });
 };
 </script>
+
 <style lang="scss" scoped>
-.box {
-  display: flex;
-  height: 42px;
-  border-bottom: 1px solid var(--c-border);
+.p-title {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  .left {
+  height: 42px;
+  border-bottom: 1px solid var(--c-border);
+
+  .tabs {
     display: flex;
     flex-shrink: 0;
-    height: 100%;
-    .item {
+
+    .tab {
       margin-right: 20px;
       line-height: 40px;
       cursor: pointer;
       font-size: 14px;
       color: var(--c-text2);
+
       &:last-child {
         margin-right: 0;
       }
+
       &.active {
         color: var(--c-text);
         font-weight: bold;
         border-bottom: 3px solid var(--c-bg-theme);
       }
-      &.onlyOne {
+
+      &.disabled {
         cursor: default;
       }
     }
   }
-  .right {
+
+  .actions {
     flex: 1;
     height: 100%;
-    overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: flex-end;
+    overflow: hidden;
   }
 }
 </style>

@@ -3,39 +3,19 @@
   <template v-if="type === 'box'">
     <transition name="dia">
       <div
-        class="diaboxF"
+        class="dialog-overlay box-overlay"
         v-if="dialogVisible"
-        :style="{
-          'z-index': zIndex,
-        }"
+        :style="{ 'z-index': zIndex }"
       >
         <div
-          class="diabox"
-          :style="{
-            width: width || '500px',
-          }"
+          class="dialog-content box-content"
+          :style="{ width: width || '500px' }"
         >
-          <div class="top">
-            <div class="title">{{ title }}</div>
-            <img
-              src="@Passets/imgs/icons14/close.png"
-              alt=""
-              @click="toClose"
-            />
-          </div>
-          <div class="mid">
+          <DialogHeader :title="title" @close="toClose" />
+          <div class="dialog-body box-body">
             <slot></slot>
           </div>
-          <div class="bot">
-            <el-button
-              v-for="(item, index) in botBtnList"
-              :key="index"
-              :type="item.type || 'primary'"
-              @click="handleClickBot(item.key)"
-            >
-              {{ item.label }}
-            </el-button>
-          </div>
+          <DialogFooter :buttons="botBtnList" @button-click="handleClickBot" />
         </div>
       </div>
     </transition>
@@ -45,55 +25,25 @@
   <template v-else-if="type === 'drawer'">
     <transition name="dia">
       <div
-        class="diadrawerF"
+        class="dialog-overlay drawer-overlay"
         v-if="dialogVisible"
-        :style="{
-          'z-index': zIndex,
-          width: `calc(100vw - ${navWidth}px)`,
-          height: `calc(100vh - ${topHeight}px)`,
-          top: topHeight + 'px',
-        }"
+        :style="overlayStyle"
       ></div>
     </transition>
     <transition name="diadrawer">
       <div
-        class="diadrawer"
+        class="dialog-content drawer-content"
         v-if="dialogVisible"
-        :style="{
-          width: width || '400px',
-          height: `calc(100vh - ${topHeight}px)`,
-          top: topHeight + 'px',
-          'z-index': zIndex + 1,
-        }"
+        :style="drawerStyle"
       >
-        <div class="top">
-          <div class="tLeft">
-            <div class="title">{{ title }}</div>
-          </div>
-          <div class="tRight">
-            <img
-              src="@Passets/imgs/icons14/close.png"
-              alt=""
-              @click="toClose"
-            />
-          </div>
-        </div>
-        <div class="top2"></div>
-        <div class="mid">
-          <div class="midbox">
+        <DialogHeader :title="title" @close="toClose" drawer />
+        <div class="drawer-top-space"></div>
+        <div class="dialog-body drawer-body">
+          <div class="drawer-content-wrapper">
             <slot></slot>
           </div>
         </div>
-        <div class="bot">
-          <el-button
-            v-for="(item, index) in botBtnList"
-            :key="index"
-            :type="item.type || 'primary'"
-            @click="handleClickBot(item.key)"
-          >
-            {{ item.label }}
-          </el-button>
-        </div>
+        <DialogFooter :buttons="botBtnList" @button-click="handleClickBot" />
       </div>
     </transition>
   </template>
@@ -102,34 +52,20 @@
   <template v-else-if="type === 'page'">
     <transition name="dia">
       <div
-        class="diapageF"
+        class="dialog-overlay page-overlay"
         v-if="dialogVisible"
-        :style="{
-          'z-index': zIndex,
-          width: `calc(100vw - ${navWidth}px)`,
-          height: `calc(100vh - ${topHeight}px)`,
-          top: topHeight + 'px',
-        }"
+        :style="overlayStyle"
       >
-        <div class="diapage">
-          <div class="top">
+        <div class="dialog-content page-content">
+          <div class="page-header">
             <p-title :list="[title]">
               <slot name="header"></slot>
             </p-title>
           </div>
-          <div class="mid">
+          <div class="dialog-body page-body">
             <slot></slot>
           </div>
-          <div class="bot">
-            <el-button
-              v-for="(item, index) in botBtnList"
-              :key="index"
-              :type="item.type || 'primary'"
-              @click="handleClickBot(item.key)"
-            >
-              {{ item.label }}
-            </el-button>
-          </div>
+          <DialogFooter :buttons="botBtnList" @button-click="handleClickBot" />
         </div>
       </div>
     </transition>
@@ -140,10 +76,12 @@
 import { ref, computed, watch } from "vue";
 import useSharedStore from "@Passets/stores/shared";
 import pTitle from "@Pcomponents/base/p-title/index.vue";
+import DialogHeader from "./DialogHeader.vue";
+import DialogFooter from "./DialogFooter.vue";
+
 const sharedStore = useSharedStore();
 
 const props = defineProps({
-  // 对话框类型: box(弹窗), drawer(抽屉), page(页面)
   type: {
     type: String,
     default: "box",
@@ -157,12 +95,10 @@ const props = defineProps({
     type: String,
     default: "",
   },
-  // drawer/box特有属性
   width: {
     type: String,
     default: "",
   },
-  // 按钮配置
   botBtn: {
     type: Array,
     default: () => [],
@@ -173,43 +109,48 @@ const emit = defineEmits(["update:modelValue", "botBtnClick"]);
 
 const dialogVisible = ref(props.modelValue);
 const zIndex = ref(1000);
-const isMobile = computed(() => {
-  return window.innerWidth <= 700;
-});
-const navWidth = computed(() => {
-  return sharedStore.isFull || isMobile.value ? "0" : "200";
-});
-const topHeight = computed(() => {
-  return sharedStore.isFull || isMobile.value ? "0" : "90";
-});
+const isMobile = computed(() => window.innerWidth <= 700);
+const navWidth = computed(() =>
+  sharedStore.isFull || isMobile.value ? "0" : "200",
+);
+const topHeight = computed(() =>
+  sharedStore.isFull || isMobile.value ? "0" : "90",
+);
 const mybtns = ref(sharedStore.userInfo?.btns);
 const botBtnList = ref([]);
+
+const overlayStyle = computed(() => ({
+  "z-index": zIndex.value,
+  width: `calc(100vw - ${navWidth.value}px)`,
+  height: `calc(100vh - ${topHeight.value}px)`,
+  top: topHeight.value + "px",
+}));
+
+const drawerStyle = computed(() => ({
+  width: props.width || "400px",
+  height: `calc(100vh - ${topHeight.value}px)`,
+  top: topHeight.value + "px",
+  "z-index": zIndex.value + 1,
+}));
 
 watch(
   () => props.botBtn,
   (newVal) => {
-    botBtnList.value = [];
-    if (newVal.length) {
-      newVal.forEach((item) => {
-        if (
-          !item.auth ||
-          mybtns.value == "all" ||
-          mybtns.value.includes(item.auth)
-        ) {
-          botBtnList.value.push(item);
-        }
-      });
-    }
+    botBtnList.value = newVal.filter(
+      (item) =>
+        !item.auth ||
+        mybtns.value == "all" ||
+        mybtns.value?.includes(item.auth),
+    );
   },
   { immediate: true },
 );
+
 watch(
   () => props.modelValue,
   (newVal) => {
     dialogVisible.value = newVal;
-    if (newVal) {
-      zIndex.value = sharedStore.getIndex();
-    }
+    if (newVal) zIndex.value = sharedStore.getIndex();
   },
 );
 
@@ -217,18 +158,12 @@ watch(dialogVisible, (newVal) => {
   emit("update:modelValue", newVal);
 });
 
-const toClose = () => {
-  dialogVisible.value = false;
-};
-
-const handleClickBot = (btn) => {
-  emit("botBtnClick", { btn });
-};
+const toClose = () => (dialogVisible.value = false);
+const handleClickBot = (btn) => emit("botBtnClick", { btn });
 </script>
 
 <style scoped lang="scss">
 /* 通用样式 */
-/* 显示隐藏动画 */
 .dia-enter-from,
 .dia-leave-to {
   opacity: 0;
@@ -238,106 +173,6 @@ const handleClickBot = (btn) => {
   transition: opacity 0.1s;
 }
 
-/* page类型样式 */
-.diapageF {
-  background-color: var(--c-bg-box);
-  position: fixed;
-  right: 0;
-  padding-left: 10px;
-}
-.diapage {
-  width: calc(100% - 10px);
-  height: calc(100%);
-  background-color: var(--c-bg);
-
-  & > .top {
-    width: 100%;
-    height: 42px;
-    padding: 0 10px;
-  }
-  & > .mid {
-    width: 100%;
-    height: calc(100% - 90px);
-    padding: 0 10px;
-    overflow-y: auto;
-  }
-  & > .bot {
-    width: 100%;
-    height: 48px;
-    padding: 0 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-}
-
-/* drawer类型样式 */
-.diadrawerF {
-  background-color: rgba(0, 0, 0, 0.5);
-  position: fixed;
-  right: 0;
-}
-.diadrawer {
-  max-width: 100%;
-  background-color: var(--c-bg-box);
-  position: fixed;
-  right: 0;
-  & > .top {
-    width: 100%;
-    height: 50px;
-    background-color: var(--c-bg-theme);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 14px;
-    .tLeft {
-      width: 80%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      .title {
-        display: inline-block;
-        font-weight: bold;
-        font-size: 18px;
-        line-height: 40px;
-        color: var(--c-text-theme);
-      }
-    }
-    .tRight {
-      img {
-        cursor: pointer;
-      }
-    }
-  }
-  & > .top2 {
-    width: 100%;
-    height: 18px;
-    background-color: var(--c-bg-theme);
-  }
-  & > .mid {
-    width: 100%;
-    height: calc(100% - 90px);
-    margin-top: -18px;
-    overflow-y: auto;
-
-    .midbox {
-      margin-left: 10px;
-      width: calc(100% - 20px);
-      background-color: var(--c-bg);
-      border-radius: 6px;
-      min-height: 100%;
-      overflow: hidden;
-    }
-  }
-  & > .bot {
-    width: 100%;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-}
-/* 抽屉动画 */
 .diadrawer-enter-from,
 .diadrawer-leave-to {
   transform: translateX(100%);
@@ -347,8 +182,13 @@ const handleClickBot = (btn) => {
   transition: transform 0.2s ease;
 }
 
-/* box类型样式 */
-.diaboxF {
+.dialog-body {
+  width: 100%;
+  overflow-y: auto;
+}
+
+/* Box 类型样式 */
+.dialog-overlay.box-overlay {
   height: 100vh;
   width: 100vw;
   background-color: rgba(0, 0, 0, 0.5);
@@ -360,45 +200,77 @@ const handleClickBot = (btn) => {
   justify-content: center;
   overflow-y: auto;
 }
-.diabox {
+
+.dialog-content.box-content {
   max-width: calc(100% - 20px);
   max-height: calc(100% - 20px);
   background: var(--c-bg);
   border-radius: 6px;
   overflow: hidden;
-  & > .top {
-    width: 100%;
-    padding: 0 10px;
-    height: 42px;
-    background: var(--c-bg-theme);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    .title {
-      display: inline-block;
-      font-size: 16px;
-      line-height: 20px;
-      color: var(--c-text-theme);
-    }
-    img {
-      cursor: pointer;
-    }
+}
+
+.dialog-body.box-body {
+  min-height: 200px;
+  max-height: calc(100vh - 104px);
+  padding-bottom: 20px;
+}
+
+/* Drawer 类型样式 */
+.dialog-overlay.drawer-overlay {
+  background-color: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  right: 0;
+}
+
+.dialog-content.drawer-content {
+  max-width: 100%;
+  background-color: var(--c-bg-box);
+  position: fixed;
+  right: 0;
+}
+
+.drawer-top-space {
+  width: 100%;
+  height: 18px;
+  background-color: var(--c-bg-theme);
+}
+
+.dialog-body.drawer-body {
+  height: calc(100% - 90px);
+  margin-top: -18px;
+
+  .drawer-content-wrapper {
+    margin-left: 10px;
+    width: calc(100% - 20px);
+    background-color: var(--c-bg);
+    border-radius: 6px;
+    min-height: 100%;
+    overflow: hidden;
   }
-  & > .mid {
-    width: 100%;
-    min-height: 200px;
-    max-height: calc(100vh - 104px);
-    padding-bottom: 20px;
-    overflow-y: auto;
-  }
-  & > .bot {
-    width: 100%;
-    height: 42px;
-    background-color: var(--c-bg-box);
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    padding-right: 10px;
-  }
+}
+
+/* Page 类型样式 */
+.dialog-overlay.page-overlay {
+  background-color: var(--c-bg-box);
+  position: fixed;
+  right: 0;
+  padding-left: 10px;
+}
+
+.dialog-content.page-content {
+  width: calc(100% - 10px);
+  height: 100%;
+  background-color: var(--c-bg);
+}
+
+.page-header {
+  width: 100%;
+  height: 42px;
+  padding: 0 10px;
+}
+
+.dialog-body.page-body {
+  height: calc(100% - 90px);
+  padding: 0 10px;
 }
 </style>

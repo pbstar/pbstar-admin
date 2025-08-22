@@ -1,19 +1,21 @@
 <template>
-  <el-splitter class="p-leftRight">
+  <el-splitter class="p-left-right">
     <el-splitter-panel
-      class="left"
-      :size="props.leftWidth"
-      :min="props.leftMinWidth"
-      :max="props.leftMaxWidth"
+      class="left-panel"
+      :size="leftWidth"
+      :min="leftMinWidth"
+      :max="leftMaxWidth"
     >
-      <slot name="left"></slot>
+      <slot name="left" />
     </el-splitter-panel>
-    <el-splitter-panel class="right">
-      <slot name="right"></slot>
+
+    <el-splitter-panel class="right-panel">
+      <slot name="right" />
     </el-splitter-panel>
   </el-splitter>
 </template>
-<script setup lang="ts">
+
+<script setup>
 const props = defineProps({
   leftWidth: {
     type: [String, Number],
@@ -29,13 +31,16 @@ const props = defineProps({
   },
 });
 </script>
+
 <style scoped lang="scss">
-.p-leftRight {
+.p-left-right {
   width: 100%;
-  :deep(.left) {
+
+  :deep(.left-panel) {
     padding-right: 10px;
   }
-  :deep(.right) {
+
+  :deep(.right-panel) {
     padding-left: 10px;
   }
 }

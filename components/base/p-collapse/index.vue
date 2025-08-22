@@ -1,13 +1,11 @@
 <template>
-  <div
-    :class="{
-      collapse: true,
-      control: !props.isControl,
-      downLine: !props.showDownLine,
-    }"
-  >
+  <div :class="collapseClasses">
     <el-collapse v-model="activeName">
-      <el-collapse-item title="Consistency" name="1" :disabled="!isControl">
+      <el-collapse-item
+        title="Consistency"
+        name="1"
+        :disabled="!props.isControl"
+      >
         <template #title>
           <div class="title">
             <img src="@Passets/imgs/sa_quan.png" alt="" />
@@ -33,8 +31,10 @@
     </el-collapse>
   </div>
 </template>
+
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
+
 const props = defineProps({
   title: {
     type: String,
@@ -44,18 +44,23 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-  //是否可控
   isControl: {
     type: Boolean,
     default: true,
   },
-  //显示下划线
   showDownLine: {
     type: Boolean,
     default: true,
   },
 });
+
 const activeName = ref(props.isCollapse ? "" : "1");
+
+const collapseClasses = computed(() => ({
+  collapse: true,
+  control: !props.isControl,
+  downLine: !props.showDownLine,
+}));
 </script>
 <style lang="scss" scoped>
 .collapse {
