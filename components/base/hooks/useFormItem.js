@@ -5,21 +5,19 @@ import { useEnumStore } from "@Passets/stores/enum";
  * 表单项通用组合式函数
  * 提取了所有表单组件的公共逻辑
  */
-export function useFormItem(props, emits, data = {}) {
+export function useFormItem(props, emits, options = {}) {
   const {
     handleArray = false,
     handleOptions = false,
     handleTree = false,
     structureFn = null,
-  } = data;
+  } = options;
 
   const enumStore = useEnumStore();
 
   // 值处理
   const value = ref(handleArray ? props.modelValue || [] : props.modelValue);
-
-  // 选项处理
-  const options = ref(
+  const optionsData = ref(
     handleOptions ? props.config.options || [] : props.config.options,
   );
 
@@ -29,29 +27,40 @@ export function useFormItem(props, emits, data = {}) {
     emits("change", val);
   };
 
-  // 标签显示计算
+  // 工具函数
+  const findOptionLabel = (val) => {
+    const option = optionsData.value.find((item) => item.value == val);
+    return option ? option.label : val;
+  };
+
+  // 计算属性
   const getLabel = computed(() => {
-    if (!handleOptions) return value.value;
+    if (!handleOptions || !value.value) return value.value;
 
     if (handleArray || Array.isArray(value.value)) {
-      if (!value.value || value.value.length === 0) return "";
-
-      return value.value
-        .map((it) => {
-          const row = options.value.find((item) => item.value == it);
-          return row ? row.label : it;
-        })
-        .join(",");
-    } else {
-      const row = options.value.find((it) => it.value == value.value);
-      return row ? row.label : value.value;
+      return value.value.map(findOptionLabel).join(",");
     }
+
+    return findOptionLabel(value.value);
   });
 
-  // 范围选择器标签显示
-  const getRangeLabel = computed(() => {
-    return value.value && value.value.length > 0 ? value.value.join("-") : "";
-  });
+  const getRangeLabel = computed(() =>
+    value.value?.length > 0 ? value.value.join("-") : "",
+  );
+
+  // 数据加载
+  const loadOptions = async (enumKey) => {
+    if (!enumKey) return;
+
+    const res = await enumStore.getEnum(enumKey);
+    if (res?.[enumKey]) {
+      const list = res[enumKey];
+      optionsData.value =
+        handleTree && structureFn
+          ? structureFn(list, "parentId", "value")
+          : list;
+    }
+  };
 
   // 监听modelValue变化
   watch(
@@ -66,28 +75,12 @@ export function useFormItem(props, emits, data = {}) {
     watch(
       () => props.config.options,
       (newVal) => {
-        options.value = handleArray ? newVal || [] : newVal;
+        optionsData.value = handleArray ? newVal || [] : newVal;
       },
       { deep: true },
     );
-    // 监听enumKey变化
-    watch(
-      () => props.config.enumKey,
-      (newVal) => {
-        if (!newVal) return;
 
-        enumStore.getEnum(newVal).then((res) => {
-          if (res && res[newVal]) {
-            const list = res[newVal];
-            options.value =
-              handleTree && structureFn
-                ? structureFn(list, "parentId", "value")
-                : list;
-          }
-        });
-      },
-      { immediate: true },
-    );
+    watch(() => props.config.enumKey, loadOptions, { immediate: true });
   }
 
   // 监听tree options变化
@@ -95,7 +88,7 @@ export function useFormItem(props, emits, data = {}) {
     watch(
       () => props.config.options,
       (newVal) => {
-        options.value = structureFn(newVal, "parentId", "value");
+        optionsData.value = structureFn(newVal, "parentId", "value");
       },
       { deep: true, immediate: true },
     );
@@ -103,7 +96,7 @@ export function useFormItem(props, emits, data = {}) {
 
   return {
     value,
-    options,
+    options: optionsData,
     handleChange,
     getLabel,
     getRangeLabel,

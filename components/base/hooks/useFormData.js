@@ -4,8 +4,8 @@ import { ref, watch } from "vue";
  * 表单数据处理组合式函数
  * 提供表单数据的通用处理方法
  */
-export function useFormData(props, emit) {
-  const data = ref(props.data || []);
+export function useFormData(props, emits) {
+  const formData = ref(props.data || []);
   const valueObj = ref({});
 
   /**
@@ -23,21 +23,20 @@ export function useFormData(props, emit) {
         console.warn("updateData方法的数组参数中必须包含key");
         return;
       }
-      const index = data.value.findIndex((it) => it.key === item.key);
+      const index = formData.value.findIndex((it) => it.key === item.key);
       if (index > -1) {
-        data.value[index] = { ...data.value[index], ...item };
+        formData.value[index] = { ...formData.value[index], ...item };
       }
     });
   };
 
   /**
-   * 更新表单值
-   * @param {Object} obj - 需要更新的值对象
+   * 处理表单值变化
+   * @param {Object} val - 表单值
    */
-  const updateValue = (obj) => {
-    if (obj && typeof obj === "object") {
-      valueObj.value = { ...valueObj.value, ...obj };
-    }
+  const handleChange = (val) => {
+    emits("change", val);
+    emits("update:modelValue", valueObj.value);
   };
 
   /**
@@ -51,16 +50,22 @@ export function useFormData(props, emit) {
   watch(
     () => props.data,
     (newData) => {
-      data.value = newData || [];
+      formData.value = newData || [];
     },
     { immediate: true },
   );
 
+  watch(
+    () => props.modelValue,
+    (newVal) => (valueObj.value = { ...valueObj.value, ...newVal }),
+    { immediate: true, deep: true },
+  );
+
   return {
-    data,
+    formData,
     valueObj,
     updateData,
-    updateValue,
     resetValue,
+    handleChange,
   };
 }

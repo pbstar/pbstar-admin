@@ -1,5 +1,5 @@
 <script setup>
-import { watch, computed } from "vue";
+import { computed } from "vue";
 import PItem from "@Pcomponents/base/p-item/index.vue";
 import { useFormData } from "../hooks/useFormData.js";
 import { validateRequired, normalizeSpan } from "../utils/validation.js";
@@ -19,29 +19,21 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["change", "update:modelValue"]);
+const emits = defineEmits(["change", "update:modelValue"]);
 
-const { data: formData, valueObj, updateData } = useFormData(props);
+const { formData, valueObj, updateData, handleChange } = useFormData(
+  props,
+  emits,
+);
 const isMobile = computed(() => {
   return window.innerWidth <= 700;
 });
-
-const handleChange = (val) => {
-  emit("change", val);
-  emit("update:modelValue", valueObj.value);
-};
 
 const getWidth = (index) => {
   const span = normalizeSpan(props.spanList[index]);
   const actualSpan = isMobile.value ? 12 : span;
   return `calc(${(actualSpan * 100) / 12}% - 20px)`;
 };
-
-watch(
-  () => props.modelValue,
-  (newVal) => (valueObj.value = { ...valueObj.value, ...newVal }),
-  { immediate: true, deep: true },
-);
 
 defineExpose({
   toChangeData: updateData,

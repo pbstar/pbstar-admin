@@ -8,30 +8,32 @@ const props = defineProps({
     type: Array,
     default: () => [],
   },
+  modelValue: {
+    type: Object,
+    default: () => ({}),
+  },
   showReset: {
     type: Boolean,
     default: true,
   },
 });
 
-const emit = defineEmits(["change", "btnClick"]);
+const emits = defineEmits(["change", "update:modelValue", "btnClick"]);
 
-const { data: formData, valueObj, updateData, resetValue } = useFormData(props);
+const { formData, valueObj, updateData, resetValue, handleChange } =
+  useFormData(props, emits);
 const showSearch = ref(true);
 
-const handleChange = (val) => emit("change", val);
-
 const toSearch = () =>
-  emit("btnClick", { type: "search", data: valueObj.value });
+  emits("btnClick", { type: "search", data: valueObj.value });
 
 const toReset = () => {
   resetValue();
-  emit("btnClick", { type: "reset", data: valueObj.value });
+  emits("btnClick", { type: "reset", data: valueObj.value });
 };
 
 defineExpose({
   toChangeData: updateData,
-  toChangeValue: updateData,
 });
 </script>
 
