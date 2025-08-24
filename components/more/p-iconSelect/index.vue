@@ -77,7 +77,7 @@ const iconList = computed(() =>
 
 const openDialog = () => {
   iconActive.value = input.value;
-  iconType.value = input.value.startsWith("p-icon-") ? "2" : "1";
+  iconType.value = input.value?.startsWith("p-icon-") ? "2" : "1";
   visible.value = true;
 };
 

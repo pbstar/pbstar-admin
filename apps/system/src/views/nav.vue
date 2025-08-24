@@ -20,6 +20,8 @@ const tableColumn = ref([
   { label: "菜单名称", key: "name" },
   { label: "菜单链接", key: "url" },
   { label: "菜单图标", key: "icon", slot: "icon" },
+  { label: "显示在导航", key: "isNav", slot: "isNav" },
+  { label: "备注", key: "remark" },
 ]);
 const tableData = ref([]);
 const tableTopBtn = ref([{ key: "add", label: "新增" }]);
@@ -37,29 +39,42 @@ const data = ref([]);
 
 onBeforeMount(() => {
   initTree();
-  initTable();
 });
 const initTree = () => {
-  data.value = [
-    {
-      value: 1,
-      label: "应用中心",
-      type: "group",
-      children: [
-        {
-          value: 2,
-          label: "系统应用",
-          type: "app",
-        },
-        {
-          value: 3,
-          label: "示例应用",
-          type: "app",
-        },
-      ],
-    },
-  ];
-  currentNode.value = 2;
+  data.value = [];
+  request
+    .post({
+      url: "/system/app/getList",
+    })
+    .then((res) => {
+      if (res && res.code === 200) {
+        // 按group分组，转换为树形数组
+        const groupMap = {};
+        res.data.forEach((item) => {
+          if (!groupMap[item.group]) {
+            groupMap[item.group] = {
+              label: item.group,
+              value: `group_${item.group}`,
+              type: "group",
+              children: [],
+            };
+          }
+          if (!currentNode.value) {
+            currentNode.value = item.id.toString();
+            initTable();
+          }
+          groupMap[item.group].children.push({
+            label: item.name,
+            value: item.id.toString(),
+            type: "app",
+            ...item,
+          });
+        });
+        data.value = Object.values(groupMap);
+      } else {
+        ElMessage.error(res?.msg || "操作异常");
+      }
+    });
 };
 const toSearch = ({ data }) => {
   searchValue.value = data;
@@ -69,6 +84,9 @@ const initTable = () => {
   const params = {
     ...searchValue.value,
   };
+  if (currentNode.value && !currentNode.value.startsWith("group")) {
+    params.appId = currentNode.value;
+  }
   tableData.value = [];
   request
     .post({
@@ -112,6 +130,10 @@ const tableRightBtnClick = ({ row, btn }) => {
 };
 const tableTopBtnClick = ({ btn }) => {
   if (btn == "add") {
+    if (!currentNode.value || currentNode.value?.startsWith("group")) {
+      ElMessage.error("请先选择应用");
+      return;
+    }
     detailType.value = "add";
     detailId.value = "";
     isDetail.value = true;
@@ -196,6 +218,9 @@ const handleNodeClick = (data) => {
               <span>{{ scope.row.icon }}</span>
             </div>
           </template>
+          <template #isNav="scope">
+            <span>{{ scope.row.isNav == 1 ? "是" : "否" }}</span>
+          </template>
         </p-table>
       </template>
     </p-left-right>
@@ -210,7 +235,12 @@ const handleNodeClick = (data) => {
       ]"
       @botBtnClick="diaBotBtnClick"
     >
-      <Detail ref="detailRef" :type="detailType" :id="detailId"></Detail>
+      <Detail
+        ref="detailRef"
+        :type="detailType"
+        :id="detailId"
+        :appId="currentNode"
+      ></Detail>
     </p-dialog>
   </div>
 </template>
@@ -218,7 +248,7 @@ const handleNodeClick = (data) => {
 <style scoped lang="scss">
 .page {
   width: 100%;
-  height: 100%;
+  min-height: 100%;
   padding: 0 10px;
   background-color: var(--c-bg);
   display: flex;

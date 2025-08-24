@@ -3,12 +3,11 @@ import { ref, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import useSharedStore from "@Passets/stores/shared";
 import { useNavsStore } from "@/stores/navs";
-import WujieVue from "wujie-vue3";
+import { bus } from "wujie";
 import request from "@Passets/utils/request";
 import PIcon from "@Pcomponents/base/p-icon/index.vue";
 import { changeTheme } from "@Passets/utils/theme";
 
-const { bus } = WujieVue;
 const sharedStore = useSharedStore();
 const navsStore = useNavsStore();
 const router = useRouter();

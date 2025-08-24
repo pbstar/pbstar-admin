@@ -40,9 +40,9 @@ import AdminNav from "@/components/layout/nav.vue";
 import history from "@/components/layout/history.vue";
 import useSharedStore from "@Passets/stores/shared";
 import { useNavsStore } from "@/stores/navs";
-import WujieVue from "wujie-vue3";
+import { bus } from "wujie";
 import request from "@Passets/utils/request";
-const { bus } = WujieVue;
+
 const sharedStore = useSharedStore();
 const navsStore = useNavsStore();
 const router = useRouter();

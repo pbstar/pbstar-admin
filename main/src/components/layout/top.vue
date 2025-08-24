@@ -2,12 +2,11 @@
 import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import useSharedStore from "@Passets/stores/shared";
-import WujieVue from "wujie-vue3";
+import { bus } from "wujie";
 import request from "@Passets/utils/request";
 import PIcon from "@Pcomponents/base/p-icon/index.vue";
 import AppSelect from "../more/appSelect.vue";
 import { changeTheme } from "@Passets/utils/theme";
-const { bus } = WujieVue;
 const sharedStore = useSharedStore();
 const router = useRouter();
 const title = ref(import.meta.env.PUBLIC_TITLE);

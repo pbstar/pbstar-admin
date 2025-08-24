@@ -22,9 +22,9 @@ const props = defineProps({
 });
 
 const iconType = computed(() =>
-  props.name.startsWith("el-icon-")
+  props.name?.startsWith("el-icon-")
     ? "ep"
-    : props.name.startsWith("p-icon-")
+    : props.name?.startsWith("p-icon-")
       ? "icon"
       : "",
 );

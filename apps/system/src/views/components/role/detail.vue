@@ -34,8 +34,8 @@ onBeforeMount(() => {
 });
 const getNavList = () => {
   request
-    .get({
-      url: "/system/nav/getAllList",
+    .post({
+      url: "/system/nav/getList",
     })
     .then((res) => {
       if (res.code === 200) {
