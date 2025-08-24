@@ -14,6 +14,14 @@
     <a href="https://github.com/pbstar/pbstar-admin"><img src="https://img.shields.io/badge/WeChat-P24612582-brightgreen.svg"></a>
 </p>
 
+## 项目特点
+
+- **微前端**: 基于wujie的微前端架构
+- **模块化**: pnpm monorepo工作区管理
+- **组件化**: 共享组件库设计
+- **工程化**: 完整的CLI工具链
+- **现代化**: 基于Rsbuild的构建系统
+
 ## 架构图
 
 ![架构图](https://github.com/pbstar/pbstar-admin-docs/blob/main/public/architecture.png)
@@ -61,8 +69,8 @@ pnpm remove <依赖名> --filter <包名>
 
 ```
 ├── apps                   # 子应用
-│ ├── example                # 示例应用
-│ ├── system                # 系统应用
+│ ├── example              # 示例应用
+│ ├── system               # 系统应用
 │ └── apps.json            # 子应用配置
 ├── assets                 # 静态资源
 ├── build                  # 打包产物
@@ -77,6 +85,7 @@ pnpm remove <依赖名> --filter <包名>
 
 ## 致谢
 
-本项目参考了以下优秀的开源项目，在此表示感谢：
+感谢以下优秀的开源项目和工具，为本项目提供了强大的技术基础和灵感来源：
 
-[vue-vben-admin](https://github.com/vbenjs/vue-vben-admin)、[Geeker-Admin](https://github.com/HalseySpicy/Geeker-Admin)、[gi-demo](https://github.com/lin-97/gi-demo)
+核心依赖：[wujie](https://github.com/Tencent/wujie)、[rsbuild](https://github.com/web-infra-dev/rsbuild)、[pnpm](https://github.com/pnpm/pnpm)、[vue](https://github.com/vuejs/core)
+优秀的后台项目：[vue-vben-admin](https://github.com/vbenjs/vue-vben-admin)、[Geeker-Admin](https://github.com/HalseySpicy/Geeker-Admin)、[gi-demo](https://github.com/lin-97/gi-demo)

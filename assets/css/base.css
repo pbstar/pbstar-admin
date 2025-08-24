@@ -14,6 +14,10 @@ body {
   position: relative;
 }
 
+#root {
+  overflow-y: auto;
+}
+
 /* 全局重置 */
 *,
 *::before,

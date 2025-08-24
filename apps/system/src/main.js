@@ -25,7 +25,7 @@ if (window.__POWERED_BY_WUJIE__) {
     render(App);
   };
   window.__WUJIE_UNMOUNT = () => {
-    instance.unmount();
+    instance?.unmount();
     instance = null;
   };
 } else {

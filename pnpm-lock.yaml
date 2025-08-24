@@ -96,12 +96,12 @@ importers:
 
   main:
     dependencies:
+      wujie:
+        specifier: ^1.0.29
+        version: 1.0.29
       wujie-polyfill:
         specifier: ^1.1.3
         version: 1.1.3
-      wujie-vue3:
-        specifier: ^1.0.29
-        version: 1.0.29(vue@3.5.18)
 
   tools:
     dependencies:
@@ -2212,11 +2212,6 @@ packages:
 
   wujie-polyfill@1.1.3:
     resolution: {integrity: sha512-qYvluvjquCO/T1yIknJba6a+8dZUeRffUN/OvQQ22RHfgyCDNtxGg7Xgw1ZCZ1YB4hs/qFsVRl66GT/VvB3/0Q==}
-
-  wujie-vue3@1.0.29:
-    resolution: {integrity: sha512-OGt5Veyq/DtmFzHQCANmv8nZgu877u7ZjS5qjFpSrtKARKhLjID3x99D40a4pb3Kj5UmRatkV5Gn5hqOWpziZQ==}
-    peerDependencies:
-      vue: ^3.0.0
 
   wujie@1.0.29:
     resolution: {integrity: sha512-u7PmBT4l5ov7ciwmZNG8DLIRKrYrnXDa0LnAFgRQikJ/ZrVZYzzSNz6duzEJoj8/o46dnMy/g9Hh/PBYGbgFUw==}
@@ -4538,11 +4533,6 @@ snapshots:
       strip-ansi: 7.1.0
 
   wujie-polyfill@1.1.3: {}
-
-  wujie-vue3@1.0.29(vue@3.5.18):
-    dependencies:
-      vue: 3.5.18
-      wujie: 1.0.29
 
   wujie@1.0.29:
     dependencies:
