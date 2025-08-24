@@ -6,7 +6,9 @@
   "scripts": {
     "create": "node ./cli.mjs",
     "build": "node ./build.mjs",
-    "dev": "node ./dev.mjs"
+    "dev": "node ./dev.mjs",
+    "add": "node ./add.mjs",
+    "remove": "node ./remove.mjs"
   },
   "dependencies": {
     "chalk": "^5.6.0",

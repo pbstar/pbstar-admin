@@ -11,6 +11,10 @@
     "precreate": "npx only-allow pnpm",
     "dev": "pnpm run -filter tools dev",
     "predev": "npx only-allow pnpm",
+    "add": "pnpm run -filter tools add",
+    "preadd": "npx only-allow pnpm",
+    "remove": "pnpm run -filter tools remove",
+    "preremove": "npx only-allow pnpm",
     "build": "pnpm run -filter tools build",
     "prebuild": "npx only-allow pnpm"
   },
