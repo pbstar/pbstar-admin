@@ -1,6 +1,7 @@
 <script setup>
 import PIcon from "@Pcomponents/base/p-icon/index.vue";
-import { ref, watch } from "vue";
+import { ref, watch, onMounted } from "vue";
+import request from "@Passets/utils/request";
 const appsRef = ref(null);
 const popoverRef = ref(null);
 const appsList = ref([
@@ -26,6 +27,20 @@ const appsList = ref([
   },
 ]);
 const appActive = ref({});
+
+const getAppList = async () => {
+  const res = await request.get({
+    url: "/main/getMyAppList",
+  });
+  if (res.code != 200 || !res.data) {
+    ElMessage.error(res.msg || "获取应用列表失败");
+    return false;
+  }
+  appsList.value = res.data;
+};
+onMounted(() => {
+  getAppList();
+});
 
 const toApp = (app) => {
   if (app.path == appActive.value.path) return;
