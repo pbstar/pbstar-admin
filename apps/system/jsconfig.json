@@ -5,8 +5,9 @@
     "baseUrl": "./",
     "jsx": "preserve",
     "paths": {
-      "@Pcomponents/*": ["components/*"],
-      "@Passets/*": ["assets/*"]
+      "@/*": ["src/*"],
+      "@Pcomponents/*": ["../../components/*"],
+      "@Passets/*": ["../../assets/*"]
     }
   },
   "exclude": ["node_modules"]
