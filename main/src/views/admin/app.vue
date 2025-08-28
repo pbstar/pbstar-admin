@@ -11,6 +11,7 @@ const sharedStore = useSharedStore();
 // 当前应用信息
 const subappContainer = ref(null);
 const currentApp = ref(null);
+const loading = ref(false);
 
 // 子应用props
 const appProps = computed(() => ({
@@ -43,6 +44,8 @@ const handleRouteChange = () => {
 const startSubApp = (key, url, path) => {
   const oldAppKey = currentApp.value?.key;
 
+  loading.value = true;
+
   // 销毁之前的实例
   if (oldAppKey) {
     destroyApp(oldAppKey);
@@ -63,6 +66,17 @@ const startSubApp = (key, url, path) => {
       sync: true,
       props: appProps.value,
       plugins,
+      afterMount: () => {
+        loading.value = false;
+      },
+      loadError: (url, err) => {
+        loading.value = false;
+        // 这个回调函数会在该子应用加载失败时触发
+        console.error(`子应用【${key}】的资源 ${url} 加载失败:`, err);
+        subappContainer.value.innerHTML = `
+          <div style="text-align: center; padding: 50px;">子应用【${key}】加载失败</div>
+        `;
+      },
     });
   });
 };
@@ -80,7 +94,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="subapp-container">
+  <div class="subapp-container" v-loading="loading">
     <div ref="subappContainer" class="subapp"></div>
   </div>
 </template>

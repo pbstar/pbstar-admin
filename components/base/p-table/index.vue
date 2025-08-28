@@ -421,6 +421,10 @@ defineExpose({
       color: var(--c-text2);
       font-weight: normal;
     }
+    /* 修复tooltip错位问题 */
+    :deep(.el-popper) {
+      position: absolute !important;
+    }
   }
   .bot {
     display: flex;
