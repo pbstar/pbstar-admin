@@ -1,62 +1,75 @@
 <script setup>
 import PIcon from "@Pcomponents/base/p-icon/index.vue";
-import { ref, watch, onMounted } from "vue";
-import request from "@Passets/utils/request";
+import { ref, onBeforeMount, watch } from "vue";
+import { useRouter } from "vue-router";
+import { useAppsStore } from "@/stores/apps";
+const appsStore = useAppsStore();
+const router = useRouter();
 const appsRef = ref(null);
 const popoverRef = ref(null);
-const appsList = ref([
-  {
-    name: "应用中心",
-    children: [
-      {
-        name: "示例应用",
-        icon: "el-icon-Memo",
-        path: "/app/example",
-      },
-      {
-        name: "系统管理",
-        icon: "el-icon-setting",
-        path: "/app/list",
-      },
-      {
-        name: "设备管理系统",
-        icon: "el-icon-setting",
-        path: "/app/device",
-      },
-    ],
-  },
-]);
+const appsList = ref([]);
 const appActive = ref({});
-
-const getAppList = async () => {
-  const res = await request.get({
-    url: "/main/getMyAppList",
+const isLoading = ref(false);
+const getAppsGroup = (myApps) => {
+  const groupMap = {};
+  myApps.forEach((item) => {
+    if (!groupMap[item.group]) {
+      groupMap[item.group] = {
+        name: item.group,
+        children: [],
+      };
+    }
+    groupMap[item.group].children.push(item);
   });
-  if (res.code != 200 || !res.data) {
-    ElMessage.error(res.msg || "获取应用列表失败");
-    return false;
-  }
-  appsList.value = res.data;
+  return Object.values(groupMap);
 };
-onMounted(() => {
-  getAppList();
+
+onBeforeMount(() => {
+  const apps = appsStore.getApps();
+  const appId = appsStore.appId;
+  appsList.value = getAppsGroup(apps);
+  if (appId) {
+    appActive.value = apps.find((item) => item.id == appId);
+  }
 });
 
-const toApp = (app) => {
-  if (app.path == appActive.value.path) return;
+const toApp = async (app) => {
+  if (app.id == appActive.value?.id) return;
+  isLoading.value = true;
+  const isOk = await appsStore.setAppId({
+    id: app.id,
+  });
+  isLoading.value = false;
+  if (!isOk) return;
   appActive.value = app;
+  const newApp = appsStore.getApp();
+  if (newApp && newApp.navs) {
+    const firstNav = newApp.navs.find((e) => e.url);
+    if (firstNav) {
+      router.push(firstNav.url);
+    }
+  }
   popoverRef.value.hide();
-  // router.push(app.path);
 };
+watch(
+  () => appsStore.appId,
+  (newVal) => {
+    if (!newVal) {
+      appActive.value = {};
+    } else if (newVal != appActive.value?.id) {
+      appActive.value = appsList.value.find((item) => item.id == newVal);
+    }
+  },
+);
 </script>
 <template>
   <div>
     <div class="apps" ref="appsRef">
-      <p-icon class="icon1" :name="appActive.icon" size="16" />
+      <p-icon class="icon1" :name="appActive?.icon" size="16" />
       <span
         class="name"
-        :style="{ width: appActive.icon ? '105px' : '121px' }"
-        >{{ appActive.name || "选择应用" }}</span
+        :style="{ width: appActive?.icon ? '105px' : '121px' }"
+        >{{ appActive?.name || "选择应用" }}</span
       >
       <p-icon class="icon2" name="el-icon-ArrowDown" size="16" />
     </div>
@@ -67,13 +80,13 @@ const toApp = (app) => {
       width="340"
       ref="popoverRef"
     >
-      <div class="list">
+      <div class="list" v-loading="isLoading">
         <div class="fItem" v-for="(item, index) in appsList" :key="index">
           <div class="title">{{ item.name }}</div>
           <div class="children" v-if="item.children">
             <div
               class="child"
-              :class="{ active: child.path == appActive.path }"
+              :class="{ active: child.id == appActive?.id }"
               v-for="(child, indexs) in item.children"
               :key="indexs + 's'"
               @click="toApp(child)"
@@ -99,6 +112,7 @@ const toApp = (app) => {
   padding: 0 6px;
   border-radius: 5px;
   font-size: 14px;
+  cursor: pointer;
   .name {
     width: 105px;
     margin-left: 5px;

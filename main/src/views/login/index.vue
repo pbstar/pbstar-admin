@@ -107,12 +107,10 @@ import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
 import PIcon from "@Pcomponents/base/p-icon/index.vue";
 import request from "@Passets/utils/request";
-import { useNavsStore } from "@/stores/navs";
 import useSharedStore from "@Passets/stores/shared";
 import pVerificationCode from "@Pcomponents/more/p-verificationCode/index.vue";
 
 const sharedStore = useSharedStore();
-const navsStore = useNavsStore();
 const router = useRouter();
 
 let title = ref(import.meta.env.PUBLIC_TITLE);
@@ -160,19 +158,8 @@ const handleSubmit = async () => {
       role: res.data.role,
       btns: res.data.btns,
     };
-    request
-      .get({
-        url: "/main/getMyNavTreeList",
-      })
-      .then((r) => {
-        if (r.code === 200) {
-          navsStore.setNavs(r.data);
-          router.push({ path: "/" });
-          ElMessage.success("登录成功");
-        } else {
-          ElMessage.error(r.msg);
-        }
-      });
+    router.push({ path: "/" });
+    ElMessage.success("登录成功");
   } else {
     ElMessage.error(res.msg);
   }

@@ -1,66 +1,35 @@
 <script setup>
-import { ref, watch } from "vue";
+import { ref, watch, onBeforeMount } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import useSharedStore from "@Passets/stores/shared";
-import { useNavsStore } from "@/stores/navs";
+import { useAppsStore } from "@/stores/apps";
 import { bus } from "wujie";
 import request from "@Passets/utils/request";
 import PIcon from "@Pcomponents/base/p-icon/index.vue";
 import { changeTheme } from "@Passets/utils/theme";
 
 const sharedStore = useSharedStore();
-const navsStore = useNavsStore();
+const appsStore = useAppsStore();
 const router = useRouter();
 const route = useRoute();
+
 const title = ref(import.meta.env.PUBLIC_TITLE);
 const userName = ref(sharedStore.userInfo?.name || "管理员");
 const userImg = ref(sharedStore.userInfo?.avatar || "");
 const theme = ref(false);
 const isMore = ref(false);
 const list = ref([]);
+const listTree = ref([]);
 const activeIndex = ref("1");
 
 const select = (val) => {
   activeIndex.value = val;
-  const url = findUrlByIndex(val);
+  activeIndex.value = val;
+  const url = list.value.find((item) => item.id.toString() === val)?.url;
   if (url) {
     isMore.value = false;
     router.push(url);
   }
-};
-
-const findUrlByIndex = (index) => {
-  let url = "";
-  const findUrl = (list) => {
-    for (let i = 0; i < list.length; i++) {
-      const item = list[i];
-      if (item.id.toString() === index) {
-        url = item.url;
-        break;
-      } else if (item.children) {
-        findUrl(item.children);
-      }
-    }
-  };
-  findUrl(list.value);
-  return url;
-};
-
-const findIndexByUrl = (url) => {
-  let index = "";
-  const findIndex = (list) => {
-    for (let i = 0; i < list.length; i++) {
-      const item = list[i];
-      if (item.url === url) {
-        index = item.id.toString();
-        break;
-      } else if (item.children) {
-        findIndex(item.children);
-      }
-    }
-  };
-  findIndex(list.value);
-  return index;
 };
 
 const toUserInfo = () => {
@@ -88,23 +57,40 @@ const toLoginOut = () => {
       }
     });
 };
-
-router.afterEach((to, from) => {
-  if (to.fullPath) {
-    activeIndex.value = findIndexByUrl(to.fullPath);
+onBeforeMount(() => {
+  if (route.fullPath) {
+    const nav = list.value.find((item) => item.url === route.fullPath);
+    activeIndex.value = nav?.id.toString() || "1";
   }
 });
 
+router.afterEach((to, from) => {
+  if (to.fullPath) {
+    const nav = list.value.find((item) => item.url === to.fullPath);
+    activeIndex.value = nav?.id.toString() || "1";
+  }
+});
 watch(
-  () => navsStore.navsTree,
+  () => appsStore.appId,
   (newStore, oldStore) => {
-    if (!newStore) return;
-    list.value = newStore;
-    if (route.fullPath) {
-      activeIndex.value = findIndexByUrl(route.fullPath);
+    if (newStore) {
+      const app = appsStore.getApp();
+      if (!app) return;
+      list.value = app.navs;
+      listTree.value = app.navsTree;
+    } else {
+      list.value = [
+        {
+          id: 1,
+          name: "首页",
+          url: "/admin/pHome",
+          icon: "el-icon-house",
+        },
+      ];
+      listTree.value = list.value;
     }
   },
-  { deep: true, immediate: true },
+  { immediate: true },
 );
 watch(
   () => sharedStore.userInfo,
@@ -137,7 +123,7 @@ watch(
       </div>
       <div class="content" v-show="isMore">
         <el-menu class="menu" :default-active="activeIndex" @select="select">
-          <div class="item" v-for="(item, index) in list" :key="index">
+          <div class="item" v-for="(item, index) in listTree" :key="index">
             <el-menu-item :index="item.id.toString()" v-if="!item.children">
               <p-icon v-if="item.icon" :name="item.icon" />
               <span>{{ item.name }}</span>

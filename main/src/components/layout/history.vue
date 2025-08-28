@@ -1,34 +1,27 @@
 <script setup>
 import PIcon from "@Pcomponents/base/p-icon/index.vue";
-import { ref, watch } from "vue";
-import { useRouter, useRoute } from "vue-router";
-import { useNavsStore } from "@/stores/navs";
-import { flatten } from "@Passets/utils/array";
+import { ref } from "vue";
+import { useRouter } from "vue-router";
+import { useAppsStore } from "@/stores/apps";
 const router = useRouter();
-const route = useRoute();
-const navsStore = useNavsStore();
+const appsStore = useAppsStore();
 const path = ref("");
 const list = ref([]);
-const navList = ref([]);
 
 const addItem = (fullPath) => {
   if (fullPath == path.value) return;
   path.value = fullPath;
-  let hasPath = false;
-  list.value.forEach((element) => {
-    if (element.path == fullPath) {
-      hasPath = true;
-      return;
-    }
-  });
+  const hasPath = list.value.find((item) => item.path == fullPath);
   if (hasPath) return;
-  const obj = navList.value.find((item) => item.url == fullPath);
-  if (obj) {
-    list.value.push({
-      name: obj.name,
-      path: obj.url,
-    });
-  }
+  const app = appsStore.getApp();
+  if (!app || !app.navs) return;
+  const nav = app.navs.find((item) => item.url == fullPath);
+  if (!nav) return;
+  list.value.push({
+    name: nav.name,
+    appId: appsStore.appId,
+    path: fullPath,
+  });
 };
 const delItem = (url) => {
   list.value = list.value.filter((item) => item.path != url);
@@ -42,24 +35,15 @@ const delItem = (url) => {
     router.push(toPath);
   }
 };
-const toPath = (url) => {
-  if (url == path.value) return;
-  router.push(url);
+const toPath = async (item) => {
+  if (item.path == path.value) return;
+  if (item.appId != appsStore.appId) {
+    await appsStore.setAppId({
+      id: item.appId,
+    });
+  }
+  router.push(item.path);
 };
-watch(
-  () => navsStore.navsTree,
-  (newVal) => {
-    if (newVal && newVal.length > 0) {
-      navList.value = flatten(newVal);
-      if (route.fullPath) {
-        addItem(route.fullPath);
-      }
-    }
-  },
-  {
-    immediate: true,
-  },
-);
 
 router.afterEach((to, from) => {
   addItem(to.fullPath);
@@ -67,7 +51,7 @@ router.afterEach((to, from) => {
 </script>
 <template>
   <div class="historyBox">
-    <div class="home" @click="toPath('/')">
+    <div class="home" @click="toPath({ appId: 0, path: '/' })">
       <p-icon name="el-icon-house" />
     </div>
     <div class="list">
@@ -76,7 +60,7 @@ router.afterEach((to, from) => {
         :class="item.path == path ? 'active' : ''"
         v-for="(item, index) in list"
         :key="index"
-        @click="toPath(item.path)"
+        @click="toPath(item)"
       >
         <span>{{ item.name }}</span>
         <p-icon name="el-icon-close" @click.stop="delItem(item.path)" />

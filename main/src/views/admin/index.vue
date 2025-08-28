@@ -1,36 +1,38 @@
 <template>
-  <div class="pa_page">
-    <div class="top" v-show="!isFull">
-      <AdminTop v-show="!isMobile" />
-      <AdminTopMobile v-show="isMobile" />
-    </div>
-    <div class="main">
-      <div class="mLeft" v-show="!isFull && !isMobile">
-        <AdminNav />
+  <div class="pa_page" v-loading="isLoading">
+    <template v-if="!isLoading">
+      <div class="top" v-show="!isFull">
+        <AdminTop v-show="!isMobile" />
+        <AdminTopMobile v-show="isMobile" />
       </div>
-      <div
-        class="mRight"
-        :style="{
-          paddingLeft: isFull ? '0' : '10px',
-          paddingRight: isFull ? '0' : '10px',
-        }"
-      >
-        <history class="history" v-show="!isFull && !isMobile" />
-        <div style="height: 0; width: 100%" v-show="isFull">
-          <div class="unfull" @click="toUnFull">
-            <p-icon name="el-icon-close" />
+      <div class="main">
+        <div class="mLeft" v-show="!isFull && !isMobile">
+          <AdminNav />
+        </div>
+        <div
+          class="mRight"
+          :style="{
+            paddingLeft: isFull ? '0' : '10px',
+            paddingRight: isFull ? '0' : '10px',
+          }"
+        >
+          <history class="history" v-show="!isFull && !isMobile" />
+          <div style="height: 0; width: 100%" v-show="isFull">
+            <div class="unfull" @click="toUnFull">
+              <p-icon name="el-icon-close" />
+            </div>
+          </div>
+          <div style="width: 100%; height: 10px" v-show="isMobile"></div>
+          <div class="mApp">
+            <RouterView />
           </div>
         </div>
-        <div style="width: 100%; height: 10px" v-show="isMobile"></div>
-        <div class="mApp">
-          <RouterView />
-        </div>
       </div>
-    </div>
+    </template>
   </div>
 </template>
 <script setup>
-import { computed, onBeforeMount, onUnmounted } from "vue";
+import { ref, computed, onBeforeMount } from "vue";
 import { ElMessage } from "element-plus";
 import { RouterView, useRouter, useRoute } from "vue-router";
 import PIcon from "@Pcomponents/base/p-icon/index.vue";
@@ -39,12 +41,12 @@ import AdminTopMobile from "@/components/layout/topMobile.vue";
 import AdminNav from "@/components/layout/nav.vue";
 import history from "@/components/layout/history.vue";
 import useSharedStore from "@Passets/stores/shared";
-import { useNavsStore } from "@/stores/navs";
+import { useAppsStore } from "@/stores/apps";
 import { bus } from "wujie";
 import request from "@Passets/utils/request";
 
 const sharedStore = useSharedStore();
-const navsStore = useNavsStore();
+const appsStore = useAppsStore();
 const router = useRouter();
 const route = useRoute();
 const freeLogin = import.meta.env.PUBLIC_FREE_LOGIN;
@@ -55,11 +57,27 @@ const isMobile = computed(() => {
   return window.innerWidth <= 700;
 });
 // 白名单
-const whiteList = ["/login", "/admin/pUser", "/admin/pHome", "/404", "/403"];
+const whiteList = ["/login", "/404", "/403"];
+const isLoading = ref(true);
 onBeforeMount(async () => {
-  if (!sharedStore.userInfo && freeLogin !== "T") {
+  if (freeLogin === "T" || whiteList.includes(route.path)) {
+    return;
+  }
+  if (!localStorage.getItem("p_token")) {
+    return router.push({ path: "/login" });
+  }
+  if (!sharedStore.userInfo) {
     await getUserInfo();
   }
+  await getAppList();
+  if (route.meta?.appKey) {
+    const isOk = await appsStore.setAppId({ key: route.meta.appKey });
+    if (!isOk || !appsStore.hasAppNav(route.query)) {
+      ElMessage.error("无权限访问");
+      return router.push({ path: "/403" });
+    }
+  }
+  isLoading.value = false;
 });
 const toUnFull = () => {
   sharedStore.isFull = false;
@@ -85,48 +103,34 @@ const getUserInfo = async () => {
       role: userRes.data.role,
       btns: userRes.data.btns,
     };
-    bus.$emit("changeSharedPinia", { userInfo: sharedStore.userInfo });
-    const navRes = await request.get({
-      url: "/main/getMyNavTreeList",
-    });
-    if (navRes.code != 200 || !navRes.data) {
-      ElMessage.error(navRes.msg || "获取导航失败");
-      return false;
-    }
-    navsStore.setNavs(navRes.data);
-    if (
-      !whiteList.includes(route.fullPath) &&
-      !navsStore.hasNav(route.fullPath)
-    ) {
-      ElMessage.error("无权限访问");
-      router.push({ path: "/403" });
-      return false;
-    }
   } catch (error) {
-    console.log(error);
+    console.error(error);
     router.push({ path: "/login" });
     return false;
   }
 };
-router.beforeEach((to, from, next) => {
-  if (freeLogin) {
-    return next();
+const getAppList = async () => {
+  const res = await request.get({
+    url: "/main/getMyAppList",
+  });
+  if (res.code != 200 || !res.data) {
+    ElMessage.error(res.msg || "获取应用列表失败");
+    return false;
   }
-  if (whiteList.includes(to.path)) {
+  appsStore.setApps(res.data);
+};
+router.beforeEach((to, from, next) => {
+  if (freeLogin || whiteList.includes(to.path)) {
     return next();
   }
   if (!localStorage.getItem("p_token")) {
     return next({ path: "/login" });
   }
-  if (!navsStore.hasNav(to.fullPath)) {
+  if (to.meta?.appKey && !appsStore.hasAppNav(to.query)) {
     ElMessage.error("无权限访问");
     return next({ path: "/403" });
   }
   next();
-});
-bus.$on("changeSharedPinia", (e) => {});
-onUnmounted(() => {
-  bus.$off("changeSharedPinia");
 });
 </script>
 <style scoped lang="scss">
