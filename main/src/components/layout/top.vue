@@ -7,41 +7,44 @@ import request from "@Passets/utils/request";
 import PIcon from "@Pcomponents/base/p-icon/index.vue";
 import AppSelect from "../more/appSelect.vue";
 import { changeTheme } from "@Passets/utils/theme";
+
 const sharedStore = useSharedStore();
 const router = useRouter();
+
 const title = ref(import.meta.env.PUBLIC_TITLE);
 const userName = ref(sharedStore.userInfo?.name || "管理员");
 const userImg = ref(sharedStore.userInfo?.avatar || "");
 const theme = ref(false);
+
 const toUserInfo = () => {
   router.push({ path: "/admin/pUser" });
 };
+
 const themeChange = () => {
   changeTheme(theme.value);
   sharedStore.isDark = theme.value;
   bus.$emit("changeSharedPinia", { isDark: theme.value });
 };
+
 const toFull = () => {
   sharedStore.isFull = true;
   bus.$emit("changeSharedPinia", { isFull: true });
 };
+
 const toLoginOut = () => {
-  request
-    .post({
-      url: "/main/logout",
-    })
-    .then((res) => {
-      if (res.code == 200) {
-        sharedStore.userInfo = null;
-        localStorage.removeItem("p_token");
-        bus.$emit("changeSharedPinia", { userInfo: null });
-        router.push({ path: "/login" });
-      }
-    });
+  request.post({ url: "/main/logout" }).then((res) => {
+    if (res.code == 200) {
+      sharedStore.userInfo = null;
+      localStorage.removeItem("p_token");
+      bus.$emit("changeSharedPinia", { userInfo: null });
+      router.push({ path: "/login" });
+    }
+  });
 };
+
 watch(
   () => sharedStore.userInfo,
-  (newVal, oldVal) => {
+  (newVal) => {
     if (newVal) {
       userName.value = newVal.name || "管理员";
       userImg.value = newVal.avatar || "";

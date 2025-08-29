@@ -1,36 +1,29 @@
 <script setup>
-import { ref, watch, onBeforeMount } from "vue";
-import { useRouter, useRoute } from "vue-router";
+import { ref, watch } from "vue";
 import useSharedStore from "@Passets/stores/shared";
-import { useAppsStore } from "@/stores/apps";
+import { useRouter } from "vue-router";
 import { bus } from "wujie";
 import request from "@Passets/utils/request";
 import PIcon from "@Pcomponents/base/p-icon/index.vue";
 import { changeTheme } from "@Passets/utils/theme";
 import AppSelect from "../more/appSelect.vue";
+import { useNavMenu } from "@/components/layout/layout";
+import MenuTree from "./MenuTree.vue";
 
 const sharedStore = useSharedStore();
-const appsStore = useAppsStore();
 const router = useRouter();
-const route = useRoute();
+
+const { listTree, activeIndex, selectNav } = useNavMenu();
 
 const title = ref(import.meta.env.PUBLIC_TITLE);
 const userName = ref(sharedStore.userInfo?.name || "管理员");
 const userImg = ref(sharedStore.userInfo?.avatar || "");
 const theme = ref(false);
 const isMore = ref(false);
-const list = ref([]);
-const listTree = ref([]);
-const activeIndex = ref("1");
 
 const select = (val) => {
-  activeIndex.value = val;
-  activeIndex.value = val;
-  const url = list.value.find((item) => item.id.toString() === val)?.url;
-  if (url) {
-    isMore.value = false;
-    router.push(url);
-  }
+  selectNav(val);
+  isMore.value = false;
 };
 
 const toUserInfo = () => {
@@ -45,57 +38,19 @@ const themeChange = () => {
 };
 
 const toLoginOut = () => {
-  request
-    .post({
-      url: "/main/logout",
-    })
-    .then((res) => {
-      if (res.code == 200) {
-        sharedStore.userInfo = null;
-        localStorage.removeItem("p_token");
-        bus.$emit("changeSharedPinia", { userInfo: null });
-        router.push({ path: "/login" });
-      }
-    });
-};
-onBeforeMount(() => {
-  if (route.fullPath) {
-    const nav = list.value.find((item) => item.url === route.fullPath);
-    activeIndex.value = nav?.id.toString() || "1";
-  }
-});
-
-router.afterEach((to, from) => {
-  if (to.fullPath) {
-    const nav = list.value.find((item) => item.url === to.fullPath);
-    activeIndex.value = nav?.id.toString() || "1";
-  }
-});
-watch(
-  () => appsStore.appId,
-  (newStore, oldStore) => {
-    if (newStore) {
-      const app = appsStore.getApp();
-      if (!app) return;
-      list.value = app.navs;
-      listTree.value = app.navsTree;
-    } else {
-      list.value = [
-        {
-          id: 1,
-          name: "首页",
-          url: "/admin/pHome",
-          icon: "el-icon-house",
-        },
-      ];
-      listTree.value = list.value;
+  request.post({ url: "/main/logout" }).then((res) => {
+    if (res.code == 200) {
+      sharedStore.userInfo = null;
+      localStorage.removeItem("p_token");
+      bus.$emit("changeSharedPinia", { userInfo: null });
+      router.push({ path: "/login" });
     }
-  },
-  { immediate: true },
-);
+  });
+};
+
 watch(
   () => sharedStore.userInfo,
-  (newVal, oldVal) => {
+  (newVal) => {
     if (newVal) {
       userName.value = newVal.name || "管理员";
       userImg.value = newVal.avatar || "";
@@ -103,6 +58,7 @@ watch(
   },
 );
 </script>
+
 <template>
   <div class="box">
     <div class="left">
@@ -124,45 +80,11 @@ watch(
       </div>
       <div class="content" v-show="isMore">
         <app-select class="appSelect" />
-        <el-menu class="menu" :default-active="activeIndex" @select="select">
-          <div class="item" v-for="(item, index) in listTree" :key="index">
-            <el-menu-item :index="item.id.toString()" v-if="!item.children">
-              <p-icon v-if="item.icon" :name="item.icon" />
-              <span>{{ item.name }}</span>
-            </el-menu-item>
-            <el-sub-menu :index="item.id.toString()" v-if="item.children">
-              <template #title>
-                <p-icon v-if="item.icon" :name="item.icon" />
-                <span>{{ item.name }}</span>
-              </template>
-              <div
-                class="items"
-                v-for="(items, indexs) in item.children"
-                :key="indexs + 's'"
-              >
-                <el-menu-item
-                  :index="items.id.toString()"
-                  v-if="!items.children"
-                  >{{ items.name }}
-                </el-menu-item>
-                <el-sub-menu :index="items.id.toString()" v-if="items.children">
-                  <template #title>
-                    <span>{{ items.name }}</span>
-                  </template>
-                  <div
-                    class="itemss"
-                    v-for="(itemss, indexss) in items.children"
-                    :key="indexss + 'ss'"
-                  >
-                    <el-menu-item :index="itemss.id.toString()"
-                      >{{ itemss.name }}
-                    </el-menu-item>
-                  </div>
-                </el-sub-menu>
-              </div>
-            </el-sub-menu>
-          </div>
-        </el-menu>
+        <MenuTree
+          :menuList="listTree"
+          :activeIndex="activeIndex"
+          @select="select"
+        />
         <div class="mobile-controls">
           <el-switch
             v-model="theme"
@@ -194,6 +116,7 @@ watch(
     </div>
   </div>
 </template>
+
 <style scoped lang="scss">
 .box {
   width: 100%;
@@ -238,24 +161,8 @@ watch(
       z-index: 100;
       overflow-y: auto;
       padding: 20px;
-
-      .menu {
-        width: 100%;
-        border-right: 0;
-        background-color: transparent;
-
-        :deep(.el-menu-item),
-        :deep(.el-sub-menu__title) {
-          height: 40px;
-          line-height: 40px;
-          font-size: 16px;
-        }
-
-        :deep(.el-sub-menu) {
-          .el-menu-item {
-            padding-left: 48px !important;
-          }
-        }
+      .appSelect {
+        margin-bottom: 20px;
       }
 
       .mobile-controls {
