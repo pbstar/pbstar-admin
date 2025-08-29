@@ -8,6 +8,7 @@ const router = useRouter();
 const appsRef = ref(null);
 const popoverRef = ref(null);
 const appsList = ref([]);
+const appsTree = ref([]);
 const appActive = ref({});
 const isLoading = ref(false);
 const getAppsGroup = (myApps) => {
@@ -25,11 +26,11 @@ const getAppsGroup = (myApps) => {
 };
 
 onBeforeMount(() => {
-  const apps = appsStore.getApps();
+  appsList.value = appsStore.getApps();
   const appId = appsStore.appId;
-  appsList.value = getAppsGroup(apps);
+  appsTree.value = getAppsGroup(appsList.value);
   if (appId) {
-    appActive.value = apps.find((item) => item.id == appId);
+    appActive.value = appsList.value.find((item) => item.id == appId);
   }
 });
 
@@ -54,10 +55,11 @@ const toApp = async (app) => {
 watch(
   () => appsStore.appId,
   (newVal) => {
-    if (!newVal) {
+    if (newVal && newVal != appActive.value?.id) {
+      const newApp = appsList.value.find((item) => item.id == newVal);
+      appActive.value = newApp || {};
+    } else {
       appActive.value = {};
-    } else if (newVal != appActive.value?.id) {
-      appActive.value = appsList.value.find((item) => item.id == newVal);
     }
   },
 );
@@ -81,7 +83,7 @@ watch(
       ref="popoverRef"
     >
       <div class="list" v-loading="isLoading">
-        <div class="fItem" v-for="(item, index) in appsList" :key="index">
+        <div class="fItem" v-for="(item, index) in appsTree" :key="index">
           <div class="title">{{ item.name }}</div>
           <div class="children" v-if="item.children">
             <div
