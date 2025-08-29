@@ -40,6 +40,7 @@ const toPath = (path) => {
   flex-direction: column;
   height: 100%;
   width: 100%;
+  padding-bottom: 120px;
   justify-content: center;
   align-items: center;
   background: var(--c-bg);
@@ -76,6 +77,41 @@ const toPath = (path) => {
       font-size: 16px;
       color: var(--c-text2);
       opacity: 0.8;
+    }
+  }
+
+  @media (max-width: 700px) {
+    .welcome-container {
+      .logo-text {
+        flex-direction: column;
+        align-items: center;
+        font-size: 18px;
+        line-height: 18px;
+
+        .gradient-text {
+          font-size: 32px;
+          line-height: 32px;
+          margin: 8px 0;
+        }
+      }
+
+      .description {
+        font-size: 14px;
+        padding: 0 20px;
+      }
+    }
+
+    .btns {
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      margin-top: 40px;
+
+      .el-button {
+        width: 200px;
+        margin-left: 0;
+        margin-right: 0;
+      }
     }
   }
 

@@ -67,13 +67,11 @@ watch(
 <template>
   <div>
     <div class="apps" ref="appsRef">
-      <p-icon class="icon1" :name="appActive?.icon" size="16" />
-      <span
-        class="name"
-        :style="{ width: appActive?.icon ? '105px' : '121px' }"
-        >{{ appActive?.name || "选择应用" }}</span
-      >
-      <p-icon class="icon2" name="el-icon-ArrowDown" size="16" />
+      <div class="nameBox">
+        <p-icon :name="appActive?.icon" size="16" />
+        <span class="name">{{ appActive?.name || "选择应用" }}</span>
+      </div>
+      <p-icon name="el-icon-ArrowDown" size="16" />
     </div>
     <el-popover
       virtual-triggering
@@ -107,6 +105,7 @@ watch(
   background-color: var(--c-bg);
   color: var(--c-text3);
   display: flex;
+  justify-content: space-between;
   align-items: center;
   height: 30px;
   width: 154px;
@@ -115,12 +114,15 @@ watch(
   border-radius: 5px;
   font-size: 14px;
   cursor: pointer;
-  .name {
-    width: 105px;
-    margin-left: 5px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+  .nameBox {
+    display: flex;
+    align-items: center;
+    .name {
+      margin-left: 5px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
   }
 }
 .list {
@@ -173,6 +175,13 @@ watch(
         color: var(--c-text-theme);
       }
     }
+  }
+}
+@media (max-width: 700px) {
+  .apps {
+    width: 100%;
+    background-color: var(--c-bg-theme);
+    color: var(--c-text-theme);
   }
 }
 </style>

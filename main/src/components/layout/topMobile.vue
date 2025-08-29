@@ -7,6 +7,7 @@ import { bus } from "wujie";
 import request from "@Passets/utils/request";
 import PIcon from "@Pcomponents/base/p-icon/index.vue";
 import { changeTheme } from "@Passets/utils/theme";
+import AppSelect from "../more/appSelect.vue";
 
 const sharedStore = useSharedStore();
 const appsStore = useAppsStore();
@@ -122,6 +123,7 @@ watch(
         />
       </div>
       <div class="content" v-show="isMore">
+        <app-select class="appSelect" />
         <el-menu class="menu" :default-active="activeIndex" @select="select">
           <div class="item" v-for="(item, index) in listTree" :key="index">
             <el-menu-item :index="item.id.toString()" v-if="!item.children">
@@ -161,7 +163,6 @@ watch(
             </el-sub-menu>
           </div>
         </el-menu>
-
         <div class="mobile-controls">
           <el-switch
             v-model="theme"
@@ -234,7 +235,7 @@ watch(
       position: fixed;
       top: 46px;
       left: 0;
-      z-index: 2199;
+      z-index: 100;
       overflow-y: auto;
       padding: 20px;
 
