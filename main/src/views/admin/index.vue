@@ -49,7 +49,8 @@ const sharedStore = useSharedStore();
 const appsStore = useAppsStore();
 const router = useRouter();
 const route = useRoute();
-const freeLogin = import.meta.env.PUBLIC_FREE_LOGIN;
+const isFreeLogin =
+  import.meta.env.DEV && import.meta.env.PUBLIC_FREE_LOGIN === "T";
 const isFull = computed(() => {
   return sharedStore.isFull;
 });
@@ -60,7 +61,7 @@ const isMobile = computed(() => {
 const whiteList = ["/login", "/404", "/403"];
 const isLoading = ref(true);
 onBeforeMount(async () => {
-  if (freeLogin === "T" || whiteList.includes(route.path)) {
+  if (isFreeLogin || whiteList.includes(route.path)) {
     return;
   }
   if (!localStorage.getItem("p_token")) {
@@ -120,7 +121,7 @@ const getAppList = async () => {
   appsStore.setApps(res.data);
 };
 router.beforeEach((to, from, next) => {
-  if (freeLogin || whiteList.includes(to.path)) {
+  if (isFreeLogin || whiteList.includes(to.path)) {
     return next();
   }
   if (!localStorage.getItem("p_token")) {
