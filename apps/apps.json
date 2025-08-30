@@ -15,6 +15,6 @@
     "key": "equipment",
     "type": "out",
     "devPort": 8803,
-    "proUrl": ""
+    "proUrl": "http://pbstar-admin-equipment.pbstar.cn/"
   }
 ]
