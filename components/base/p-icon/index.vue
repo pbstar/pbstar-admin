@@ -4,7 +4,7 @@
   </el-icon>
   <i
     v-else-if="iconType === 'icon'"
-    class="iconfont"
+    class="el-icon iconfont"
     :class="name"
     :style="iconStyle"
   ></i>
