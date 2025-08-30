@@ -6,7 +6,7 @@ import PTable from "@Pcomponents/base/p-table/index.vue";
 import PSearch from "@Pcomponents/base/p-search/index.vue";
 import PTitle from "@Pcomponents/base/p-title/index.vue";
 import PDialog from "@Pcomponents/base/p-dialog/index.vue";
-import PLeftRight from "@Pcomponents/layout/p-leftRight/index.vue";
+import PTwinBox from "@Pcomponents/layout/p-twinBox/index.vue";
 import Detail from "./components/nav/detail.vue";
 import PIcon from "@Pcomponents/base/p-icon/index.vue";
 import { structure } from "@Passets/utils/array";
@@ -176,8 +176,8 @@ const handleNodeClick = (data) => {
   <div class="page">
     <p-title :list="['菜单管理']"></p-title>
 
-    <p-left-right class="content">
-      <template #left>
+    <p-twinBox class="content">
+      <template #plan1>
         <el-tree
           style="margin-top: 10px"
           :data="data"
@@ -188,7 +188,7 @@ const handleNodeClick = (data) => {
           :current-node-key="currentNode"
         />
       </template>
-      <template #right>
+      <template #plan2>
         <p-search
           style="margin-top: 10px"
           :data="searchData"
@@ -223,7 +223,7 @@ const handleNodeClick = (data) => {
           </template>
         </p-table>
       </template>
-    </p-left-right>
+    </p-twinBox>
 
     <p-dialog
       title="菜单管理详情页"
