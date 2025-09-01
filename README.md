@@ -2,8 +2,8 @@
     <img src="https://github.com/pbstar/pbstar-admin/blob/main/main/src/assets/imgs/logo-w.png" height="80px">
     <h1 style="margin-bottom:30px;margin-top:10px; font-weight: bold;">PbstarAdmin 微后台🎉</h1>
     <h4>
-        <div style="margin-bottom:5px;">基于 wujie、rsbuild、pnpm 完成微前端架构，运用 vue3、pinia、element plus 等主流技术栈。</div>
-        <div style="margin-bottom:0;">提供脚手架、组件库、代码生成器和部署工具(计划)等全套工具链。</div>
+        <div style="margin-bottom:5px;">基于 <strong>wujie微前端 + rsbuild高性能构建 + pnpm monorepo</strong> 的现代化架构</div>
+        <div style="margin-bottom:0;">集成 <strong>Vue3 + Pinia + Element Plus</strong> 主流技术体系，提供从开发到部署的完整解决方案</div>
     </h4>
 </div>
 
@@ -16,15 +16,11 @@
 
 ## 项目特点
 
-- **微前端**: 基于wujie的微前端架构
-- **模块化**: pnpm monorepo工作区管理
-- **组件化**: 共享组件库设计
-- **工程化**: 完整的CLI工具链
-- **现代化**: 基于Rsbuild的构建系统
-
-## 架构图
-
-![架构图](https://github.com/pbstar/pbstar-admin-docs/blob/main/public/architecture.png)
+- **🚀 微前端架构**: 基于腾讯wujie微前端框架，支持内外部子应用动态加载，实现真正的应用级微前端解耦
+- **📦 智能模块化**: pnpm monorepo工作区管理，支持内外部子应用（in/out类型），内外子应用可独立git仓库管理
+- **🧩 企业级组件化**: 共享组件库设计，@Pcomponents、@Passets统一别名引用，支持跨应用组件复用
+- **⚙️ 全链路工程化**: 完整的CLI工具链（create/dev/build/add/remove），自动化脚手架、依赖管理、打包部署
+- **⚡ 极致现代化**: 基于Rsbuild高性能构建系统，多环境配置，支持子应用独立端口开发（8801/8802/8803）
 
 ## 环境要求
 
@@ -78,7 +74,15 @@ pnpm run create
 
 ## 致谢
 
-感谢以下优秀的开源项目和工具，为本项目提供了强大的技术基础和灵感来源：
+本项目能够顺利完成，离不开以下优秀开源项目和工具，在此表示衷心感谢：
 
-核心依赖：[wujie](https://github.com/Tencent/wujie)、[rsbuild](https://github.com/web-infra-dev/rsbuild)、[pnpm](https://github.com/pnpm/pnpm)、[vue](https://github.com/vuejs/core)
-优秀的后台项目：[vue-vben-admin](https://github.com/vbenjs/vue-vben-admin)、[Geeker-Admin](https://github.com/HalseySpicy/Geeker-Admin)、[gi-demo](https://github.com/lin-97/gi-demo)
+### 🏗️ 核心架构
+
+- [**wujie**](https://github.com/Tencent/wujie) - 腾讯开源的微前端框架，提供强大的微前端解决方案
+- [**rsbuild**](https://github.com/web-infra-dev/rsbuild) - 基于 Rspack 的高性能构建工具，带来极致的构建体验
+- [**pnpm**](https://github.com/pnpm/pnpm) - 快速、节省磁盘空间的包管理器，优化依赖管理
+- [**vue**](https://github.com/vuejs/core) - 渐进式 JavaScript 框架，构建用户界面的基础
+
+### 📚 灵感采集
+
+- [vue-vben-admin](https://github.com/vbenjs/vue-vben-admin)、[Geeker-Admin](https://github.com/HalseySpicy/Geeker-Admin)、[gi-demo](https://github.com/lin-97/gi-demo)
