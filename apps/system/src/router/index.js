@@ -39,6 +39,11 @@ const router = createRouter({
       component: () => import("@/views/app.vue"),
     },
     {
+      path: "/flow",
+      name: "flow",
+      component: () => import("@/views/flow.vue"),
+    },
+    {
       path: "/:pathMatch(.*)*",
       name: "notFound",
       component: () => import("@Pcomponents/page/404.vue"),
