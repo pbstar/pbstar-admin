@@ -32,6 +32,8 @@
 ```bash
 # 克隆项目
 git clone https://github.com/pbstar/pbstar-admin.git
+# 克隆外部子应用仓库（可选）
+git submodule update --init
 # 进入项目目录
 cd pbstar-admin
 # 安装pnpm（如果已安装pnpm，请忽略此步骤）

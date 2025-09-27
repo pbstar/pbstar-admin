@@ -60,6 +60,8 @@ importers:
 
   ../pbstar-admin-apps/equipment: {}
 
+  apps/equipment: {}
+
   apps/example:
     dependencies:
       '@wangeditor-next/editor':

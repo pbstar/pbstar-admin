@@ -4,11 +4,11 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "create": "node ./cli.mjs",
-    "build": "node ./build.mjs",
-    "dev": "node ./dev.mjs",
-    "add": "node ./add.mjs",
-    "remove": "node ./remove.mjs"
+    "create": "node ./cli/create.mjs",
+    "build": "node ./cli/build.mjs",
+    "dev": "node ./cli/dev.mjs",
+    "add": "node ./cli/add.mjs",
+    "remove": "node ./cli/remove.mjs"
   },
   "dependencies": {
     "chalk": "^5.6.0",

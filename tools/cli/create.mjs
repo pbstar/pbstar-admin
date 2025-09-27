@@ -12,10 +12,9 @@ import { replaceInFile } from "replace-in-file";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // 定义路径
-const TEMPLATE_DIR = path.join(__dirname, "./template");
-const TEMPLATE_ADD_OUT_DIR = path.join(__dirname, "./templateAddOut");
-const APPS_IN_DIR = path.join(__dirname, "../apps");
-const APPS_OUT_DIR = path.join(__dirname, "../../pbstar-admin-apps");
+const TEMPLATE_DIR = path.join(__dirname, "../template");
+const TEMPLATE_MORE_DIR = path.join(__dirname, "../templateMore");
+const APPS_DIR = path.join(__dirname, "../../apps");
 
 // 定义命令
 program
@@ -52,10 +51,7 @@ program
       ]);
 
       const { appType, appKey } = answers;
-      const appPath = path.join(
-        appType === "out" ? APPS_OUT_DIR : APPS_IN_DIR,
-        appKey,
-      );
+      const appPath = path.join(APPS_DIR, appKey);
 
       // 检查目录是否存在
       if (fs.existsSync(appPath)) {
@@ -68,7 +64,7 @@ program
       }
 
       // apps.json文件中添加子应用配置
-      const appsJsonPath = path.join(APPS_IN_DIR, "apps.json");
+      const appsJsonPath = path.join(APPS_DIR, "apps.json");
       let port = 0;
       if (fs.existsSync(appsJsonPath)) {
         const appsJson = fs.readJsonSync(appsJsonPath);
@@ -93,7 +89,6 @@ program
         }
         appsJson.push({
           key: appKey,
-          type: appType,
           devPort: port,
           proUrl: "",
         });
@@ -110,7 +105,11 @@ program
 
       // 补充模板文件
       if (appType === "out") {
-        await fs.copy(TEMPLATE_ADD_OUT_DIR, appPath);
+        // 复制TEMPLATE_MORE_DIR文件夹下的.gitignore文件到子应用目录
+        await fs.copy(
+          path.join(TEMPLATE_MORE_DIR, ".gitignore"),
+          path.join(appPath, ".gitignore"),
+        );
       }
 
       // 更新占位符

@@ -2,7 +2,7 @@ import { execSync } from "child_process";
 import { program } from "commander";
 import inquirer from "inquirer";
 import chalk from "chalk";
-import apps from "../apps/apps.json" with { type: "json" };
+import apps from "../../apps/apps.json" with { type: "json" };
 
 const list = [
   "全局工程",
@@ -49,7 +49,7 @@ program
         command = `pnpm add ${packageName} --filter ${appKey}`;
       }
       packageType === "devDependencies" && (command += " -D");
-      execSync(command, { stdio: "inherit", cwd: "../" });
+      execSync(command, { stdio: "inherit", cwd: "../../" });
     } catch (err) {
       console.error(chalk.red("Error:"), err);
       process.exit(1);

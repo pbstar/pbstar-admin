@@ -1,22 +1,12 @@
 import { defineConfig } from "@rsbuild/core";
-import fs from "fs-extra";
 import { pluginVue } from "@rsbuild/plugin-vue";
 import { pluginSass } from "@rsbuild/plugin-sass";
 import { checkUniqueKeyPlugin } from "./tools/plugins/checkUniqueKeyPlugin";
 import { distZipPlugin } from "./tools/plugins/distZipPlugin";
-import { outAppRegisterPackages } from "./tools/plugins/outAppRegisterPackages";
 import apps from "./apps/apps.json" with { type: "json" };
-import rootPackage from "./package.json" with { type: "json" };
 
 const createAppConfig = (app) => {
-  const isInternal = app.type === "in";
-  const basePath = isInternal
-    ? `./apps/${app.key}`
-    : `../pbstar-admin-apps/${app.key}`;
-  const appPackage = isInternal
-    ? null
-    : fs.readJsonSync(`${basePath}/package.json`);
-
+  const basePath = `./apps/${app.key}`;
   return {
     source: {
       entry: { index: `${basePath}/src/main.js` },
@@ -27,7 +17,6 @@ const createAppConfig = (app) => {
     resolve: {
       alias: {
         "@": basePath + "/src",
-        ...(appPackage ? outAppRegisterPackages(rootPackage, appPackage) : {}),
       },
     },
     plugins: [
