@@ -49,7 +49,7 @@ program
         command = `pnpm add ${packageName} --filter ${appKey}`;
       }
       packageType === "devDependencies" && (command += " -D");
-      execSync(command, { stdio: "inherit", cwd: "../../" });
+      execSync(command, { stdio: "inherit", cwd: "../" });
     } catch (err) {
       console.error(chalk.red("Error:"), err);
       process.exit(1);

@@ -58,8 +58,6 @@ importers:
         specifier: ^3.6.2
         version: 3.6.2
 
-  ../pbstar-admin-apps/equipment: {}
-
   apps/equipment: {}
 
   apps/example:

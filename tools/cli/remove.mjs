@@ -42,7 +42,7 @@ program
       } else {
         command = `pnpm remove ${packageName} --filter ${appKey}`;
       }
-      execSync(command, { stdio: "inherit", cwd: "../../" });
+      execSync(command, { stdio: "inherit", cwd: "../" });
     } catch (err) {
       console.error(chalk.red("Error:"), err);
       process.exit(1);

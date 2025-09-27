@@ -27,7 +27,7 @@ program
         const app = apps.find((item) => item.key === appKey);
         command = `rsbuild dev --environment ${appKey} --port ${app.devPort}`;
       }
-      execSync(command, { stdio: "inherit", cwd: "../../" });
+      execSync(command, { stdio: "inherit", cwd: "../" });
     } catch (err) {
       console.error(chalk.red("Error:"), err);
       process.exit(1);
