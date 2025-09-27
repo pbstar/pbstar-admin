@@ -1,3 +1,4 @@
-[submodule "equipment"]
-	path = /apps/equipment
+
+[submodule "apps/equipment"]
+	path = apps/equipment
 	url = https://github.com/pbstar/pbstar-admin-quipment.git
