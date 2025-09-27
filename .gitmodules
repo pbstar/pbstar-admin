@@ -2,3 +2,6 @@
 [submodule "apps/equipment"]
 	path = apps/equipment
 	url = https://github.com/pbstar/pbstar-admin-quipment.git
+[submodule "apps/test"]
+	path = apps/test
+	url = https://github.com/pbstar/pbstar-admin-test.git

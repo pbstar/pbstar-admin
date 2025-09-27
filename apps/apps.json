@@ -13,5 +13,10 @@
     "key": "equipment",
     "devPort": 8803,
     "proUrl": "http://pbstar-admin-equipment.pbstar.cn/"
+  },
+  {
+    "key": "test",
+    "devPort": 8804,
+    "proUrl": ""
   }
 ]
