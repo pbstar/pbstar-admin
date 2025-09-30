@@ -1,13 +1,13 @@
 [
   {
-    "key": "example",
+    "key": "system",
     "devPort": 8801,
-    "proUrl": "http://pbstar-admin-example.pbstar.cn/"
+    "proUrl": "http://pbstar-admin-system.pbstar.cn/"
   },
   {
-    "key": "system",
+    "key": "example",
     "devPort": 8802,
-    "proUrl": "http://pbstar-admin-system.pbstar.cn/"
+    "proUrl": "http://pbstar-admin-example.pbstar.cn/"
   },
   {
     "key": "equipment",
