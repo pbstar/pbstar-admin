@@ -178,6 +178,16 @@ defineExpose({
           }"
           v-model="detailInfo.isNav"
         />
+        <!-- 排序 -->
+        <p-item
+          class="dtItem"
+          :config="{
+            isText: detailType == 'view',
+            type: 'inputNumber',
+            label: '排序',
+          }"
+          v-model="detailInfo.index"
+        />
         <p-item
           class="dtItem"
           :config="{

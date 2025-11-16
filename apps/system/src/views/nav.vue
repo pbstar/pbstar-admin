@@ -21,6 +21,7 @@ const tableColumn = ref([
   { label: "菜单链接", key: "url" },
   { label: "菜单图标", key: "icon", slot: "icon" },
   { label: "显示在导航", key: "isNav", slot: "isNav" },
+  { label: "排序", key: "index" },
   { label: "备注", key: "remark" },
 ]);
 const tableData = ref([]);
