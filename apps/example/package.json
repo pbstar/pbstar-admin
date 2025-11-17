@@ -5,11 +5,6 @@
   "type": "module",
   "scripts": {},
   "dependencies": {
-    "vue": "workspace:*",
-    "vue-router": "workspace:*",
-    "pinia": "workspace:*",
-    "element-plus": "workspace:*",
-    "@element-plus/icons-vue": "workspace:*",
     "@wangeditor-next/editor": "^5.6.43",
     "@wangeditor-next/editor-for-vue": "^5.1.14",
     "echarts": "^5.6.0",

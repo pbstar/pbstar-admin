@@ -61,6 +61,8 @@ importers:
         specifier: ^3.6.2
         version: 3.6.2
 
+  apps/app-common: {}
+
   apps/equipment: {}
 
   apps/example:

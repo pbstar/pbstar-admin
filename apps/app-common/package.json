@@ -4,12 +4,6 @@
   "private": true,
   "type": "module",
   "scripts": {},
-  "dependencies": {
-    "vue": "workspace:*",
-    "vue-router": "workspace:*",
-    "pinia": "workspace:*",
-    "element-plus": "workspace:*",
-    "@element-plus/icons-vue": "workspace:*"
-  },
+  "dependencies": {},
   "devDependencies": {}
 }
