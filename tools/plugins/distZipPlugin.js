@@ -1,7 +1,7 @@
 import JSZip from "jszip";
 import fs from "fs-extra";
 import path from "path";
-import { getNowTime } from "../../assets/utils/time";
+import dayjs from "dayjs";
 
 /**
  * 构建后生成zip文件的插件
@@ -15,7 +15,7 @@ export const distZipPlugin = () => ({
       const zipDir = path.join(rootPath, "build", "distZip");
       const zipPath = path.join(
         zipDir,
-        `${distName}${getNowTime("yyyymmddhhmm")}.zip`,
+        `${distName}${dayjs().format("YYYYMMDDHHmm")}.zip`,
       );
 
       // 确保目录存在
