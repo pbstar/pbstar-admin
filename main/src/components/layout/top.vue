@@ -4,7 +4,7 @@ import { useRouter } from "vue-router";
 import useSharedStore from "@Passets/stores/shared";
 import { bus } from "wujie";
 import request from "@Passets/utils/request";
-import PIcon from "@Pcomponents/base/p-icon/index.vue";
+import { PIcon } from "@Pcomponents";
 import AppSelect from "../more/appSelect.vue";
 import { changeTheme } from "@Passets/utils/theme";
 

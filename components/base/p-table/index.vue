@@ -122,7 +122,7 @@
 import { ref, watch } from "vue";
 import { ElMessage } from "element-plus";
 import pExportExcel from "p-export-excel";
-import PIcon from "@Pcomponents/base/p-icon/index.vue";
+import { PIcon } from "@Pcomponents";
 import topBtn from "./topBtn.vue";
 import rightBtn from "./rightBtn.vue";
 import setting from "./setting.vue";

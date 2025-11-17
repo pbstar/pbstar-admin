@@ -2,9 +2,7 @@
 import { ref, onBeforeMount } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import request from "@Passets/utils/request";
-import PCollapse from "@Pcomponents/base/p-collapse/index.vue";
-import PForm from "@Pcomponents/base/p-form/index.vue";
-import PIconSelect from "@Pcomponents/more/p-iconSelect/index.vue";
+import { PCollapse, PForm, PIconSelect } from "@Pcomponents";
 import apps from "../../../../../apps.json" with { type: "json" };
 
 const props = defineProps({

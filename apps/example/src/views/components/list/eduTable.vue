@@ -2,10 +2,7 @@
 import { ref, onBeforeMount, watch } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import request from "@Passets/utils/request";
-import PTable from "@Pcomponents/base/p-table/index.vue";
-import PDialog from "@Pcomponents/base/p-dialog/index.vue";
-
-import PForm from "@Pcomponents/base/p-form/index.vue";
+import { PTable, PDialog, PForm } from "@Pcomponents";
 
 const props = defineProps({
   type: {

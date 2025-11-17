@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from "vue";
-import PItem from "@Pcomponents/base/p-item/index.vue";
+import { PItem } from "@Pcomponents";
 import { useFormData } from "../hooks/useFormData.js";
 import { validateRequired, normalizeSpan } from "../utils/validation.js";
 

@@ -1,5 +1,5 @@
 <script setup>
-import PIcon from "@Pcomponents/base/p-icon/index.vue";
+import { PIcon } from "@Pcomponents";
 
 const toPath = (path) => {
   window.open(path);

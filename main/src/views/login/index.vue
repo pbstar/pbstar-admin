@@ -105,10 +105,9 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
-import PIcon from "@Pcomponents/base/p-icon/index.vue";
+import { PIcon, PVerificationCode } from "@Pcomponents";
 import request from "@Passets/utils/request";
 import useSharedStore from "@Passets/stores/shared";
-import pVerificationCode from "@Pcomponents/more/p-verificationCode/index.vue";
 
 const sharedStore = useSharedStore();
 const router = useRouter();

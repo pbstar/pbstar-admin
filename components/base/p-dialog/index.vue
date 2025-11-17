@@ -87,7 +87,7 @@
 <script setup>
 import { ref, computed, watch } from "vue";
 import useSharedStore from "@Passets/stores/shared";
-import pTitle from "@Pcomponents/base/p-title/index.vue";
+import { PTitle } from "@Pcomponents";
 import DialogHeader from "./DialogHeader.vue";
 import DialogFooter from "./DialogFooter.vue";
 

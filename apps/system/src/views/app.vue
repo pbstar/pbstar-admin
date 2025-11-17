@@ -2,12 +2,8 @@
 import { ref, onBeforeMount } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import request from "@Passets/utils/request";
-import PTable from "@Pcomponents/base/p-table/index.vue";
-import PSearch from "@Pcomponents/base/p-search/index.vue";
-import PTitle from "@Pcomponents/base/p-title/index.vue";
-import PDialog from "@Pcomponents/base/p-dialog/index.vue";
+import { PTable, PSearch, PTitle, PDialog, PIcon } from "@Pcomponents";
 import Detail from "./components/app/detail.vue";
-import PIcon from "@Pcomponents/base/p-icon/index.vue";
 import { structure } from "@Passets/utils/array";
 
 const searchData = ref([

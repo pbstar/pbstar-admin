@@ -42,7 +42,7 @@
 </template>
 <script setup>
 import { ref, watch } from "vue";
-import PIcon from "@Pcomponents/base/p-icon/index.vue";
+import { PIcon } from "@Pcomponents";
 const props = defineProps({
   btns: {
     type: Array,

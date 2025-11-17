@@ -35,7 +35,7 @@
 import { ref, computed, onBeforeMount } from "vue";
 import { ElMessage } from "element-plus";
 import { RouterView, useRouter, useRoute } from "vue-router";
-import PIcon from "@Pcomponents/base/p-icon/index.vue";
+import { PIcon } from "@Pcomponents";
 import AdminTop from "@/components/layout/top.vue";
 import AdminTopMobile from "@/components/layout/topMobile.vue";
 import AdminNav from "@/components/layout/nav.vue";

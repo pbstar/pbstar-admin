@@ -22,8 +22,7 @@ import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
 import request from "@Passets/utils/request";
 import useSharedStore from "@Passets/stores/shared";
-import PTitle from "@Pcomponents/base/p-title/index.vue";
-import PForm from "@Pcomponents/base/p-form/index.vue";
+import { PTitle, PForm } from "@Pcomponents";
 
 const sharedStore = useSharedStore();
 const detailInfo = ref({});

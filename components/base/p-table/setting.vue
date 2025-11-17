@@ -40,9 +40,8 @@
 <script setup>
 import { ref } from "vue";
 import { ElMessage } from "element-plus";
-import PIcon from "@Pcomponents/base/p-icon/index.vue";
+import { PIcon, PDialog } from "@Pcomponents";
 import { VueDraggable } from "vue-draggable-plus";
-import pDialog from "@Pcomponents/base/p-dialog/index.vue";
 import { useTableStore } from "@Passets/stores/base";
 const tableStore = useTableStore();
 const props = defineProps({

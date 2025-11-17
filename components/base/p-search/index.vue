@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from "vue";
-import PItem from "@Pcomponents/base/p-item/index.vue";
+import { PItem } from "@Pcomponents";
 import { useFormData } from "../hooks/useFormData.js";
 
 const props = defineProps({

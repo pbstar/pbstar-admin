@@ -2,8 +2,7 @@
 import { ref, onBeforeMount } from "vue";
 import { ElMessage } from "element-plus";
 import request from "@Passets/utils/request";
-import PCollapse from "@Pcomponents/base/p-collapse/index.vue";
-import PForm from "@Pcomponents/base/p-form/index.vue";
+import { PCollapse, PForm } from "@Pcomponents";
 
 const props = defineProps({
   type: {

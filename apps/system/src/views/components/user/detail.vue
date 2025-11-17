@@ -2,8 +2,7 @@
 import { ref, onBeforeMount } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import request from "@Passets/utils/request";
-import PCollapse from "@Pcomponents/base/p-collapse/index.vue";
-import PItem from "@Pcomponents/base/p-item/index.vue";
+import { PCollapse, PItem } from "@Pcomponents";
 
 const props = defineProps({
   type: {

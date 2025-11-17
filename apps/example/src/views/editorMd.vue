@@ -17,7 +17,7 @@ import { ref } from "vue";
 import { MdEditor } from "md-editor-v3";
 import useSharedStore from "@Passets/stores/shared";
 import "md-editor-v3/lib/style.css";
-import PTitle from "@Pcomponents/base/p-title/index.vue";
+import { PTitle } from "@Pcomponents";
 const sharedStore = useSharedStore();
 const text = ref("## hello world");
 </script>
