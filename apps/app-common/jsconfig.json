@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "module": "esnext",
+    "target": "esnext",
+    "baseUrl": "./",
+    "jsx": "preserve",
+    "paths": {
+      "@Pcomponents/*": ["../../components/*"],
+      "@Passets/*": ["../../assets/*"]
+    }
+  },
+  "exclude": ["node_modules"]
+}

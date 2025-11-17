@@ -166,7 +166,7 @@ program
       // 更新占位符
       await replaceInFile({
         files: [appPath + "/**/*"],
-        from: [/P{key}/g],
+        from: [/app-template-package-name/g],
         to: [appKey],
       });
 
