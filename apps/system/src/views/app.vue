@@ -2,7 +2,7 @@
 import { ref, onBeforeMount } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import request from "@Passets/utils/request";
-import { PTable, PSearch, PTitle, PDialog, PIcon } from "@Pcomponents";
+import { PTable, PSearch, PTitle, PDialog, PIcon, PButton } from "@Pcomponents";
 import Detail from "./components/app/detail.vue";
 import { structure } from "@Passets/utils/array";
 
@@ -94,7 +94,7 @@ const tableTopBtnClick = ({ btn }) => {
     isDetail.value = true;
   }
 };
-const diaBotBtnClick = ({ btn }) => {
+const diaBotBtnClick = (btn) => {
   if (btn === "save") {
     const detailInfo = detailRef.value.getFormValue();
     const url =
@@ -151,17 +151,14 @@ const diaBotBtnClick = ({ btn }) => {
       </template>
     </p-table>
 
-    <p-dialog
-      title="应用管理详情页"
-      type="drawer"
-      v-model="isDetail"
-      :botBtn="[
-        { label: '保存', key: 'save' },
-        { label: '返回', key: 'back' },
-      ]"
-      @botBtnClick="diaBotBtnClick"
-    >
+    <p-dialog title="应用管理详情页" type="drawer" v-model="isDetail">
       <Detail ref="detailRef" :type="detailType" :id="detailId"></Detail>
+      <template #footer>
+        <p-button type="primary" @click="diaBotBtnClick('save')">
+          保存
+        </p-button>
+        <p-button @click="diaBotBtnClick('back')">返回</p-button>
+      </template>
     </p-dialog>
   </div>
 </template>

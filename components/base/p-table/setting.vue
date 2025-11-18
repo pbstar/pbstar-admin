@@ -2,26 +2,7 @@
   <el-button size="small" circle @click="handleClickSetting()">
     <p-icon name="el-icon-operation" />
   </el-button>
-  <p-dialog
-    type="drawer"
-    title="定制表头"
-    v-model="isDialog"
-    :botBtn="[
-      {
-        label: '保存',
-        key: 'save',
-      },
-      {
-        label: '返回',
-        key: 'back',
-      },
-      {
-        label: '重置',
-        key: 'reset',
-      },
-    ]"
-    @botBtnClick="dialogBotBtnClick"
-  >
+  <p-dialog type="drawer" title="定制表头" v-model="isDialog">
     <div class="row">
       <VueDraggable
         ghostClass="ghost"
@@ -35,12 +16,19 @@
         </div>
       </VueDraggable>
     </div>
+    <template #footer>
+      <p-button type="primary" @click="dialogBotBtnClick('save')">
+        保存
+      </p-button>
+      <p-button @click="dialogBotBtnClick('reset')"> 重置 </p-button>
+      <p-button @click="dialogBotBtnClick('close')"> 返回 </p-button>
+    </template>
   </p-dialog>
 </template>
 <script setup>
 import { ref } from "vue";
 import { ElMessage } from "element-plus";
-import { PIcon, PDialog } from "@Pcomponents";
+import { PIcon, PDialog, PButton } from "@Pcomponents";
 import { VueDraggable } from "vue-draggable-plus";
 import { useTableStore } from "@Passets/stores/base";
 const tableStore = useTableStore();
@@ -98,7 +86,7 @@ const initAllColumn = () => {
   handleColumnList("init");
 };
 
-const dialogBotBtnClick = ({ btn }) => {
+const dialogBotBtnClick = (btn) => {
   if (btn == "save") {
     handleColumnList("save");
     ElMessage.success("操作成功");

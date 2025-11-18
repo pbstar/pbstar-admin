@@ -9,6 +9,7 @@ import {
   PDialog,
   PTwinBox,
   PIcon,
+  PButton,
 } from "@Pcomponents";
 import Detail from "./components/nav/detail.vue";
 import { structure } from "@Passets/utils/array";
@@ -142,7 +143,7 @@ const tableTopBtnClick = ({ btn }) => {
     isDetail.value = true;
   }
 };
-const diaBotBtnClick = ({ btn }) => {
+const diaBotBtnClick = (btn) => {
   if (btn === "save") {
     const detailInfo = detailRef.value.getFormValue();
     const url =
@@ -228,22 +229,19 @@ const handleNodeClick = (data) => {
       </template>
     </p-twinBox>
 
-    <p-dialog
-      title="菜单管理详情页"
-      type="drawer"
-      v-model="isDetail"
-      :botBtn="[
-        { label: '保存', key: 'save' },
-        { label: '返回', key: 'back' },
-      ]"
-      @botBtnClick="diaBotBtnClick"
-    >
+    <p-dialog title="菜单管理详情页" type="drawer" v-model="isDetail">
       <Detail
         ref="detailRef"
         :type="detailType"
         :id="detailId"
         :appId="currentNode"
       ></Detail>
+      <template #footer>
+        <p-button type="primary" @click="diaBotBtnClick('save')">
+          保存
+        </p-button>
+        <p-button @click="diaBotBtnClick('back')"> 返回 </p-button>
+      </template>
     </p-dialog>
   </div>
 </template>

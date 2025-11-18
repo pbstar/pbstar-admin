@@ -2,7 +2,7 @@
 import { ref, onBeforeMount, watch } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import request from "@Passets/utils/request";
-import { PTable, PDialog, PForm } from "@Pcomponents";
+import { PTable, PDialog, PForm, PButton } from "@Pcomponents";
 
 const props = defineProps({
   type: {
@@ -117,7 +117,7 @@ const tableTopBtnClick = ({ btn }) => {
     isDetail.value = true;
   }
 };
-const diaBotBtnClick = ({ btn }) => {
+const diaBotBtnClick = (btn) => {
   if (btn === "save") {
     const url =
       detailType.value == "add"
@@ -163,16 +163,7 @@ watch(
       @topBtnClick="tableTopBtnClick"
     />
 
-    <p-dialog
-      type="box"
-      title="教育背景详情页"
-      v-model="isDetail"
-      :botBtn="[
-        { label: '保存', key: 'save' },
-        { label: '返回', key: 'back' },
-      ]"
-      @botBtnClick="diaBotBtnClick"
-    >
+    <p-dialog type="box" title="教育背景详情页" v-model="isDetail">
       <div style="padding: 10px 0">
         <p-form
           :data="formData"
@@ -180,6 +171,12 @@ watch(
           v-model="detailInfo"
         ></p-form>
       </div>
+      <template #footer>
+        <p-button type="primary" @click="diaBotBtnClick('save')">
+          保存
+        </p-button>
+        <p-button @click="diaBotBtnClick('back')"> 返回 </p-button>
+      </template>
     </p-dialog>
   </div>
 </template>

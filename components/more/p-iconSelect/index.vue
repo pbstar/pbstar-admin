@@ -12,14 +12,7 @@
       <p-icon name="el-icon-arrow-down" />
     </template>
   </el-input>
-  <p-dialog
-    :title="props.title"
-    width="700px"
-    v-model="visible"
-    type="box"
-    :botBtn="botBtnList"
-    @botBtnClick="dialogBotBtnClick"
-  >
+  <p-dialog :title="props.title" width="700px" v-model="visible" type="box">
     <div class="box">
       <el-tabs v-model="iconType">
         <el-tab-pane label="Element Plus" name="1">
@@ -34,12 +27,19 @@
         </el-tab-pane>
       </el-tabs>
     </div>
+    <template #footer>
+      <p-button type="primary" @click="dialogBotBtnClick('save')">
+        保存
+      </p-button>
+      <p-button @click="dialogBotBtnClick('close')"> 返回 </p-button>
+    </template>
   </p-dialog>
 </template>
 <script setup>
 import { ref, watch, computed } from "vue";
 import PIcon from "../../base/p-icon/index.vue";
 import PDialog from "../../base/p-dialog/index.vue";
+import PButton from "../../base/p-button/index.vue";
 import IconList from "./IconList.vue";
 import * as ElIcons from "@element-plus/icons-vue";
 import iconJson from "@Passets/iconfont/iconfont.json";
@@ -62,11 +62,6 @@ const input = ref(props.modelValue);
 const iconActive = ref(props.modelValue);
 const iconType = ref("1");
 
-const botBtnList = ref([
-  { label: "保存", key: "save" },
-  { label: "返回", key: "back" },
-]);
-
 const elList = computed(() =>
   Object.keys(ElIcons).map((item) => "el-icon-" + item),
 );
@@ -81,7 +76,7 @@ const openDialog = () => {
   visible.value = true;
 };
 
-const dialogBotBtnClick = ({ btn }) => {
+const dialogBotBtnClick = (btn) => {
   if (btn === "save") {
     visible.value = false;
     input.value = iconActive.value;

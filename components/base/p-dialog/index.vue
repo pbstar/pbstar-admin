@@ -11,15 +11,17 @@
           class="dialog-content box-content"
           :style="{ width: width || '500px' }"
         >
-          <DialogHeader :title="title" @close="toClose" />
+          <DialogHeader
+            class="dialog-header box-header"
+            :title="title"
+            @close="toClose"
+          />
           <div class="dialog-body box-body">
             <slot></slot>
           </div>
-          <DialogFooter
-            :type="type"
-            :buttons="botBtnList"
-            @button-click="handleClickBot"
-          />
+          <div class="dialog-footer box-footer">
+            <slot name="footer"></slot>
+          </div>
         </div>
       </div>
     </transition>
@@ -40,18 +42,21 @@
         v-if="dialogVisible"
         :style="drawerStyle"
       >
-        <DialogHeader :title="title" @close="toClose" drawer />
+        <DialogHeader
+          class="dialog-header drawer-header"
+          :title="title"
+          @close="toClose"
+          drawer
+        />
         <div class="drawer-top-space"></div>
         <div class="dialog-body drawer-body">
           <div class="drawer-content-wrapper">
             <slot></slot>
           </div>
         </div>
-        <DialogFooter
-          :type="type"
-          :buttons="botBtnList"
-          @button-click="handleClickBot"
-        />
+        <div class="dialog-footer drawer-footer">
+          <slot name="footer"></slot>
+        </div>
       </div>
     </transition>
   </template>
@@ -65,7 +70,7 @@
         :style="overlayStyle"
       >
         <div class="dialog-content page-content">
-          <div class="page-header">
+          <div class="dialog-header page-header">
             <p-title :list="[title]">
               <slot name="header"></slot>
             </p-title>
@@ -73,11 +78,9 @@
           <div class="dialog-body page-body">
             <slot></slot>
           </div>
-          <DialogFooter
-            :type="type"
-            :buttons="botBtnList"
-            @button-click="handleClickBot"
-          />
+          <div class="dialog-footer page-footer">
+            <slot name="footer"></slot>
+          </div>
         </div>
       </div>
     </transition>
@@ -89,7 +92,6 @@ import { ref, computed, watch } from "vue";
 import useSharedStore from "@Passets/stores/shared";
 import { PTitle } from "@Pcomponents";
 import DialogHeader from "./DialogHeader.vue";
-import DialogFooter from "./DialogFooter.vue";
 
 const sharedStore = useSharedStore();
 
@@ -111,13 +113,9 @@ const props = defineProps({
     type: String,
     default: "",
   },
-  botBtn: {
-    type: Array,
-    default: () => [],
-  },
 });
 
-const emit = defineEmits(["update:modelValue", "botBtnClick"]);
+const emit = defineEmits(["update:modelValue"]);
 
 const dialogVisible = ref(props.modelValue);
 const zIndex = ref(1000);
@@ -128,8 +126,6 @@ const navWidth = computed(() =>
 const topHeight = computed(() =>
   sharedStore.isFull || isMobile.value ? "0" : "90",
 );
-const mybtns = ref(sharedStore.userInfo?.btns);
-const botBtnList = ref([]);
 
 const overlayStyle = computed(() => ({
   "z-index": zIndex.value,
@@ -146,19 +142,6 @@ const drawerStyle = computed(() => ({
 }));
 
 watch(
-  () => props.botBtn,
-  (newVal) => {
-    botBtnList.value = newVal.filter(
-      (item) =>
-        !item.auth ||
-        mybtns.value == "all" ||
-        mybtns.value?.includes(item.auth),
-    );
-  },
-  { immediate: true },
-);
-
-watch(
   () => props.modelValue,
   (newVal) => {
     dialogVisible.value = newVal;
@@ -171,7 +154,6 @@ watch(dialogVisible, (newVal) => {
 });
 
 const toClose = () => (dialogVisible.value = false);
-const handleClickBot = (btn) => emit("botBtnClick", { btn });
 </script>
 
 <style scoped lang="scss">
@@ -193,10 +175,24 @@ const handleClickBot = (btn) => emit("botBtnClick", { btn });
 .diadrawer-leave-active {
   transition: transform 0.2s ease;
 }
-
+.dialog-content {
+  display: flex;
+  flex-direction: column;
+}
+.dialog-header {
+  flex-shrink: 0;
+  width: 100%;
+}
 .dialog-body {
+  flex: 1;
   width: 100%;
   overflow-y: auto;
+}
+.dialog-footer {
+  flex-shrink: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
 }
 
 /* Box 类型样式 */
@@ -225,6 +221,14 @@ const handleClickBot = (btn) => emit("botBtnClick", { btn });
   min-height: 200px;
   max-height: calc(100vh - 104px);
   padding-bottom: 20px;
+}
+
+.dialog-footer.box-footer {
+  background-color: var(--c-bg-box);
+  justify-content: flex-end;
+  padding-right: 10px;
+  padding-bottom: 10px;
+  padding-top: 10px;
 }
 
 /* Drawer 类型样式 */
@@ -261,6 +265,12 @@ const handleClickBot = (btn) => emit("botBtnClick", { btn });
   }
 }
 
+.dialog-footer.drawer-footer {
+  justify-content: center;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
 /* Page 类型样式 */
 .dialog-overlay.page-overlay {
   background-color: var(--c-bg-box);
@@ -284,5 +294,9 @@ const handleClickBot = (btn) => emit("botBtnClick", { btn });
 .dialog-body.page-body {
   height: calc(100% - 90px);
   padding: 0 10px;
+}
+
+.dialog-footer.page-footer {
+  justify-content: center;
 }
 </style>

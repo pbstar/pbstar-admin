@@ -27,14 +27,18 @@
         <span v-show="scope.row.age >= 25">{{ scope.row.age }}（老年人）</span>
       </template>
     </p-table>
-    <p-dialog
-      title="用户列表详情页"
-      type="page"
-      v-model="isDetail"
-      :botBtn="detailBotBtn"
-      @botBtnClick="toBotBtnClick"
-    >
+    <p-dialog title="用户列表详情页" type="page" v-model="isDetail">
       <Detail ref="detailRef" :type="detailType" :id="detailId"></Detail>
+      <template #footer>
+        <p-button
+          type="primary"
+          @click="diaBotBtnClick('save')"
+          v-if="detailType !== 'view'"
+        >
+          保存
+        </p-button>
+        <p-button @click="diaBotBtnClick('back')"> 返回 </p-button>
+      </template>
     </p-dialog>
   </div>
 </template>
@@ -42,7 +46,7 @@
 import { ref, onMounted } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import request from "@Passets/utils/request";
-import { PTable, PSearch, PTitle, PDialog } from "@Pcomponents";
+import { PTable, PSearch, PTitle, PDialog, PButton } from "@Pcomponents";
 import Detail from "./components/list/detail.vue";
 const data = ref([]);
 const column = ref([
@@ -82,7 +86,6 @@ const isDetail = ref(false);
 const detailType = ref("");
 const detailId = ref("");
 const detailRef = ref(null);
-const detailBotBtn = ref([{ key: "back", label: "返回" }]);
 
 onMounted(() => {
   tableRef.value.toChangeColumn([
@@ -133,10 +136,6 @@ const toTopBtnClick = ({ btn }) => {
   if (btn == "add") {
     detailType.value = "add";
     detailId.value = "";
-    detailBotBtn.value = [
-      { key: "back", label: "返回" },
-      { key: "save", label: "保存" },
-    ];
     isDetail.value = true;
   }
 };
@@ -144,14 +143,6 @@ const toRightBtnClick = ({ btn, row }) => {
   if (btn == "view" || btn == "edit") {
     detailType.value = btn;
     detailId.value = row.id;
-    if (btn == "view") {
-      detailBotBtn.value = [{ key: "back", label: "返回" }];
-    } else {
-      detailBotBtn.value = [
-        { key: "back", label: "返回" },
-        { key: "save", label: "保存" },
-      ];
-    }
     isDetail.value = true;
   } else if (btn == "delete") {
     ElMessageBox.confirm("确认删除吗?", "提示", {
@@ -177,7 +168,7 @@ const toRightBtnClick = ({ btn, row }) => {
     ElMessage.success("其他");
   }
 };
-const toBotBtnClick = ({ btn }) => {
+const diaBotBtnClick = (btn) => {
   if (btn == "save") {
     const detailInfo = detailRef.value.getFormValue();
     if (!detailInfo) {

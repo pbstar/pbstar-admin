@@ -1,10 +1,10 @@
 <template>
-  <el-button v-bind="$attrs" v-on="$listeners" v-if="isAuth">
+  <el-button v-bind="$attrs" v-if="isAuth">
     <slot></slot>
   </el-button>
 </template>
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import useSharedStore from "@Passets/stores/shared";
 
 const sharedStore = useSharedStore();

@@ -2,7 +2,7 @@
 import { ref, onBeforeMount } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import request from "@Passets/utils/request";
-import { PTable, PSearch, PTitle, PDialog } from "@Pcomponents";
+import { PTable, PSearch, PTitle, PDialog, PButton } from "@Pcomponents";
 import Detail from "./components/enum/detail.vue";
 
 const searchData = ref([
@@ -30,7 +30,6 @@ const detailType = ref("");
 const detailId = ref("");
 const isDetail = ref(false);
 const detailRef = ref(null);
-const detailBotBtn = ref([{ key: "back", label: "返回" }]);
 
 onBeforeMount(() => {
   initTable();
@@ -70,14 +69,6 @@ const tableRightBtnClick = ({ row, btn }) => {
   if (btn == "view" || btn == "edit") {
     detailType.value = btn;
     detailId.value = row.id;
-    if (btn == "view") {
-      detailBotBtn.value = [{ key: "back", label: "返回" }];
-    } else {
-      detailBotBtn.value = [
-        { key: "back", label: "返回" },
-        { key: "save", label: "保存" },
-      ];
-    }
     isDetail.value = true;
   } else if (btn === "delete") {
     ElMessageBox.confirm("确认删除吗?", "提示", {
@@ -105,14 +96,10 @@ const tableTopBtnClick = ({ btn }) => {
   if (btn == "add") {
     detailType.value = "add";
     detailId.value = "";
-    detailBotBtn.value = [
-      { key: "back", label: "返回" },
-      { key: "save", label: "保存" },
-    ];
     isDetail.value = true;
   }
 };
-const diaBotBtnClick = ({ btn }) => {
+const diaBotBtnClick = (btn) => {
   if (btn === "save") {
     const detailInfo = detailRef.value.getFormValue();
     const url =
@@ -166,10 +153,18 @@ const diaBotBtnClick = ({ btn }) => {
       type="drawer"
       width="600"
       v-model="isDetail"
-      :botBtn="detailBotBtn"
-      @botBtnClick="diaBotBtnClick"
     >
       <Detail ref="detailRef" :type="detailType" :id="detailId"></Detail>
+      <template #footer>
+        <p-button
+          type="primary"
+          v-if="detailType !== 'view'"
+          @click="diaBotBtnClick('save')"
+        >
+          保存
+        </p-button>
+        <p-button @click="diaBotBtnClick('back')"> 返回 </p-button>
+      </template>
     </p-dialog>
   </div>
 </template>
