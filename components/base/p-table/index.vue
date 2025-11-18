@@ -2,7 +2,7 @@
   <div class="tabulation">
     <div class="topBtn">
       <div class="tLeft">
-        <topBtn :btns="topBtnList" @btnClick="handleClickTop" />
+        <slot name="topLeft"></slot>
       </div>
       <div class="tRight">
         <el-button
@@ -27,7 +27,7 @@
       class="table"
       :style="{
         marginTop:
-          topBtnList.length > 0 || (props.showSetting && props.tableKey)
+          $slots.topLeft || (props.showSetting && props.tableKey)
             ? '10px'
             : '0px',
       }"
@@ -90,11 +90,7 @@
         v-if="rightBtnList.length > 0"
       >
         <template #default="scope">
-          <rightBtn
-            :data="scope.row"
-            :btns="rightBtnList"
-            @btnClick="handleClick"
-          />
+          <slot name="operation" :row="scope.row"></slot>
         </template>
       </el-table-column>
     </el-table>
@@ -123,13 +119,9 @@ import { ref, watch } from "vue";
 import { ElMessage } from "element-plus";
 import pExportExcel from "p-export-excel";
 import { PIcon } from "@Pcomponents";
-import topBtn from "./topBtn.vue";
-import rightBtn from "./rightBtn.vue";
 import setting from "./setting.vue";
 import { useEnumStore } from "@Passets/stores/enum";
-import useSharedStore from "@Passets/stores/shared";
 const enumStore = useEnumStore();
-const sharedStore = useSharedStore();
 
 const props = defineProps({
   data: {
@@ -137,14 +129,6 @@ const props = defineProps({
     default: () => [],
   },
   column: {
-    type: Array,
-    default: () => [],
-  },
-  rightBtn: {
-    type: Array,
-    default: () => [],
-  },
-  topBtn: {
     type: Array,
     default: () => [],
   },
@@ -177,7 +161,7 @@ const props = defineProps({
     default: null,
   },
 });
-const emit = defineEmits(["rightBtnClick", "topBtnClick", "paginationChange"]);
+const emit = defineEmits(["paginationChange", "selectionChange"]);
 
 const columnList = ref([]);
 const allColumn = ref(props.column);
@@ -196,9 +180,6 @@ const columnItemDefault = {
   slot: null, //插槽名（非必填）
 };
 const exportLoading = ref(false);
-const topBtnList = ref([]);
-const rightBtnList = ref([]);
-const mybtns = ref(sharedStore.userInfo?.btns);
 
 if (props.showSetting && !props.tableKey) {
   console.error("showSetting为true时必须传入tableKey");
@@ -233,18 +214,6 @@ if (enumKeyList.length > 0) {
 const getIndex = (index) => {
   return (pageNumber.value - 1) * pageSize.value + index + 1;
 };
-const handleClick = ({ row, btn }) => {
-  emit("rightBtnClick", { row, btn });
-};
-const handleClickTop = ({ btn }) => {
-  const obj = {
-    btn,
-  };
-  if (props.showSelection) {
-    obj.selectionList = selectionList.value;
-  }
-  emit("topBtnClick", obj);
-};
 const handleSizeChange = (val) => {
   pageSize.value = val;
   emit("paginationChange", {
@@ -264,6 +233,7 @@ const settingChange = (val) => {
 };
 const handleSelectionChange = (val) => {
   selectionList.value = val;
+  emit("selectionChange", val);
 };
 const toChangeColumn = (list) => {
   list.forEach((item) => {
@@ -331,30 +301,6 @@ const toExport = () => {
       });
   });
 };
-// 处理btn权限
-const handleBtn = () => {
-  topBtnList.value = [];
-  rightBtnList.value = [];
-  props.topBtn.forEach((item) => {
-    if (
-      !item.auth ||
-      mybtns.value == "all" ||
-      mybtns.value.includes(item.auth)
-    ) {
-      topBtnList.value.push(item);
-    }
-  });
-  props.rightBtn.forEach((item) => {
-    if (
-      !item.auth ||
-      mybtns.value == "all" ||
-      mybtns.value.includes(item.auth)
-    ) {
-      rightBtnList.value.push(item);
-    }
-  });
-};
-handleBtn();
 // 动态处理data
 watch(
   () => props.data,
@@ -380,15 +326,6 @@ watch(
   {
     deep: true,
     immediate: true,
-  },
-);
-watch(
-  () => sharedStore.userInfo,
-  (newVal, oldVal) => {
-    if (newVal) {
-      mybtns.value = newVal.btns;
-      handleBtn();
-    }
   },
 );
 defineExpose({

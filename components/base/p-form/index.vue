@@ -2,7 +2,7 @@
 import { computed } from "vue";
 import { PItem } from "@Pcomponents";
 import { useFormData } from "../hooks/useFormData.js";
-import { validateRequired, normalizeSpan } from "../utils/validation.js";
+import { validateRequired, normalizeSpan } from "./validation.js";
 
 const props = defineProps({
   data: {
