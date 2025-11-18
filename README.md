@@ -57,15 +57,16 @@ pnpm run create
 ```
 ├── .husky                      # git hooks配置
 ├── apps                        # 子应用
+│ ├── app-common                # 公共子应用模块
 │ ├── example                   # 示例应用
 │ ├── system                    # 系统应用
 │ ├── equipment                 # 设备应用（外部子应用）
 │ └── apps.json                 # 子应用配置
 ├── assets                      # 静态资源
 ├── build                       # 打包产物
-├── components                  # 组件
+├── components                  # 组件库
 ├── main                        # 主应用
-├── tools                       # 工具
+├── tools                       # 工具模块
 ├── .gitignore                  # git忽略文件
 ├── .gitmodules                 # git子模块配置
 ├── .prettierrc                 # prettier配置
@@ -82,9 +83,9 @@ pnpm run create
 
 ### 🏗️ 核心架构
 
-- [**git-submodule**](https://git-scm.com/docs/git-submodule) - 用于管理项目中的子模块，实现外部子应用的独立版本控制
+- [**git-submodule**](https://git-scm.com/docs/git-submodule) - 用于实现外部子应用的独立版本控制
 - [**wujie**](https://github.com/Tencent/wujie) - 腾讯开源的微前端框架，提供强大的微前端解决方案
-- [**rsbuild**](https://github.com/web-infra-dev/rsbuild) - 基于 Rspack 的高性能构建工具，带来极致的构建体验
+- [**rsbuild**](https://github.com/web-infra-dev/rsbuild) - 基于 Rspack 的高性能构建工具
 - [**pnpm**](https://github.com/pnpm/pnpm) - 快速、节省磁盘空间的包管理器，优化依赖管理
 - [**vue**](https://github.com/vuejs/core) - 渐进式 JavaScript 框架，构建用户界面的基础
 
