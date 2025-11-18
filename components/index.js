@@ -1,6 +1,5 @@
-// 公共组件统一导出
-
 // 基础组件
+export { default as PButton } from "./base/p-button/index.vue";
 export { default as PCollapse } from "./base/p-collapse/index.vue";
 export { default as PDialog } from "./base/p-dialog/index.vue";
 export { default as PForm } from "./base/p-form/index.vue";
