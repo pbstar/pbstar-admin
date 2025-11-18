@@ -134,26 +134,22 @@ watch(
 <template>
   <div class="childBox">
     <p-table :column="tableColumn" :data="tableData">
-      <template #topLeft>
-        <p-button
-          type="primary"
-          v-if="props.type !== 'add' && props.type !== 'view'"
-          @click="tableTopBtnClick"
-        >
-          新增
-        </p-button>
+      <template #topLeft v-if="props.type !== 'add' && props.type !== 'view'">
+        <p-button type="primary" @click="tableTopBtnClick"> 新增 </p-button>
       </template>
-      <template #operation="{ row }">
+      <template v-if="props.type !== 'view'" #operation="{ row }">
         <p-button
           type="primary"
-          v-if="props.type !== 'view'"
+          size="small"
+          link
           @click="tableRightBtnClick({ row, btn: 'edit' })"
         >
           编辑
         </p-button>
         <p-button
           type="danger"
-          v-if="props.type !== 'view'"
+          size="small"
+          link
           @click="tableRightBtnClick({ row, btn: 'delete' })"
         >
           删除

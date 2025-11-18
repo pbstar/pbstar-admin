@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onBeforeMount, watch } from "vue";
+import { ref, watch } from "vue";
 import { cloneDeep } from "es-toolkit/object";
 import { ElMessageBox } from "element-plus";
 import { PTable, PDialog, PForm, PButton } from "@Pcomponents";
@@ -16,26 +16,11 @@ const props = defineProps({
 });
 const emit = defineEmits(["update:modelValue", "change"]);
 
-onBeforeMount(() => {
-  if (props.type == "view") {
-    tableTopBtn.value = [];
-    tableRightBtn.value = [];
-  } else {
-    tableTopBtn.value = [{ label: "新增", key: "add" }];
-    tableRightBtn.value = [
-      { label: "编辑", key: "edit" },
-      { label: "删除", key: "delete" },
-    ];
-  }
-});
-
 const tableColumn = ref([
   { label: "爱好", key: "hobby" },
   { label: "爱好描述", key: "hobbyDesc" },
 ]);
 const tableData = ref([]);
-const tableRightBtn = ref([]);
-const tableTopBtn = ref([]);
 const detailType = ref("");
 const detailInfo = ref({});
 const isDetail = ref(false);
@@ -87,13 +72,11 @@ const tableRightBtnClick = ({ row, btn }) => {
   }
 };
 
-const tableTopBtnClick = ({ btn }) => {
-  if (btn === "add") {
-    detailType.value = "add";
-    detailInfo.value = {};
-    detailInfo.value.webId = getWebId();
-    isDetail.value = true;
-  }
+const tableTopBtnClick = () => {
+  detailType.value = "add";
+  detailInfo.value = {};
+  detailInfo.value.webId = getWebId();
+  isDetail.value = true;
 };
 
 const diaBotBtnClick = (btn) => {
@@ -138,14 +121,29 @@ watch(
 
 <template>
   <div class="childBox">
-    <p-table
-      :column="tableColumn"
-      :data="tableData"
-      :rightBtn="tableRightBtn"
-      :topBtn="tableTopBtn"
-      @rightBtnClick="tableRightBtnClick"
-      @topBtnClick="tableTopBtnClick"
-    />
+    <p-table :column="tableColumn" :data="tableData">
+      <template #topLeft>
+        <p-button type="primary" @click="tableTopBtnClick()"> 新增 </p-button>
+      </template>
+      <template #operation="{ row }">
+        <p-button
+          type="primary"
+          size="small"
+          link
+          @click="tableRightBtnClick({ row, btn: 'edit' })"
+        >
+          编辑
+        </p-button>
+        <p-button
+          type="danger"
+          size="small"
+          link
+          @click="tableRightBtnClick({ row, btn: 'delete' })"
+        >
+          删除
+        </p-button>
+      </template>
+    </p-table>
 
     <p-dialog type="box" title="爱好详情页" v-model="isDetail">
       <div style="padding: 10px 0">

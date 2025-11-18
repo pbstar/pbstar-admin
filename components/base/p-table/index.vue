@@ -6,6 +6,7 @@
       </div>
       <div class="tRight">
         <el-button
+          style="margin-top: 6px"
           v-if="props.export"
           size="small"
           :loading="exportLoading"
@@ -87,7 +88,8 @@
         fixed="right"
         label="操作"
         width="160"
-        v-if="rightBtnList.length > 0"
+        :show-overflow-tooltip="false"
+        v-if="$slots.operation"
       >
         <template #default="scope">
           <slot name="operation" :row="scope.row"></slot>
@@ -345,7 +347,7 @@ defineExpose({
       align-items: center;
     }
     .tRight {
-      padding-top: 6px;
+      overflow: hidden;
       display: flex;
       align-items: center;
       justify-content: flex-end;
@@ -361,6 +363,10 @@ defineExpose({
     /* 修复tooltip错位问题 */
     :deep(.el-popper) {
       position: absolute !important;
+    }
+
+    :deep(.el-button + .el-button) {
+      margin-left: 5px;
     }
   }
   .bot {

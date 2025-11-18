@@ -28,12 +28,6 @@ const tableColumn = ref([
   { label: "备注", key: "remark" },
 ]);
 const tableData = ref([]);
-const tableTopBtn = ref([{ key: "add", label: "新增" }]);
-const tableRightBtn = ref([
-  { key: "view", label: "查看" },
-  { key: "edit", label: "编辑" },
-  { key: "delete", label: "删除" },
-]);
 const detailType = ref("");
 const detailId = ref("");
 const isDetail = ref(false);
@@ -132,16 +126,14 @@ const tableRightBtnClick = ({ row, btn }) => {
       .catch(() => {});
   }
 };
-const tableTopBtnClick = ({ btn }) => {
-  if (btn == "add") {
-    if (!currentNode.value || currentNode.value?.startsWith("group")) {
-      ElMessage.error("请先选择应用");
-      return;
-    }
-    detailType.value = "add";
-    detailId.value = "";
-    isDetail.value = true;
+const tableTopBtnClick = () => {
+  if (!currentNode.value || currentNode.value?.startsWith("group")) {
+    ElMessage.error("请先选择应用");
+    return;
   }
+  detailType.value = "add";
+  detailId.value = "";
+  isDetail.value = true;
 };
 const diaBotBtnClick = (btn) => {
   if (btn === "save") {
@@ -203,12 +195,8 @@ const handleNodeClick = (data) => {
           style="margin-top: 10px"
           :data="tableData"
           :column="tableColumn"
-          :topBtn="tableTopBtn"
-          :rightBtn="tableRightBtn"
           tableKey="nav_1"
           showSetting
-          @topBtnClick="tableTopBtnClick"
-          @rightBtnClick="tableRightBtnClick"
         >
           <template #icon="scope">
             <div
@@ -224,6 +212,37 @@ const handleNodeClick = (data) => {
           </template>
           <template #isNav="scope">
             <span>{{ scope.row.isNav == 1 ? "是" : "否" }}</span>
+          </template>
+          <template #topLeft>
+            <p-button type="primary" @click="tableTopBtnClick()">
+              新增
+            </p-button>
+          </template>
+          <template #operation="{ row }">
+            <p-button
+              type="primary"
+              size="small"
+              link
+              @click="tableRightBtnClick({ row, btn: 'view' })"
+            >
+              查看
+            </p-button>
+            <p-button
+              type="primary"
+              size="small"
+              link
+              @click="tableRightBtnClick({ row, btn: 'edit' })"
+            >
+              编辑
+            </p-button>
+            <p-button
+              type="danger"
+              size="small"
+              link
+              @click="tableRightBtnClick({ row, btn: 'delete' })"
+            >
+              删除
+            </p-button>
           </template>
         </p-table>
       </template>

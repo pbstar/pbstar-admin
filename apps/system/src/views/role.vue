@@ -17,12 +17,6 @@ const tableColumn = ref([
   { label: "按钮权限", key: "btns" },
 ]);
 const tableData = ref([]);
-const tableTopBtn = ref([{ key: "add", label: "新增" }]);
-const tableRightBtn = ref([
-  { key: "view", label: "查看" },
-  { key: "edit", label: "编辑" },
-  { key: "delete", label: "删除", show: (row) => row.id != 1 },
-]);
 const pagination = ref({
   pageNumber: 1,
   pageSize: 10,
@@ -94,12 +88,10 @@ const tableRightBtnClick = ({ row, btn }) => {
       .catch(() => {});
   }
 };
-const tableTopBtnClick = ({ btn }) => {
-  if (btn == "add") {
-    detailType.value = "add";
-    detailId.value = "";
-    isDetail.value = true;
-  }
+const tableTopBtnClick = () => {
+  detailType.value = "add";
+  detailId.value = "";
+  isDetail.value = true;
 };
 const diaBotBtnClick = (btn) => {
   if (btn === "save") {
@@ -140,15 +132,42 @@ const diaBotBtnClick = (btn) => {
       style="margin-top: 10px"
       :data="tableData"
       :column="tableColumn"
-      :topBtn="tableTopBtn"
-      :rightBtn="tableRightBtn"
       tableKey="role_1"
       showSetting
       :pagination="pagination"
       @paginationChange="tablePaginationChange"
-      @topBtnClick="tableTopBtnClick"
-      @rightBtnClick="tableRightBtnClick"
-    ></p-table>
+    >
+      <template #topLeft>
+        <p-button type="primary" @click="tableTopBtnClick()"> 新增 </p-button>
+      </template>
+      <template #operation="{ row }">
+        <p-button
+          type="primary"
+          size="small"
+          link
+          @click="tableRightBtnClick({ row, btn: 'view' })"
+        >
+          查看
+        </p-button>
+        <p-button
+          type="primary"
+          size="small"
+          link
+          @click="tableRightBtnClick({ row, btn: 'edit' })"
+        >
+          编辑
+        </p-button>
+        <p-button
+          v-if="row.id != 1"
+          type="danger"
+          size="small"
+          link
+          @click="tableRightBtnClick({ row, btn: 'delete' })"
+        >
+          删除
+        </p-button>
+      </template>
+    </p-table>
 
     <p-dialog title="角色管理详情页" type="drawer" v-model="isDetail">
       <Detail ref="detailRef" :type="detailType" :id="detailId"></Detail>

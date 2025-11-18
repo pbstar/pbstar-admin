@@ -12,19 +12,58 @@
       ref="tableRef"
       :data="data"
       :column="column"
-      :topBtn="topBtn"
-      :rightBtn="rightBtn"
       tableKey="table1"
       showSetting
       :pagination="pagination"
       :export="toExport"
       @paginationChange="toPageChange"
-      @topBtnClick="toTopBtnClick"
-      @rightBtnClick="toRightBtnClick"
     >
       <template #age="scope">
         <span v-show="scope.row.age < 25">{{ scope.row.age }}</span>
         <span v-show="scope.row.age >= 25">{{ scope.row.age }}（老年人）</span>
+      </template>
+      <template #topLeft>
+        <p-button type="primary" @click="toTopBtnClick()"> 新增 </p-button>
+      </template>
+      <template #operation="{ row }">
+        <p-button
+          type="primary"
+          size="small"
+          link
+          @click="toRightBtnClick({ row, btn: 'view' })"
+        >
+          查看
+        </p-button>
+        <p-button
+          type="primary"
+          size="small"
+          link
+          @click="toRightBtnClick({ row, btn: 'edit' })"
+        >
+          编辑
+        </p-button>
+        <el-dropdown trigger="click">
+          <el-button
+            style="margin-left: 5px; margin-top: 2px"
+            type="primary"
+            link
+            size="small"
+          >
+            <span>更多</span>
+            <p-icon name="el-icon-arrow-down" />
+          </el-button>
+
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item @click="toRightBtnClick({ row, btn: 'delete' })"
+                >删除
+              </el-dropdown-item>
+              <el-dropdown-item @click="toRightBtnClick({ row, btn: 'other' })"
+                >其他
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
       </template>
     </p-table>
     <p-dialog title="用户列表详情页" type="page" v-model="isDetail">
@@ -46,7 +85,7 @@
 import { ref, onMounted } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import request from "@Passets/utils/request";
-import { PTable, PSearch, PTitle, PDialog, PButton } from "@Pcomponents";
+import { PTable, PSearch, PTitle, PDialog, PButton, PIcon } from "@Pcomponents";
 import Detail from "./components/list/detail.vue";
 const data = ref([]);
 const column = ref([
@@ -56,13 +95,7 @@ const column = ref([
   { key: "ethnic", label: "民族", enumKey: "ethnic" },
   { key: "isHealthy", label: "是否健康", enumKey: "boolean" },
 ]);
-const topBtn = ref([{ key: "add", label: "新增", auth: "list_add" }]);
-const rightBtn = ref([
-  { key: "view", label: "查看" },
-  { key: "edit", label: "编辑" },
-  { key: "delete", label: "删除" },
-  { key: "other", label: "其他" },
-]);
+
 const tableRef = ref(null);
 const pagination = ref({
   pageNumber: 1,
@@ -132,12 +165,10 @@ const initTable = () => {
       }
     });
 };
-const toTopBtnClick = ({ btn }) => {
-  if (btn == "add") {
-    detailType.value = "add";
-    detailId.value = "";
-    isDetail.value = true;
-  }
+const toTopBtnClick = () => {
+  detailType.value = "add";
+  detailId.value = "";
+  isDetail.value = true;
 };
 const toRightBtnClick = ({ btn, row }) => {
   if (btn == "view" || btn == "edit") {

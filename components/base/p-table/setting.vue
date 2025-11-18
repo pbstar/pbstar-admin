@@ -1,5 +1,10 @@
 <template>
-  <el-button size="small" circle @click="handleClickSetting()">
+  <el-button
+    size="small"
+    style="margin-top: 6px"
+    circle
+    @click="handleClickSetting()"
+  >
     <p-icon name="el-icon-operation" />
   </el-button>
   <p-dialog type="drawer" title="定制表头" v-model="isDialog">
