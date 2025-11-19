@@ -17,9 +17,7 @@ export function useFormItem(props, emits, options = {}) {
 
   // 值处理
   const value = ref(handleArray ? props.modelValue || [] : props.modelValue);
-  const optionsData = ref(
-    handleOptions ? props.config.options || [] : props.config.options,
-  );
+  const optionsData = ref(props.config.options || []);
 
   // 值变更处理
   const handleChange = (val) => {

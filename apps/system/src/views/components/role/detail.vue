@@ -3,7 +3,6 @@ import { ref, onBeforeMount } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import request from "@Passets/utils/request";
 import { PCollapse, PItem } from "@Pcomponents";
-import { useBtnStore } from "@Passets/stores/btn";
 
 const props = defineProps({
   type: {
@@ -15,7 +14,6 @@ const props = defineProps({
     default: "",
   },
 });
-const btnStore = useBtnStore();
 const detailInfo = ref({});
 const detailType = ref("");
 const detailId = ref("");
@@ -25,7 +23,7 @@ const btnList = ref([]);
 onBeforeMount(() => {
   detailType.value = props.type;
   detailId.value = props.id;
-  btnList.value = btnStore.getBtnList();
+  getBtnList();
   getNavList();
   if (detailType.value == "view" || detailType.value == "edit") {
     getDetailInfo();
@@ -41,12 +39,26 @@ const getNavList = () => {
         navList.value = res.data.map((item) => {
           return {
             label: item.name,
-            value: item.id,
-            ...item,
+            value: item.id.toString(),
+            parentId: item.parentId?.toString() || "",
           };
         });
       } else {
         ElMessage.error(res.msg || "获取菜单失败");
+      }
+    });
+};
+
+const getBtnList = () => {
+  request
+    .post({
+      url: "/system/nav/getBtnList",
+    })
+    .then((res) => {
+      if (res.code === 200) {
+        btnList.value = res.data;
+      } else {
+        ElMessage.error(res.msg || "获取按钮失败");
       }
     });
 };

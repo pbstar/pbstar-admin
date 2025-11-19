@@ -231,6 +231,7 @@ const handleNodeClick = (data) => {
     <p-dialog
       title="菜单管理详情页"
       type="drawer"
+      width="600px"
       v-model="isDetail"
       :botBtn="[
         { label: '保存', key: 'save' },
