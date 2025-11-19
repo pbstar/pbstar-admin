@@ -21,7 +21,6 @@ const props = defineProps(commonProps);
 const emits = defineEmits(commonEmits);
 
 const { value, options, handleChange, getLabel } = useFormItem(props, emits, {
-  handleOptions: true,
   handleTree: true,
   structureFn: structure,
 });
