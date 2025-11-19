@@ -3,6 +3,7 @@ import { ref, onBeforeMount } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import request from "@Passets/utils/request";
 import { PCollapse, PItem, PIconSelect } from "@Pcomponents";
+import btnTable from "./btnTable.vue";
 
 const props = defineProps({
   type: {
@@ -195,6 +196,15 @@ defineExpose({
           }"
           v-model="detailInfo.remark"
         />
+        <p-item
+          class="dtItem"
+          :config="{
+            type: 'slot',
+            label: '页面按钮',
+          }"
+        >
+          <btnTable :type="detailType" v-model="detailInfo.btnList" />
+        </p-item>
       </div>
     </p-collapse>
   </div>

@@ -248,7 +248,12 @@ const handleNodeClick = (data) => {
       </template>
     </p-twinBox>
 
-    <p-dialog title="菜单管理详情页" type="drawer" v-model="isDetail">
+    <p-dialog
+      title="菜单管理详情页"
+      type="drawer"
+      width="600px"
+      v-model="isDetail"
+    >
       <Detail
         ref="detailRef"
         :type="detailType"
