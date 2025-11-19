@@ -1,8 +1,8 @@
 <script setup>
-import { ref, onBeforeMount, watch } from "vue";
+import { ref, watch } from "vue";
 import { cloneDeep } from "es-toolkit/object";
 import { ElMessageBox } from "element-plus";
-import { PTable, PDialog, PForm } from "@Pcomponents";
+import { PTable, PDialog, PForm, PButton } from "@Pcomponents";
 
 const props = defineProps({
   type: {
@@ -16,26 +16,11 @@ const props = defineProps({
 });
 const emit = defineEmits(["update:modelValue", "change"]);
 
-onBeforeMount(() => {
-  if (props.type == "view") {
-    tableTopBtn.value = [];
-    tableRightBtn.value = [];
-  } else {
-    tableTopBtn.value = [{ label: "新增", key: "add" }];
-    tableRightBtn.value = [
-      { label: "编辑", key: "edit" },
-      { label: "删除", key: "delete" },
-    ];
-  }
-});
-
 const tableColumn = ref([
   { label: "按钮名称", key: "name" },
   { label: "按钮Key", key: "key" },
 ]);
 const tableData = ref([]);
-const tableRightBtn = ref([]);
-const tableTopBtn = ref([]);
 const detailType = ref("");
 const detailInfo = ref({});
 const isDetail = ref(false);
@@ -87,16 +72,14 @@ const tableRightBtnClick = ({ row, btn }) => {
   }
 };
 
-const tableTopBtnClick = ({ btn }) => {
-  if (btn === "add") {
-    detailType.value = "add";
-    detailInfo.value = {};
-    detailInfo.value.webId = getWebId();
-    isDetail.value = true;
-  }
+const tableTopBtnClick = () => {
+  detailType.value = "add";
+  detailInfo.value = {};
+  detailInfo.value.webId = getWebId();
+  isDetail.value = true;
 };
 
-const diaBotBtnClick = ({ btn }) => {
+const diaBotBtnClick = (btn) => {
   if (btn === "save") {
     if (detailType.value === "add") {
       tableData.value.push(detailInfo.value);
@@ -138,25 +121,31 @@ watch(
 
 <template>
   <div class="childBox">
-    <p-table
-      :column="tableColumn"
-      :data="tableData"
-      :rightBtn="tableRightBtn"
-      :topBtn="tableTopBtn"
-      @rightBtnClick="tableRightBtnClick"
-      @topBtnClick="tableTopBtnClick"
-    />
+    <p-table :column="tableColumn" :data="tableData">
+      <template #topLeft>
+        <p-button type="primary" @click="tableTopBtnClick()"> 新增 </p-button>
+      </template>
+      <template #operation="{ row }">
+        <p-button
+          type="primary"
+          size="small"
+          link
+          @click="tableRightBtnClick({ row, btn: 'edit' })"
+        >
+          编辑
+        </p-button>
+        <p-button
+          type="danger"
+          size="small"
+          link
+          @click="tableRightBtnClick({ row, btn: 'delete' })"
+        >
+          删除
+        </p-button>
+      </template>
+    </p-table>
 
-    <p-dialog
-      type="box"
-      title="按钮详情页"
-      v-model="isDetail"
-      :botBtn="[
-        { label: '保存', key: 'save' },
-        { label: '返回', key: 'back' },
-      ]"
-      @botBtnClick="diaBotBtnClick"
-    >
+    <p-dialog type="box" title="按钮详情页" v-model="isDetail">
       <div style="padding: 10px 0">
         <p-form
           :data="formData"
@@ -164,6 +153,12 @@ watch(
           v-model="detailInfo"
         ></p-form>
       </div>
+      <template #footer>
+        <p-button type="primary" @click="diaBotBtnClick('save')">
+          保存
+        </p-button>
+        <p-button @click="diaBotBtnClick('back')"> 返回 </p-button>
+      </template>
     </p-dialog>
   </div>
 </template>
