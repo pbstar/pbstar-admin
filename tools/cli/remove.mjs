@@ -7,7 +7,7 @@ import apps from "../../apps/apps.json" with { type: "json" };
 const list = [
   "全局工程",
   "assets",
-  "compontents",
+  "components",
   "tools",
   "main",
   ...apps.map((item) => item.key),
