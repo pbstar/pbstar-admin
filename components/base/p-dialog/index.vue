@@ -14,7 +14,7 @@
           <DialogHeader
             class="dialog-header box-header"
             :title="title"
-            @close="toClose"
+            @close="handleClose"
           />
           <div class="dialog-body box-body">
             <slot></slot>
@@ -45,7 +45,7 @@
         <DialogHeader
           class="dialog-header drawer-header"
           :title="title"
-          @close="toClose"
+          @close="handleClose"
           drawer
         />
         <div class="drawer-top-space"></div>
@@ -96,19 +96,23 @@ import DialogHeader from "./DialogHeader.vue";
 const sharedStore = useSharedStore();
 
 const props = defineProps({
+  // 对话框类型：box(普通对话框)、drawer(抽屉)、page(全屏页面)
   type: {
     type: String,
     default: "box",
     validator: (value) => ["box", "drawer", "page"].includes(value),
   },
+  // 显示/隐藏
   modelValue: {
     type: Boolean,
     default: false,
   },
+  // 标题
   title: {
     type: String,
     default: "",
   },
+  // 宽度
   width: {
     type: String,
     default: "",
@@ -127,11 +131,12 @@ const topHeight = computed(() =>
   sharedStore.isFull || isMobile.value ? "0" : "90",
 );
 
+// Page 类型的遮罩样式
 const overlayStyle = computed(() => ({
   "z-index": zIndex.value,
   width: `calc(100vw - ${navWidth.value}px)`,
   height: `calc(100vh - ${topHeight.value}px)`,
-  top: topHeight.value + "px",
+  top: `${topHeight.value}px`,
 }));
 
 const drawerStyle = computed(() => ({
@@ -149,11 +154,10 @@ watch(
   },
 );
 
-watch(dialogVisible, (newVal) => {
-  emit("update:modelValue", newVal);
-});
-
-const toClose = () => (dialogVisible.value = false);
+// 关闭处理
+const handleClose = () => {
+  emit("update:modelValue", false);
+};
 </script>
 
 <style scoped lang="scss">
@@ -294,6 +298,7 @@ const toClose = () => (dialogVisible.value = false);
 .dialog-body.page-body {
   height: calc(100% - 90px);
   padding: 0 10px;
+  overflow-y: auto;
 }
 
 .dialog-footer.page-footer {

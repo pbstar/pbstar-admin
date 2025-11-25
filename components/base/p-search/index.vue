@@ -4,14 +4,17 @@ import { PItem } from "@Pcomponents";
 import { useFormData } from "../hooks/useFormData.js";
 
 const props = defineProps({
+  // 搜索表单配置数据
   data: {
     type: Array,
     default: () => [],
   },
+  // 表单值
   modelValue: {
     type: Object,
     default: () => ({}),
   },
+  // 是否显示重置按钮
   showReset: {
     type: Boolean,
     default: true,
@@ -22,11 +25,16 @@ const emits = defineEmits(["change", "update:modelValue", "btnClick"]);
 
 const { formData, valueObj, updateData, resetValue, handleChange } =
   useFormData(props, emits);
+
+// 是否展开搜索区域
 const showSearch = ref(true);
 
-const toSearch = () =>
+// 搜索处理
+const toSearch = () => {
   emits("btnClick", { type: "search", data: valueObj.value });
+};
 
+// 重置处理
 const toReset = () => {
   resetValue();
   emits("btnClick", { type: "reset", data: valueObj.value });

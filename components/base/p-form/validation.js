@@ -28,16 +28,3 @@ export const validateRequired = (formData, values) => {
 
   return true;
 };
-
-/**
- * 校验span值是否在有效范围内
- * @param {number} span - span值
- * @returns {number} - 修正后的span值
- */
-export const normalizeSpan = (span) => {
-  if (!span || span > 12 || span < 1) {
-    console.warn("span的值必须在1-12之间，已使用默认值6");
-    return 6;
-  }
-  return span;
-};

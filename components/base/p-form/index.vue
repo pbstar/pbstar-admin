@@ -2,17 +2,20 @@
 import { computed } from "vue";
 import { PItem } from "@Pcomponents";
 import { useFormData } from "../hooks/useFormData.js";
-import { validateRequired, normalizeSpan } from "./validation.js";
+import { validateRequired } from "./validation.js";
 
 const props = defineProps({
+  // 表单配置数据
   data: {
     type: Array,
     default: () => [],
   },
+  // 每列的宽度配置（12 栅格系统）
   spanList: {
     type: Array,
     default: () => [],
   },
+  // 表单值
   modelValue: {
     type: Object,
     default: () => ({}),
@@ -25,14 +28,16 @@ const { formData, valueObj, updateData, handleChange } = useFormData(
   props,
   emits,
 );
-const isMobile = computed(() => {
-  return window.innerWidth <= 700;
-});
 
+// 判断是否为移动端
+const isMobile = computed(() => window.innerWidth <= 700);
+
+// 计算每列的宽度
 const getWidth = (index) => {
-  const span = normalizeSpan(props.spanList[index]);
-  const actualSpan = isMobile.value ? 12 : span;
-  return `calc(${(actualSpan * 100) / 12}% - 20px)`;
+  const span = props.spanList[index] || 6;
+  let width = span < 1 || span > 12 ? 6 : span;
+  width = isMobile.value ? 12 : width;
+  return `calc(${(width * 100) / 12}% - 20px)`;
 };
 
 defineExpose({

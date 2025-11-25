@@ -1,6 +1,15 @@
 <template>
   <div class="tabulation">
-    <div class="topBtn">
+    <!-- 顶部操作区 -->
+    <div
+      class="topBtn"
+      v-if="
+        $slots.topLeft ||
+        $slots.topRight ||
+        props.export ||
+        (props.showSetting && props.tableKey)
+      "
+    >
       <div class="tLeft">
         <slot name="topLeft"></slot>
       </div>
@@ -24,6 +33,7 @@
         <slot name="topRight"></slot>
       </div>
     </div>
+    <!-- 表格 -->
     <el-table
       class="table"
       :style="{
@@ -32,21 +42,23 @@
             ? '10px'
             : '0px',
       }"
-      :data="dataList"
+      :data="data"
       border
-      row-key="id"
+      :row-key="rowKey"
       stripe
-      :max-height="props.maxHeight"
+      :max-height="maxHeight"
       show-overflow-tooltip
       @selection-change="handleSelectionChange"
     >
-      <el-table-column type="selection" width="55" v-if="props.showSelection" />
+      <!-- 选择列 -->
+      <el-table-column v-if="showSelection" type="selection" width="55" />
+      <!-- 序号列 -->
       <el-table-column
+        v-if="showIndex"
         label="序号"
         type="index"
         :index="getIndex"
         width="60"
-        v-if="props.showIndex"
       />
       <template v-for="(item, i) in columnList" :key="i">
         <el-table-column
@@ -96,14 +108,20 @@
         </template>
       </el-table-column>
     </el-table>
-    <div class="bot">
+    <!-- 底部操作区 -->
+    <div
+      class="bot"
+      v-if="
+        $slots.botLeft || (pagination && Object.keys(pagination).length > 0)
+      "
+    >
       <div class="bLeft">
         <slot name="botLeft"></slot>
       </div>
       <div class="bRight">
         <el-pagination
+          v-if="pagination && Object.keys(pagination).length > 0"
           class="pagination"
-          v-if="props.pagination && props.pagination != {}"
           v-model:current-page="pageNumber"
           v-model:page-size="pageSize"
           :page-sizes="[10, 20, 50, 100]"
@@ -116,6 +134,7 @@
     </div>
   </div>
 </template>
+
 <script setup>
 import { ref, watch } from "vue";
 import { ElMessage } from "element-plus";
@@ -126,48 +145,62 @@ import { useEnumStore } from "@Passets/stores/enum";
 const enumStore = useEnumStore();
 
 const props = defineProps({
+  // 表格数据
   data: {
     type: Array,
     default: () => [],
   },
+  // 列配置
   column: {
     type: Array,
     default: () => [],
   },
+  // 分页配置
   pagination: {
     type: Object,
-    default: () => {},
+    default: () => ({}),
   },
+  // 是否显示列设置
   showSetting: {
     type: Boolean,
     default: false,
   },
+  // 表格唯一标识（用于保存列设置）
   tableKey: {
     type: String,
     default: "",
   },
+  // 是否显示选择列
   showSelection: {
     type: Boolean,
     default: false,
   },
+  // 是否显示序号列
   showIndex: {
     type: Boolean,
     default: true,
   },
+  // 表格最大高度
   maxHeight: {
     type: [String, Number],
     default: "800",
   },
+  // 行 key 字段
+  rowKey: {
+    type: [String, Function],
+    default: "id",
+  },
+  // 导出函数
   export: {
     type: [Function, null],
     default: null,
   },
 });
+
 const emit = defineEmits(["paginationChange", "selectionChange"]);
 
 const columnList = ref([]);
 const allColumn = ref(props.column);
-const dataList = ref([]);
 const pageNumber = ref(1);
 const pageSize = ref(10);
 const total = ref(0);
@@ -216,6 +249,8 @@ if (enumKeyList.length > 0) {
 const getIndex = (index) => {
   return (pageNumber.value - 1) * pageSize.value + index + 1;
 };
+
+// 分页变化处理
 const handleSizeChange = (val) => {
   pageSize.value = val;
   emit("paginationChange", {
@@ -223,6 +258,7 @@ const handleSizeChange = (val) => {
     pageSize: pageSize.value,
   });
 };
+
 const handleCurrentChange = (val) => {
   pageNumber.value = val;
   emit("paginationChange", {
@@ -249,42 +285,38 @@ const toChangeColumn = (list) => {
     }
   });
 };
+
+// 导出功能
 const toExport = () => {
+  if (!props.export) return;
+
   exportLoading.value = true;
-  props.export((data) => {
-    if (!data || !data.data) {
+  props.export((e) => {
+    if (!e || !e.data) {
       ElMessage.error("导出失败");
       exportLoading.value = false;
       return;
     }
+
     const rows = [];
-    const thCells = allColumn.value.map((item) => {
-      return item.label;
-    });
-    rows.push({
-      cells: thCells,
-    });
-    data.data.forEach((item) => {
+    const thCells = allColumn.value.map((item) => item.label);
+    rows.push({ cells: thCells });
+
+    e.data.forEach((item) => {
       const row = [];
       allColumn.value.forEach((col) => {
         if (col.options) {
           const obj = col.options.find((it) => it.value == item[col.key]);
-          if (obj) {
-            row.push(obj.label);
-            return;
-          }
+          row.push(obj ? obj.label : item[col.key] || "");
+        } else {
           row.push(item[col.key] || "");
-          return;
         }
-        row.push(item[col.key] || "");
       });
-      rows.push({
-        cells: row,
-      });
+      rows.push({ cells: row });
     });
 
     pExportExcel({
-      fileName: data.fileName || "导出数据表",
+      fileName: e.fileName || "导出数据表",
       sheets: [
         {
           sheetName: "sheet1",
@@ -303,22 +335,12 @@ const toExport = () => {
       });
   });
 };
-// 动态处理data
-watch(
-  () => props.data,
-  (val) => {
-    dataList.value = val || [];
-  },
-  {
-    deep: true,
-    immediate: true,
-  },
-);
-// 动态更新分页信息
+
+// 监听分页信息变化
 watch(
   () => props.pagination,
   (val) => {
-    if (!val || val == {}) {
+    if (!val || Object.keys(val).length === 0) {
       return;
     }
     pageNumber.value = val.pageNumber || 1;
