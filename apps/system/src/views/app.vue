@@ -122,13 +122,7 @@ const diaBotBtnClick = (btn) => {
       @btnClick="toSearch"
     ></p-search>
 
-    <p-table
-      style="margin-top: 10px"
-      :data="tableData"
-      :column="tableColumn"
-      tableKey="app_1"
-      showSetting
-    >
+    <p-table style="margin-top: 10px" :data="tableData" :column="tableColumn">
       <template #icon="scope">
         <div v-if="scope.row.icon" style="display: flex; align-items: center">
           <p-icon

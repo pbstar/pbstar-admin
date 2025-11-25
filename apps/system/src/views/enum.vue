@@ -130,8 +130,6 @@ const diaBotBtnClick = (btn) => {
       style="margin-top: 10px"
       :data="tableData"
       :column="tableColumn"
-      tableKey="enum_1"
-      showSetting
       :pagination="pagination"
       @paginationChange="tablePaginationChange"
     >

@@ -195,8 +195,6 @@ const handleNodeClick = (data) => {
           style="margin-top: 10px"
           :data="tableData"
           :column="tableColumn"
-          tableKey="nav_1"
-          showSetting
         >
           <template #icon="scope">
             <div

@@ -28,7 +28,7 @@ const userButtons = computed(() => sharedStore.userInfo?.btns || []);
 // 组件属性
 const props = defineProps({
   // 权限标识
-  auth: {
+  btnkey: {
     type: String,
     default: "",
   },
@@ -41,7 +41,7 @@ const props = defineProps({
 
 // 权限验证
 const hasPermission = computed(() => {
-  if (!props.auth) return true;
-  return userButtons.value.includes(props.auth);
+  if (!props.btnkey) return true;
+  return userButtons.value.includes(props.btnkey);
 });
 </script>

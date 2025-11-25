@@ -12,8 +12,6 @@
       ref="tableRef"
       :data="data"
       :column="column"
-      tableKey="table1"
-      showSetting
       :pagination="pagination"
       :export="toExport"
       @paginationChange="toPageChange"

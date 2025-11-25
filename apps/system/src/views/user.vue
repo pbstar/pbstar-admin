@@ -169,8 +169,6 @@ const diaBotBtnClick = (btn) => {
       style="margin-top: 10px"
       :data="tableData"
       :column="tableColumn"
-      tableKey="user_1"
-      showSetting
       ref="tableRef"
       :pagination="pagination"
       @paginationChange="tablePaginationChange"

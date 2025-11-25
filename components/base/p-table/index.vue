@@ -3,12 +3,7 @@
     <!-- 顶部操作区 -->
     <div
       class="topBtn"
-      v-if="
-        $slots.topLeft ||
-        $slots.topRight ||
-        props.export ||
-        (props.showSetting && props.tableKey)
-      "
+      v-if="$slots.topLeft || $slots.topRight || props.export"
     >
       <div class="tLeft">
         <slot name="topLeft"></slot>
@@ -24,12 +19,6 @@
         >
           <p-icon name="el-icon-download" />
         </el-button>
-        <setting
-          v-if="props.showSetting && props.tableKey"
-          :tableKey="props.tableKey"
-          :column="allColumn"
-          @change="settingChange"
-        />
         <slot name="topRight"></slot>
       </div>
     </div>
@@ -38,9 +27,7 @@
       class="table"
       :style="{
         marginTop:
-          $slots.topLeft || (props.showSetting && props.tableKey)
-            ? '10px'
-            : '0px',
+          $slots.topLeft || $slots.topRight || props.export ? '10px' : '0px',
       }"
       :data="data"
       border
@@ -140,7 +127,6 @@ import { ref, watch } from "vue";
 import { ElMessage } from "element-plus";
 import pExportExcel from "p-export-excel";
 import { PIcon } from "@Pcomponents";
-import setting from "./setting.vue";
 import { useEnumStore } from "@Passets/stores/enum";
 const enumStore = useEnumStore();
 
@@ -159,16 +145,6 @@ const props = defineProps({
   pagination: {
     type: Object,
     default: () => ({}),
-  },
-  // 是否显示列设置
-  showSetting: {
-    type: Boolean,
-    default: false,
-  },
-  // 表格唯一标识（用于保存列设置）
-  tableKey: {
-    type: String,
-    default: "",
   },
   // 是否显示选择列
   showSelection: {
@@ -199,8 +175,7 @@ const props = defineProps({
 
 const emit = defineEmits(["paginationChange", "selectionChange"]);
 
-const columnList = ref([]);
-const allColumn = ref(props.column);
+const columnList = ref(props.column);
 const pageNumber = ref(1);
 const pageSize = ref(10);
 const total = ref(0);
@@ -216,11 +191,8 @@ const columnItemDefault = {
 };
 const exportLoading = ref(false);
 
-if (props.showSetting && !props.tableKey) {
-  console.error("showSetting为true时必须传入tableKey");
-}
 const enumKeyList = [];
-allColumn.value.forEach((item) => {
+columnList.value.forEach((item) => {
   item = Object.assign(columnItemDefault, item);
   if (
     item.enumKey &&
@@ -230,13 +202,12 @@ allColumn.value.forEach((item) => {
     enumKeyList.push(item.enumKey);
   }
 });
-columnList.value = allColumn.value;
 if (enumKeyList.length > 0) {
   let str = enumKeyList.join(",");
   enumStore.getEnum(str).then((res) => {
     if (res) {
       for (const enumKey in res) {
-        allColumn.value.forEach((item) => {
+        columnList.value.forEach((item) => {
           if (item.enumKey == enumKey) {
             item.options = res[enumKey];
           }
@@ -266,9 +237,6 @@ const handleCurrentChange = (val) => {
     pageSize: pageSize.value,
   });
 };
-const settingChange = (val) => {
-  columnList.value = val.columnList || [];
-};
 const handleSelectionChange = (val) => {
   selectionList.value = val;
   emit("selectionChange", val);
@@ -279,9 +247,9 @@ const toChangeColumn = (list) => {
       console.warn("toChangeColumn方法的数组参数中必须包含key");
       return;
     }
-    const index = allColumn.value.findIndex((it) => it.key == item.key);
+    const index = columnList.value.findIndex((it) => it.key == item.key);
     if (index > -1) {
-      allColumn.value[index] = Object.assign(allColumn.value[index], item);
+      columnList.value[index] = Object.assign(columnList.value[index], item);
     }
   });
 };
@@ -299,12 +267,12 @@ const toExport = () => {
     }
 
     const rows = [];
-    const thCells = allColumn.value.map((item) => item.label);
+    const thCells = columnList.value.map((item) => item.label);
     rows.push({ cells: thCells });
 
     e.data.forEach((item) => {
       const row = [];
-      allColumn.value.forEach((col) => {
+      columnList.value.forEach((col) => {
         if (col.options) {
           const obj = col.options.find((it) => it.value == item[col.key]);
           row.push(obj ? obj.label : item[col.key] || "");
