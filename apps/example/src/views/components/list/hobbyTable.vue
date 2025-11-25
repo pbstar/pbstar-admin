@@ -16,10 +16,6 @@ const props = defineProps({
 });
 const emit = defineEmits(["update:modelValue", "change"]);
 
-const tableColumn = ref([
-  { label: "爱好", key: "hobby" },
-  { label: "爱好描述", key: "hobbyDesc" },
-]);
 const tableData = ref([]);
 const detailType = ref("");
 const detailInfo = ref({});
@@ -121,27 +117,38 @@ watch(
 
 <template>
   <div class="childBox">
-    <p-table :column="tableColumn" :data="tableData">
+    <p-table :data="tableData">
+      <template #column>
+        <el-table-column prop="hobby" label="爱好" />
+        <el-table-column prop="hobbyDesc" label="爱好描述" />
+        <el-table-column
+          prop="operation"
+          label="操作"
+          fixed="right"
+          width="160"
+        >
+          <template #default="{ row }">
+            <p-button
+              type="primary"
+              size="small"
+              link
+              @click="tableRightBtnClick({ row, btn: 'edit' })"
+            >
+              编辑
+            </p-button>
+            <p-button
+              type="danger"
+              size="small"
+              link
+              @click="tableRightBtnClick({ row, btn: 'delete' })"
+            >
+              删除
+            </p-button>
+          </template>
+        </el-table-column>
+      </template>
       <template #topLeft>
         <p-button type="primary" @click="tableTopBtnClick()"> 新增 </p-button>
-      </template>
-      <template #operation="{ row }">
-        <p-button
-          type="primary"
-          size="small"
-          link
-          @click="tableRightBtnClick({ row, btn: 'edit' })"
-        >
-          编辑
-        </p-button>
-        <p-button
-          type="danger"
-          size="small"
-          link
-          @click="tableRightBtnClick({ row, btn: 'delete' })"
-        >
-          删除
-        </p-button>
       </template>
     </p-table>
 

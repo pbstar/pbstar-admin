@@ -19,14 +19,6 @@ const searchData = ref([
   { label: "菜单链接", key: "url", type: "input" },
 ]);
 const searchValue = ref({});
-const tableColumn = ref([
-  { label: "菜单名称", key: "name" },
-  { label: "菜单链接", key: "url" },
-  { label: "菜单图标", key: "icon", slot: "icon" },
-  { label: "显示在导航", key: "isNav", slot: "isNav" },
-  { label: "排序", key: "index" },
-  { label: "备注", key: "remark" },
-]);
 const tableData = ref([]);
 const detailType = ref("");
 const detailId = ref("");
@@ -191,55 +183,65 @@ const handleNodeClick = (data) => {
           @btnClick="toSearch"
         ></p-search>
 
-        <p-table
-          style="margin-top: 10px"
-          :data="tableData"
-          :column="tableColumn"
-        >
-          <template #icon="scope">
-            <div
-              v-if="scope.row.icon"
-              style="display: flex; align-items: center"
+        <p-table style="margin-top: 10px" :data="tableData">
+          <template #column>
+            <el-table-column prop="name" label="菜单名称" />
+            <el-table-column prop="url" label="菜单链接" />
+            <el-table-column prop="icon" label="菜单图标">
+              <template #default="{ row }">
+                <div v-if="row.icon" style="display: flex; align-items: center">
+                  <p-icon
+                    style="margin-right: 5px; font-size: 16px"
+                    :name="row.icon"
+                  />
+                  <span>{{ row.icon }}</span>
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column prop="isNav" label="显示在导航">
+              <template #default="{ row }">
+                <span>{{ row.isNav == 1 ? "是" : "否" }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="index" label="排序" />
+            <el-table-column prop="remark" label="备注" />
+            <el-table-column
+              prop="operation"
+              label="操作"
+              fixed="right"
+              width="200"
             >
-              <p-icon
-                style="margin-right: 5px; font-size: 16px"
-                :name="scope.row.icon"
-              />
-              <span>{{ scope.row.icon }}</span>
-            </div>
-          </template>
-          <template #isNav="scope">
-            <span>{{ scope.row.isNav == 1 ? "是" : "否" }}</span>
+              <template #default="{ row }">
+                <p-button
+                  type="primary"
+                  size="small"
+                  link
+                  @click="tableRightBtnClick({ row, btn: 'view' })"
+                >
+                  查看
+                </p-button>
+                <p-button
+                  type="primary"
+                  size="small"
+                  link
+                  @click="tableRightBtnClick({ row, btn: 'edit' })"
+                >
+                  编辑
+                </p-button>
+                <p-button
+                  type="danger"
+                  size="small"
+                  link
+                  @click="tableRightBtnClick({ row, btn: 'delete' })"
+                >
+                  删除
+                </p-button>
+              </template>
+            </el-table-column>
           </template>
           <template #topLeft>
             <p-button type="primary" @click="tableTopBtnClick()">
               新增
-            </p-button>
-          </template>
-          <template #operation="{ row }">
-            <p-button
-              type="primary"
-              size="small"
-              link
-              @click="tableRightBtnClick({ row, btn: 'view' })"
-            >
-              查看
-            </p-button>
-            <p-button
-              type="primary"
-              size="small"
-              link
-              @click="tableRightBtnClick({ row, btn: 'edit' })"
-            >
-              编辑
-            </p-button>
-            <p-button
-              type="danger"
-              size="small"
-              link
-              @click="tableRightBtnClick({ row, btn: 'delete' })"
-            >
-              删除
             </p-button>
           </template>
         </p-table>

@@ -16,12 +16,6 @@ const searchData = ref([
   },
 ]);
 const searchValue = ref({});
-const tableColumn = ref([
-  { label: "应用名称", key: "name" },
-  { label: "应用分组", key: "group" },
-  { label: "应用Key", key: "key" },
-  { label: "应用图标", key: "icon", slot: "icon" },
-]);
 const tableData = ref([]);
 
 const detailType = ref("");
@@ -122,44 +116,58 @@ const diaBotBtnClick = (btn) => {
       @btnClick="toSearch"
     ></p-search>
 
-    <p-table style="margin-top: 10px" :data="tableData" :column="tableColumn">
-      <template #icon="scope">
-        <div v-if="scope.row.icon" style="display: flex; align-items: center">
-          <p-icon
-            style="margin-right: 5px; font-size: 16px"
-            :name="scope.row.icon"
-          />
-          <span>{{ scope.row.icon }}</span>
-        </div>
+    <p-table style="margin-top: 10px" :data="tableData">
+      <template #column>
+        <el-table-column prop="name" label="应用名称" />
+        <el-table-column prop="group" label="应用分组" />
+        <el-table-column prop="key" label="应用Key" />
+        <el-table-column prop="icon" label="应用图标">
+          <template #default="{ row }">
+            <div v-if="row.icon" style="display: flex; align-items: center">
+              <p-icon
+                style="margin-right: 5px; font-size: 16px"
+                :name="row.icon"
+              />
+              <span>{{ row.icon }}</span>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="operation"
+          label="操作"
+          fixed="right"
+          width="200"
+        >
+          <template #default="{ row }">
+            <p-button
+              type="primary"
+              size="small"
+              link
+              @click="tableRightBtnClick({ row, btn: 'view' })"
+            >
+              查看
+            </p-button>
+            <p-button
+              type="primary"
+              size="small"
+              link
+              @click="tableRightBtnClick({ row, btn: 'edit' })"
+            >
+              编辑
+            </p-button>
+            <p-button
+              type="danger"
+              size="small"
+              link
+              @click="tableRightBtnClick({ row, btn: 'delete' })"
+            >
+              删除
+            </p-button>
+          </template>
+        </el-table-column>
       </template>
       <template #topLeft>
         <p-button type="primary" @click="tableTopBtnClick()"> 新增 </p-button>
-      </template>
-      <template #operation="{ row }">
-        <p-button
-          type="primary"
-          size="small"
-          link
-          @click="tableRightBtnClick({ row, btn: 'view' })"
-        >
-          查看
-        </p-button>
-        <p-button
-          type="primary"
-          size="small"
-          link
-          @click="tableRightBtnClick({ row, btn: 'edit' })"
-        >
-          编辑
-        </p-button>
-        <p-button
-          type="danger"
-          size="small"
-          link
-          @click="tableRightBtnClick({ row, btn: 'delete' })"
-        >
-          删除
-        </p-button>
       </template>
     </p-table>
 

@@ -10,12 +10,6 @@ const searchData = ref([
   { label: "角色Key", key: "key", type: "input" },
 ]);
 const searchValue = ref({});
-const tableColumn = ref([
-  { label: "角色名称", key: "name" },
-  { label: "角色Key", key: "key" },
-  { label: "菜单权限", key: "navs" },
-  { label: "按钮权限", key: "btns" },
-]);
 const tableData = ref([]);
 const pagination = ref({
   pageNumber: 1,
@@ -131,39 +125,51 @@ const diaBotBtnClick = (btn) => {
     <p-table
       style="margin-top: 10px"
       :data="tableData"
-      :column="tableColumn"
       :pagination="pagination"
       @paginationChange="tablePaginationChange"
     >
+      <template #column>
+        <el-table-column prop="name" label="角色名称" />
+        <el-table-column prop="key" label="角色Key" />
+        <el-table-column prop="navs" label="菜单权限" />
+        <el-table-column prop="btns" label="按钮权限" />
+        <el-table-column
+          prop="operation"
+          label="操作"
+          fixed="right"
+          width="200"
+        >
+          <template #default="{ row }">
+            <p-button
+              type="primary"
+              size="small"
+              link
+              @click="tableRightBtnClick({ row, btn: 'view' })"
+            >
+              查看
+            </p-button>
+            <p-button
+              type="primary"
+              size="small"
+              link
+              @click="tableRightBtnClick({ row, btn: 'edit' })"
+            >
+              编辑
+            </p-button>
+            <p-button
+              v-if="row.id != 1"
+              type="danger"
+              size="small"
+              link
+              @click="tableRightBtnClick({ row, btn: 'delete' })"
+            >
+              删除
+            </p-button>
+          </template>
+        </el-table-column>
+      </template>
       <template #topLeft>
         <p-button type="primary" @click="tableTopBtnClick()"> 新增 </p-button>
-      </template>
-      <template #operation="{ row }">
-        <p-button
-          type="primary"
-          size="small"
-          link
-          @click="tableRightBtnClick({ row, btn: 'view' })"
-        >
-          查看
-        </p-button>
-        <p-button
-          type="primary"
-          size="small"
-          link
-          @click="tableRightBtnClick({ row, btn: 'edit' })"
-        >
-          编辑
-        </p-button>
-        <p-button
-          v-if="row.id != 1"
-          type="danger"
-          size="small"
-          link
-          @click="tableRightBtnClick({ row, btn: 'delete' })"
-        >
-          删除
-        </p-button>
       </template>
     </p-table>
 

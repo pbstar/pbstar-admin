@@ -21,10 +21,6 @@ onBeforeMount(() => {
   }
 });
 
-const tableColumn = ref([
-  { label: "枚举label", key: "label" },
-  { label: "枚举value", key: "value" },
-]);
 const tableData = ref([]);
 const detailType = ref("");
 const detailInfo = ref({});
@@ -133,27 +129,39 @@ watch(
 
 <template>
   <div class="childBox">
-    <p-table :column="tableColumn" :data="tableData">
+    <p-table :data="tableData">
+      <template #column>
+        <el-table-column prop="label" label="枚举label" />
+        <el-table-column prop="value" label="枚举value" />
+        <el-table-column
+          v-if="props.type !== 'view'"
+          prop="operation"
+          label="操作"
+          fixed="right"
+          width="160"
+        >
+          <template #default="{ row }">
+            <p-button
+              type="primary"
+              size="small"
+              link
+              @click="tableRightBtnClick({ row, btn: 'edit' })"
+            >
+              编辑
+            </p-button>
+            <p-button
+              type="danger"
+              size="small"
+              link
+              @click="tableRightBtnClick({ row, btn: 'delete' })"
+            >
+              删除
+            </p-button>
+          </template>
+        </el-table-column>
+      </template>
       <template #topLeft v-if="props.type !== 'add' && props.type !== 'view'">
         <p-button type="primary" @click="tableTopBtnClick"> 新增 </p-button>
-      </template>
-      <template v-if="props.type !== 'view'" #operation="{ row }">
-        <p-button
-          type="primary"
-          size="small"
-          link
-          @click="tableRightBtnClick({ row, btn: 'edit' })"
-        >
-          编辑
-        </p-button>
-        <p-button
-          type="danger"
-          size="small"
-          link
-          @click="tableRightBtnClick({ row, btn: 'delete' })"
-        >
-          删除
-        </p-button>
       </template>
     </p-table>
     <p-dialog type="box" title="枚举值详情页" v-model="isDetail">

@@ -11,14 +11,9 @@ const searchData = ref([
   { label: "角色", key: "role", type: "select" },
 ]);
 const searchValue = ref({});
-const tableColumn = ref([
-  { label: "姓名", key: "name" },
-  { label: "头像", key: "avatar", slot: "avatar" },
-  { label: "账号", key: "username" },
-  { label: "角色", key: "role" },
-]);
 const tableRef = ref(null);
 const tableData = ref([]);
+const roleOptions = ref([]);
 const pagination = ref({
   pageNumber: 1,
   pageSize: 10,
@@ -74,28 +69,28 @@ const getRoleList = () => {
     })
     .then((res) => {
       if (res.code === 200 && res.data) {
-        const roleOptions = res.data.map((item) => {
+        roleOptions.value = res.data.map((item) => {
           return {
             label: item.name,
             value: item.role_key,
           };
         });
-        tableRef.value.toChangeColumn([
-          {
-            key: "role",
-            options: roleOptions,
-          },
-        ]);
         searchRef.value.toChangeData([
           {
             key: "role",
-            options: roleOptions,
+            options: roleOptions.value,
           },
         ]);
       } else {
         ElMessage.error(res.msg || "获取角色列表失败");
       }
     });
+};
+
+// 根据 role_key 获取角色名称
+const getRoleLabel = (roleKey) => {
+  const role = roleOptions.value.find((item) => item.value === roleKey);
+  return role ? role.label : roleKey;
 };
 const tableRightBtnClick = ({ row, btn }) => {
   if (btn == "view" || btn == "edit") {
@@ -168,50 +163,67 @@ const diaBotBtnClick = (btn) => {
     <p-table
       style="margin-top: 10px"
       :data="tableData"
-      :column="tableColumn"
       ref="tableRef"
       :pagination="pagination"
       @paginationChange="tablePaginationChange"
     >
+      <template #column>
+        <el-table-column prop="name" label="姓名" />
+        <el-table-column prop="avatar" label="头像">
+          <template #default="{ row }">
+            <div style="display: flex">
+              <img
+                style="width: 26px; height: 26px; border-radius: 50%"
+                v-if="row.avatar"
+                :src="row.avatar"
+                alt=""
+              />
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column prop="username" label="账号" />
+        <el-table-column prop="role" label="角色">
+          <template #default="{ row }">
+            {{ getRoleLabel(row.role) }}
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="operation"
+          label="操作"
+          fixed="right"
+          width="200"
+        >
+          <template #default="{ row }">
+            <p-button
+              type="primary"
+              size="small"
+              link
+              @click="tableRightBtnClick({ row, btn: 'view' })"
+            >
+              查看
+            </p-button>
+            <p-button
+              type="primary"
+              size="small"
+              link
+              @click="tableRightBtnClick({ row, btn: 'edit' })"
+            >
+              编辑
+            </p-button>
+            <p-button
+              v-if="row.id != 1"
+              type="danger"
+              size="small"
+              link
+              @click="tableRightBtnClick({ row, btn: 'delete' })"
+            >
+              删除
+            </p-button>
+          </template>
+        </el-table-column>
+      </template>
       <template #topLeft>
         <p-button type="primary" @click="tableTopBtnClick()"> 新增 </p-button>
-      </template>
-      <template #avatar="{ row }">
-        <div style="display: flex">
-          <img
-            style="width: 26px; height: 26px; border-radius: 50%"
-            v-if="row.avatar"
-            :src="row.avatar"
-            alt=""
-          />
-        </div>
-      </template>
-      <template #operation="{ row }">
-        <p-button
-          type="primary"
-          size="small"
-          link
-          @click="tableRightBtnClick({ row, btn: 'view' })"
-        >
-          查看
-        </p-button>
-        <p-button
-          type="primary"
-          size="small"
-          link
-          @click="tableRightBtnClick({ row, btn: 'edit' })"
-        >
-          编辑
-        </p-button>
-        <p-button
-          v-if="row.id != 1"
-          type="danger"
-          size="small"
-          link
-          @click="tableRightBtnClick({ row, btn: 'delete' })"
-        >
-          删除
-        </p-button>
       </template>
     </p-table>
 

@@ -11,57 +11,91 @@
       style="margin-top: 10px"
       ref="tableRef"
       :data="data"
-      :column="column"
       :pagination="pagination"
-      :export="toExport"
       @paginationChange="toPageChange"
     >
-      <template #age="scope">
-        <span v-show="scope.row.age < 25">{{ scope.row.age }}</span>
-        <span v-show="scope.row.age >= 25">{{ scope.row.age }}（老年人）</span>
+      <template #column>
+        <el-table-column prop="name" label="姓名" />
+        <el-table-column prop="age" label="年龄">
+          <template #default="{ row }">
+            <span v-show="row.age < 25">{{ row.age }}</span>
+            <span v-show="row.age >= 25">{{ row.age }}（老年人）</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="sex" label="性别">
+          <template #default="{ row }">
+            {{ getSexLabel(row.sex) }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="ethnic" label="民族">
+          <template #default="{ row }">
+            {{
+              getEnumOptions("ethnic").find((item) => item.value == row.ethnic)
+                ?.label || row.ethnic
+            }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="isHealthy" label="是否健康">
+          <template #default="{ row }">
+            {{
+              getEnumOptions("boolean").find(
+                (item) => item.value == row.isHealthy,
+              )?.label || row.isHealthy
+            }}
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="operation"
+          label="操作"
+          fixed="right"
+          width="200"
+        >
+          <template #default="{ row }">
+            <p-button
+              type="primary"
+              size="small"
+              link
+              @click="toRightBtnClick({ row, btn: 'view' })"
+            >
+              查看
+            </p-button>
+            <p-button
+              type="primary"
+              size="small"
+              link
+              @click="toRightBtnClick({ row, btn: 'edit' })"
+            >
+              编辑
+            </p-button>
+            <el-dropdown trigger="click">
+              <el-button
+                style="margin-left: 5px; margin-top: 2px"
+                type="primary"
+                link
+                size="small"
+              >
+                <span>更多</span>
+                <p-icon name="el-icon-arrow-down" />
+              </el-button>
+
+              <template #dropdown>
+                <el-dropdown-menu>
+                  <el-dropdown-item
+                    @click="toRightBtnClick({ row, btn: 'delete' })"
+                    >删除
+                  </el-dropdown-item>
+                  <el-dropdown-item
+                    @click="toRightBtnClick({ row, btn: 'other' })"
+                    >其他
+                  </el-dropdown-item>
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
+          </template>
+        </el-table-column>
       </template>
       <template #topLeft>
         <p-button type="primary" @click="toTopBtnClick()"> 新增 </p-button>
-      </template>
-      <template #operation="{ row }">
-        <p-button
-          type="primary"
-          size="small"
-          link
-          @click="toRightBtnClick({ row, btn: 'view' })"
-        >
-          查看
-        </p-button>
-        <p-button
-          type="primary"
-          size="small"
-          link
-          @click="toRightBtnClick({ row, btn: 'edit' })"
-        >
-          编辑
-        </p-button>
-        <el-dropdown trigger="click">
-          <el-button
-            style="margin-left: 5px; margin-top: 2px"
-            type="primary"
-            link
-            size="small"
-          >
-            <span>更多</span>
-            <p-icon name="el-icon-arrow-down" />
-          </el-button>
-
-          <template #dropdown>
-            <el-dropdown-menu>
-              <el-dropdown-item @click="toRightBtnClick({ row, btn: 'delete' })"
-                >删除
-              </el-dropdown-item>
-              <el-dropdown-item @click="toRightBtnClick({ row, btn: 'other' })"
-                >其他
-              </el-dropdown-item>
-            </el-dropdown-menu>
-          </template>
-        </el-dropdown>
       </template>
     </p-table>
     <p-dialog title="用户列表详情页" type="page" v-model="isDetail">
@@ -84,15 +118,10 @@ import { ref, onMounted } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import request from "@Passets/utils/request";
 import { PTable, PSearch, PTitle, PDialog, PButton, PIcon } from "@Pcomponents";
+import { useEnumStore } from "@Passets/stores/enum";
 import Detail from "./components/list/detail.vue";
 const data = ref([]);
-const column = ref([
-  { key: "name", label: "姓名" },
-  { key: "age", label: "年龄", slot: "age" },
-  { key: "sex", label: "性别" },
-  { key: "ethnic", label: "民族", enumKey: "ethnic" },
-  { key: "isHealthy", label: "是否健康", enumKey: "boolean" },
-]);
+const enumStore = useEnumStore();
 
 const tableRef = ref(null);
 const pagination = ref({
@@ -117,24 +146,40 @@ const isDetail = ref(false);
 const detailType = ref("");
 const detailId = ref("");
 const detailRef = ref(null);
+const sexOptions = ref([
+  { label: "男", value: "1" },
+  { label: "女", value: "2" },
+]);
 
-onMounted(() => {
-  tableRef.value.toChangeColumn([
-    {
-      key: "sex",
-      options: [
-        { label: "男", value: "1" },
-        { label: "女", value: "2" },
-      ],
-    },
-  ]);
+// 根据 value 获取 label
+const getSexLabel = (value) => {
+  const option = sexOptions.value.find((item) => item.value === value);
+  return option ? option.label : value;
+};
+
+// 根据 enumKey 和 value 获取枚举 label
+const getEnumLabel = async (enumKey, value) => {
+  if (!enumKey || !value) return value;
+  const enumData = await enumStore.getEnum(enumKey);
+  if (enumData?.[enumKey]) {
+    const option = enumData[enumKey].find((item) => item.value == value);
+    return option ? option.label : value;
+  }
+  return value;
+};
+
+// 获取枚举选项（用于响应式显示）
+const getEnumOptions = (enumKey) => {
+  return enumStore.enums[enumKey] || [];
+};
+
+onMounted(async () => {
+  // 预加载枚举数据
+  await enumStore.getEnum("ethnic,boolean");
   searchRef.value.toChangeData([
     {
       key: "sex",
-      options: [
-        { label: "男", value: "1" },
-        { label: "女", value: "2" },
-      ],
+      options: sexOptions.value,
     },
   ]);
   initTable();
@@ -224,27 +269,6 @@ const diaBotBtnClick = (btn) => {
   } else if (btn == "back") {
     isDetail.value = false;
   }
-};
-const toExport = (callBack) => {
-  request
-    .post({
-      url: "/example/person/getList",
-      data: {
-        pageNumber: 1,
-        pageSize: 10000,
-        ...searchValue.value,
-      },
-    })
-    .then((res) => {
-      if (res && res.code == 200) {
-        callBack({
-          fileName: "用户列表",
-          data: res.data.list,
-        });
-      } else {
-        ElMessage.error(res.msg || "操作异常");
-      }
-    });
 };
 </script>
 <style lang="scss" scoped>
