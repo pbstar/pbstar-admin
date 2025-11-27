@@ -39,6 +39,7 @@ const showSearch = ref(true);
         <el-button v-show="showReset" @click="emits('reset')">重置</el-button>
       </div>
     </div>
+    <div v-show="!showSearch" class="searchContentNo"></div>
   </div>
 </template>
 
@@ -47,7 +48,7 @@ const showSearch = ref(true);
   width: 100%;
   background: var(--c-bg-box);
   color: var(--c-text2);
-  padding: 5px;
+  padding: 5px 5px 0;
 
   .searchTitle {
     display: flex;
@@ -69,22 +70,26 @@ const showSearch = ref(true);
     display: flex;
     flex-wrap: wrap;
     position: relative;
-    margin-top: -5px;
 
     .searchPlaceholder {
       width: 160px;
       height: 30px;
+      margin-bottom: 10px;
     }
 
     .searchBtn {
       position: absolute;
       right: 10px;
-      bottom: 5px;
+      bottom: 10px;
       display: flex;
       justify-content: center;
       align-items: center;
       width: 160px;
     }
+  }
+
+  .searchContentNo {
+    height: 5px;
   }
 }
 </style>

@@ -85,9 +85,10 @@ defineExpose({
 .form {
   display: flex;
   flex-wrap: wrap;
+  gap: 10px;
 
   .item {
-    width: calc(100% - 20px);
+    width: 100%;
   }
 }
 </style>

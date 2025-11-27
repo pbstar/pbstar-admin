@@ -126,12 +126,13 @@ defineExpose({
 .form {
   display: flex;
   flex-wrap: wrap;
+  gap: 10px;
 
   .item {
     width: calc(33.33% - 20px);
 
     &.full {
-      width: calc(100% - 20px);
+      width: 100%;
     }
   }
 }

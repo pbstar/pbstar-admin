@@ -101,6 +101,7 @@ watch(
       .form {
         display: flex;
         flex-wrap: wrap;
+        gap: 10px;
 
         .item {
           width: 100%;

@@ -2,7 +2,15 @@
 import { ref, onBeforeMount } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import request from "@Passets/utils/request";
-import { PTable, PSearch, PTitle, PDialog, PIcon, PButton } from "@Pcomponents";
+import {
+  PTable,
+  PSearch,
+  PTitle,
+  PDialog,
+  PIcon,
+  PButton,
+  PItem,
+} from "@Pcomponents";
 import Detail from "./components/app/detail.vue";
 import { structure } from "@Passets/utils/array";
 
