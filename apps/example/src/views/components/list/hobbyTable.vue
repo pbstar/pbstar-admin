@@ -2,7 +2,7 @@
 import { ref, watch } from "vue";
 import { cloneDeep } from "es-toolkit/object";
 import { ElMessageBox } from "element-plus";
-import { PTable, PDialog, PForm, PButton } from "@Pcomponents";
+import { PTable, PDialog, PButton, PItem } from "@Pcomponents";
 
 const props = defineProps({
   type: {
@@ -20,11 +20,6 @@ const tableData = ref([]);
 const detailType = ref("");
 const detailInfo = ref({});
 const isDetail = ref(false);
-const formData = ref([
-  { label: "爱好", type: "input", key: "hobby" },
-  { label: "爱好描述", type: "textarea", key: "hobbyDesc" },
-]);
-
 const getWebId = () => {
   const timestamp = Date.now();
   const randomNum = Math.floor(Math.random() * 1000);
@@ -148,12 +143,17 @@ watch(
     </p-table>
 
     <p-dialog type="box" title="爱好详情页" v-model="isDetail">
-      <div style="padding: 10px 0">
-        <p-form
-          :data="formData"
-          :spanList="[12, 12]"
-          v-model="detailInfo"
-        ></p-form>
+      <div class="dialog-form">
+        <p-item
+          class="item"
+          :config="{ label: '爱好', type: 'input' }"
+          v-model="detailInfo.hobby"
+        />
+        <p-item
+          class="item"
+          :config="{ label: '爱好描述', type: 'textarea' }"
+          v-model="detailInfo.hobbyDesc"
+        />
       </div>
       <template #footer>
         <p-button type="primary" @click="handleSave()"> 保存 </p-button>
@@ -165,6 +165,16 @@ watch(
 
 <style scoped lang="scss">
 .childBox {
+  width: 100%;
+}
+
+.dialog-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.dialog-form .item {
   width: 100%;
 }
 </style>

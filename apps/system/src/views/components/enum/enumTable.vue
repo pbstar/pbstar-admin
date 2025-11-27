@@ -2,7 +2,7 @@
 import { ref, onBeforeMount, watch } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import request from "@Passets/utils/request";
-import { PTable, PDialog, PForm, PButton } from "@Pcomponents";
+import { PTable, PDialog, PButton, PItem } from "@Pcomponents";
 
 const props = defineProps({
   type: {
@@ -25,10 +25,6 @@ const tableData = ref([]);
 const detailType = ref("");
 const detailInfo = ref({});
 const isDetail = ref(false);
-const formData = ref([
-  { label: "枚举label", type: "input", key: "label" },
-  { label: "枚举value", type: "input", key: "value" },
-]);
 
 const initTable = () => {
   tableData.value = [];
@@ -162,12 +158,17 @@ watch(
       </template>
     </p-table>
     <p-dialog type="box" title="枚举值详情页" v-model="isDetail">
-      <div style="padding: 10px 0">
-        <p-form
-          :data="formData"
-          :spanList="[12, 12]"
-          v-model="detailInfo"
-        ></p-form>
+      <div class="dialog-form">
+        <p-item
+          class="item"
+          :config="{ label: '枚举label', type: 'input' }"
+          v-model="detailInfo.label"
+        />
+        <p-item
+          class="item"
+          :config="{ label: '枚举value', type: 'input' }"
+          v-model="detailInfo.value"
+        />
       </div>
       <template #footer>
         <p-button type="primary" @click="handleSave()"> 保存 </p-button>
@@ -181,5 +182,15 @@ watch(
 .childBox {
   width: 100%;
   padding-top: 10px;
+}
+
+.dialog-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.dialog-form .item {
+  width: 100%;
 }
 </style>

@@ -2,7 +2,7 @@
 import { ref, watch } from "vue";
 import { cloneDeep } from "es-toolkit/object";
 import { ElMessageBox } from "element-plus";
-import { PTable, PDialog, PForm, PButton } from "@Pcomponents";
+import { PTable, PDialog, PButton, PItem } from "@Pcomponents";
 
 const props = defineProps({
   type: {
@@ -20,10 +20,6 @@ const tableData = ref([]);
 const detailType = ref("");
 const detailInfo = ref({});
 const isDetail = ref(false);
-const formData = ref([
-  { label: "按钮名称", type: "input", key: "name" },
-  { label: "按钮Key", type: "input", key: "key" },
-]);
 
 const getWebId = () => {
   const timestamp = Date.now();
@@ -148,12 +144,17 @@ watch(
     </p-table>
 
     <p-dialog type="box" title="按钮详情页" v-model="isDetail">
-      <div style="padding: 10px 0">
-        <p-form
-          :data="formData"
-          :spanList="[12, 12]"
-          v-model="detailInfo"
-        ></p-form>
+      <div class="dialog-form">
+        <p-item
+          class="item"
+          :config="{ label: '按钮名称', type: 'input' }"
+          v-model="detailInfo.name"
+        />
+        <p-item
+          class="item"
+          :config="{ label: '按钮Key', type: 'input' }"
+          v-model="detailInfo.key"
+        />
       </div>
       <template #footer>
         <p-button type="primary" @click="handleSave()"> 保存 </p-button>
@@ -165,6 +166,16 @@ watch(
 
 <style scoped lang="scss">
 .childBox {
+  width: 100%;
+}
+
+.dialog-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.dialog-form .item {
   width: 100%;
 }
 </style>
