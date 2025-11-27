@@ -1,12 +1,32 @@
 <template>
   <div class="page">
     <p-title :list="['用户列表']"></p-title>
-    <p-search
-      style="margin-top: 10px"
-      ref="searchRef"
-      :data="searchData"
-      @btnClick="toSearch"
-    ></p-search>
+    <p-search style="margin-top: 10px" @search="toSearch" @reset="toReset">
+      <p-item
+        class="item"
+        :config="{ label: '姓名', type: 'input' }"
+        v-model="searchValue.name"
+      />
+      <p-item
+        class="item"
+        :config="{ label: '年龄', type: 'inputNumber' }"
+        v-model="searchValue.age"
+      />
+      <p-item
+        class="item"
+        :config="{ label: '性别', type: 'select', options: sexOptions }"
+        v-model="searchValue.sex"
+      />
+      <p-item
+        class="item"
+        :config="{
+          label: '是否健康',
+          type: 'select',
+          enumKey: 'boolean',
+        }"
+        v-model="searchValue.isHealthy"
+      />
+    </p-search>
     <p-table
       style="margin-top: 10px"
       ref="tableRef"
@@ -117,7 +137,15 @@
 import { ref, onMounted } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import request from "@Passets/utils/request";
-import { PTable, PSearch, PTitle, PDialog, PButton, PIcon } from "@Pcomponents";
+import {
+  PTable,
+  PSearch,
+  PTitle,
+  PDialog,
+  PButton,
+  PIcon,
+  PItem,
+} from "@Pcomponents";
 import { useEnumStore } from "@Passets/stores/enum";
 import Detail from "./components/list/detail.vue";
 const data = ref([]);
@@ -129,18 +157,8 @@ const pagination = ref({
   pageSize: 10,
   total: 0,
 });
-const searchRef = ref(null);
-const searchData = ref([
-  { key: "name", label: "姓名", type: "input" },
-  { key: "age", label: "年龄", type: "inputNumber" },
-  { key: "sex", label: "性别", type: "select", options: [] },
-  {
-    key: "isHealthy",
-    label: "是否健康",
-    type: "select",
-    enumKey: "boolean",
-  },
-]);
+// const searchRef = ref(null);
+// const searchData = ref([]);
 const searchValue = ref({});
 const isDetail = ref(false);
 const detailType = ref("");
@@ -157,17 +175,6 @@ const getSexLabel = (value) => {
   return option ? option.label : value;
 };
 
-// 根据 enumKey 和 value 获取枚举 label
-const getEnumLabel = async (enumKey, value) => {
-  if (!enumKey || !value) return value;
-  const enumData = await enumStore.getEnum(enumKey);
-  if (enumData?.[enumKey]) {
-    const option = enumData[enumKey].find((item) => item.value == value);
-    return option ? option.label : value;
-  }
-  return value;
-};
-
 // 获取枚举选项（用于响应式显示）
 const getEnumOptions = (enumKey) => {
   return enumStore.enums[enumKey] || [];
@@ -176,17 +183,15 @@ const getEnumOptions = (enumKey) => {
 onMounted(async () => {
   // 预加载枚举数据
   await enumStore.getEnum("ethnic,boolean");
-  searchRef.value.toChangeData([
-    {
-      key: "sex",
-      options: sexOptions.value,
-    },
-  ]);
   initTable();
 });
-const toSearch = ({ data }) => {
-  searchValue.value = data;
+const toSearch = () => {
+  pagination.value.pageNumber = 1;
   initTable();
+};
+const toReset = () => {
+  searchValue.value = {};
+  toSearch();
 };
 const toPageChange = ({ pageNumber, pageSize }) => {
   pagination.value.pageNumber = pageNumber;
@@ -276,5 +281,11 @@ const diaBotBtnClick = (btn) => {
   width: 100%;
   padding: 0 10px;
   background-color: var(--c-bg);
+
+  .item {
+    width: 250px;
+    margin-bottom: 10px;
+    margin-right: 10px;
+  }
 }
 </style>

@@ -2,17 +2,9 @@
 import { ref, onBeforeMount } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import request from "@Passets/utils/request";
-import { PTable, PSearch, PTitle, PDialog, PButton } from "@Pcomponents";
+import { PTable, PSearch, PTitle, PDialog, PButton, PItem } from "@Pcomponents";
 import Detail from "./components/log/detail.vue";
 
-const searchData = ref([
-  { label: "用户名", key: "userName", type: "input" },
-  {
-    label: "操作时间",
-    key: "createTime",
-    type: "dateRange",
-  },
-]);
 const searchValue = ref({});
 const tableData = ref([]);
 
@@ -30,9 +22,13 @@ onBeforeMount(() => {
   initTable();
 });
 
-const toSearch = ({ data }) => {
-  searchValue.value = data;
+const toSearch = () => {
+  pagination.value.pageNumber = 1;
   initTable();
+};
+const toReset = () => {
+  searchValue.value = {};
+  toSearch();
 };
 const tablePaginationChange = ({ pageNumber, pageSize }) => {
   pagination.value.pageNumber = pageNumber;
@@ -121,11 +117,21 @@ const diaBotBtnClick = (btn) => {
   <div class="page">
     <p-title :list="['操作日志']"></p-title>
 
-    <p-search
-      style="margin-top: 10px"
-      :data="searchData"
-      @btnClick="toSearch"
-    ></p-search>
+    <p-search style="margin-top: 10px" @search="toSearch" @reset="toReset">
+      <p-item
+        class="item"
+        :config="{ label: '用户名', type: 'input' }"
+        v-model="searchValue.userName"
+      />
+      <p-item
+        class="item"
+        :config="{
+          label: '操作时间',
+          type: 'dateRange',
+        }"
+        v-model="searchValue.createTime"
+      />
+    </p-search>
 
     <p-table
       style="margin-top: 10px"
@@ -191,5 +197,11 @@ const diaBotBtnClick = (btn) => {
   width: 100%;
   padding: 0 10px;
   background-color: var(--c-bg);
+
+  .item {
+    width: 250px;
+    margin-bottom: 10px;
+    margin-right: 10px;
+  }
 }
 </style>

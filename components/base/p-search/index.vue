@@ -1,19 +1,7 @@
 <script setup>
 import { ref } from "vue";
-import { PItem } from "@Pcomponents";
-import { useFormData } from "../hooks/useFormData.js";
 
 const props = defineProps({
-  // 搜索表单配置数据
-  data: {
-    type: Array,
-    default: () => [],
-  },
-  // 表单值
-  modelValue: {
-    type: Object,
-    default: () => ({}),
-  },
   // 是否显示重置按钮
   showReset: {
     type: Boolean,
@@ -21,34 +9,26 @@ const props = defineProps({
   },
 });
 
-const emits = defineEmits(["change", "update:modelValue", "btnClick"]);
-
-const { formData, valueObj, updateData, resetValue, handleChange } =
-  useFormData(props, emits);
+const emits = defineEmits(["search", "reset"]);
 
 // 是否展开搜索区域
 const showSearch = ref(true);
 
 // 搜索处理
 const toSearch = () => {
-  emits("btnClick", { type: "search", data: valueObj.value });
+  emits("search");
 };
 
 // 重置处理
 const toReset = () => {
-  resetValue();
-  emits("btnClick", { type: "reset", data: valueObj.value });
+  emits("reset");
 };
-
-defineExpose({
-  toChangeData: updateData,
-});
 </script>
 
 <template>
   <div class="search">
     <div class="searchTitle">
-      <span>查询条件</span>
+      <span class="searchTitleText">查询条件</span>
       <el-button
         type="primary"
         size="small"
@@ -60,21 +40,8 @@ defineExpose({
     </div>
 
     <div class="searchContent" v-show="showSearch">
-      <p-item
-        v-for="(item, index) in formData"
-        :key="index"
-        class="item"
-        :config="item"
-        v-model="valueObj[item.key]"
-        @change="handleChange"
-      >
-        <template v-if="item.type === 'slot'" #[item.key]>
-          <slot :name="item.key"></slot>
-        </template>
-      </p-item>
-
-      <div class="item placeholder"></div>
-
+      <slot></slot>
+      <div class="searchPlaceholder"></div>
       <div class="searchBtn">
         <el-button type="primary" plain @click="toSearch">搜索</el-button>
         <el-button v-show="showReset" @click="toReset">重置</el-button>
@@ -97,7 +64,7 @@ defineExpose({
     height: 18px;
     margin: 5px;
 
-    span {
+    .searchTitleText {
       font-size: 14px;
       font-weight: bold;
       border-left: 3px solid var(--c-bg-theme);
@@ -112,14 +79,9 @@ defineExpose({
     position: relative;
     margin-top: -5px;
 
-    .item {
-      width: 300px;
-      margin: 5px 20px 5px 0;
-
-      &.placeholder {
-        width: 160px;
-        height: 30px;
-      }
+    .searchPlaceholder {
+      width: 160px;
+      height: 30px;
     }
 
     .searchBtn {

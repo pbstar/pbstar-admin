@@ -2,14 +2,9 @@
 import { ref, onBeforeMount, onMounted } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import request from "@Passets/utils/request";
-import { PTable, PSearch, PTitle, PDialog, PButton } from "@Pcomponents";
+import { PTable, PSearch, PTitle, PDialog, PButton, PItem } from "@Pcomponents";
 import Detail from "./components/user/detail.vue";
 
-const searchData = ref([
-  { label: "姓名", key: "name", type: "input" },
-  { label: "账号", key: "username", type: "input" },
-  { label: "角色", key: "role", type: "select" },
-]);
 const searchValue = ref({});
 const tableRef = ref(null);
 const tableData = ref([]);
@@ -23,7 +18,6 @@ const detailType = ref("");
 const detailId = ref("");
 const isDetail = ref(false);
 const detailRef = ref(null);
-const searchRef = ref(null);
 
 onBeforeMount(() => {
   initTable();
@@ -32,9 +26,13 @@ onMounted(() => {
   getRoleList();
 });
 
-const toSearch = ({ data }) => {
-  searchValue.value = data;
+const toSearch = () => {
+  pagination.value.pageNumber = 1;
   initTable();
+};
+const toReset = () => {
+  searchValue.value = {};
+  toSearch();
 };
 const tablePaginationChange = ({ pageNumber, pageSize }) => {
   pagination.value.pageNumber = pageNumber;
@@ -75,12 +73,6 @@ const getRoleList = () => {
             value: item.role_key,
           };
         });
-        searchRef.value.toChangeData([
-          {
-            key: "role",
-            options: roleOptions.value,
-          },
-        ]);
       } else {
         ElMessage.error(res.msg || "获取角色列表失败");
       }
@@ -153,12 +145,23 @@ const diaBotBtnClick = (btn) => {
   <div class="page">
     <p-title :list="['用户管理']"></p-title>
 
-    <p-search
-      style="margin-top: 10px"
-      :data="searchData"
-      @btnClick="toSearch"
-      ref="searchRef"
-    ></p-search>
+    <p-search style="margin-top: 10px" @search="toSearch" @reset="toReset">
+      <p-item
+        class="item"
+        :config="{ label: '姓名', type: 'input' }"
+        v-model="searchValue.name"
+      />
+      <p-item
+        class="item"
+        :config="{ label: '账号', type: 'input' }"
+        v-model="searchValue.username"
+      />
+      <p-item
+        class="item"
+        :config="{ label: '角色', type: 'select', options: roleOptions }"
+        v-model="searchValue.role"
+      />
+    </p-search>
 
     <p-table
       style="margin-top: 10px"
@@ -244,5 +247,11 @@ const diaBotBtnClick = (btn) => {
   width: 100%;
   padding: 0 10px;
   background-color: var(--c-bg);
+
+  .item {
+    width: 250px;
+    margin-bottom: 10px;
+    margin-right: 10px;
+  }
 }
 </style>

@@ -6,15 +6,6 @@ import { PTable, PSearch, PTitle, PDialog, PIcon, PButton } from "@Pcomponents";
 import Detail from "./components/app/detail.vue";
 import { structure } from "@Passets/utils/array";
 
-const searchData = ref([
-  { label: "应用名称", key: "name", type: "input" },
-  { label: "应用分组", key: "group", type: "input" },
-  {
-    label: "应用Key",
-    key: "key",
-    type: "input",
-  },
-]);
 const searchValue = ref({});
 const tableData = ref([]);
 
@@ -27,9 +18,12 @@ onBeforeMount(() => {
   initTable();
 });
 
-const toSearch = ({ data }) => {
-  searchValue.value = data;
+const toSearch = () => {
   initTable();
+};
+const toReset = () => {
+  searchValue.value = {};
+  toSearch();
 };
 const initTable = () => {
   const params = {
@@ -110,11 +104,26 @@ const diaBotBtnClick = (btn) => {
   <div class="page">
     <p-title :list="['应用管理']"></p-title>
 
-    <p-search
-      style="margin-top: 10px"
-      :data="searchData"
-      @btnClick="toSearch"
-    ></p-search>
+    <p-search style="margin-top: 10px" @search="toSearch" @reset="toReset">
+      <p-item
+        class="item"
+        :config="{ label: '应用名称', type: 'input' }"
+        v-model="searchValue.name"
+      />
+      <p-item
+        class="item"
+        :config="{ label: '应用分组', type: 'input' }"
+        v-model="searchValue.group"
+      />
+      <p-item
+        class="item"
+        :config="{
+          label: '应用Key',
+          type: 'input',
+        }"
+        v-model="searchValue.key"
+      />
+    </p-search>
 
     <p-table style="margin-top: 10px" :data="tableData">
       <template #column>
@@ -188,5 +197,11 @@ const diaBotBtnClick = (btn) => {
   width: 100%;
   padding: 0 10px;
   background-color: var(--c-bg);
+
+  .item {
+    width: 250px;
+    margin-bottom: 10px;
+    margin-right: 10px;
+  }
 }
 </style>

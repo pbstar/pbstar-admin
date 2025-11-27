@@ -7,6 +7,8 @@
   - 添加 p-button 按钮组件
   - 重构 p-dialog 对话框组件，将 footer 插槽化
   - 重构 p-table 表格组件，将配置插槽化
+  - 重构 p-search 查询组件
+  - 移除 p-form 表单组件
 
 ## v0.2.4 2025-11-19
 

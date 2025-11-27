@@ -10,14 +10,11 @@ import {
   PTwinBox,
   PIcon,
   PButton,
+  PItem,
 } from "@Pcomponents";
 import Detail from "./components/nav/detail.vue";
 import { structure } from "@Passets/utils/array";
 
-const searchData = ref([
-  { label: "菜单名称", key: "name", type: "input" },
-  { label: "菜单链接", key: "url", type: "input" },
-]);
 const searchValue = ref({});
 const tableData = ref([]);
 const detailType = ref("");
@@ -66,9 +63,12 @@ const initTree = () => {
       }
     });
 };
-const toSearch = ({ data }) => {
-  searchValue.value = data;
+const toSearch = () => {
   initTable();
+};
+const toReset = () => {
+  searchValue.value = {};
+  toSearch();
 };
 const initTable = () => {
   const params = {
@@ -177,11 +177,18 @@ const handleNodeClick = (data) => {
         />
       </template>
       <template #plan2>
-        <p-search
-          style="margin-top: 10px"
-          :data="searchData"
-          @btnClick="toSearch"
-        ></p-search>
+        <p-search style="margin-top: 10px" @search="toSearch" @reset="toReset">
+          <p-item
+            class="item"
+            :config="{ label: '菜单名称', type: 'input' }"
+            v-model="searchValue.name"
+          />
+          <p-item
+            class="item"
+            :config="{ label: '菜单链接', type: 'input' }"
+            v-model="searchValue.url"
+          />
+        </p-search>
 
         <p-table style="margin-top: 10px" :data="tableData">
           <template #column>
@@ -280,6 +287,12 @@ const handleNodeClick = (data) => {
   flex-direction: column;
   .content {
     flex: 1;
+  }
+
+  .item {
+    width: 250px;
+    margin-bottom: 10px;
+    margin-right: 10px;
   }
 }
 </style>
