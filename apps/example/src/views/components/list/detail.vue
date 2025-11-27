@@ -2,7 +2,7 @@
 import { ref, onBeforeMount, onMounted } from "vue";
 import { ElMessage } from "element-plus";
 import request from "@Passets/utils/request";
-import { PCollapse, PForm } from "@Pcomponents";
+import { PCollapse, PItem } from "@Pcomponents";
 import hobbyTable from "./hobbyTable.vue";
 import eduTable from "./eduTable.vue";
 
@@ -19,68 +19,12 @@ const props = defineProps({
 const detailInfo = ref({});
 const detailType = ref("");
 const detailId = ref("");
-const formRef = ref(null);
-const formData = ref([
-  {
-    key: "name",
-    label: "姓名",
-    type: "input",
-    isRequired: true,
-  },
-  {
-    key: "age",
-    label: "年龄",
-    type: "inputNumber",
-    isRequired: true,
-  },
-  {
-    key: "sex",
-    label: "性别",
-    type: "select",
-    isRequired: true,
-    options: [
-      { label: "男", value: "1" },
-      { label: "女", value: "2" },
-    ],
-  },
-  {
-    key: "ethnic",
-    label: "民族",
-    type: "select",
-    enumKey: "ethnic",
-  },
-  {
-    key: "isHealthy",
-    label: "是否健康",
-    type: "select",
-    enumKey: "boolean",
-  },
-  {
-    key: "hobbyList",
-    label: "兴趣爱好",
-    type: "slot",
-  },
-]);
 
 onBeforeMount(() => {
   detailType.value = props.type;
   detailId.value = props.id;
   if (detailType.value == "view" || detailType.value == "edit") {
     getDetailInfo();
-  }
-});
-onMounted(() => {
-  if (detailType.value == "view") {
-    const arr = [];
-    formData.value.forEach((item) => {
-      if (item.type != "slot") {
-        arr.push({
-          key: item.key,
-          isText: true,
-        });
-      }
-    });
-    formRef.value.toChangeData(arr);
   }
 });
 
@@ -101,10 +45,6 @@ const getDetailInfo = () => {
     });
 };
 const getFormValue = () => {
-  const isRequired = formRef.value && formRef.value.toCheckRequired();
-  if (!isRequired) {
-    return false;
-  }
   return detailInfo.value;
 };
 
@@ -116,16 +56,65 @@ defineExpose({
 <template>
   <div class="detail">
     <p-collapse title="基础信息" :isControl="false" :showDownLine="false">
-      <p-form
-        :data="formData"
-        :spanList="[4, 4, 4, 4, 4, 12]"
-        ref="formRef"
-        v-model="detailInfo"
-      >
-        <template #hobbyList>
+      <div class="form">
+        <p-item
+          class="item"
+          :config="{
+            label: '姓名',
+            type: 'input',
+            isRequired: true,
+            isText: detailType === 'view',
+          }"
+          v-model="detailInfo.name"
+        />
+        <p-item
+          class="item"
+          :config="{
+            label: '年龄',
+            type: 'inputNumber',
+            isRequired: true,
+            isText: detailType === 'view',
+          }"
+          v-model="detailInfo.age"
+        />
+        <p-item
+          class="item"
+          :config="{
+            label: '性别',
+            type: 'select',
+            isRequired: true,
+            options: [
+              { label: '男', value: '1' },
+              { label: '女', value: '2' },
+            ],
+            isText: detailType === 'view',
+          }"
+          v-model="detailInfo.sex"
+        />
+        <p-item
+          class="item"
+          :config="{
+            label: '民族',
+            type: 'select',
+            enumKey: 'ethnic',
+            isText: detailType === 'view',
+          }"
+          v-model="detailInfo.ethnic"
+        />
+        <p-item
+          class="item"
+          :config="{
+            label: '是否健康',
+            type: 'select',
+            enumKey: 'boolean',
+            isText: detailType === 'view',
+          }"
+          v-model="detailInfo.isHealthy"
+        />
+        <div class="item full">
           <hobbyTable :type="detailType" v-model="detailInfo.hobbyList" />
-        </template>
-      </p-form>
+        </div>
+      </div>
     </p-collapse>
     <p-collapse title="教育背景">
       <eduTable :type="detailType" :id="detailId" />
@@ -133,4 +122,17 @@ defineExpose({
   </div>
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.form {
+  display: flex;
+  flex-wrap: wrap;
+
+  .item {
+    width: calc(33.33% - 20px);
+
+    &.full {
+      width: calc(100% - 20px);
+    }
+  }
+}
+</style>

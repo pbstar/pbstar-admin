@@ -3,12 +3,44 @@
     <p-title :list="['个人资料']"></p-title>
     <div class="content">
       <div class="info">
-        <p-form
-          :data="formData"
-          :spanList="[12, 12, 12, 12]"
-          v-model="detailInfo"
-        >
-        </p-form>
+        <div class="form">
+          <p-item
+            class="item"
+            :config="{
+              label: '姓名',
+              type: 'input',
+              isRequired: true,
+            }"
+            v-model="detailInfo.name"
+          />
+          <p-item
+            class="item"
+            :config="{
+              label: '头像',
+              type: 'input',
+              placeholder: '请输入头像地址',
+            }"
+            v-model="detailInfo.avatar"
+          />
+          <p-item
+            class="item"
+            :config="{
+              label: '账号',
+              type: 'input',
+              isRequired: true,
+            }"
+            v-model="detailInfo.username"
+          />
+          <p-item
+            class="item"
+            :config="{
+              label: '密码',
+              type: 'input',
+              placeholder: '如需修改密码，请输入新密码',
+            }"
+            v-model="detailInfo.password"
+          />
+        </div>
       </div>
       <div class="btn">
         <el-button type="primary" @click="toSave">保存</el-button>
@@ -22,37 +54,11 @@ import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
 import request from "@Passets/utils/request";
 import useSharedStore from "@Passets/stores/shared";
-import { PTitle, PForm } from "@Pcomponents";
+import { PTitle, PItem } from "@Pcomponents";
 
 const sharedStore = useSharedStore();
 const detailInfo = ref({});
 const router = useRouter();
-const formData = ref([
-  {
-    label: "姓名",
-    key: "name",
-    type: "input",
-    isRequired: true,
-  },
-  {
-    label: "头像",
-    key: "avatar",
-    type: "input",
-    placeholder: "请输入头像地址",
-  },
-  {
-    label: "账号",
-    key: "username",
-    type: "input",
-    isRequired: true,
-  },
-  {
-    label: "密码",
-    key: "password",
-    type: "input",
-    placeholder: "如需修改密码，请输入新密码",
-  },
-]);
 
 const toSave = () => {
   request
@@ -92,6 +98,14 @@ watch(
     .info {
       width: 360px;
       max-width: 100%;
+      .form {
+        display: flex;
+        flex-wrap: wrap;
+
+        .item {
+          width: 100%;
+        }
+      }
     }
     .btn {
       width: 270px;

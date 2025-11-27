@@ -82,7 +82,9 @@ const handleChange = (val) => {
 };
 
 // 计算属性
-const currentComponent = computed(() => componentMap[config.value.type]);
+const currentComponent = computed(
+  () => componentMap[config.value.type] || pInput,
+);
 </script>
 
 <template>
@@ -110,14 +112,14 @@ const currentComponent = computed(() => componentMap[config.value.type]);
     <div class="value">
       <div class="val-box">
         <div class="input">
-          <component
-            v-if="config.type !== 'slot'"
-            :is="currentComponent"
-            v-model="value"
-            :config="config"
-            @change="handleChange"
-          />
-          <slot v-else :config="config" :modelValue="value" />
+          <slot :config="config" :modelValue="value">
+            <component
+              :is="currentComponent"
+              v-model="value"
+              :config="config"
+              @change="handleChange"
+            />
+          </slot>
         </div>
         <div v-if="$slots.right" class="right-text">
           <slot name="right" />

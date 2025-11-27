@@ -2,7 +2,7 @@
 import { ref, onBeforeMount } from "vue";
 import { ElMessage } from "element-plus";
 import request from "@Passets/utils/request";
-import { PCollapse, PForm } from "@Pcomponents";
+import { PCollapse, PItem } from "@Pcomponents";
 
 const props = defineProps({
   type: {
@@ -17,44 +17,6 @@ const props = defineProps({
 const detailInfo = ref({});
 const detailType = ref("");
 const detailId = ref("");
-const formData = ref([
-  {
-    label: "用户名",
-    type: "input",
-    key: "userName",
-    isText: 'detailType.value == "view"',
-  },
-  {
-    label: "请求方法",
-    type: "input",
-    key: "method",
-    isText: 'detailType.value == "view"',
-  },
-  {
-    label: "请求路径",
-    type: "input",
-    key: "path",
-    isText: 'detailType.value == "view"',
-  },
-  {
-    label: "IP地址",
-    type: "input",
-    key: "ip",
-    isText: 'detailType.value == "view"',
-  },
-  {
-    label: "请求参数",
-    type: "textarea",
-    key: "param",
-    isText: 'detailType.value == "view"',
-  },
-  {
-    label: "操作时间",
-    type: "dateTime",
-    key: "createTime",
-    isText: 'detailType.value == "view"',
-  },
-]);
 
 onBeforeMount(() => {
   detailType.value = props.type;
@@ -92,13 +54,73 @@ defineExpose({
 <template>
   <div style="padding: 0 10px">
     <p-collapse title="基础信息" :isControl="false" :showDownLine="false">
-      <p-form
-        :data="formData"
-        :spanList="[12, 12, 12, 12, 12, 12]"
-        v-model="detailInfo"
-      ></p-form>
+      <div class="form">
+        <p-item
+          class="item"
+          :config="{
+            label: '用户名',
+            type: 'input',
+            isText: detailType === 'view',
+          }"
+          v-model="detailInfo.userName"
+        />
+        <p-item
+          class="item"
+          :config="{
+            label: '请求方法',
+            type: 'input',
+            isText: detailType === 'view',
+          }"
+          v-model="detailInfo.method"
+        />
+        <p-item
+          class="item"
+          :config="{
+            label: '请求路径',
+            type: 'input',
+            isText: detailType === 'view',
+          }"
+          v-model="detailInfo.path"
+        />
+        <p-item
+          class="item"
+          :config="{
+            label: 'IP地址',
+            type: 'input',
+            isText: detailType === 'view',
+          }"
+          v-model="detailInfo.ip"
+        />
+        <p-item
+          class="item"
+          :config="{
+            label: '请求参数',
+            type: 'textarea',
+            isText: detailType === 'view',
+          }"
+          v-model="detailInfo.param"
+        />
+        <p-item
+          class="item"
+          :config="{
+            label: '操作时间',
+            type: 'dateTime',
+            isText: detailType === 'view',
+          }"
+          v-model="detailInfo.createTime"
+        />
+      </div>
     </p-collapse>
   </div>
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.form {
+  display: flex;
+  flex-wrap: wrap;
+
+  .item {
+    width: calc(100% - 20px);
+  }
+}
+</style>

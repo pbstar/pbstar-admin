@@ -2,7 +2,6 @@
 export { default as PButton } from "./base/p-button/index.vue";
 export { default as PCollapse } from "./base/p-collapse/index.vue";
 export { default as PDialog } from "./base/p-dialog/index.vue";
-export { default as PForm } from "./base/p-form/index.vue";
 export { default as PIcon } from "./base/p-icon/index.vue";
 export { default as PItem } from "./base/p-item/index.vue";
 export { default as PSearch } from "./base/p-search/index.vue";
