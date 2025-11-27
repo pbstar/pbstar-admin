@@ -49,19 +49,12 @@
         </el-table-column>
         <el-table-column prop="ethnic" label="民族">
           <template #default="{ row }">
-            {{
-              getEnumOptions("ethnic").find((item) => item.value == row.ethnic)
-                ?.label || row.ethnic
-            }}
+            {{ enumStore.getEnumLabel("ethnic", row.ethnic) }}
           </template>
         </el-table-column>
         <el-table-column prop="isHealthy" label="是否健康">
           <template #default="{ row }">
-            {{
-              getEnumOptions("boolean").find(
-                (item) => item.value == row.isHealthy,
-              )?.label || row.isHealthy
-            }}
+            {{ enumStore.getEnumLabel("boolean", row.isHealthy) }}
           </template>
         </el-table-column>
         <el-table-column
@@ -173,11 +166,6 @@ const sexOptions = ref([
 const getSexLabel = (value) => {
   const option = sexOptions.value.find((item) => item.value === value);
   return option ? option.label : value;
-};
-
-// 获取枚举选项（用于响应式显示）
-const getEnumOptions = (enumKey) => {
-  return enumStore.enums[enumKey] || [];
 };
 
 onMounted(async () => {
