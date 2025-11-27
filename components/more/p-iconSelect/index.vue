@@ -28,10 +28,8 @@
       </el-tabs>
     </div>
     <template #footer>
-      <p-button type="primary" @click="dialogBotBtnClick('save')">
-        保存
-      </p-button>
-      <p-button @click="dialogBotBtnClick('close')"> 返回 </p-button>
+      <p-button type="primary" @click="handleSave()"> 保存 </p-button>
+      <p-button @click="handleBack()"> 返回 </p-button>
     </template>
   </p-dialog>
 </template>
@@ -76,14 +74,13 @@ const openDialog = () => {
   visible.value = true;
 };
 
-const dialogBotBtnClick = (btn) => {
-  if (btn === "save") {
-    visible.value = false;
-    input.value = iconActive.value;
-    emit("update:modelValue", iconActive.value);
-  } else {
-    visible.value = false;
-  }
+const handleSave = () => {
+  visible.value = false;
+  input.value = iconActive.value;
+  emit("update:modelValue", iconActive.value);
+};
+const handleBack = () => {
+  visible.value = false;
 };
 
 const selectIcon = (name) => {

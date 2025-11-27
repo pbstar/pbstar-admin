@@ -47,74 +47,76 @@ const initTable = () => {
       }
     });
 };
-const tableRightBtnClick = ({ row, btn }) => {
-  if (btn === "edit") {
-    request
-      .get({
-        url: "/system/enum/getEnumDetail",
-        data: { id: row.id },
-      })
-      .then((res) => {
-        if (res && res.code === 200 && res.data) {
-          detailType.value = btn;
-          detailInfo.value = res.data;
-          isDetail.value = true;
-        } else {
-          ElMessage.error(res?.msg || "操作异常");
-        }
-      });
-  } else if (btn === "delete") {
-    ElMessageBox.confirm("确认删除吗?", "提示", {
-      type: "warning",
+const handleEdit = (row) => {
+  request
+    .get({
+      url: "/system/enum/getEnumDetail",
+      data: { id: row.id },
     })
-      .then(() => {
-        request
-          .post({
-            url: "/system/enum/deleteEnum",
-            data: { idList: [row.id] },
-          })
-          .then((res) => {
-            if (res && res.code === 200) {
-              initTable();
-              ElMessage.success("操作成功");
-            } else {
-              ElMessage.error(res?.msg || "操作异常");
-            }
-          });
-      })
-      .catch(() => {});
-  }
+    .then((res) => {
+      if (res && res.code === 200 && res.data) {
+        detailType.value = "edit";
+        detailInfo.value = res.data;
+        isDetail.value = true;
+      } else {
+        ElMessage.error(res?.msg || "操作异常");
+      }
+    });
 };
-const tableTopBtnClick = () => {
+
+const handleDelete = (row) => {
+  ElMessageBox.confirm("确认删除吗?", "提示", {
+    type: "warning",
+  })
+    .then(() => {
+      request
+        .post({
+          url: "/system/enum/deleteEnum",
+          data: { idList: [row.id] },
+        })
+        .then((res) => {
+          if (res && res.code === 200) {
+            initTable();
+            ElMessage.success("操作成功");
+          } else {
+            ElMessage.error(res?.msg || "操作异常");
+          }
+        });
+    })
+    .catch(() => {});
+};
+
+const handleAdd = () => {
   detailType.value = "add";
   detailInfo.value = {
     enumId: props.id,
   };
   isDetail.value = true;
 };
-const diaBotBtnClick = (btn) => {
-  if (btn === "save") {
-    const url =
-      detailType.value == "add"
-        ? "/system/enum/createEnum"
-        : "/system/enum/updateEnum";
-    request
-      .post({
-        url,
-        data: detailInfo.value,
-      })
-      .then((res) => {
-        if (res && res.code === 200) {
-          initTable();
-          ElMessage.success("操作成功");
-          isDetail.value = false;
-        } else {
-          ElMessage.error(res?.msg || "操作异常");
-        }
-      });
-  } else if (btn === "back") {
-    isDetail.value = false;
-  }
+
+const handleSave = () => {
+  const url =
+    detailType.value == "add"
+      ? "/system/enum/createEnum"
+      : "/system/enum/updateEnum";
+  request
+    .post({
+      url,
+      data: detailInfo.value,
+    })
+    .then((res) => {
+      if (res && res.code === 200) {
+        initTable();
+        ElMessage.success("操作成功");
+        isDetail.value = false;
+      } else {
+        ElMessage.error(res?.msg || "操作异常");
+      }
+    });
+};
+
+const handleBack = () => {
+  isDetail.value = false;
 };
 
 watch(
@@ -141,19 +143,14 @@ watch(
           width="160"
         >
           <template #default="{ row }">
-            <p-button
-              type="primary"
-              size="small"
-              link
-              @click="tableRightBtnClick({ row, btn: 'edit' })"
-            >
+            <p-button type="primary" size="small" link @click="handleEdit(row)">
               编辑
             </p-button>
             <p-button
               type="danger"
               size="small"
               link
-              @click="tableRightBtnClick({ row, btn: 'delete' })"
+              @click="handleDelete(row)"
             >
               删除
             </p-button>
@@ -161,7 +158,7 @@ watch(
         </el-table-column>
       </template>
       <template #topLeft v-if="props.type !== 'add' && props.type !== 'view'">
-        <p-button type="primary" @click="tableTopBtnClick"> 新增 </p-button>
+        <p-button type="primary" @click="handleAdd"> 新增 </p-button>
       </template>
     </p-table>
     <p-dialog type="box" title="枚举值详情页" v-model="isDetail">
@@ -173,10 +170,8 @@ watch(
         ></p-form>
       </div>
       <template #footer>
-        <p-button type="primary" @click="diaBotBtnClick('save')">
-          保存
-        </p-button>
-        <p-button @click="diaBotBtnClick('back')"> 返回 </p-button>
+        <p-button type="primary" @click="handleSave()"> 保存 </p-button>
+        <p-button @click="handleBack()"> 返回 </p-button>
       </template>
     </p-dialog>
   </div>

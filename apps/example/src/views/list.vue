@@ -64,20 +64,10 @@
           width="200"
         >
           <template #default="{ row }">
-            <p-button
-              type="primary"
-              size="small"
-              link
-              @click="toRightBtnClick({ row, btn: 'view' })"
-            >
+            <p-button type="primary" size="small" link @click="handleView(row)">
               查看
             </p-button>
-            <p-button
-              type="primary"
-              size="small"
-              link
-              @click="toRightBtnClick({ row, btn: 'edit' })"
-            >
+            <p-button type="primary" size="small" link @click="handleEdit(row)">
               编辑
             </p-button>
             <el-dropdown trigger="click">
@@ -93,12 +83,10 @@
 
               <template #dropdown>
                 <el-dropdown-menu>
-                  <el-dropdown-item
-                    @click="toRightBtnClick({ row, btn: 'delete' })"
+                  <el-dropdown-item @click="handleDelete(row)"
                     >删除
                   </el-dropdown-item>
-                  <el-dropdown-item
-                    @click="toRightBtnClick({ row, btn: 'other' })"
+                  <el-dropdown-item @click="handleOther(row)"
                     >其他
                   </el-dropdown-item>
                 </el-dropdown-menu>
@@ -108,7 +96,7 @@
         </el-table-column>
       </template>
       <template #topLeft>
-        <p-button type="primary" @click="toTopBtnClick()"> 新增 </p-button>
+        <p-button type="primary" @click="handleAdd()"> 新增 </p-button>
       </template>
     </p-table>
     <p-dialog title="用户列表详情页" type="page" v-model="isDetail">
@@ -116,12 +104,12 @@
       <template #footer>
         <p-button
           type="primary"
-          @click="diaBotBtnClick('save')"
+          @click="handleSave()"
           v-if="detailType !== 'view'"
         >
           保存
         </p-button>
-        <p-button @click="diaBotBtnClick('back')"> 返回 </p-button>
+        <p-button @click="handleBack()"> 返回 </p-button>
       </template>
     </p-dialog>
   </div>
@@ -201,67 +189,71 @@ const initTable = () => {
       }
     });
 };
-const toTopBtnClick = () => {
+const handleAdd = () => {
   detailType.value = "add";
   detailId.value = "";
   isDetail.value = true;
 };
-const toRightBtnClick = ({ btn, row }) => {
-  if (btn == "view" || btn == "edit") {
-    detailType.value = btn;
-    detailId.value = row.id;
-    isDetail.value = true;
-  } else if (btn == "delete") {
-    ElMessageBox.confirm("确认删除吗?", "提示", {
-      type: "warning",
-    }).then(() => {
-      request
-        .post({
-          url: "/example/person/delete",
-          data: {
-            idList: [row.id],
-          },
-        })
-        .then((res) => {
-          if (res && res.code == 200) {
-            ElMessage.success("删除成功");
-            initTable();
-          } else {
-            ElMessage.error(res.msg || "操作异常");
-          }
-        });
-    });
-  } else if (btn == "other") {
-    ElMessage.success("其他");
-  }
+const handleView = (row) => {
+  detailType.value = "view";
+  detailId.value = row.id;
+  isDetail.value = true;
 };
-const diaBotBtnClick = (btn) => {
-  if (btn == "save") {
-    const detailInfo = detailRef.value.getFormValue();
-    if (!detailInfo) {
-      return;
-    }
-    const url =
-      detailType.value == "add"
-        ? "/example/person/create"
-        : "/example/person/update";
+const handleEdit = (row) => {
+  detailType.value = "edit";
+  detailId.value = row.id;
+  isDetail.value = true;
+};
+const handleDelete = (row) => {
+  ElMessageBox.confirm("确认删除吗?", "提示", {
+    type: "warning",
+  }).then(() => {
     request
       .post({
-        url,
-        data: detailInfo,
+        url: "/example/person/delete",
+        data: {
+          idList: [row.id],
+        },
       })
       .then((res) => {
         if (res && res.code == 200) {
-          ElMessage.success("保存成功");
-          isDetail.value = false;
+          ElMessage.success("删除成功");
           initTable();
         } else {
           ElMessage.error(res.msg || "操作异常");
         }
       });
-  } else if (btn == "back") {
-    isDetail.value = false;
+  });
+};
+const handleOther = (row) => {
+  ElMessage.success("其他");
+};
+const handleSave = () => {
+  const detailInfo = detailRef.value.getFormValue();
+  if (!detailInfo) {
+    return;
   }
+  const url =
+    detailType.value == "add"
+      ? "/example/person/create"
+      : "/example/person/update";
+  request
+    .post({
+      url,
+      data: detailInfo,
+    })
+    .then((res) => {
+      if (res && res.code == 200) {
+        ElMessage.success("保存成功");
+        isDetail.value = false;
+        initTable();
+      } else {
+        ElMessage.error(res.msg || "操作异常");
+      }
+    });
+};
+const handleBack = () => {
+  isDetail.value = false;
 };
 </script>
 <style lang="scss" scoped>
