@@ -33,18 +33,13 @@
       <slot name="column"></slot>
     </el-table>
     <!-- 底部操作区 -->
-    <div
-      class="bot"
-      v-if="
-        $slots.botLeft || (pagination && Object.keys(pagination).length > 0)
-      "
-    >
+    <div class="bot" v-if="$slots.botLeft || hasPagination">
       <div class="bLeft">
         <slot name="botLeft"></slot>
       </div>
       <div class="bRight">
         <el-pagination
-          v-if="pagination && Object.keys(pagination).length > 0"
+          v-if="hasPagination"
           class="pagination"
           v-model:current-page="pageNumber"
           v-model:page-size="pageSize"
@@ -60,7 +55,7 @@
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
+import { ref, watch, computed } from "vue";
 
 const props = defineProps({
   // 表格数据
@@ -96,6 +91,11 @@ const pageNumber = ref(1);
 const pageSize = ref(10);
 const total = ref(0);
 const selectionList = ref([]);
+
+// 是否显示分页
+const hasPagination = computed(() => {
+  return props.pagination && Object.keys(props.pagination).length > 0;
+});
 
 const getIndex = (index) => {
   return (pageNumber.value - 1) * pageSize.value + index + 1;
@@ -139,7 +139,7 @@ watch(
   },
 );
 </script>
-<style scoped>
+<style scoped lang="scss">
 .tabulation {
   width: 100%;
   padding-bottom: 10px;

@@ -13,16 +13,6 @@ const emits = defineEmits(["search", "reset"]);
 
 // 是否展开搜索区域
 const showSearch = ref(true);
-
-// 搜索处理
-const toSearch = () => {
-  emits("search");
-};
-
-// 重置处理
-const toReset = () => {
-  emits("reset");
-};
 </script>
 
 <template>
@@ -43,8 +33,10 @@ const toReset = () => {
       <slot></slot>
       <div class="searchPlaceholder"></div>
       <div class="searchBtn">
-        <el-button type="primary" plain @click="toSearch">搜索</el-button>
-        <el-button v-show="showReset" @click="toReset">重置</el-button>
+        <el-button type="primary" plain @click="emits('search')"
+          >搜索</el-button
+        >
+        <el-button v-show="showReset" @click="emits('reset')">重置</el-button>
       </div>
     </div>
   </div>

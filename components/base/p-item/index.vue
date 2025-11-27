@@ -13,6 +13,20 @@ import pDateRange from "./dateRange.vue";
 import pDateTime from "./dateTime.vue";
 import pDateTimeRange from "./dateTimeRange.vue";
 
+// 默认配置
+const defaultConfig = {
+  key: "",
+  label: "",
+  type: "input",
+  placeholder: "",
+  isText: false,
+  isRequired: false,
+  isDisabled: false,
+  options: [],
+  enumKey: "",
+  more: {},
+};
+
 // 组件映射
 const componentMap = {
   input: pInput,
@@ -43,20 +57,6 @@ const props = defineProps({
 
 // Emits 定义
 const emit = defineEmits(["change", "update:modelValue"]);
-
-// 默认配置
-const defaultConfig = {
-  key: "",
-  label: "",
-  type: "input",
-  placeholder: "",
-  isText: false,
-  isRequired: false,
-  isDisabled: false,
-  options: [],
-  enumKey: "",
-  more: {},
-};
 
 // 状态管理
 const config = ref({ ...defaultConfig });
