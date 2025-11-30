@@ -35,7 +35,7 @@
     "vue-router": "^4.5.1"
   },
   "devDependencies": {
-    "@rsbuild/core": "^1.6.7",
+    "@rsbuild/core": "^1.6.10",
     "@rsbuild/plugin-sass": "^1.4.0",
     "@rsbuild/plugin-vue": "^1.2.0",
     "globby": "^14.1.0",
