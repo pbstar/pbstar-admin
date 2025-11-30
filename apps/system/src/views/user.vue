@@ -219,7 +219,9 @@ const handleBack = () => {
         </el-table-column>
       </template>
       <template #topLeft>
-        <p-button type="primary" @click="handleAdd()"> 新增 </p-button>
+        <p-button btnkey="user_add" type="primary" @click="handleAdd()">
+          新增
+        </p-button>
       </template>
     </p-table>
 
