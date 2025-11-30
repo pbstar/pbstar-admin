@@ -90,13 +90,15 @@ defineExpose({
           }"
           v-model="detailInfo.key"
         />
-        <div class="item">
-          <PIconSelect
-            title="选择图标"
-            v-model="detailInfo.icon"
-            :isText="detailType === 'view'"
-          />
-        </div>
+        <p-item
+          class="item"
+          :config="{
+            label: '选择图标',
+            type: 'slot',
+          }"
+        >
+          <PIconSelect title="选择图标" v-model="detailInfo.icon" />
+        </p-item>
       </div>
     </p-collapse>
   </div>

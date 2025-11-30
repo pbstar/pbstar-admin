@@ -33,7 +33,7 @@ defineEmits(["select"]);
 .icon-list {
   display: flex;
   flex-wrap: wrap;
-  height: 600px;
+  height: 510px;
   overflow-y: auto;
 }
 

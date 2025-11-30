@@ -97,5 +97,6 @@ watch(
 <style scoped lang="scss">
 .box {
   padding: 0 15px;
+  height: 560px;
 }
 </style>

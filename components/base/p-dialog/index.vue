@@ -303,5 +303,7 @@ const handleClose = () => {
 
 .dialog-footer.page-footer {
   justify-content: center;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 </style>

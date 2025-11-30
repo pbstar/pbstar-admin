@@ -44,9 +44,6 @@ export const useEnumStore = defineStore("enum", () => {
   const getEnumLabel = (enumKey, value) => {
     const enumData = enumCache.value[enumKey];
     if (!enumData) {
-      console.error(
-        `枚举key ${enumKey} 不存在，请先调用 getEnum 方法获取枚举数据`,
-      );
       return value;
     }
     const enumItem = enumData.find((item) => item.value === value);
