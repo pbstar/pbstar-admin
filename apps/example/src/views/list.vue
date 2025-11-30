@@ -138,8 +138,6 @@ const pagination = ref({
   pageSize: 10,
   total: 0,
 });
-// const searchRef = ref(null);
-// const searchData = ref([]);
 const searchValue = ref({});
 const isDetail = ref(false);
 const detailType = ref("");

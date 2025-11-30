@@ -2,7 +2,7 @@
 
 ## v0.3.0 2025-11-30
 
-- 升级 rsbuild 版本至 1.6.7
+- 升级 rsbuild 版本至 1.6.10
 - 重构 PComponents 组件，减少配置增加插槽降低学习成本提高组件的可定制性
   - 添加 p-button 按钮组件
   - 重构 p-dialog 对话框组件，将 footer 插槽化
