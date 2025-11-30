@@ -9,30 +9,14 @@ import {
   PDialog,
   PTwinBox,
   PIcon,
+  PButton,
+  PItem,
 } from "@Pcomponents";
 import Detail from "./components/nav/detail.vue";
 import { structure } from "@Passets/utils/array";
 
-const searchData = ref([
-  { label: "菜单名称", key: "name", type: "input" },
-  { label: "菜单链接", key: "url", type: "input" },
-]);
 const searchValue = ref({});
-const tableColumn = ref([
-  { label: "菜单名称", key: "name" },
-  { label: "菜单链接", key: "url" },
-  { label: "菜单图标", key: "icon", slot: "icon" },
-  { label: "显示在导航", key: "isNav", slot: "isNav" },
-  { label: "排序", key: "index" },
-  { label: "备注", key: "remark" },
-]);
 const tableData = ref([]);
-const tableTopBtn = ref([{ key: "add", label: "新增" }]);
-const tableRightBtn = ref([
-  { key: "view", label: "查看" },
-  { key: "edit", label: "编辑" },
-  { key: "delete", label: "删除" },
-]);
 const detailType = ref("");
 const detailId = ref("");
 const isDetail = ref(false);
@@ -79,9 +63,12 @@ const initTree = () => {
       }
     });
 };
-const toSearch = ({ data }) => {
-  searchValue.value = data;
+const toSearch = () => {
   initTable();
+};
+const toReset = () => {
+  searchValue.value = {};
+  toSearch();
 };
 const initTable = () => {
   const params = {
@@ -104,66 +91,67 @@ const initTable = () => {
       }
     });
 };
-const tableRightBtnClick = ({ row, btn }) => {
-  if (btn == "view" || btn == "edit") {
-    detailType.value = btn;
-    detailId.value = row.id;
-    isDetail.value = true;
-  } else if (btn === "delete") {
-    ElMessageBox.confirm("确认删除吗?", "提示", {
-      type: "warning",
+const handleView = (row) => {
+  detailType.value = "view";
+  detailId.value = row.id;
+  isDetail.value = true;
+};
+const handleEdit = (row) => {
+  detailType.value = "edit";
+  detailId.value = row.id;
+  isDetail.value = true;
+};
+const handleDelete = (row) => {
+  ElMessageBox.confirm("确认删除吗?", "提示", {
+    type: "warning",
+  })
+    .then(() => {
+      request
+        .post({
+          url: "/system/nav/delete",
+          data: { idList: [row.id] },
+        })
+        .then((res) => {
+          if (res && res.code === 200) {
+            initTable();
+            ElMessage.success("操作成功");
+          } else {
+            ElMessage.error(res?.msg || "操作异常");
+          }
+        });
     })
-      .then(() => {
-        request
-          .post({
-            url: "/system/nav/delete",
-            data: { idList: [row.id] },
-          })
-          .then((res) => {
-            if (res && res.code === 200) {
-              initTable();
-              ElMessage.success("操作成功");
-            } else {
-              ElMessage.error(res?.msg || "操作异常");
-            }
-          });
-      })
-      .catch(() => {});
-  }
+    .catch(() => {});
 };
-const tableTopBtnClick = ({ btn }) => {
-  if (btn == "add") {
-    if (!currentNode.value || currentNode.value?.startsWith("group")) {
-      ElMessage.error("请先选择应用");
-      return;
-    }
-    detailType.value = "add";
-    detailId.value = "";
-    isDetail.value = true;
+const handleAdd = () => {
+  if (!currentNode.value || currentNode.value?.startsWith("group")) {
+    ElMessage.error("请先选择应用");
+    return;
   }
+  detailType.value = "add";
+  detailId.value = "";
+  isDetail.value = true;
 };
-const diaBotBtnClick = ({ btn }) => {
-  if (btn === "save") {
-    const detailInfo = detailRef.value.getFormValue();
-    const url =
-      detailType.value == "add" ? "/system/nav/create" : "/system/nav/update";
-    request
-      .post({
-        url,
-        data: detailInfo,
-      })
-      .then((res) => {
-        if (res && res.code === 200) {
-          initTable();
-          ElMessage.success("操作成功");
-          isDetail.value = false;
-        } else {
-          ElMessage.error(res?.msg || "操作异常");
-        }
-      });
-  } else if (btn === "back") {
-    isDetail.value = false;
-  }
+const handleSave = () => {
+  const detailInfo = detailRef.value.getFormValue();
+  const url =
+    detailType.value == "add" ? "/system/nav/create" : "/system/nav/update";
+  request
+    .post({
+      url,
+      data: detailInfo,
+    })
+    .then((res) => {
+      if (res && res.code === 200) {
+        initTable();
+        ElMessage.success("操作成功");
+        isDetail.value = false;
+      } else {
+        ElMessage.error(res?.msg || "操作异常");
+      }
+    });
+};
+const handleBack = () => {
+  isDetail.value = false;
 };
 const handleNodeClick = (data) => {
   currentNode.value = data.value;
@@ -192,37 +180,77 @@ const handleNodeClick = (data) => {
         />
       </template>
       <template #plan2>
-        <p-search
-          style="margin-top: 10px"
-          :data="searchData"
-          @btnClick="toSearch"
-        ></p-search>
+        <p-search style="margin-top: 10px" @search="toSearch" @reset="toReset">
+          <p-item
+            class="item"
+            :config="{ label: '菜单名称', type: 'input' }"
+            v-model="searchValue.name"
+          />
+          <p-item
+            class="item"
+            :config="{ label: '菜单链接', type: 'input' }"
+            v-model="searchValue.url"
+          />
+        </p-search>
 
-        <p-table
-          style="margin-top: 10px"
-          :data="tableData"
-          :column="tableColumn"
-          :topBtn="tableTopBtn"
-          :rightBtn="tableRightBtn"
-          tableKey="nav_1"
-          showSetting
-          @topBtnClick="tableTopBtnClick"
-          @rightBtnClick="tableRightBtnClick"
-        >
-          <template #icon="scope">
-            <div
-              v-if="scope.row.icon"
-              style="display: flex; align-items: center"
+        <p-table style="margin-top: 10px" :data="tableData">
+          <template #column>
+            <el-table-column prop="name" label="菜单名称" />
+            <el-table-column prop="url" label="菜单链接" />
+            <el-table-column prop="icon" label="菜单图标">
+              <template #default="{ row }">
+                <div v-if="row.icon" style="display: flex; align-items: center">
+                  <p-icon
+                    style="margin-right: 5px; font-size: 16px"
+                    :name="row.icon"
+                  />
+                  <span>{{ row.icon }}</span>
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column prop="isNav" label="显示在导航">
+              <template #default="{ row }">
+                <span>{{ row.isNav == 1 ? "是" : "否" }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="index" label="排序" />
+            <el-table-column prop="remark" label="备注" />
+            <el-table-column
+              prop="operation"
+              label="操作"
+              fixed="right"
+              width="200"
             >
-              <p-icon
-                style="margin-right: 5px; font-size: 16px"
-                :name="scope.row.icon"
-              />
-              <span>{{ scope.row.icon }}</span>
-            </div>
+              <template #default="{ row }">
+                <p-button
+                  type="primary"
+                  size="small"
+                  link
+                  @click="handleView(row)"
+                >
+                  查看
+                </p-button>
+                <p-button
+                  type="primary"
+                  size="small"
+                  link
+                  @click="handleEdit(row)"
+                >
+                  编辑
+                </p-button>
+                <p-button
+                  type="danger"
+                  size="small"
+                  link
+                  @click="handleDelete(row)"
+                >
+                  删除
+                </p-button>
+              </template>
+            </el-table-column>
           </template>
-          <template #isNav="scope">
-            <span>{{ scope.row.isNav == 1 ? "是" : "否" }}</span>
+          <template #topLeft>
+            <p-button type="primary" @click="handleAdd()"> 新增 </p-button>
           </template>
         </p-table>
       </template>
@@ -233,11 +261,6 @@ const handleNodeClick = (data) => {
       type="drawer"
       width="600px"
       v-model="isDetail"
-      :botBtn="[
-        { label: '保存', key: 'save' },
-        { label: '返回', key: 'back' },
-      ]"
-      @botBtnClick="diaBotBtnClick"
     >
       <Detail
         ref="detailRef"
@@ -245,6 +268,10 @@ const handleNodeClick = (data) => {
         :id="detailId"
         :appId="currentNode"
       ></Detail>
+      <template #footer>
+        <p-button type="primary" @click="handleSave()"> 保存 </p-button>
+        <p-button @click="handleBack()"> 返回 </p-button>
+      </template>
     </p-dialog>
   </div>
 </template>
@@ -259,6 +286,12 @@ const handleNodeClick = (data) => {
   flex-direction: column;
   .content {
     flex: 1;
+  }
+
+  .item {
+    width: 250px;
+    margin-bottom: 10px;
+    margin-right: 10px;
   }
 }
 </style>

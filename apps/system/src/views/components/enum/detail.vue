@@ -2,7 +2,7 @@
 import { ref, onBeforeMount } from "vue";
 import { ElMessage } from "element-plus";
 import request from "@Passets/utils/request";
-import { PCollapse, PForm } from "@Pcomponents";
+import { PCollapse, PItem } from "@Pcomponents";
 import EnumTable from "./enumTable.vue";
 
 const props = defineProps({
@@ -18,20 +18,6 @@ const props = defineProps({
 const detailInfo = ref({});
 const detailType = ref(props.type);
 const detailId = ref("");
-const formData = ref([
-  {
-    label: "枚举名称",
-    type: "input",
-    key: "name",
-    isText: detailType.value == "view",
-  },
-  {
-    label: "枚举key",
-    type: "input",
-    key: "key",
-    isText: detailType.value == "view",
-  },
-]);
 
 onBeforeMount(() => {
   detailId.value = props.id;
@@ -68,11 +54,26 @@ defineExpose({
 <template>
   <div style="padding: 0 10px">
     <p-collapse title="基础信息" :isControl="false" :showDownLine="false">
-      <p-form
-        :data="formData"
-        :spanList="[12, 12]"
-        v-model="detailInfo"
-      ></p-form>
+      <div class="form">
+        <p-item
+          class="item"
+          :config="{
+            label: '枚举名称',
+            type: 'input',
+            isText: detailType === 'view',
+          }"
+          v-model="detailInfo.name"
+        />
+        <p-item
+          class="item"
+          :config="{
+            label: '枚举key',
+            type: 'input',
+            isText: detailType === 'view',
+          }"
+          v-model="detailInfo.key"
+        />
+      </div>
     </p-collapse>
     <p-collapse title="枚举值">
       <enumTable :type="detailType" :id="detailId" />
@@ -80,4 +81,14 @@ defineExpose({
   </div>
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+
+  .item {
+    width: 100%;
+  }
+}
+</style>

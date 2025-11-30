@@ -1,40 +1,116 @@
 <template>
   <div class="page">
     <p-title :list="['用户列表']"></p-title>
-    <p-search
-      style="margin-top: 10px"
-      ref="searchRef"
-      :data="searchData"
-      @btnClick="toSearch"
-    ></p-search>
+    <p-search style="margin-top: 10px" @search="toSearch" @reset="toReset">
+      <p-item
+        class="item"
+        :config="{ label: '姓名', type: 'input' }"
+        v-model="searchValue.name"
+      />
+      <p-item
+        class="item"
+        :config="{ label: '年龄', type: 'inputNumber' }"
+        v-model="searchValue.age"
+      />
+      <p-item
+        class="item"
+        :config="{ label: '性别', type: 'select', options: sexOptions }"
+        v-model="searchValue.sex"
+      />
+      <p-item
+        class="item"
+        :config="{
+          label: '是否健康',
+          type: 'select',
+          enumKey: 'boolean',
+        }"
+        v-model="searchValue.isHealthy"
+      />
+    </p-search>
     <p-table
       style="margin-top: 10px"
       ref="tableRef"
       :data="data"
-      :column="column"
-      :topBtn="topBtn"
-      :rightBtn="rightBtn"
-      tableKey="table1"
-      showSetting
       :pagination="pagination"
-      :export="toExport"
       @paginationChange="toPageChange"
-      @topBtnClick="toTopBtnClick"
-      @rightBtnClick="toRightBtnClick"
     >
-      <template #age="scope">
-        <span v-show="scope.row.age < 25">{{ scope.row.age }}</span>
-        <span v-show="scope.row.age >= 25">{{ scope.row.age }}（老年人）</span>
+      <template #column>
+        <el-table-column prop="name" label="姓名" />
+        <el-table-column prop="age" label="年龄">
+          <template #default="{ row }">
+            <span v-show="row.age < 25">{{ row.age }}</span>
+            <span v-show="row.age >= 25">{{ row.age }}（老年人）</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="sex" label="性别">
+          <template #default="{ row }">
+            {{ getSexLabel(row.sex) }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="ethnic" label="民族">
+          <template #default="{ row }">
+            {{ enumStore.getEnumLabel("ethnic", row.ethnic) }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="isHealthy" label="是否健康">
+          <template #default="{ row }">
+            {{ enumStore.getEnumLabel("boolean", row.isHealthy) }}
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="operation"
+          label="操作"
+          fixed="right"
+          width="200"
+        >
+          <template #default="{ row }">
+            <p-button type="primary" size="small" link @click="handleView(row)">
+              查看
+            </p-button>
+            <p-button type="primary" size="small" link @click="handleEdit(row)">
+              编辑
+            </p-button>
+            <el-dropdown trigger="click">
+              <el-button
+                style="margin-left: 5px; margin-top: 2px"
+                type="primary"
+                link
+                size="small"
+              >
+                <span>更多</span>
+                <p-icon name="el-icon-arrow-down" />
+              </el-button>
+
+              <template #dropdown>
+                <el-dropdown-menu>
+                  <el-dropdown-item @click="handleDelete(row)"
+                    >删除
+                  </el-dropdown-item>
+                  <el-dropdown-item @click="handleOther(row)"
+                    >其他
+                  </el-dropdown-item>
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
+          </template>
+        </el-table-column>
+      </template>
+      <template #topLeft>
+        <p-button type="primary" @click="handleAdd()"> 新增 </p-button>
       </template>
     </p-table>
-    <p-dialog
-      title="用户列表详情页"
-      type="page"
-      v-model="isDetail"
-      :botBtn="detailBotBtn"
-      @botBtnClick="toBotBtnClick"
-    >
+    <p-dialog title="用户列表详情页" type="page" v-model="isDetail">
       <Detail ref="detailRef" :type="detailType" :id="detailId"></Detail>
+      <template #footer>
+        <p-button
+          type="primary"
+          @click="handleSave()"
+          v-if="detailType !== 'view'"
+        >
+          保存
+        </p-button>
+        <p-button @click="handleBack()"> 返回 </p-button>
+      </template>
     </p-dialog>
   </div>
 </template>
@@ -42,72 +118,54 @@
 import { ref, onMounted } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import request from "@Passets/utils/request";
-import { PTable, PSearch, PTitle, PDialog } from "@Pcomponents";
+import {
+  PTable,
+  PSearch,
+  PTitle,
+  PDialog,
+  PButton,
+  PIcon,
+  PItem,
+} from "@Pcomponents";
+import { useEnumStore } from "@Passets/stores/enum";
 import Detail from "./components/list/detail.vue";
 const data = ref([]);
-const column = ref([
-  { key: "name", label: "姓名" },
-  { key: "age", label: "年龄", slot: "age" },
-  { key: "sex", label: "性别" },
-  { key: "ethnic", label: "民族", enumKey: "ethnic" },
-  { key: "isHealthy", label: "是否健康", enumKey: "boolean" },
-]);
-const topBtn = ref([{ key: "add", label: "新增", auth: "list_add" }]);
-const rightBtn = ref([
-  { key: "view", label: "查看" },
-  { key: "edit", label: "编辑" },
-  { key: "delete", label: "删除" },
-  { key: "other", label: "其他" },
-]);
+const enumStore = useEnumStore();
+
 const tableRef = ref(null);
 const pagination = ref({
   pageNumber: 1,
   pageSize: 10,
   total: 0,
 });
-const searchRef = ref(null);
-const searchData = ref([
-  { key: "name", label: "姓名", type: "input" },
-  { key: "age", label: "年龄", type: "inputNumber" },
-  { key: "sex", label: "性别", type: "select", options: [] },
-  {
-    key: "isHealthy",
-    label: "是否健康",
-    type: "select",
-    enumKey: "boolean",
-  },
-]);
 const searchValue = ref({});
 const isDetail = ref(false);
 const detailType = ref("");
 const detailId = ref("");
 const detailRef = ref(null);
-const detailBotBtn = ref([{ key: "back", label: "返回" }]);
+const sexOptions = ref([
+  { label: "男", value: "1" },
+  { label: "女", value: "2" },
+]);
 
-onMounted(() => {
-  tableRef.value.toChangeColumn([
-    {
-      key: "sex",
-      options: [
-        { label: "男", value: "1" },
-        { label: "女", value: "2" },
-      ],
-    },
-  ]);
-  searchRef.value.toChangeData([
-    {
-      key: "sex",
-      options: [
-        { label: "男", value: "1" },
-        { label: "女", value: "2" },
-      ],
-    },
-  ]);
+// 根据 value 获取 label
+const getSexLabel = (value) => {
+  const option = sexOptions.value.find((item) => item.value === value);
+  return option ? option.label : value;
+};
+
+onMounted(async () => {
+  // 预加载枚举数据
+  await enumStore.getEnum("ethnic,boolean");
   initTable();
 });
-const toSearch = ({ data }) => {
-  searchValue.value = data;
+const toSearch = () => {
+  pagination.value.pageNumber = 1;
   initTable();
+};
+const toReset = () => {
+  searchValue.value = {};
+  toSearch();
 };
 const toPageChange = ({ pageNumber, pageSize }) => {
   pagination.value.pageNumber = pageNumber;
@@ -129,102 +187,71 @@ const initTable = () => {
       }
     });
 };
-const toTopBtnClick = ({ btn }) => {
-  if (btn == "add") {
-    detailType.value = "add";
-    detailId.value = "";
-    detailBotBtn.value = [
-      { key: "back", label: "返回" },
-      { key: "save", label: "保存" },
-    ];
-    isDetail.value = true;
-  }
+const handleAdd = () => {
+  detailType.value = "add";
+  detailId.value = "";
+  isDetail.value = true;
 };
-const toRightBtnClick = ({ btn, row }) => {
-  if (btn == "view" || btn == "edit") {
-    detailType.value = btn;
-    detailId.value = row.id;
-    if (btn == "view") {
-      detailBotBtn.value = [{ key: "back", label: "返回" }];
-    } else {
-      detailBotBtn.value = [
-        { key: "back", label: "返回" },
-        { key: "save", label: "保存" },
-      ];
-    }
-    isDetail.value = true;
-  } else if (btn == "delete") {
-    ElMessageBox.confirm("确认删除吗?", "提示", {
-      type: "warning",
-    }).then(() => {
-      request
-        .post({
-          url: "/example/person/delete",
-          data: {
-            idList: [row.id],
-          },
-        })
-        .then((res) => {
-          if (res && res.code == 200) {
-            ElMessage.success("删除成功");
-            initTable();
-          } else {
-            ElMessage.error(res.msg || "操作异常");
-          }
-        });
-    });
-  } else if (btn == "other") {
-    ElMessage.success("其他");
-  }
+const handleView = (row) => {
+  detailType.value = "view";
+  detailId.value = row.id;
+  isDetail.value = true;
 };
-const toBotBtnClick = ({ btn }) => {
-  if (btn == "save") {
-    const detailInfo = detailRef.value.getFormValue();
-    if (!detailInfo) {
-      return;
-    }
-    const url =
-      detailType.value == "add"
-        ? "/example/person/create"
-        : "/example/person/update";
+const handleEdit = (row) => {
+  detailType.value = "edit";
+  detailId.value = row.id;
+  isDetail.value = true;
+};
+const handleDelete = (row) => {
+  ElMessageBox.confirm("确认删除吗?", "提示", {
+    type: "warning",
+  }).then(() => {
     request
       .post({
-        url,
-        data: detailInfo,
+        url: "/example/person/delete",
+        data: {
+          idList: [row.id],
+        },
       })
       .then((res) => {
         if (res && res.code == 200) {
-          ElMessage.success("保存成功");
-          isDetail.value = false;
+          ElMessage.success("删除成功");
           initTable();
         } else {
           ElMessage.error(res.msg || "操作异常");
         }
       });
-  } else if (btn == "back") {
-    isDetail.value = false;
-  }
+  });
 };
-const toExport = (callBack) => {
+const handleOther = (row) => {
+  ElMessage.success("其他");
+};
+const handleSave = () => {
+  const detailInfo = detailRef.value.getFormValue();
+  if (!detailInfo) {
+    return;
+  }
+  const url =
+    detailType.value == "add"
+      ? "/example/person/create"
+      : "/example/person/update";
   request
     .post({
-      url: "/example/person/getList",
-      data: {
-        pageNumber: 1,
-        pageSize: 10000,
-        ...searchValue.value,
-      },
+      url,
+      data: detailInfo,
     })
     .then((res) => {
       if (res && res.code == 200) {
-        callBack({
-          fileName: "用户列表",
-          data: res.data.list,
-        });
+        ElMessage.success("保存成功");
+        isDetail.value = false;
+        initTable();
       } else {
         ElMessage.error(res.msg || "操作异常");
       }
     });
+};
+const handleBack = () => {
+  isDetail.value = false;
 };
 </script>
 <style lang="scss" scoped>
@@ -232,5 +259,11 @@ const toExport = (callBack) => {
   width: 100%;
   padding: 0 10px;
   background-color: var(--c-bg);
+
+  .item {
+    width: 250px;
+    margin-bottom: 10px;
+    margin-right: 10px;
+  }
 }
 </style>

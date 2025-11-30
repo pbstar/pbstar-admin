@@ -13,6 +13,20 @@ import pDateRange from "./dateRange.vue";
 import pDateTime from "./dateTime.vue";
 import pDateTimeRange from "./dateTimeRange.vue";
 
+// 默认配置
+const defaultConfig = {
+  key: "",
+  label: "",
+  type: "input",
+  placeholder: "",
+  isText: false,
+  isRequired: false,
+  isDisabled: false,
+  options: [],
+  enumKey: "",
+  more: {},
+};
+
 // 组件映射
 const componentMap = {
   input: pInput,
@@ -44,23 +58,6 @@ const props = defineProps({
 // Emits 定义
 const emit = defineEmits(["change", "update:modelValue"]);
 
-// 默认配置
-const defaultConfig = {
-  key: "",
-  label: "",
-  type: "input",
-  placeholder: "",
-  isText: false,
-  isRequired: false,
-  isDisabled: false,
-  tipText: "",
-  rightText: "",
-  labelStyle: "",
-  options: [],
-  enumKey: "",
-  more: {},
-};
-
 // 状态管理
 const config = ref({ ...defaultConfig });
 const value = ref(props.modelValue);
@@ -85,19 +82,20 @@ const handleChange = (val) => {
 };
 
 // 计算属性
-const currentComponent = computed(() => componentMap[config.value.type]);
+const currentComponent = computed(
+  () => componentMap[config.value.type] || pInput,
+);
 </script>
 
 <template>
   <div class="item">
     <!-- 标签区域 -->
-    <div v-if="config.label" class="label" :style="config.labelStyle">
+    <div v-if="config.label" class="label">
       <span
         v-show="config.isRequired && !config.isText && !config.isDisabled"
         class="required"
         >*</span
       >
-
       <el-tooltip
         v-if="config.label.length > 8"
         effect="dark"
@@ -112,25 +110,23 @@ const currentComponent = computed(() => componentMap[config.value.type]);
 
     <!-- 内容区域 -->
     <div class="value">
-      <div v-if="config.type !== 'slot'" class="val-box">
+      <div class="val-box">
         <div class="input">
-          <component
-            :is="currentComponent"
-            v-model="value"
-            :config="config"
-            @change="handleChange"
-          />
+          <slot :config="config" :modelValue="value">
+            <component
+              :is="currentComponent"
+              v-model="value"
+              :config="config"
+              @change="handleChange"
+            />
+          </slot>
         </div>
-
-        <div v-if="config.rightText" class="right-text">
-          {{ config.rightText }}
+        <div v-if="$slots.right" class="right-text">
+          <slot name="right" />
         </div>
       </div>
-
-      <slot v-else />
-
-      <div v-if="config.tipText" class="tip-box">
-        {{ config.tipText }}
+      <div v-if="$slots.bottom" class="tip-box">
+        <slot name="bottom" />
       </div>
     </div>
   </div>
@@ -186,16 +182,11 @@ const currentComponent = computed(() => componentMap[config.value.type]);
 
     .right-text {
       flex-shrink: 0;
-      font-size: 14px;
-      color: var(--c-text);
       margin-left: 6px;
     }
   }
 
   .tip-box {
-    font-size: 12px;
-    line-height: 16px;
-    color: var(--c-text2);
     margin-top: 4px;
   }
 }

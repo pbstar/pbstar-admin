@@ -37,13 +37,13 @@ const epIcon = computed(() => {
   return ElIcons[iconName] || null;
 });
 
-const iconStyle = computed(() => ({
-  fontSize:
-    typeof props.size === "number" || !props.size.includes("px")
-      ? `${props.size}px`
-      : props.size,
-  color: props.color,
-}));
+const iconStyle = computed(() => {
+  const size = props.size;
+  return {
+    fontSize: isNaN(Number(size)) ? size : `${size}px`,
+    color: props.color,
+  };
+});
 </script>
 
 <style lang="scss" scoped>

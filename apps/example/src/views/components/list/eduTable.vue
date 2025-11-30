@@ -2,7 +2,7 @@
 import { ref, onBeforeMount, watch } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import request from "@Passets/utils/request";
-import { PTable, PDialog, PForm } from "@Pcomponents";
+import { PTable, PDialog, PButton, PItem } from "@Pcomponents";
 
 const props = defineProps({
   type: {
@@ -16,43 +16,15 @@ const props = defineProps({
 });
 
 onBeforeMount(() => {
-  if (props.type == "add") {
-    tableTopBtn.value = [];
-    tableRightBtn.value = [
-      { label: "编辑", key: "edit" },
-      { label: "删除", key: "delete" },
-    ];
-  } else if (props.type == "view") {
-    tableTopBtn.value = [];
-    tableRightBtn.value = [];
-    initTable();
-  } else {
-    tableTopBtn.value = [{ label: "新增", key: "add" }];
-    tableRightBtn.value = [
-      { label: "编辑", key: "edit" },
-      { label: "删除", key: "delete" },
-    ];
+  if (props.type !== "add") {
     initTable();
   }
 });
 
-const tableColumn = ref([
-  { label: "名称", key: "eduName" },
-  { label: "时间", key: "dateRange" },
-  { label: "备注", key: "remark" },
-]);
 const tableData = ref([]);
-const tableRightBtn = ref([]);
-const tableTopBtn = ref([]);
 const detailType = ref("");
 const detailInfo = ref({});
 const isDetail = ref(false);
-const formData = ref([
-  { label: "名称", type: "input", key: "eduName" },
-  { label: "时间", type: "dateRange", key: "dateRange" },
-  { label: "备注", type: "textarea", key: "remark" },
-]);
-
 const initTable = () => {
   tableData.value = [];
   request
@@ -70,76 +42,76 @@ const initTable = () => {
       }
     });
 };
-const tableRightBtnClick = ({ row, btn }) => {
-  if (btn === "edit") {
-    request
-      .get({
-        url: "/example/person/getEducationDetail",
-        data: { id: row.id },
-      })
-      .then((res) => {
-        if (res && res.code === 200 && res.data) {
-          detailType.value = btn;
-          detailInfo.value = res.data;
-          isDetail.value = true;
-        } else {
-          ElMessage.error(res?.msg || "操作异常");
-        }
-      });
-  } else if (btn === "delete") {
-    ElMessageBox.confirm("确认删除吗?", "提示", {
-      type: "warning",
+const handleEdit = (row) => {
+  request
+    .get({
+      url: "/example/person/getEducationDetail",
+      data: { id: row.id },
     })
-      .then(() => {
-        request
-          .post({
-            url: "/example/person/deleteEducation",
-            data: { idList: [row.id] },
-          })
-          .then((res) => {
-            if (res && res.code === 200) {
-              initTable();
-              ElMessage.success("操作成功");
-            } else {
-              ElMessage.error(res?.msg || "操作异常");
-            }
-          });
-      })
-      .catch(() => {});
-  }
+    .then((res) => {
+      if (res && res.code === 200 && res.data) {
+        detailType.value = "edit";
+        detailInfo.value = res.data;
+        isDetail.value = true;
+      } else {
+        ElMessage.error(res?.msg || "操作异常");
+      }
+    });
 };
-const tableTopBtnClick = ({ btn }) => {
-  if (btn === "add") {
-    detailType.value = "add";
-    detailInfo.value = {
-      personId: props.id,
-    };
-    isDetail.value = true;
-  }
+
+const handleDelete = (row) => {
+  ElMessageBox.confirm("确认删除吗?", "提示", {
+    type: "warning",
+  })
+    .then(() => {
+      request
+        .post({
+          url: "/example/person/deleteEducation",
+          data: { idList: [row.id] },
+        })
+        .then((res) => {
+          if (res && res.code === 200) {
+            initTable();
+            ElMessage.success("操作成功");
+          } else {
+            ElMessage.error(res?.msg || "操作异常");
+          }
+        });
+    })
+    .catch(() => {});
 };
-const diaBotBtnClick = ({ btn }) => {
-  if (btn === "save") {
-    const url =
-      detailType.value == "add"
-        ? "/example/person/createEducation"
-        : "/example/person/updateEducation";
-    request
-      .post({
-        url,
-        data: detailInfo.value,
-      })
-      .then((res) => {
-        if (res && res.code === 200) {
-          initTable();
-          ElMessage.success("操作成功");
-          isDetail.value = false;
-        } else {
-          ElMessage.error(res?.msg || "操作异常");
-        }
-      });
-  } else if (btn === "back") {
-    isDetail.value = false;
-  }
+
+const handleAdd = () => {
+  detailType.value = "add";
+  detailInfo.value = {
+    personId: props.id,
+  };
+  isDetail.value = true;
+};
+
+const handleSave = () => {
+  const url =
+    detailType.value == "add"
+      ? "/example/person/createEducation"
+      : "/example/person/updateEducation";
+  request
+    .post({
+      url,
+      data: detailInfo.value,
+    })
+    .then((res) => {
+      if (res && res.code === 200) {
+        initTable();
+        ElMessage.success("操作成功");
+        isDetail.value = false;
+      } else {
+        ElMessage.error(res?.msg || "操作异常");
+      }
+    });
+};
+
+const handleBack = () => {
+  isDetail.value = false;
 };
 
 watch(
@@ -154,32 +126,60 @@ watch(
 
 <template>
   <div class="childBox">
-    <p-table
-      :column="tableColumn"
-      :data="tableData"
-      :rightBtn="tableRightBtn"
-      :topBtn="tableTopBtn"
-      @rightBtnClick="tableRightBtnClick"
-      @topBtnClick="tableTopBtnClick"
-    />
+    <p-table :data="tableData">
+      <template #column>
+        <el-table-column prop="eduName" label="名称" />
+        <el-table-column prop="dateRange" label="时间" />
+        <el-table-column prop="remark" label="备注" />
+        <el-table-column
+          v-if="props.type !== 'view'"
+          prop="operation"
+          label="操作"
+          fixed="right"
+          width="160"
+        >
+          <template #default="{ row }">
+            <p-button type="primary" size="small" link @click="handleEdit(row)">
+              编辑
+            </p-button>
+            <p-button
+              type="danger"
+              size="small"
+              link
+              @click="handleDelete(row)"
+            >
+              删除
+            </p-button>
+          </template>
+        </el-table-column>
+      </template>
+      <template #topLeft v-if="props.type !== 'view' && props.type !== 'add'">
+        <p-button type="primary" @click="handleAdd()"> 新增 </p-button>
+      </template>
+    </p-table>
 
-    <p-dialog
-      type="box"
-      title="教育背景详情页"
-      v-model="isDetail"
-      :botBtn="[
-        { label: '保存', key: 'save' },
-        { label: '返回', key: 'back' },
-      ]"
-      @botBtnClick="diaBotBtnClick"
-    >
-      <div style="padding: 10px 0">
-        <p-form
-          :data="formData"
-          :spanList="[12, 12, 12]"
-          v-model="detailInfo"
-        ></p-form>
+    <p-dialog type="box" title="教育背景详情页" v-model="isDetail">
+      <div class="dialog-form">
+        <p-item
+          class="item"
+          :config="{ label: '名称', type: 'input' }"
+          v-model="detailInfo.eduName"
+        />
+        <p-item
+          class="item"
+          :config="{ label: '时间', type: 'dateRange' }"
+          v-model="detailInfo.dateRange"
+        />
+        <p-item
+          class="item"
+          :config="{ label: '备注', type: 'textarea' }"
+          v-model="detailInfo.remark"
+        />
       </div>
+      <template #footer>
+        <p-button type="primary" @click="handleSave()"> 保存 </p-button>
+        <p-button @click="handleBack()"> 返回 </p-button>
+      </template>
     </p-dialog>
   </div>
 </template>
@@ -188,5 +188,16 @@ watch(
 .childBox {
   width: 100%;
   padding-top: 10px;
+}
+
+.dialog-form {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 20px;
+  gap: 10px;
+}
+
+.dialog-form .item {
+  width: 100%;
 }
 </style>

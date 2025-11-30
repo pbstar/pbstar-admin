@@ -40,8 +40,19 @@ export const useEnumStore = defineStore("enum", () => {
     return result;
   };
 
+  // 根据枚举key和value获取枚举label
+  const getEnumLabel = (enumKey, value) => {
+    const enumData = enumCache.value[enumKey];
+    if (!enumData) {
+      return value;
+    }
+    const enumItem = enumData.find((item) => item.value === value);
+    return enumItem ? enumItem.label : value;
+  };
+
   return {
     enums: enumCache,
     getEnum,
+    getEnumLabel,
   };
 });

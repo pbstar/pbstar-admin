@@ -2,7 +2,7 @@
   <div :class="collapseClasses">
     <el-collapse v-model="activeName">
       <el-collapse-item
-        title="Consistency"
+        :title="props.title"
         name="1"
         :disabled="!props.isControl"
       >

@@ -1,5 +1,16 @@
 # 更新日志
 
+## v0.3.0 2025-11-30
+
+- 升级 rsbuild 版本至 1.6.10
+- 重构 PComponents 组件，减少配置增加插槽降低学习成本提高组件的可定制性
+  - 添加 p-button 按钮组件
+  - 重构 p-dialog 对话框组件，将 footer 插槽化
+  - 重构 p-item 表单项组件，将 Props 的 tipText、rightText 改为插槽 bottom、right
+  - 重构 p-table 表格组件，将 Props 的 column 改为插槽 column，移除列设置、导出等功能
+  - 重构 p-search 查询组件，移除 Props 的 data、modelValue，将查询参数作为插槽参数传递
+  - 移除 p-form 表单组件
+
 ## v0.2.4 2025-11-19
 
 - 优化按钮权限模块
@@ -8,7 +19,7 @@
 
 - 用 dayjs 替换自定义时间工具函数
 - 重构子应用初始化逻辑，提取公共代码到 app-common 模块
-- 优化 Pcomponents 组件导出、导入方式
+- 优化 PComponents 组件导出、导入方式
 
 ## v0.2.2 2025-11-16
 

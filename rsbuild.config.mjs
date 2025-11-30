@@ -22,7 +22,7 @@ const createAppConfig = (app) => {
     plugins: [
       checkUniqueKeyPlugin({
         checkPath: `${basePath}/src`,
-        checkKeys: ["tableKey", "table-key"],
+        checkKeys: ["btnkey"],
       }),
     ],
   };
@@ -46,7 +46,7 @@ const mainConfig = {
   plugins: [
     checkUniqueKeyPlugin({
       checkPath: "./main/src",
-      checkKeys: ["tableKey", "table-key"],
+      checkKeys: ["btnkey"],
     }),
   ],
 };

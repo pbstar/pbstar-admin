@@ -1,46 +1,24 @@
 <script setup>
 import { ref } from "vue";
-import { PItem } from "@Pcomponents";
-import { useFormData } from "../hooks/useFormData.js";
 
 const props = defineProps({
-  data: {
-    type: Array,
-    default: () => [],
-  },
-  modelValue: {
-    type: Object,
-    default: () => ({}),
-  },
+  // 是否显示重置按钮
   showReset: {
     type: Boolean,
     default: true,
   },
 });
 
-const emits = defineEmits(["change", "update:modelValue", "btnClick"]);
+const emits = defineEmits(["search", "reset"]);
 
-const { formData, valueObj, updateData, resetValue, handleChange } =
-  useFormData(props, emits);
+// 是否展开搜索区域
 const showSearch = ref(true);
-
-const toSearch = () =>
-  emits("btnClick", { type: "search", data: valueObj.value });
-
-const toReset = () => {
-  resetValue();
-  emits("btnClick", { type: "reset", data: valueObj.value });
-};
-
-defineExpose({
-  toChangeData: updateData,
-});
 </script>
 
 <template>
   <div class="search">
     <div class="searchTitle">
-      <span>查询条件</span>
+      <span class="searchTitleText">查询条件</span>
       <el-button
         type="primary"
         size="small"
@@ -52,26 +30,16 @@ defineExpose({
     </div>
 
     <div class="searchContent" v-show="showSearch">
-      <p-item
-        v-for="(item, index) in formData"
-        :key="index"
-        class="item"
-        :config="item"
-        v-model="valueObj[item.key]"
-        @change="handleChange"
-      >
-        <template v-if="item.type === 'slot'" #[item.key]>
-          <slot :name="item.key"></slot>
-        </template>
-      </p-item>
-
-      <div class="item placeholder"></div>
-
+      <slot></slot>
+      <div class="searchPlaceholder"></div>
       <div class="searchBtn">
-        <el-button type="primary" plain @click="toSearch">搜索</el-button>
-        <el-button v-show="showReset" @click="toReset">重置</el-button>
+        <el-button type="primary" plain @click="emits('search')"
+          >搜索</el-button
+        >
+        <el-button v-show="showReset" @click="emits('reset')">重置</el-button>
       </div>
     </div>
+    <div v-show="!showSearch" class="searchContentNo"></div>
   </div>
 </template>
 
@@ -80,7 +48,7 @@ defineExpose({
   width: 100%;
   background: var(--c-bg-box);
   color: var(--c-text2);
-  padding: 5px;
+  padding: 5px 5px 0;
 
   .searchTitle {
     display: flex;
@@ -89,7 +57,7 @@ defineExpose({
     height: 18px;
     margin: 5px;
 
-    span {
+    .searchTitleText {
       font-size: 14px;
       font-weight: bold;
       border-left: 3px solid var(--c-bg-theme);
@@ -102,27 +70,26 @@ defineExpose({
     display: flex;
     flex-wrap: wrap;
     position: relative;
-    margin-top: -5px;
 
-    .item {
-      width: 300px;
-      margin: 5px 20px 5px 0;
-
-      &.placeholder {
-        width: 160px;
-        height: 30px;
-      }
+    .searchPlaceholder {
+      width: 160px;
+      height: 30px;
+      margin-bottom: 10px;
     }
 
     .searchBtn {
       position: absolute;
       right: 10px;
-      bottom: 5px;
+      bottom: 10px;
       display: flex;
       justify-content: center;
       align-items: center;
       width: 160px;
     }
+  }
+
+  .searchContentNo {
+    height: 5px;
   }
 }
 </style>

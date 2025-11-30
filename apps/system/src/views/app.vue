@@ -2,33 +2,21 @@
 import { ref, onBeforeMount } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import request from "@Passets/utils/request";
-import { PTable, PSearch, PTitle, PDialog, PIcon } from "@Pcomponents";
+import {
+  PTable,
+  PSearch,
+  PTitle,
+  PDialog,
+  PIcon,
+  PButton,
+  PItem,
+} from "@Pcomponents";
 import Detail from "./components/app/detail.vue";
 import { structure } from "@Passets/utils/array";
 
-const searchData = ref([
-  { label: "应用名称", key: "name", type: "input" },
-  { label: "应用分组", key: "group", type: "input" },
-  {
-    label: "应用Key",
-    key: "key",
-    type: "input",
-  },
-]);
 const searchValue = ref({});
-const tableColumn = ref([
-  { label: "应用名称", key: "name" },
-  { label: "应用分组", key: "group" },
-  { label: "应用Key", key: "key" },
-  { label: "应用图标", key: "icon", slot: "icon" },
-]);
 const tableData = ref([]);
-const tableTopBtn = ref([{ key: "add", label: "新增" }]);
-const tableRightBtn = ref([
-  { key: "view", label: "查看" },
-  { key: "edit", label: "编辑" },
-  { key: "delete", label: "删除" },
-]);
+
 const detailType = ref("");
 const detailId = ref("");
 const isDetail = ref(false);
@@ -38,9 +26,12 @@ onBeforeMount(() => {
   initTable();
 });
 
-const toSearch = ({ data }) => {
-  searchValue.value = data;
+const toSearch = () => {
   initTable();
+};
+const toReset = () => {
+  searchValue.value = {};
+  toSearch();
 };
 const initTable = () => {
   const params = {
@@ -60,62 +51,63 @@ const initTable = () => {
       }
     });
 };
-const tableRightBtnClick = ({ row, btn }) => {
-  if (btn == "view" || btn == "edit") {
-    detailType.value = btn;
-    detailId.value = row.id;
-    isDetail.value = true;
-  } else if (btn === "delete") {
-    ElMessageBox.confirm("确认删除吗?", "提示", {
-      type: "warning",
+const handleView = (row) => {
+  detailType.value = "view";
+  detailId.value = row.id;
+  isDetail.value = true;
+};
+const handleEdit = (row) => {
+  detailType.value = "edit";
+  detailId.value = row.id;
+  isDetail.value = true;
+};
+const handleDelete = (row) => {
+  ElMessageBox.confirm("确认删除吗?", "提示", {
+    type: "warning",
+  })
+    .then(() => {
+      request
+        .post({
+          url: "/system/app/delete",
+          data: { idList: [row.id] },
+        })
+        .then((res) => {
+          if (res && res.code === 200) {
+            initTable();
+            ElMessage.success("操作成功");
+          } else {
+            ElMessage.error(res?.msg || "操作异常");
+          }
+        });
     })
-      .then(() => {
-        request
-          .post({
-            url: "/system/app/delete",
-            data: { idList: [row.id] },
-          })
-          .then((res) => {
-            if (res && res.code === 200) {
-              initTable();
-              ElMessage.success("操作成功");
-            } else {
-              ElMessage.error(res?.msg || "操作异常");
-            }
-          });
-      })
-      .catch(() => {});
-  }
+    .catch(() => {});
 };
-const tableTopBtnClick = ({ btn }) => {
-  if (btn == "add") {
-    detailType.value = "add";
-    detailId.value = "";
-    isDetail.value = true;
-  }
+const handleAdd = () => {
+  detailType.value = "add";
+  detailId.value = "";
+  isDetail.value = true;
 };
-const diaBotBtnClick = ({ btn }) => {
-  if (btn === "save") {
-    const detailInfo = detailRef.value.getFormValue();
-    const url =
-      detailType.value == "add" ? "/system/app/create" : "/system/app/update";
-    request
-      .post({
-        url,
-        data: detailInfo,
-      })
-      .then((res) => {
-        if (res && res.code === 200) {
-          initTable();
-          ElMessage.success("操作成功");
-          isDetail.value = false;
-        } else {
-          ElMessage.error(res?.msg || "操作异常");
-        }
-      });
-  } else if (btn === "back") {
-    isDetail.value = false;
-  }
+const handleSave = () => {
+  const detailInfo = detailRef.value.getFormValue();
+  const url =
+    detailType.value == "add" ? "/system/app/create" : "/system/app/update";
+  request
+    .post({
+      url,
+      data: detailInfo,
+    })
+    .then((res) => {
+      if (res && res.code === 200) {
+        initTable();
+        ElMessage.success("操作成功");
+        isDetail.value = false;
+      } else {
+        ElMessage.error(res?.msg || "操作异常");
+      }
+    });
+};
+const handleBack = () => {
+  isDetail.value = false;
 };
 </script>
 
@@ -123,45 +115,78 @@ const diaBotBtnClick = ({ btn }) => {
   <div class="page">
     <p-title :list="['应用管理']"></p-title>
 
-    <p-search
-      style="margin-top: 10px"
-      :data="searchData"
-      @btnClick="toSearch"
-    ></p-search>
+    <p-search style="margin-top: 10px" @search="toSearch" @reset="toReset">
+      <p-item
+        class="item"
+        :config="{ label: '应用名称', type: 'input' }"
+        v-model="searchValue.name"
+      />
+      <p-item
+        class="item"
+        :config="{ label: '应用分组', type: 'input' }"
+        v-model="searchValue.group"
+      />
+      <p-item
+        class="item"
+        :config="{
+          label: '应用Key',
+          type: 'input',
+        }"
+        v-model="searchValue.key"
+      />
+    </p-search>
 
-    <p-table
-      style="margin-top: 10px"
-      :data="tableData"
-      :column="tableColumn"
-      :topBtn="tableTopBtn"
-      :rightBtn="tableRightBtn"
-      tableKey="app_1"
-      showSetting
-      @topBtnClick="tableTopBtnClick"
-      @rightBtnClick="tableRightBtnClick"
-    >
-      <template #icon="scope">
-        <div v-if="scope.row.icon" style="display: flex; align-items: center">
-          <p-icon
-            style="margin-right: 5px; font-size: 16px"
-            :name="scope.row.icon"
-          />
-          <span>{{ scope.row.icon }}</span>
-        </div>
+    <p-table style="margin-top: 10px" :data="tableData">
+      <template #column>
+        <el-table-column prop="name" label="应用名称" />
+        <el-table-column prop="group" label="应用分组" />
+        <el-table-column prop="key" label="应用Key" />
+        <el-table-column prop="icon" label="应用图标">
+          <template #default="{ row }">
+            <div v-if="row.icon" style="display: flex; align-items: center">
+              <p-icon
+                style="margin-right: 5px; font-size: 16px"
+                :name="row.icon"
+              />
+              <span>{{ row.icon }}</span>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="operation"
+          label="操作"
+          fixed="right"
+          width="200"
+        >
+          <template #default="{ row }">
+            <p-button type="primary" size="small" link @click="handleView(row)">
+              查看
+            </p-button>
+            <p-button type="primary" size="small" link @click="handleEdit(row)">
+              编辑
+            </p-button>
+            <p-button
+              type="danger"
+              size="small"
+              link
+              @click="handleDelete(row)"
+            >
+              删除
+            </p-button>
+          </template>
+        </el-table-column>
+      </template>
+      <template #topLeft>
+        <p-button type="primary" @click="handleAdd()"> 新增 </p-button>
       </template>
     </p-table>
 
-    <p-dialog
-      title="应用管理详情页"
-      type="drawer"
-      v-model="isDetail"
-      :botBtn="[
-        { label: '保存', key: 'save' },
-        { label: '返回', key: 'back' },
-      ]"
-      @botBtnClick="diaBotBtnClick"
-    >
+    <p-dialog title="应用管理详情页" type="drawer" v-model="isDetail">
       <Detail ref="detailRef" :type="detailType" :id="detailId"></Detail>
+      <template #footer>
+        <p-button type="primary" @click="handleSave()"> 保存 </p-button>
+        <p-button @click="handleBack()">返回</p-button>
+      </template>
     </p-dialog>
   </div>
 </template>
@@ -171,5 +196,11 @@ const diaBotBtnClick = ({ btn }) => {
   width: 100%;
   padding: 0 10px;
   background-color: var(--c-bg);
+
+  .item {
+    width: 250px;
+    margin-bottom: 10px;
+    margin-right: 10px;
+  }
 }
 </style>
