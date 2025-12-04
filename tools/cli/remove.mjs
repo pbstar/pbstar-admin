@@ -4,6 +4,7 @@ import inquirer from "inquirer";
 import chalk from "chalk";
 import apps from "../../apps/apps.json" with { type: "json" };
 
+// 可选择的工程列表
 const list = [
   "全局工程",
   "assets",
@@ -32,10 +33,12 @@ program
         },
       ]);
       const { appKey, packageName } = answers;
+      // 验证依赖包名称
       if (!packageName) {
         console.error(chalk.red("Error: 依赖包名称不能为空"));
         process.exit(1);
       }
+      // 构建pnpm命令
       let command = "";
       if (appKey === "全局工程") {
         command = `pnpm remove ${packageName}`;

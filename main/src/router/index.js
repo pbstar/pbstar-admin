@@ -1,6 +1,10 @@
 import { createRouter, createWebHistory } from "vue-router";
 import apps from "../../../apps/apps.json" with { type: "json" };
+
+// 判断是否为开发环境
 const isDev = import.meta.env.DEV;
+
+// 动态生成子应用路由配置
 const appsRouter = apps.map((item) => {
   return {
     path: item.key,
@@ -58,5 +62,4 @@ const router = createRouter({
   ],
 });
 
-router.afterEach((to) => {});
 export default router;

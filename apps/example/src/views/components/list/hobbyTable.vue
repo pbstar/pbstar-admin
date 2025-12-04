@@ -39,7 +39,7 @@ const handleChange = (val) => {
 const handleEdit = (row) => {
   detailType.value = "edit";
   const index = tableData.value.findIndex((item) => {
-    return item.webId == row.webId;
+    return item.webId === row.webId;
   });
   isDetail.value = true;
   if (index > -1) {
@@ -53,7 +53,7 @@ const handleDelete = (row) => {
   })
     .then(() => {
       const index = tableData.value.findIndex((item) => {
-        return item.webId == row.webId;
+        return item.webId === row.webId;
       });
       if (index > -1) {
         tableData.value.splice(index, 1);
@@ -75,7 +75,7 @@ const handleSave = () => {
     tableData.value.push(detailInfo.value);
   } else if (detailType.value === "edit") {
     const index = tableData.value.findIndex((item) => {
-      return item.webId == detailInfo.value.webId;
+      return item.webId === detailInfo.value.webId;
     });
     if (index > -1) {
       tableData.value[index] = detailInfo.value;

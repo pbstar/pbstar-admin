@@ -8,12 +8,22 @@ import "@Passets/css/base.css";
 
 import App from "./App.vue";
 import router from "./router";
+
+// 创建Vue应用实例
 const app = createApp(App);
+
+// 创建Pinia状态管理实例
 const mainPinia = createPinia();
 window.$mainPinia = mainPinia;
+
+// 注册ElementPlus组件库
 app.use(ElementPlus, {
   locale: zhCn,
 });
+
+// 注册Pinia和路由
 app.use(mainPinia);
 app.use(router);
+
+// 挂载应用
 app.mount("#root");

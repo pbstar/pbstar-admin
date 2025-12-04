@@ -8,14 +8,15 @@ const appsStore = useAppsStore();
 const path = ref("");
 const list = ref([]);
 
+// 添加历史记录
 const addItem = (fullPath) => {
-  if (fullPath == path.value) return;
+  if (fullPath === path.value) return;
   path.value = fullPath;
-  const hasPath = list.value.find((item) => item.path == fullPath);
+  const hasPath = list.value.find((item) => item.path === fullPath);
   if (hasPath) return;
   const app = appsStore.getApp();
   if (!app || !app.navs) return;
-  const nav = app.navs.find((item) => item.url == fullPath);
+  const nav = app.navs.find((item) => item.url === fullPath);
   if (!nav) return;
   list.value.push({
     name: nav.name,
@@ -23,11 +24,12 @@ const addItem = (fullPath) => {
     path: fullPath,
   });
 };
+// 删除历史记录
 const delItem = (url) => {
-  list.value = list.value.filter((item) => item.path != url);
-  if (url == path.value) {
+  list.value = list.value.filter((item) => item.path !== url);
+  if (url === path.value) {
     let toPath = "";
-    if (list.value.length == 0) {
+    if (list.value.length === 0) {
       toPath = "/";
     } else {
       toPath = list.value[list.value.length - 1].path;
@@ -35,9 +37,10 @@ const delItem = (url) => {
     router.push(toPath);
   }
 };
+// 跳转路径
 const toPath = async (item) => {
-  if (item.path == path.value) return;
-  if (item.appId != appsStore.appId) {
+  if (item.path === path.value) return;
+  if (item.appId !== appsStore.appId) {
     await appsStore.setAppId({
       id: item.appId,
     });
@@ -57,7 +60,7 @@ router.afterEach((to, from) => {
     <div class="list">
       <div
         class="item"
-        :class="item.path == path ? 'active' : ''"
+        :class="item.path === path ? 'active' : ''"
         v-for="(item, index) in list"
         :key="index"
         @click="toPath(item)"

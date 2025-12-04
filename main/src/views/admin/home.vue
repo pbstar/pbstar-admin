@@ -1,6 +1,7 @@
 <script setup>
 import { PIcon } from "@Pcomponents";
 
+// 打开外部链接
 const toPath = (path) => {
   window.open(path);
 };
@@ -80,6 +81,16 @@ const toPath = (path) => {
     }
   }
 
+  .btns {
+    margin-top: 60px;
+    display: flex;
+
+    .icon {
+      margin-right: 5px;
+    }
+  }
+
+  // 响应式布局
   @media (max-width: 700px) {
     .welcome-container {
       .logo-text {
@@ -112,14 +123,6 @@ const toPath = (path) => {
         margin-left: 0;
         margin-right: 0;
       }
-    }
-  }
-
-  .btns {
-    margin-top: 60px;
-    display: flex;
-    .icon {
-      margin-right: 5px;
     }
   }
 }

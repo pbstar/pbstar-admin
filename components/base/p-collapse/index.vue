@@ -36,26 +36,32 @@
 import { ref, computed } from "vue";
 
 const props = defineProps({
+  // 折叠面板标题
   title: {
     type: String,
     default: "",
   },
+  // 是否默认折叠
   isCollapse: {
     type: Boolean,
     default: false,
   },
+  // 是否可控制展开收起
   isControl: {
     type: Boolean,
     default: true,
   },
+  // 是否显示下划线
   showDownLine: {
     type: Boolean,
     default: true,
   },
 });
 
+// 当前激活的面板
 const activeName = ref(props.isCollapse ? "" : "1");
 
+// 计算折叠面板样式类名
 const collapseClasses = computed(() => ({
   collapse: true,
   control: !props.isControl,

@@ -73,13 +73,14 @@ export const useAppsStore = defineStore("apps", () => {
     });
     app.navsTree = structure(app.navs);
   };
+  // 检查应用是否有导航
   const hasAppNav = (query) => {
     let bool = false;
     const app = myApps.value.find((item) => item.id === appId.value);
     if (app && query) {
       const url = `/admin/${app.key}?${app.key}=${encodeURIComponent(query[app.key])}`;
       app.navs.forEach((e) => {
-        if (e.url == url) {
+        if (e.url === url) {
           bool = true;
         }
       });

@@ -15,7 +15,7 @@ export function useMicroApp() {
   const handleSharedPinia = (e) => {
     for (const key in e) {
       sharedStore[key] = e[key];
-      if (key == "isDark") {
+      if (key === "isDark") {
         changeTheme(e[key]);
       }
     }
@@ -42,7 +42,7 @@ export function useMicroApp() {
 
     // 监听路由变更
     window.$wujie?.bus.$on("subappRouteChange", (obj) => {
-      if (obj && obj.path && obj.key == window.$wujie?.bus.id) {
+      if (obj && obj.path && obj.key === window.$wujie?.bus.id) {
         router.push(obj.path);
       }
     });
