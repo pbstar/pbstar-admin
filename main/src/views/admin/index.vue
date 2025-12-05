@@ -1,6 +1,7 @@
 <template>
-  <div class="pa_page" v-loading="isLoading">
-    <template v-if="!isLoading">
+  <div class="pa_page">
+    <Loading v-if="!isMounted" :isRouteLoading="false" isFixed />
+    <template v-else>
       <div class="top" v-show="!isFull">
         <AdminTop v-show="!isMobile" />
         <AdminTopMobile v-show="isMobile" />
@@ -40,6 +41,7 @@ import AdminTop from "@/components/layout/top.vue";
 import AdminTopMobile from "@/components/layout/topMobile.vue";
 import AdminNav from "@/components/layout/nav.vue";
 import history from "@/components/layout/history.vue";
+import Loading from "@/components/layout/loading.vue";
 import useSharedStore from "@Passets/stores/shared";
 import { useAppsStore } from "@/stores/apps";
 import { bus } from "wujie";
@@ -60,7 +62,7 @@ const isMobile = computed(() => {
 });
 // 路由白名单
 const whiteList = ["/login", "/404", "/403"];
-const isLoading = ref(true);
+const isMounted = ref(false);
 onBeforeMount(async () => {
   if (isFreeLogin || whiteList.includes(route.path)) {
     return;
@@ -79,7 +81,7 @@ onBeforeMount(async () => {
       return router.push({ path: "/403" });
     }
   }
-  isLoading.value = false;
+  isMounted.value = true;
 });
 // 退出全屏
 const toUnFull = () => {

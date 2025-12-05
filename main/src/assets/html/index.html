@@ -4,27 +4,31 @@
   <body>
     <div id="<%= mountId %>">
       <style>
-        #p_app_loading_mask {
+        /* Loading 样式 */
+        .p-loading-mask {
           position: fixed;
-          left: 0;
           top: 0;
-          height: 100vh;
+          left: 0;
           width: 100vw;
+          height: 100vh;
           background: #fff;
           user-select: none;
           z-index: 9999;
           overflow: hidden;
+          display: flex;
+          align-items: center;
+          justify-content: center;
         }
 
-        #p_app_loading_mask .loading-wrapper {
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -100%);
+        .p-loading-wrapper {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
         }
 
-        #p_app_loading_mask .loading-dot {
-          animation: cr_app_loading_antRotate 1.2s infinite linear;
+        .p-loading-dot {
+          animation: p-loading-rotate 1.2s infinite linear;
           transform: rotate(45deg);
           position: relative;
           display: inline-block;
@@ -34,73 +38,57 @@
           box-sizing: border-box;
         }
 
-        #p_app_loading_mask .loading-dot i {
+        .p-loading-dot i {
           width: 22px;
           height: 22px;
           position: absolute;
           display: block;
-          background-color: #1890ff;
+          background-color: #0376fa;
           border-radius: 100%;
           transform: scale(0.75);
           transform-origin: 50% 50%;
           opacity: 0.3;
-          animation: cr_app_loading_antSpinMove 1s infinite linear alternate;
+          animation: p-loading-spin 1s infinite linear alternate;
         }
 
-        #p_app_loading_mask .loading-dot i:nth-child(1) {
+        .p-loading-dot i:nth-child(1) {
           top: 0;
           left: 0;
         }
 
-        #p_app_loading_mask .loading-dot i:nth-child(2) {
+        .p-loading-dot i:nth-child(2) {
           top: 0;
           right: 0;
-          -webkit-animation-delay: 0.4s;
           animation-delay: 0.4s;
         }
 
-        #p_app_loading_mask .loading-dot i:nth-child(3) {
+        .p-loading-dot i:nth-child(3) {
           right: 0;
           bottom: 0;
-          -webkit-animation-delay: 0.8s;
           animation-delay: 0.8s;
         }
 
-        #p_app_loading_mask .loading-dot i:nth-child(4) {
+        .p-loading-dot i:nth-child(4) {
           bottom: 0;
           left: 0;
-          -webkit-animation-delay: 1.2s;
           animation-delay: 1.2s;
         }
 
-        @keyframes cr_app_loading_antRotate {
+        @keyframes p-loading-rotate {
           to {
-            -webkit-transform: rotate(405deg);
             transform: rotate(405deg);
           }
         }
-        @-webkit-keyframes cr_app_loading_antRotate {
-          to {
-            -webkit-transform: rotate(405deg);
-            transform: rotate(405deg);
-          }
-        }
-        @keyframes cr_app_loading_antSpinMove {
-          to {
-            opacity: 1;
-          }
-        }
-        @-webkit-keyframes cr_app_loading_antSpinMove {
+
+        @keyframes p-loading-spin {
           to {
             opacity: 1;
           }
         }
       </style>
-      <div id="p_app_loading_mask">
-        <div class="loading-wrapper">
-          <span class="loading-dot loading-dot-spin">
-            <i></i><i></i><i></i><i></i>
-          </span>
+      <div class="p-loading-mask">
+        <div class="p-loading-wrapper">
+          <span class="p-loading-dot"><i></i><i></i><i></i><i></i></span>
         </div>
       </div>
     </div>

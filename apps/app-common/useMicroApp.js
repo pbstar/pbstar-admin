@@ -13,12 +13,15 @@ export function useMicroApp() {
 
   // 处理共享状态变更
   const handleSharedPinia = (e) => {
-    for (const key in e) {
-      sharedStore[key] = e[key];
-      if (key === "isDark") {
-        changeTheme(e[key]);
+    Object.keys(e).forEach((key) => {
+      // 只设置 store 中已存在的属性
+      if (key in sharedStore) {
+        sharedStore[key] = e[key];
+        if (key === "isDark") {
+          changeTheme(e[key]);
+        }
       }
-    }
+    });
   };
 
   // 处理路由跳转
@@ -53,6 +56,20 @@ export function useMicroApp() {
     window.$wujie?.bus.$off("changeSharedPinia");
     window.$wujie?.bus.$off("subappRouteChange");
   };
+
+  // 路由守卫 - 控制loading状态
+  router.beforeEach((to, from, next) => {
+    // 通过bus向主应用同步loading状态
+    window.$wujie?.bus.$emit("changeSharedPinia", { isRouteLoading: true });
+    next();
+  });
+
+  router.afterEach(() => {
+    // 延迟关闭loading,确保页面渲染完成
+    setTimeout(() => {
+      window.$wujie?.bus.$emit("changeSharedPinia", { isRouteLoading: false });
+    }, 200);
+  });
 
   // 初始化微应用
   handleRouteChange();
