@@ -25,9 +25,9 @@ export function useFormItem(props, emits, options = {}) {
     emits("change", val);
   };
 
-  // 工具函数
+  // 工具函数:查找选项标签
   const findOptionLabel = (val) => {
-    const option = optionsData.value.find((item) => item.value == val);
+    const option = optionsData.value.find((item) => item.value === val);
     return option ? option.label : val;
   };
 

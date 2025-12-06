@@ -97,11 +97,12 @@ const hasPagination = computed(() => {
   return props.pagination && Object.keys(props.pagination).length > 0;
 });
 
+// 计算序号
 const getIndex = (index) => {
   return (pageNumber.value - 1) * pageSize.value + index + 1;
 };
 
-// 分页变化处理
+// 每页条数变化
 const handleSizeChange = (val) => {
   pageSize.value = val;
   emit("paginationChange", {
@@ -110,6 +111,7 @@ const handleSizeChange = (val) => {
   });
 };
 
+// 当前页变化
 const handleCurrentChange = (val) => {
   pageNumber.value = val;
   emit("paginationChange", {
@@ -117,6 +119,7 @@ const handleCurrentChange = (val) => {
     pageSize: pageSize.value,
   });
 };
+// 选择项变化
 const handleSelectionChange = (val) => {
   selectionList.value = val;
   emit("selectionChange", val);

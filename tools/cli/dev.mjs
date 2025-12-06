@@ -4,6 +4,7 @@ import inquirer from "inquirer";
 import chalk from "chalk";
 import apps from "../../apps/apps.json" with { type: "json" };
 
+// 可启动的应用模块列表
 const list = ["main", ...apps.map((item) => item.key)];
 
 program
@@ -20,6 +21,7 @@ program
         },
       ]);
       const { appKey } = answers;
+      // 构建启动命令
       let command = "";
       if (appKey === "main") {
         command = "rsbuild dev --environment main --port 8800 --open";

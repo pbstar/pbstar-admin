@@ -116,9 +116,9 @@ program
 
       // apps.json文件中添加子应用配置
       const appsJsonPath = path.join(APPS_DIR, "apps.json");
-      let port = 0;
       if (fs.existsSync(appsJsonPath)) {
         const appsJson = fs.readJsonSync(appsJsonPath);
+        // 检查子应用是否已存在
         const appIndex = appsJson.findIndex((item) => item.key === appKey);
         if (appIndex !== -1) {
           console.error(
@@ -128,9 +128,11 @@ program
           );
           process.exit(1);
         }
+        // 计算新端口号（从现有最大端口+1）
         const maxPort = Math.max(...appsJson.map((item) => item.devPort));
-        port = maxPort + 1;
-        if (port < 8801 || port > 8899 || !port) {
+        const port = maxPort + 1;
+        // 验证端口号范围（8801-8899）
+        if (port < 8801 || port > 8899) {
           console.error(
             chalk.red(
               "错误: 端口号超出范围（ 8801-8899 ），请检测子应用配置（ /pbstar-admin/apps/apps.json ）。",

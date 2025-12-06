@@ -1,5 +1,5 @@
 <div align="center">
-    <img src="https://github.com/pbstar/pbstar-admin/blob/main/main/src/assets/imgs/logo-w.png" height="80px">
+    <img src="https://github.com/pbstar/pbstar-admin/blob/main/main/src/assets/imgs/logo-w.png" height="80px" alt="PbstarAdmin Logo">
     <h1 style="margin-bottom:30px;margin-top:10px; font-weight: bold;">PbstarAdmin 微后台🎉</h1>
     <h4>
         <div style="margin-bottom:5px;">基于 <strong>wujie微前端 + rsbuild高性能构建 + pnpm monorepo</strong> 的现代化架构</div>
@@ -8,13 +8,18 @@
 </div>
 
 <p align="center">
-	<a href="https://github.com/pbstar/pbstar-admin/blob/main/LICENSE"><img src="https://img.shields.io/github/license/mashape/apistatus.svg"></a>
-    <a href="http://pbstar-admin-docs.pbstar.cn/"><img src="https://img.shields.io/badge/官方文档-5672CD?style=flat"></a>
-    <a href="http://pbstar-admin.pbstar.cn/"><img src="https://img.shields.io/badge/在线演示-FF5722?style=flat"></a>
-    <a href="https://github.com/pbstar/pbstar-admin"><img src="https://img.shields.io/badge/WeChat-P24612582-brightgreen.svg"></a>
+    <a href="http://pbstar-admin-docs.pbstar.cn/">
+        <img src="https://img.shields.io/badge/📖_官方文档-5672CD?style=for-the-badge" alt="官方文档">
+    </a>
+    <a href="http://pbstar-admin.pbstar.cn/">
+        <img src="https://img.shields.io/badge/🚀_在线演示-FF5722?style=for-the-badge" alt="在线演示">
+    </a>
+    <a href="https://github.com/pbstar/pbstar-admin">
+        <img src="https://img.shields.io/badge/💬_WeChat-P24612582-07C160?style=for-the-badge" alt="WeChat">
+    </a>
 </p>
 
-## 项目特点
+## ✨ 项目特点
 
 - **🚀 微前端架构**: 基于腾讯wujie微前端框架，支持内外部子应用动态加载，实现真正的应用级微前端解耦
 - **📦 智能模块化**: pnpm monorepo工作区管理，支持内外部子应用（in/out类型），外部子应用可独立git仓库管理
@@ -22,12 +27,14 @@
 - **⚙️ 全链路工程化**: 完整的CLI工具链（create/dev/build/add/remove），自动化脚手架、依赖管理、打包部署
 - **⚡ 极致现代化**: 基于Rsbuild高性能构建系统，多环境配置，支持子应用独立开发、调试、打包
 
-## 环境要求
+## 📋 环境要求
 
-- node >= 18.12.0（推荐使用 Node.js 22 LTS）
-- pnpm >= 9.15.0
+| 环境    | 版本要求                 |
+| ------- | ------------------------ |
+| Node.js | >= 18.12.0 (推荐 22 LTS) |
+| pnpm    | >= 9.15.0                |
 
-## 快速开始
+## 🚀 快速开始
 
 ```bash
 # 克隆项目
@@ -52,7 +59,7 @@ pnpm run remove
 pnpm run create
 ```
 
-## 项目结构
+## 📁 项目结构
 
 ```
 ├── .husky                      # git hooks配置
@@ -77,7 +84,7 @@ pnpm run create
 └── README.md                   # 说明
 ```
 
-## 致谢
+## 🙏 致谢
 
 本项目能够顺利完成，离不开以下优秀开源项目和工具，在此表示衷心感谢：
 
@@ -85,10 +92,10 @@ pnpm run create
 
 - [**git-submodule**](https://git-scm.com/docs/git-submodule) - 用于实现外部子应用的独立版本控制
 - [**wujie**](https://github.com/Tencent/wujie) - 腾讯开源的微前端框架，提供强大的微前端解决方案
-- [**rsbuild**](https://github.com/web-infra-dev/rsbuild) - 基于 Rspack 的高性能构建工具
+- [**rsbuild**](https://github.com/web-infra-dev/rsbuild) - 基于 Rspack 的高性能构建工具，提供极速的构建体验
 - [**pnpm**](https://github.com/pnpm/pnpm) - 快速、节省磁盘空间的包管理器，优化依赖管理
 - [**vue**](https://github.com/vuejs/core) - 渐进式 JavaScript 框架，构建用户界面的基础
 
 ### 📚 灵感采集
 
-- [vue-vben-admin](https://github.com/vbenjs/vue-vben-admin)、[Geeker-Admin](https://github.com/HalseySpicy/Geeker-Admin)、[gi-demo](https://github.com/lin-97/gi-demo)
+- [vue-vben-admin](https://github.com/vbenjs/vue-vben-admin)、[Geeker-Admin](https://github.com/HalseySpicy/Geeker-Admin)、[gi-demo](https://github.com/lin-97/gi-demo)、[teek-design-vue3](https://github.com/Kele-Bingtang/teek-design-vue3)

@@ -37,6 +37,12 @@ body {
     Microsoft YaHei,
     sans-serif;
 }
+/* 在字体加载时先显示备用字体 */
+.iconfont,
+.iconfont::before,
+.iconfont::after {
+  font-display: swap;
+}
 
 /* 滚动条样式 */
 div::-webkit-scrollbar {

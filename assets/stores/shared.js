@@ -9,6 +9,7 @@ export default defineStore("shared", () => {
   const isDark = ref(false); // 暗黑模式
   const isFull = ref(false); // 全屏状态
   const dialogIndex = ref(1000); // 对话框z-index基数
+  const isAppRouteLoading = ref(false); // 应用路由loading状态
 
   /**
    * 获取递增的z-index值
@@ -23,6 +24,7 @@ export default defineStore("shared", () => {
     userInfo,
     isDark,
     isFull,
+    isAppRouteLoading,
     getIndex: getNextZIndex,
   };
 });

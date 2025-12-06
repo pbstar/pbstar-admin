@@ -37,9 +37,10 @@ const themeChange = () => {
   bus.$emit("changeSharedPinia", { isDark: theme.value });
 };
 
+// 退出登录
 const toLoginOut = () => {
   request.post({ url: "/main/logout" }).then((res) => {
-    if (res.code == 200) {
+    if (res.code === 200) {
       sharedStore.userInfo = null;
       localStorage.removeItem("p_token");
       bus.$emit("changeSharedPinia", { userInfo: null });

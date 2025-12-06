@@ -11,29 +11,37 @@ import { changeTheme } from "@Passets/utils/theme";
 const sharedStore = useSharedStore();
 const router = useRouter();
 
+// 系统标题
 const title = ref(import.meta.env.PUBLIC_TITLE);
+// 用户名称
 const userName = ref(sharedStore.userInfo?.name || "管理员");
+// 用户头像
 const userImg = ref(sharedStore.userInfo?.avatar || "");
+// 主题模式
 const theme = ref(false);
 
+// 跳转个人资料
 const toUserInfo = () => {
   router.push({ path: "/admin/pUser" });
 };
 
+// 切换主题
 const themeChange = () => {
   changeTheme(theme.value);
   sharedStore.isDark = theme.value;
   bus.$emit("changeSharedPinia", { isDark: theme.value });
 };
 
+// 进入全屏
 const toFull = () => {
   sharedStore.isFull = true;
   bus.$emit("changeSharedPinia", { isFull: true });
 };
 
+// 退出登录
 const toLoginOut = () => {
   request.post({ url: "/main/logout" }).then((res) => {
-    if (res.code == 200) {
+    if (res.code === 200) {
       sharedStore.userInfo = null;
       localStorage.removeItem("p_token");
       bus.$emit("changeSharedPinia", { userInfo: null });

@@ -1,6 +1,7 @@
 <template>
-  <div class="pa_page" v-loading="isLoading">
-    <template v-if="!isLoading">
+  <div class="pa_page">
+    <Loading v-if="!isMounted" type="main" isFixed />
+    <template v-else>
       <div class="top" v-show="!isFull">
         <AdminTop v-show="!isMobile" />
         <AdminTopMobile v-show="isMobile" />
@@ -40,6 +41,7 @@ import AdminTop from "@/components/layout/top.vue";
 import AdminTopMobile from "@/components/layout/topMobile.vue";
 import AdminNav from "@/components/layout/nav.vue";
 import history from "@/components/layout/history.vue";
+import Loading from "@/components/layout/loading.vue";
 import useSharedStore from "@Passets/stores/shared";
 import { useAppsStore } from "@/stores/apps";
 import { bus } from "wujie";
@@ -49,6 +51,7 @@ const sharedStore = useSharedStore();
 const appsStore = useAppsStore();
 const router = useRouter();
 const route = useRoute();
+// 开发环境免登录配置
 const isFreeLogin =
   import.meta.env.DEV && import.meta.env.PUBLIC_FREE_LOGIN === "T";
 const isFull = computed(() => {
@@ -57,9 +60,9 @@ const isFull = computed(() => {
 const isMobile = computed(() => {
   return window.innerWidth <= 700;
 });
-// 白名单
+// 路由白名单
 const whiteList = ["/login", "/404", "/403"];
-const isLoading = ref(true);
+const isMounted = ref(false);
 onBeforeMount(async () => {
   if (isFreeLogin || whiteList.includes(route.path)) {
     return;
@@ -78,18 +81,20 @@ onBeforeMount(async () => {
       return router.push({ path: "/403" });
     }
   }
-  isLoading.value = false;
+  isMounted.value = true;
 });
+// 退出全屏
 const toUnFull = () => {
   sharedStore.isFull = false;
   bus.$emit("changeSharedPinia", { isFull: false });
 };
+// 获取用户信息
 const getUserInfo = async () => {
   try {
     const userRes = await request.post({
       url: "/main/loginByToken",
     });
-    if (userRes.code != 200 || !userRes.data) {
+    if (userRes.code !== 200 || !userRes.data) {
       ElMessage.error(userRes.msg || "获取用户信息失败");
       localStorage.removeItem("p_token");
       router.push({ path: "/login" });
@@ -110,11 +115,12 @@ const getUserInfo = async () => {
     return false;
   }
 };
+// 获取应用列表
 const getAppList = async () => {
   const res = await request.get({
     url: "/main/getMyAppList",
   });
-  if (res.code != 200 || !res.data) {
+  if (res.code !== 200 || !res.data) {
     ElMessage.error(res.msg || "获取应用列表失败");
     return false;
   }

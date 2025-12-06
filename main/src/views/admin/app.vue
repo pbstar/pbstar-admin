@@ -4,6 +4,7 @@ import { useRoute } from "vue-router";
 import { startApp, destroyApp, bus } from "wujie";
 import { InstanceofPlugin } from "wujie-polyfill";
 import useSharedStore from "@Passets/stores/shared";
+import layoutLoading from "@/components/layout/loading.vue";
 
 const route = useRoute();
 const sharedStore = useSharedStore();
@@ -11,7 +12,6 @@ const sharedStore = useSharedStore();
 // 当前应用信息
 const subappContainer = ref(null);
 const currentApp = ref(null);
-const loading = ref(false);
 
 // 子应用props
 const appProps = computed(() => ({
@@ -21,6 +21,15 @@ const appProps = computed(() => ({
 
 // 插件配置
 const plugins = [InstanceofPlugin()];
+
+// 监听子应用共享状态变更
+const handleSharedPiniaChange = (data) => {
+  Object.keys(data).forEach((key) => {
+    if (key in sharedStore) {
+      sharedStore[key] = data[key];
+    }
+  });
+};
 
 // 路由变化处理
 const handleRouteChange = () => {
@@ -44,7 +53,8 @@ const handleRouteChange = () => {
 const startSubApp = (key, url, path) => {
   const oldAppKey = currentApp.value?.key;
 
-  loading.value = true;
+  // 开启loading
+  sharedStore.isAppRouteLoading = true;
 
   // 销毁之前的实例
   if (oldAppKey) {
@@ -64,13 +74,20 @@ const startSubApp = (key, url, path) => {
       url,
       el: subappContainer.value,
       sync: true,
-      props: appProps.value,
+      props: appProps.value || {},
       plugins,
+      beforeLoad: () => {
+        // 子应用开始加载
+        sharedStore.isAppRouteLoading = true;
+      },
       afterMount: () => {
-        loading.value = false;
+        // 延迟关闭loading,确保子应用渲染完成
+        setTimeout(() => {
+          sharedStore.isAppRouteLoading = false;
+        }, 200);
       },
       loadError: (url, err) => {
-        loading.value = false;
+        sharedStore.isAppRouteLoading = false;
         // 这个回调函数会在该子应用加载失败时触发
         console.error(`子应用【${key}】的资源 ${url} 加载失败:`, err);
         subappContainer.value.innerHTML = `
@@ -81,6 +98,9 @@ const startSubApp = (key, url, path) => {
   });
 };
 
+// 绑定事件监听
+bus.$on("changeSharedPinia", handleSharedPiniaChange);
+
 // 监听路由变化
 watch(() => route.fullPath, handleRouteChange, { immediate: true });
 
@@ -90,12 +110,15 @@ onUnmounted(() => {
     destroyApp(currentApp.value.key);
   }
   currentApp.value = null;
+  // 解绑事件监听
+  bus.$off("changeSharedPinia");
 });
 </script>
 
 <template>
-  <div class="subapp-container" v-loading="loading">
+  <div class="subapp-container">
     <div ref="subappContainer" class="subapp"></div>
+    <layoutLoading />
   </div>
 </template>
 

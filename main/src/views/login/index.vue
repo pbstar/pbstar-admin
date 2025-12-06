@@ -112,32 +112,46 @@ import useSharedStore from "@Passets/stores/shared";
 const sharedStore = useSharedStore();
 const router = useRouter();
 
-let title = ref(import.meta.env.PUBLIC_TITLE);
+// 页面标题
+const title = ref(import.meta.env.PUBLIC_TITLE);
 
+// 验证码
 let code = "";
 const changeCode = (e) => {
   code = e;
 };
+
+// 登录表单
 const loginForm = ref({
   username: "",
   password: "",
   captcha: "",
 });
-const handleSubmit = async () => {
-  if (loginForm.value.username == "") {
+
+// 表单验证
+const validateForm = () => {
+  if (!loginForm.value.username) {
     ElMessage.error("请输入账号");
-    return;
+    return false;
   }
-  if (loginForm.value.password == "") {
+  if (!loginForm.value.password) {
     ElMessage.error("请输入密码");
-    return;
+    return false;
   }
-  if (loginForm.value.captcha == "") {
+  if (!loginForm.value.captcha) {
     ElMessage.error("请输入验证码");
-    return;
+    return false;
   }
-  if (loginForm.value.captcha != code) {
+  if (loginForm.value.captcha !== code) {
     ElMessage.error("验证码错误");
+    return false;
+  }
+  return true;
+};
+
+// 登录提交
+const handleSubmit = async () => {
+  if (!validateForm()) {
     return;
   }
   const res = await request.post({
@@ -147,7 +161,7 @@ const handleSubmit = async () => {
       password: loginForm.value.password,
     },
   });
-  if (res.code == 200 && res.data) {
+  if (res.code === 200 && res.data) {
     localStorage.setItem("p_token", res.data.token);
     sharedStore.userInfo = {
       id: res.data.id,

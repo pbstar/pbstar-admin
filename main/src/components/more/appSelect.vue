@@ -30,12 +30,13 @@ onBeforeMount(() => {
   const appId = appsStore.appId;
   appsTree.value = getAppsGroup(appsList.value);
   if (appId) {
-    appActive.value = appsList.value.find((item) => item.id == appId);
+    appActive.value = appsList.value.find((item) => item.id === appId);
   }
 });
 
+// 切换应用
 const toApp = async (app) => {
-  if (app.id == appActive.value?.id) return;
+  if (app.id === appActive.value?.id) return;
   isLoading.value = true;
   const isOk = await appsStore.setAppId({
     id: app.id,
@@ -55,8 +56,8 @@ const toApp = async (app) => {
 watch(
   () => appsStore.appId,
   (newVal) => {
-    if (newVal && newVal != appActive.value?.id) {
-      const newApp = appsList.value.find((item) => item.id == newVal);
+    if (newVal && newVal !== appActive.value?.id) {
+      const newApp = appsList.value.find((item) => item.id === newVal);
       appActive.value = newApp || {};
     } else {
       appActive.value = {};
@@ -86,7 +87,7 @@ watch(
           <div class="children" v-if="item.children">
             <div
               class="child"
-              :class="{ active: child.id == appActive?.id }"
+              :class="{ active: child.id === appActive?.id }"
               v-for="(child, indexs) in item.children"
               :key="indexs + 's'"
               @click="toApp(child)"

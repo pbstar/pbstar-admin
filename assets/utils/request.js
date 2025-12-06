@@ -32,7 +32,6 @@ axios.interceptors.response.use(
  * @returns {Promise} 请求结果
  */
 const request = (config) => {
-  const token = localStorage.getItem("token");
   const baseURL = config.url.startsWith("http") ? "" : "/api";
 
   const requestConfig = {
@@ -40,7 +39,6 @@ const request = (config) => {
     timeout: 6000,
     ...config,
     headers: {
-      ...(token && { token }),
       ...config.headers,
     },
   };
