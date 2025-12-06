@@ -15,7 +15,7 @@
         <img src="https://img.shields.io/badge/🚀_在线演示-FF5722?style=for-the-badge" alt="在线演示">
     </a>
     <a href="https://github.com/pbstar/pbstar-admin">
-        <img src="https://img.shields.io/badge/💬_WeChat-P24612582-07C160?style=for-the-badge" alt="WeChat">
+        <img src="https://img.shields.io/badge/💬_微信-P24612582-07C160?style=for-the-badge" alt="WeChat">
     </a>
 </p>
 
@@ -29,10 +29,8 @@
 
 ## 📋 环境要求
 
-| 环境    | 版本要求                 |
-| ------- | ------------------------ |
-| Node.js | >= 18.12.0 (推荐 22 LTS) |
-| pnpm    | >= 9.15.0                |
+- node >= 18.12.0（推荐使用 Node.js 22 LTS）
+- pnpm >= 9.15.0
 
 ## 🚀 快速开始
 
