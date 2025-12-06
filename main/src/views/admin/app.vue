@@ -54,7 +54,7 @@ const startSubApp = (key, url, path) => {
   const oldAppKey = currentApp.value?.key;
 
   // 开启loading
-  sharedStore.isRouteLoading = true;
+  sharedStore.isAppRouteLoading = true;
 
   // 销毁之前的实例
   if (oldAppKey) {
@@ -78,16 +78,16 @@ const startSubApp = (key, url, path) => {
       plugins,
       beforeLoad: () => {
         // 子应用开始加载
-        sharedStore.isRouteLoading = true;
+        sharedStore.isAppRouteLoading = true;
       },
       afterMount: () => {
         // 延迟关闭loading,确保子应用渲染完成
         setTimeout(() => {
-          sharedStore.isRouteLoading = false;
+          sharedStore.isAppRouteLoading = false;
         }, 200);
       },
       loadError: (url, err) => {
-        sharedStore.isRouteLoading = false;
+        sharedStore.isAppRouteLoading = false;
         // 这个回调函数会在该子应用加载失败时触发
         console.error(`子应用【${key}】的资源 ${url} 加载失败:`, err);
         subappContainer.value.innerHTML = `

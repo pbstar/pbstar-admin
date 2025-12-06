@@ -1,6 +1,6 @@
 <template>
   <div class="pa_page">
-    <Loading v-if="!isMounted" :isRouteLoading="false" isFixed />
+    <Loading v-if="!isMounted" type="main" isFixed />
     <template v-else>
       <div class="top" v-show="!isFull">
         <AdminTop v-show="!isMobile" />

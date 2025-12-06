@@ -60,14 +60,16 @@ export function useMicroApp() {
   // 路由守卫 - 控制loading状态
   router.beforeEach((to, from, next) => {
     // 通过bus向主应用同步loading状态
-    window.$wujie?.bus.$emit("changeSharedPinia", { isRouteLoading: true });
+    window.$wujie?.bus.$emit("changeSharedPinia", { isAppRouteLoading: true });
     next();
   });
 
   router.afterEach(() => {
     // 延迟关闭loading,确保页面渲染完成
     setTimeout(() => {
-      window.$wujie?.bus.$emit("changeSharedPinia", { isRouteLoading: false });
+      window.$wujie?.bus.$emit("changeSharedPinia", {
+        isAppRouteLoading: false,
+      });
     }, 200);
   });
 

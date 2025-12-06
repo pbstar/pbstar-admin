@@ -12,9 +12,9 @@ import useSharedStore from "@Passets/stores/shared";
 
 const sharedStore = useSharedStore();
 const props = defineProps({
-  isRouteLoading: {
-    type: Boolean,
-    default: true,
+  type: {
+    type: String,
+    default: "appRoute",
   },
   isFixed: {
     type: Boolean,
@@ -22,8 +22,8 @@ const props = defineProps({
   },
 });
 const visible = computed(() => {
-  if (props.isRouteLoading) {
-    return sharedStore.isRouteLoading;
+  if (props.type === "appRoute") {
+    return sharedStore.isAppRouteLoading;
   }
   return true;
 });
