@@ -1,6 +1,6 @@
 <template>
   <div class="pa_page">
-    <Loading v-if="!isMounted" type="main" isFixed />
+    <LayoutLoading v-if="!isMounted" type="main" isFixed />
     <template v-else>
       <div class="top" v-show="!isFull">
         <AdminTop v-show="!isMobile" />
@@ -41,7 +41,7 @@ import AdminTop from "@/components/layout/top.vue";
 import AdminTopMobile from "@/components/layout/topMobile.vue";
 import AdminNav from "@/components/layout/nav.vue";
 import history from "@/components/layout/history.vue";
-import Loading from "@/components/layout/loading.vue";
+import LayoutLoading from "@/components/layout/loading.vue";
 import useSharedStore from "@Passets/stores/shared";
 import { useAppsStore } from "@/stores/apps";
 import { bus } from "wujie";
