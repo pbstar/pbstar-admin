@@ -48,7 +48,7 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
-import { PIcon, PVerificationCode } from "@Pcomponents";
+import { pIcon, pVerificationCode } from "@Pcomponents";
 import request from "@Passets/utils/request";
 import useSharedStore from "@Passets/stores/shared";
 import LoginLb from "./components/login-lb.vue";

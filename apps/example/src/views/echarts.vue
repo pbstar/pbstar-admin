@@ -27,7 +27,7 @@
 </template>
 <script setup>
 import { ref, onMounted } from "vue";
-import { PTitle, PCollapse } from "@Pcomponents";
+import { pTitle, pCollapse } from "@Pcomponents";
 import * as echarts from "echarts";
 const i1 = ref(null);
 const i2 = ref(null);

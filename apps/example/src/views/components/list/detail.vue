@@ -1,8 +1,8 @@
 <script setup>
-import { ref, onBeforeMount, onMounted } from "vue";
+import { ref, onBeforeMount } from "vue";
 import { ElMessage } from "element-plus";
 import request from "@Passets/utils/request";
-import { PCollapse, PItem } from "@Pcomponents";
+import { pCollapse, pItem } from "@Pcomponents";
 import hobbyTable from "./hobbyTable.vue";
 import eduTable from "./eduTable.vue";
 

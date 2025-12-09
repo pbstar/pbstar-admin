@@ -1,5 +1,5 @@
 <script setup>
-import { PIcon } from "@Pcomponents";
+import { pIcon } from "@Pcomponents";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useAppsStore } from "@/stores/apps";

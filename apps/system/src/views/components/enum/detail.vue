@@ -2,7 +2,7 @@
 import { ref, onBeforeMount } from "vue";
 import { ElMessage } from "element-plus";
 import request from "@Passets/utils/request";
-import { PCollapse, PItem } from "@Pcomponents";
+import { pCollapse, pItem } from "@Pcomponents";
 import EnumTable from "./enumTable.vue";
 
 const props = defineProps({

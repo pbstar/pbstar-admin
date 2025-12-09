@@ -3,14 +3,14 @@ import { ref, onBeforeMount } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import request from "@Passets/utils/request";
 import {
-  PTable,
-  PSearch,
-  PTitle,
-  PDialog,
-  PTwinBox,
-  PIcon,
-  PButton,
-  PItem,
+  pTable,
+  pSearch,
+  pTitle,
+  pDialog,
+  pTwinBox,
+  pIcon,
+  pButton,
+  pItem,
 } from "@Pcomponents";
 import Detail from "./components/nav/detail.vue";
 import { structure } from "@Passets/utils/array";
