@@ -80,9 +80,9 @@ const startSubApp = (appKey, appUrl, subPath) => {
       loadError: (url, err) => {
         sharedStore.isAppRouteLoading = false;
         // 这个回调函数会在该子应用加载失败时触发
-        console.error(`子应用【${key}】的资源 ${url} 加载失败:`, err);
+        console.error(`子应用【${appKey}】的资源 ${url} 加载失败:`, err);
         subappContainer.value.innerHTML = `
-          <div style="text-align: center; padding: 50px;">子应用【${key}】加载失败</div>
+          <div style="text-align: center; padding: 50px;">子应用【${appKey}】加载失败</div>
         `;
       },
     });
