@@ -2,7 +2,7 @@
 import { ref, onBeforeMount, onMounted } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import request from "@Passets/utils/request";
-import { PTable, PSearch, PTitle, PDialog, PButton, PItem } from "@Pcomponents";
+import { pTable, pSearch, pTitle, pDialog, pButton, pItem } from "@Pcomponents";
 import Detail from "./components/user/detail.vue";
 
 const searchValue = ref({});

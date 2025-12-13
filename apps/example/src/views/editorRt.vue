@@ -24,7 +24,7 @@
 import { onBeforeUnmount, ref, shallowRef } from "vue";
 import { Editor, Toolbar } from "@wangeditor-next/editor-for-vue";
 import "@wangeditor-next/editor/dist/css/style.css"; // 引入 css
-import { PTitle } from "@Pcomponents";
+import { pTitle } from "@Pcomponents";
 const editorRef = shallowRef();
 
 // 内容 HTML

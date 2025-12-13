@@ -1,8 +1,8 @@
 <script setup>
 import { ref, onBeforeMount } from "vue";
-import { ElMessage, ElMessageBox } from "element-plus";
+import { ElMessage } from "element-plus";
 import request from "@Passets/utils/request";
-import { PCollapse, PItem, PIconSelect } from "@Pcomponents";
+import { pCollapse, pItem, pIconSelect } from "@Pcomponents";
 import btnTable from "./btnTable.vue";
 
 const props = defineProps({
@@ -157,7 +157,7 @@ defineExpose({
             label: '菜单图标',
           }"
         >
-          <PIconSelect title="选择图标" v-model="detailInfo.icon" />
+          <p-iconSelect title="选择图标" v-model="detailInfo.icon" />
         </p-item>
         <p-item
           class="dtItem"

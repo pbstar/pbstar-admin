@@ -54,7 +54,7 @@ import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
 import request from "@Passets/utils/request";
 import useSharedStore from "@Passets/stores/shared";
-import { PTitle, PItem } from "@Pcomponents";
+import { pTitle, pItem } from "@Pcomponents";
 
 const sharedStore = useSharedStore();
 const detailInfo = ref({});

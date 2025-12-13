@@ -90,7 +90,7 @@
 <script setup>
 import { ref, computed, watch } from "vue";
 import useSharedStore from "@Passets/stores/shared";
-import { PTitle } from "@Pcomponents";
+import { pTitle } from "@Pcomponents";
 import DialogHeader from "./DialogHeader.vue";
 
 const sharedStore = useSharedStore();

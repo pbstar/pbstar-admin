@@ -1,8 +1,8 @@
 <script setup>
 import { ref, onBeforeMount } from "vue";
-import { ElMessage, ElMessageBox } from "element-plus";
+import { ElMessage } from "element-plus";
 import request from "@Passets/utils/request";
-import { PCollapse, PItem } from "@Pcomponents";
+import { pCollapse, pItem } from "@Pcomponents";
 
 const props = defineProps({
   type: {

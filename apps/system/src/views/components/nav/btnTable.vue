@@ -2,7 +2,7 @@
 import { ref, watch } from "vue";
 import { cloneDeep } from "es-toolkit/object";
 import { ElMessageBox } from "element-plus";
-import { PTable, PDialog, PButton, PItem } from "@Pcomponents";
+import { pTable, pDialog, pButton, pItem } from "@Pcomponents";
 
 const props = defineProps({
   type: {

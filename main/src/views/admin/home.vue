@@ -1,5 +1,5 @@
 <script setup>
-import { PIcon } from "@Pcomponents";
+import { pIcon } from "@Pcomponents";
 
 // 打开外部链接
 const toPath = (path) => {
@@ -22,14 +22,14 @@ const toPath = (path) => {
         size="large"
         @click="toPath('http://pbstar-admin-docs.pbstar.cn')"
       >
-        <PIcon name="el-icon-document" class="icon" />
+        <p-icon name="el-icon-document" class="icon" />
         官方文档
       </el-button>
       <el-button
         size="large"
         @click="toPath('https://github.com/pbstar/pbstar-admin')"
       >
-        <PIcon name="el-icon-star" class="icon" />
+        <p-icon name="el-icon-star" class="icon" />
         GitHub
       </el-button>
     </div>

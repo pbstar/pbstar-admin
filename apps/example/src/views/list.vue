@@ -119,13 +119,13 @@ import { ref, onMounted } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import request from "@Passets/utils/request";
 import {
-  PTable,
-  PSearch,
-  PTitle,
-  PDialog,
-  PButton,
-  PIcon,
-  PItem,
+  pTable,
+  pSearch,
+  pTitle,
+  pDialog,
+  pButton,
+  pIcon,
+  pItem,
 } from "@Pcomponents";
 import { useEnumStore } from "@Passets/stores/enum";
 import Detail from "./components/list/detail.vue";

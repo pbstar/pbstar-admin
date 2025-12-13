@@ -23,7 +23,7 @@ import useSharedStore from "@Passets/stores/shared";
 
 // 权限验证
 const sharedStore = useSharedStore();
-const userButtons = computed(() => sharedStore.userInfo?.btns || []);
+const userButtons = computed(() => sharedStore.userInfo?.btns);
 
 // 组件属性
 const props = defineProps({
@@ -42,6 +42,9 @@ const props = defineProps({
 // 权限验证
 const hasPermission = computed(() => {
   if (!props.btnkey) return true;
-  return userButtons.value.includes(props.btnkey);
+  if (!userButtons.value) return false;
+  return (
+    userButtons.value === "all" || userButtons.value.includes(props.btnkey)
+  );
 });
 </script>

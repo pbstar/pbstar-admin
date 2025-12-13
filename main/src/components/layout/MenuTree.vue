@@ -39,7 +39,7 @@
 </template>
 
 <script setup>
-import { PIcon } from "@Pcomponents";
+import { pIcon } from "@Pcomponents";
 
 const props = defineProps({
   menuList: {
