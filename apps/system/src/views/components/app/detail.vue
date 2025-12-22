@@ -105,9 +105,6 @@ defineExpose({
 </template>
 
 <style scoped lang="scss">
-.detail {
-  padding: 0 10px;
-}
 .form {
   display: flex;
   flex-wrap: wrap;

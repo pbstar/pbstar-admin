@@ -34,7 +34,11 @@ const epIcon = computed(() => {
   const iconName = props.name
     .replace("el-icon", "")
     .replace(/-(\w)/g, (_, c) => c.toUpperCase());
-  return ElIcons[iconName] || null;
+  if (!iconName || !ElIcons[iconName]) {
+    console.warn(`图标 ${iconName} 不存在`);
+    return null;
+  }
+  return ElIcons[iconName];
 });
 
 const iconStyle = computed(() => {
