@@ -179,7 +179,7 @@ defineExpose({
           <el-input
             v-model="detailInfo.remark"
             type="textarea"
-            rows="3"
+            :rows="3"
             placeholder="请输入备注"
           />
         </p-item>

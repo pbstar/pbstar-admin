@@ -92,7 +92,7 @@ defineExpose({
           <el-input
             v-model="detailInfo.param"
             type="textarea"
-            rows="3"
+            :rows="3"
             placeholder="请输入请求参数"
           />
         </p-item>

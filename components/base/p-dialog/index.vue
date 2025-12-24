@@ -6,6 +6,7 @@
     append-to-body
     :show-close="false"
     class="p-dialog-custom"
+    destroy-on-close
     @update:model-value="emit('update:modelValue', $event)"
   >
     <template #header>

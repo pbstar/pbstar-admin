@@ -10,9 +10,7 @@ html.dark {
 }
 
 /* 表单元素高度统一 */
-.el-button:not(.is-link),
-.el-select,
-.el-input {
+.el-button:not(.is-link) {
   height: 30px;
   line-height: 30px;
 }
