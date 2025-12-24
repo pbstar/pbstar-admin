@@ -144,16 +144,17 @@ watch(
 
     <p-dialog type="box" title="爱好详情页" v-model="isDetail">
       <div class="dialog-form">
-        <p-item
-          class="item"
-          :config="{ label: '爱好', type: 'input' }"
-          v-model="detailInfo.hobby"
-        />
-        <p-item
-          class="item"
-          :config="{ label: '爱好描述', type: 'textarea' }"
-          v-model="detailInfo.hobbyDesc"
-        />
+        <p-item class="item" label="爱好">
+          <el-input v-model="detailInfo.hobby" placeholder="请输入爱好" />
+        </p-item>
+        <p-item class="item" label="爱好描述">
+          <el-input
+            v-model="detailInfo.hobbyDesc"
+            type="textarea"
+            placeholder="请输入爱好描述"
+            :rows="3"
+          />
+        </p-item>
       </div>
       <template #footer>
         <p-button type="primary" @click="handleSave()"> 保存 </p-button>

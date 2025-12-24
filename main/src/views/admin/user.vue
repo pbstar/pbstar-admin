@@ -4,42 +4,24 @@
     <div class="content">
       <div class="info">
         <div class="form">
-          <p-item
-            class="item"
-            :config="{
-              label: '姓名',
-              type: 'input',
-              isRequired: true,
-            }"
-            v-model="detailInfo.name"
-          />
-          <p-item
-            class="item"
-            :config="{
-              label: '头像',
-              type: 'input',
-              placeholder: '请输入头像地址',
-            }"
-            v-model="detailInfo.avatar"
-          />
-          <p-item
-            class="item"
-            :config="{
-              label: '账号',
-              type: 'input',
-              isRequired: true,
-            }"
-            v-model="detailInfo.username"
-          />
-          <p-item
-            class="item"
-            :config="{
-              label: '密码',
-              type: 'input',
-              placeholder: '如需修改密码，请输入新密码',
-            }"
-            v-model="detailInfo.password"
-          />
+          <p-item class="item" label="姓名" required>
+            <el-input v-model="detailInfo.name" placeholder="请输入姓名" />
+          </p-item>
+          <p-item class="item" label="头像">
+            <el-input
+              v-model="detailInfo.avatar"
+              placeholder="请输入头像地址"
+            />
+          </p-item>
+          <p-item class="item" label="账号" required>
+            <el-input v-model="detailInfo.username" placeholder="请输入账号" />
+          </p-item>
+          <p-item class="item" label="密码">
+            <el-input
+              v-model="detailInfo.password"
+              placeholder="如需修改密码，请输入新密码"
+            />
+          </p-item>
         </div>
       </div>
       <div class="btn">

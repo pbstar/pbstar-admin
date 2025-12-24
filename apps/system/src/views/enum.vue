@@ -120,16 +120,12 @@ const handleBack = () => {
     <p-title :list="['枚举管理']"></p-title>
 
     <p-search style="margin-top: 10px" @search="toSearch" @reset="toReset">
-      <p-item
-        class="item"
-        :config="{ label: '枚举名称', type: 'input' }"
-        v-model="searchValue.name"
-      />
-      <p-item
-        class="item"
-        :config="{ label: '枚举key', type: 'input' }"
-        v-model="searchValue.key"
-      />
+      <p-item class="item" label="枚举名称">
+        <el-input v-model="searchValue.name" placeholder="请输入枚举名称" />
+      </p-item>
+      <p-item class="item" label="枚举key">
+        <el-input v-model="searchValue.key" placeholder="请输入枚举key" />
+      </p-item>
     </p-search>
 
     <p-table

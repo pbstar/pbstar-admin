@@ -6,7 +6,6 @@ import { pTable, pSearch, pTitle, pDialog, pButton, pItem } from "@Pcomponents";
 import Detail from "./components/user/detail.vue";
 
 const searchValue = ref({});
-const tableRef = ref(null);
 const tableData = ref([]);
 const roleOptions = ref([]);
 const pagination = ref({
@@ -149,27 +148,27 @@ const handleBack = () => {
     <p-title :list="['用户管理']"></p-title>
 
     <p-search style="margin-top: 10px" @search="toSearch" @reset="toReset">
-      <p-item
-        class="item"
-        :config="{ label: '姓名', type: 'input' }"
-        v-model="searchValue.name"
-      />
-      <p-item
-        class="item"
-        :config="{ label: '账号', type: 'input' }"
-        v-model="searchValue.username"
-      />
-      <p-item
-        class="item"
-        :config="{ label: '角色', type: 'select', options: roleOptions }"
-        v-model="searchValue.role"
-      />
+      <p-item class="item" label="姓名">
+        <el-input v-model="searchValue.name" placeholder="请输入姓名" />
+      </p-item>
+      <p-item class="item" label="账号">
+        <el-input v-model="searchValue.username" placeholder="请输入账号" />
+      </p-item>
+      <p-item class="item" label="角色">
+        <el-select v-model="searchValue.role" placeholder="请选择角色">
+          <el-option
+            v-for="item in roleOptions"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
+      </p-item>
     </p-search>
 
     <p-table
       style="margin-top: 10px"
       :data="tableData"
-      ref="tableRef"
       :pagination="pagination"
       @paginationChange="tablePaginationChange"
     >

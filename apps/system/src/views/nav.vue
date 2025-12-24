@@ -181,16 +181,12 @@ const handleNodeClick = (data) => {
       </template>
       <template #plan2>
         <p-search style="margin-top: 10px" @search="toSearch" @reset="toReset">
-          <p-item
-            class="item"
-            :config="{ label: '菜单名称', type: 'input' }"
-            v-model="searchValue.name"
-          />
-          <p-item
-            class="item"
-            :config="{ label: '菜单链接', type: 'input' }"
-            v-model="searchValue.url"
-          />
+          <p-item class="item" label="菜单名称">
+            <el-input v-model="searchValue.name" placeholder="请输入菜单名称" />
+          </p-item>
+          <p-item class="item" label="菜单链接">
+            <el-input v-model="searchValue.url" placeholder="请输入菜单链接" />
+          </p-item>
         </p-search>
 
         <p-table style="margin-top: 10px" :data="tableData">

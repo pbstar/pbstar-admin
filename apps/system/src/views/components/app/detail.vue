@@ -64,39 +64,33 @@ defineExpose({
       <div class="form">
         <p-item
           class="item"
-          :config="{
-            label: '应用名称',
-            type: 'input',
-            isText: detailType === 'view',
-          }"
-          v-model="detailInfo.name"
-        />
-        <p-item
-          class="item"
-          :config="{
-            label: '应用分组',
-            type: 'input',
-            isText: detailType === 'view',
-          }"
-          v-model="detailInfo.group"
-        />
-        <p-item
-          class="item"
-          :config="{
-            label: '应用key',
-            type: 'select',
-            options: appOptions,
-            isText: detailType === 'view',
-          }"
-          v-model="detailInfo.key"
-        />
-        <p-item
-          class="item"
-          :config="{
-            label: '选择图标',
-            type: 'slot',
-          }"
+          label="应用名称"
+          :text="detailType === 'view' ? detailInfo.name : ''"
         >
+          <el-input v-model="detailInfo.name" placeholder="请输入应用名称" />
+        </p-item>
+        <p-item
+          class="item"
+          label="应用分组"
+          :text="detailType === 'view' ? detailInfo.group : ''"
+        >
+          <el-input v-model="detailInfo.group" placeholder="请输入应用分组" />
+        </p-item>
+        <p-item
+          class="item"
+          label="应用key"
+          :text="detailType === 'view' ? detailInfo.key : ''"
+        >
+          <el-select v-model="detailInfo.key" placeholder="请选择应用key">
+            <el-option
+              v-for="item in appOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+        </p-item>
+        <p-item class="item" label="选择图标">
           <p-iconSelect title="选择图标" v-model="detailInfo.icon" />
         </p-item>
       </div>

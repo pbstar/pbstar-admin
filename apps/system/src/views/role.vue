@@ -120,16 +120,12 @@ const handleBack = () => {
     <p-title :list="['角色管理']"></p-title>
 
     <p-search style="margin-top: 10px" @search="toSearch" @reset="toReset">
-      <p-item
-        class="item"
-        :config="{ label: '角色名称', type: 'input' }"
-        v-model="searchValue.name"
-      />
-      <p-item
-        class="item"
-        :config="{ label: '角色Key', type: 'input' }"
-        v-model="searchValue.key"
-      />
+      <p-item class="item" label="角色名称">
+        <el-input v-model="searchValue.name" placeholder="请输入角色名称" />
+      </p-item>
+      <p-item class="item" label="角色Key">
+        <el-input v-model="searchValue.key" placeholder="请输入角色Key" />
+      </p-item>
     </p-search>
 
     <p-table

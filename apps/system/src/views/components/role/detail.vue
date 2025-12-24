@@ -109,55 +109,53 @@ defineExpose({
       <div class="items">
         <p-item
           class="dtItem"
-          :config="{
-            isText: detailType == 'view',
-            type: 'input',
-            label: '角色名称',
-          }"
-          v-model="detailInfo.name"
-        />
+          label="角色名称"
+          :text="detailType === 'view' ? detailInfo.name : ''"
+        >
+          <el-input v-model="detailInfo.name" placeholder="请输入角色名称" />
+        </p-item>
         <p-item
           class="dtItem"
-          :config="{
-            isText: detailType == 'view',
-            type: 'input',
-            label: '角色Key',
-            isDisabled: detailInfo.id == '1',
-          }"
-          v-model="detailInfo.key"
-        />
+          label="角色Key"
+          :text="detailType === 'view' ? detailInfo.key : ''"
+        >
+          <el-input
+            v-model="detailInfo.key"
+            placeholder="请输入角色Key"
+            :disabled="detailInfo.id == '1'"
+          />
+        </p-item>
         <p-item
           class="dtItem"
-          :config="{
-            isText: detailType == 'view',
-            type: 'selectTree',
-            label: '菜单权限',
-            options: navList,
-            isDisabled: detailInfo.id == '1',
-            more: {
-              showCheckbox: true,
-              multiple: true,
-              checkStrictly: false,
-            },
-          }"
-          v-model="detailInfo.navs"
-        />
+          label="菜单权限"
+          :text="detailType === 'view' ? detailInfo.navs : ''"
+        >
+          <el-tree-select
+            v-model="detailInfo.navs"
+            :data="navList"
+            :props="{ value: 'value', label: 'label', children: 'children' }"
+            show-checkbox
+            multiple
+            :check-strictly="false"
+            placeholder="请选择菜单权限"
+            :disabled="detailInfo.id == '1'"
+          />
+        </p-item>
         <p-item
           class="dtItem"
-          :config="{
-            isText: detailType == 'view',
-            type: 'selectTree',
-            label: '按钮权限',
-            options: btnList,
-            isDisabled: detailInfo.id == '1',
-            more: {
-              showCheckbox: true,
-              multiple: true,
-              checkStrictly: false,
-            },
-          }"
-          v-model="detailInfo.btns"
-        />
+          label="按钮权限"
+          :text="detailType === 'view' ? detailInfo.btns : ''"
+        >
+          <el-tree-select
+            v-model="detailInfo.btns"
+            :data="btnList"
+            show-checkbox
+            multiple
+            :check-strictly="false"
+            placeholder="请选择按钮权限"
+            :disabled="detailInfo.id == '1'"
+          />
+        </p-item>
       </div>
     </p-collapse>
   </div>

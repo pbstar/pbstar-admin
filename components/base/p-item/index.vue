@@ -1,125 +1,52 @@
 <script setup>
-import { ref, watch, computed } from "vue";
-import pInput from "./input.vue";
-import pTextarea from "./textarea.vue";
-import pInputNumber from "./inputNumber.vue";
-import pSelect from "./select.vue";
-import pSelectMultiple from "./selectMultiple.vue";
-import pSelectTree from "./selectTree.vue";
-import pRadio from "./radio.vue";
-import pCheckbox from "./checkbox.vue";
-import pDate from "./date.vue";
-import pDateRange from "./dateRange.vue";
-import pDateTime from "./dateTime.vue";
-import pDateTimeRange from "./dateTimeRange.vue";
-
-// 默认配置
-const defaultConfig = {
-  key: "",
-  label: "",
-  type: "input",
-  placeholder: "",
-  isText: false,
-  isRequired: false,
-  isDisabled: false,
-  options: [],
-  enumKey: "",
-  more: {},
-};
-
-// 组件映射
-const componentMap = {
-  input: pInput,
-  textarea: pTextarea,
-  inputNumber: pInputNumber,
-  select: pSelect,
-  selectMultiple: pSelectMultiple,
-  selectTree: pSelectTree,
-  radio: pRadio,
-  checkbox: pCheckbox,
-  date: pDate,
-  dateRange: pDateRange,
-  dateTime: pDateTime,
-  dateTimeRange: pDateTimeRange,
-};
-
-// Props 定义
 const props = defineProps({
-  config: {
-    type: Object,
-    default: () => ({}),
-  },
-  modelValue: {
-    type: [Number, String, Boolean, Array, Object],
+  label: {
+    type: String,
     default: "",
   },
-});
-
-// Emits 定义
-const emit = defineEmits(["change", "update:modelValue"]);
-
-// 状态管理
-const config = ref({ ...defaultConfig });
-const value = ref(props.modelValue);
-
-// 监听属性变化
-watch(
-  () => props.modelValue,
-  (val) => (value.value = val),
-);
-watch(
-  () => props.config,
-  (val) => {
-    config.value = { ...defaultConfig, ...val };
+  // 有text时，内容区域显示text
+  text: {
+    type: String,
+    default: "",
   },
-  { immediate: true, deep: true },
-);
-
-// 事件处理
-const handleChange = (val) => {
-  emit("update:modelValue", value.value);
-  emit("change", val);
-};
-
-// 计算属性
-const currentComponent = computed(
-  () => componentMap[config.value.type] || pInput,
-);
+  isRequired: {
+    type: Boolean,
+    default: false,
+  },
+  // text是否换行
+  isTextWrap: {
+    type: Boolean,
+    default: false,
+  },
+});
 </script>
 
 <template>
   <div class="item">
     <!-- 标签区域 -->
-    <div v-if="config.label" class="label">
-      <span
-        v-show="config.isRequired && !config.isText && !config.isDisabled"
-        class="required"
-        >*</span
-      >
+    <div v-if="props.label" class="label">
+      <span v-show="props.isRequired" class="required">*</span>
       <el-tooltip
-        v-if="config.label.length > 8"
+        v-if="props.label.length > 8"
         effect="dark"
-        :content="config.label"
+        :content="props.label"
         placement="bottom"
       >
-        <span class="label-text">{{ config.label }}</span>
+        <span class="label-text">{{ props.label }}</span>
       </el-tooltip>
-
-      <span v-else class="label-text">{{ config.label }}</span>
+      <span v-else class="label-text">{{ props.label }}</span>
     </div>
-
     <!-- 内容区域 -->
     <div class="value">
       <div class="val-box">
-        <div class="input">
-          <slot :config="config" :modelValue="value">
-            <component
-              :is="currentComponent"
-              v-model="value"
-              :config="config"
-              @change="handleChange"
-            />
-          </slot>
+        <div class="input" v-if="!props.text">
+          <slot></slot>
+        </div>
+        <div
+          v-if="props.text"
+          :class="props.isTextWrap ? 'val-text-wrap' : 'val-text'"
+        >
+          {{ props.text }}
         </div>
         <div v-if="$slots.right" class="right-text">
           <slot name="right" />
@@ -178,6 +105,34 @@ const currentComponent = computed(
     .input {
       max-width: 100%;
       flex: 1;
+    }
+
+    .val-text {
+      max-width: 100%;
+      flex: 1;
+      height: 30px;
+      padding: 0 6px;
+      line-height: 30px;
+      color: var(--c-text);
+      border-bottom: 1px solid var(--c-border);
+      overflow-x: auto;
+      overflow-y: hidden;
+      white-space: nowrap;
+      ::-webkit-scrollbar {
+        width: 2px;
+        height: 2px;
+      }
+    }
+
+    .val-text-wrap {
+      max-width: 100%;
+      flex: 1;
+      height: auto;
+      padding: 5px 6px;
+      line-height: 20px;
+      color: var(--c-text);
+      border-bottom: 1px solid var(--c-border);
+      word-break: break-word;
     }
 
     .right-text {

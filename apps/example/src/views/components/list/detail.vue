@@ -3,8 +3,11 @@ import { ref, onBeforeMount } from "vue";
 import { ElMessage } from "element-plus";
 import request from "@Passets/utils/request";
 import { pCollapse, pItem } from "@Pcomponents";
+import { useEnumStore } from "@Passets/stores/enum";
 import hobbyTable from "./hobbyTable.vue";
 import eduTable from "./eduTable.vue";
+
+const enumStore = useEnumStore();
 
 const props = defineProps({
   type: {
@@ -48,6 +51,12 @@ const getFormValue = () => {
   return detailInfo.value;
 };
 
+// 获取性别标签
+const getSexLabel = (value) => {
+  const sexMap = { 1: "男", 2: "女" };
+  return sexMap[value] || value;
+};
+
 defineExpose({
   getFormValue,
 });
@@ -59,61 +68,70 @@ defineExpose({
       <div class="form">
         <p-item
           class="item"
-          :config="{
-            label: '姓名',
-            type: 'input',
-            isRequired: true,
-            isText: detailType === 'view',
-          }"
-          v-model="detailInfo.name"
-        />
+          label="姓名"
+          isRequired
+          :text="detailType === 'view' ? detailInfo.name : ''"
+        >
+          <el-input v-model="detailInfo.name" placeholder="请输入姓名" />
+        </p-item>
         <p-item
           class="item"
-          :config="{
-            label: '年龄',
-            type: 'inputNumber',
-            isRequired: true,
-            isText: detailType === 'view',
-          }"
-          v-model="detailInfo.age"
-        />
+          label="年龄"
+          isRequired
+          :text="detailType === 'view' ? String(detailInfo.age) : ''"
+        >
+          <el-input-number v-model="detailInfo.age" placeholder="请输入年龄" />
+        </p-item>
         <p-item
           class="item"
-          :config="{
-            label: '性别',
-            type: 'select',
-            isRequired: true,
-            options: [
-              { label: '男', value: '1' },
-              { label: '女', value: '2' },
-            ],
-            isText: detailType === 'view',
-          }"
-          v-model="detailInfo.sex"
-        />
+          label="性别"
+          isRequired
+          :text="detailType === 'view' ? getSexLabel(detailInfo.sex) : ''"
+        >
+          <el-select v-model="detailInfo.sex" placeholder="请选择性别">
+            <el-option label="男" value="1" />
+            <el-option label="女" value="2" />
+          </el-select>
+        </p-item>
         <p-item
           class="item"
-          :config="{
-            label: '民族',
-            type: 'select',
-            enumKey: 'ethnic',
-            isText: detailType === 'view',
-          }"
-          v-model="detailInfo.ethnic"
-        />
+          label="民族"
+          :text="
+            detailType === 'view'
+              ? enumStore.getEnumLabel('ethnic', detailInfo.ethnic)
+              : ''
+          "
+        >
+          <el-select v-model="detailInfo.ethnic" placeholder="请选择民族">
+            <el-option
+              v-for="item in enumStore.getEnumOptions('ethnic')"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+        </p-item>
         <p-item
           class="item"
-          :config="{
-            label: '是否健康',
-            type: 'select',
-            enumKey: 'boolean',
-            isText: detailType === 'view',
-          }"
-          v-model="detailInfo.isHealthy"
-        />
-        <div class="item full">
+          label="是否健康"
+          :text="
+            detailType === 'view'
+              ? enumStore.getEnumLabel('boolean', detailInfo.isHealthy)
+              : ''
+          "
+        >
+          <el-select v-model="detailInfo.isHealthy" placeholder="请选择">
+            <el-option
+              v-for="item in enumStore.getEnumOptions('boolean')"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+        </p-item>
+        <p-item class="item full" label="爱好">
           <hobbyTable :type="detailType" v-model="detailInfo.hobbyList" />
-        </div>
+        </p-item>
       </div>
     </p-collapse>
     <p-collapse title="教育背景">

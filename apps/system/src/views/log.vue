@@ -116,19 +116,19 @@ const handleBack = () => {
     <p-title :list="['操作日志']"></p-title>
 
     <p-search style="margin-top: 10px" @search="toSearch" @reset="toReset">
-      <p-item
-        class="item"
-        :config="{ label: '用户名', type: 'input' }"
-        v-model="searchValue.userName"
-      />
-      <p-item
-        class="item"
-        :config="{
-          label: '操作时间',
-          type: 'dateRange',
-        }"
-        v-model="searchValue.createTime"
-      />
+      <p-item class="item" label="用户名">
+        <el-input v-model="searchValue.userName" placeholder="请输入用户名" />
+      </p-item>
+      <p-item class="item" label="操作时间">
+        <el-date-picker
+          v-model="searchValue.createTime"
+          type="daterange"
+          range-separator="至"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          value-format="YYYY-MM-DD"
+        />
+      </p-item>
     </p-search>
 
     <p-table

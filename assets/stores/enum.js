@@ -50,9 +50,16 @@ export const useEnumStore = defineStore("enum", () => {
     return enumItem ? enumItem.label : value;
   };
 
+  // 获取枚举选项
+  const getEnumOptions = (enumKey) => {
+    const enumData = enumCache.value[enumKey];
+    return enumData || [];
+  };
+
   return {
     enums: enumCache,
     getEnum,
     getEnumLabel,
+    getEnumOptions,
   };
 });
