@@ -165,7 +165,6 @@ defineExpose({
 
 <style scoped lang="scss">
 .detail {
-  padding: 0 10px;
   .items {
     display: flex;
     flex-direction: column;

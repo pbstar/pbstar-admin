@@ -99,7 +99,12 @@
         <p-button type="primary" @click="handleAdd()"> 新增 </p-button>
       </template>
     </p-table>
-    <p-dialog title="用户列表详情页" type="page" v-model="isDetail">
+    <p-dialog
+      title="用户列表详情页"
+      type="drawer"
+      width="1000px"
+      v-model="isDetail"
+    >
       <Detail ref="detailRef" :type="detailType" :id="detailId"></Detail>
       <template #footer>
         <p-button

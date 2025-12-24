@@ -187,7 +187,7 @@ watch(
 .dialog-form {
   display: flex;
   flex-wrap: wrap;
-  padding: 20px;
+  padding-top: 10px;
   gap: 10px;
 }
 
