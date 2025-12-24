@@ -58,35 +58,40 @@ defineExpose({
         <p-item
           class="item"
           label="用户名"
-          :text="detailType === 'view' ? detailInfo.userName : ''"
+          :showText="detailType === 'view'"
+          :text="detailInfo.userName"
         >
           <el-input v-model="detailInfo.userName" placeholder="请输入用户名" />
         </p-item>
         <p-item
           class="item"
           label="请求方法"
-          :text="detailType === 'view' ? detailInfo.method : ''"
+          :showText="detailType === 'view'"
+          :text="detailInfo.method"
         >
           <el-input v-model="detailInfo.method" placeholder="请输入请求方法" />
         </p-item>
         <p-item
           class="item"
           label="请求路径"
-          :text="detailType === 'view' ? detailInfo.path : ''"
+          :showText="detailType === 'view'"
+          :text="detailInfo.path"
         >
           <el-input v-model="detailInfo.path" placeholder="请输入请求路径" />
         </p-item>
         <p-item
           class="item"
           label="IP地址"
-          :text="detailType === 'view' ? detailInfo.ip : ''"
+          :showText="detailType === 'view'"
+          :text="detailInfo.ip"
         >
           <el-input v-model="detailInfo.ip" placeholder="请输入IP地址" />
         </p-item>
         <p-item
           class="item"
           label="请求参数"
-          :text="detailType === 'view' ? detailInfo.param : ''"
+          :showText="detailType === 'view'"
+          :text="detailInfo.param"
           isTextWrap
         >
           <el-input
@@ -99,7 +104,8 @@ defineExpose({
         <p-item
           class="item"
           label="操作时间"
-          :text="detailType === 'view' ? detailInfo.createTime : ''"
+          :showText="detailType === 'view'"
+          :text="detailInfo.createTime"
         >
           <el-date-picker
             v-model="detailInfo.createTime"

@@ -110,14 +110,16 @@ defineExpose({
         <p-item
           class="dtItem"
           label="角色名称"
-          :text="detailType === 'view' ? detailInfo.name : ''"
+          :showText="detailType === 'view'"
+          :text="detailInfo.name"
         >
           <el-input v-model="detailInfo.name" placeholder="请输入角色名称" />
         </p-item>
         <p-item
           class="dtItem"
           label="角色Key"
-          :text="detailType === 'view' ? detailInfo.key : ''"
+          :showText="detailType === 'view'"
+          :text="detailInfo.key"
         >
           <el-input
             v-model="detailInfo.key"
@@ -128,7 +130,8 @@ defineExpose({
         <p-item
           class="dtItem"
           label="菜单权限"
-          :text="detailType === 'view' ? detailInfo.navs : ''"
+          :showText="detailType === 'view'"
+          :text="detailInfo.navs"
         >
           <el-tree-select
             v-model="detailInfo.navs"
@@ -144,7 +147,8 @@ defineExpose({
         <p-item
           class="dtItem"
           label="按钮权限"
-          :text="detailType === 'view' ? detailInfo.btns : ''"
+          :showText="detailType === 'view'"
+          :text="detailInfo.btns"
         >
           <el-tree-select
             v-model="detailInfo.btns"

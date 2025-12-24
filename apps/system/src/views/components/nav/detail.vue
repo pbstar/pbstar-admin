@@ -126,21 +126,24 @@ defineExpose({
         <p-item
           class="dtItem"
           label="菜单名称"
-          :text="detailType === 'view' ? detailInfo.name : ''"
+          :showText="detailType === 'view'"
+          :text="detailInfo.name"
         >
           <el-input v-model="detailInfo.name" placeholder="请输入菜单名称" />
         </p-item>
         <p-item
           class="dtItem"
           label="菜单链接"
-          :text="detailType === 'view' ? detailInfo.url : ''"
+          :showText="detailType === 'view'"
+          :text="detailInfo.url"
         >
           <el-input v-model="detailInfo.url" placeholder="请输入菜单链接" />
         </p-item>
         <p-item
           class="dtItem"
           label="上级菜单"
-          :text="detailType === 'view' ? detailInfo.parentId : ''"
+          :showText="detailType === 'view'"
+          :text="detailInfo.parentId"
         >
           <el-tree-select
             v-model="detailInfo.parentId"
@@ -153,7 +156,12 @@ defineExpose({
         <p-item class="dtItem" label="菜单图标">
           <p-iconSelect title="选择图标" v-model="detailInfo.icon" />
         </p-item>
-        <p-item class="dtItem" label="是否显示在导航">
+        <p-item
+          class="dtItem"
+          label="是否显示在导航"
+          :showText="detailType === 'view'"
+          :text="detailInfo.isNav === 1 ? '是' : '否'"
+        >
           <el-radio-group v-model="detailInfo.isNav">
             <el-radio :value="1">是</el-radio>
             <el-radio :value="0">否</el-radio>
@@ -162,7 +170,8 @@ defineExpose({
         <p-item
           class="dtItem"
           label="排序"
-          :text="detailType === 'view' ? String(detailInfo.index) : ''"
+          :showText="detailType === 'view'"
+          :text="detailInfo.index"
         >
           <el-input-number
             v-model="detailInfo.index"
@@ -173,7 +182,8 @@ defineExpose({
         <p-item
           class="dtItem"
           label="备注"
-          :text="detailType === 'view' ? detailInfo.remark : ''"
+          :showText="detailType === 'view'"
+          :text="detailInfo.remark"
           isTextWrap
         >
           <el-input

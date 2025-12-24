@@ -4,9 +4,12 @@ const props = defineProps({
     type: String,
     default: "",
   },
-  // 有text时，内容区域显示text
+  showText: {
+    type: Boolean,
+    default: false,
+  },
   text: {
-    type: String,
+    type: [String, Number],
     default: "",
   },
   isRequired: {
@@ -39,11 +42,11 @@ const props = defineProps({
     <!-- 内容区域 -->
     <div class="value">
       <div class="val-box">
-        <div class="input" v-if="!props.text">
+        <div class="input" v-if="!props.showText">
           <slot></slot>
         </div>
         <div
-          v-if="props.text"
+          v-if="props.showText"
           :class="props.isTextWrap ? 'val-text-wrap' : 'val-text'"
         >
           {{ props.text }}

@@ -51,12 +51,6 @@ const getFormValue = () => {
   return detailInfo.value;
 };
 
-// 获取性别标签
-const getSexLabel = (value) => {
-  const sexMap = { 1: "男", 2: "女" };
-  return sexMap[value] || value;
-};
-
 defineExpose({
   getFormValue,
 });
@@ -70,7 +64,8 @@ defineExpose({
           class="item"
           label="姓名"
           isRequired
-          :text="detailType === 'view' ? detailInfo.name : ''"
+          :showText="detailType === 'view'"
+          :text="detailInfo.name"
         >
           <el-input v-model="detailInfo.name" placeholder="请输入姓名" />
         </p-item>
@@ -78,7 +73,8 @@ defineExpose({
           class="item"
           label="年龄"
           isRequired
-          :text="detailType === 'view' ? String(detailInfo.age) : ''"
+          :showText="detailType === 'view'"
+          :text="detailInfo.age"
         >
           <el-input-number v-model="detailInfo.age" placeholder="请输入年龄" />
         </p-item>
@@ -86,7 +82,8 @@ defineExpose({
           class="item"
           label="性别"
           isRequired
-          :text="detailType === 'view' ? getSexLabel(detailInfo.sex) : ''"
+          :showText="detailType === 'view'"
+          :text="detailInfo.sex === '1' ? '男' : '女'"
         >
           <el-select v-model="detailInfo.sex" placeholder="请选择性别">
             <el-option label="男" value="1" />
@@ -96,6 +93,7 @@ defineExpose({
         <p-item
           class="item"
           label="民族"
+          :showText="detailType === 'view'"
           :text="
             detailType === 'view'
               ? enumStore.getEnumLabel('ethnic', detailInfo.ethnic)
@@ -114,6 +112,7 @@ defineExpose({
         <p-item
           class="item"
           label="是否健康"
+          :showText="detailType === 'view'"
           :text="
             detailType === 'view'
               ? enumStore.getEnumLabel('boolean', detailInfo.isHealthy)

@@ -65,21 +65,27 @@ defineExpose({
         <p-item
           class="item"
           label="应用名称"
-          :text="detailType === 'view' ? detailInfo.name : ''"
+          :showText="detailType === 'view'"
+          :text="detailInfo.name"
         >
           <el-input v-model="detailInfo.name" placeholder="请输入应用名称" />
         </p-item>
         <p-item
           class="item"
           label="应用分组"
-          :text="detailType === 'view' ? detailInfo.group : ''"
+          :showText="detailType === 'view'"
+          :text="detailInfo.group"
         >
           <el-input v-model="detailInfo.group" placeholder="请输入应用分组" />
         </p-item>
         <p-item
           class="item"
           label="应用key"
-          :text="detailType === 'view' ? detailInfo.key : ''"
+          :showText="detailType === 'view'"
+          :text="
+            appOptions.find((item) => item.value == detailInfo.key)?.label ||
+            detailInfo.key
+          "
         >
           <el-select v-model="detailInfo.key" placeholder="请选择应用key">
             <el-option

@@ -58,14 +58,16 @@ defineExpose({
         <p-item
           class="item"
           label="枚举名称"
-          :text="detailType === 'view' ? detailInfo.name : ''"
+          :showText="detailType === 'view'"
+          :text="detailInfo.name"
         >
           <el-input v-model="detailInfo.name" placeholder="请输入枚举名称" />
         </p-item>
         <p-item
           class="item"
           label="枚举key"
-          :text="detailType === 'view' ? detailInfo.key : ''"
+          :showText="detailType === 'view'"
+          :text="detailInfo.key"
         >
           <el-input v-model="detailInfo.key" placeholder="请输入枚举key" />
         </p-item>

@@ -77,21 +77,24 @@ defineExpose({
         <p-item
           class="dtItem"
           label="姓名"
-          :text="detailType === 'view' ? detailInfo.name : ''"
+          :showText="detailType === 'view'"
+          :text="detailInfo.name"
         >
           <el-input v-model="detailInfo.name" placeholder="请输入姓名" />
         </p-item>
         <p-item
           class="dtItem"
           label="头像"
-          :text="detailType === 'view' ? detailInfo.avatar : ''"
+          :showText="detailType === 'view'"
+          :text="detailInfo.avatar"
         >
           <el-input v-model="detailInfo.avatar" placeholder="请输入头像地址" />
         </p-item>
         <p-item
           class="dtItem"
           label="账号"
-          :text="detailType === 'view' ? detailInfo.username : ''"
+          :showText="detailType === 'view'"
+          :text="detailInfo.username"
         >
           <el-input
             v-model="detailInfo.username"
@@ -105,7 +108,11 @@ defineExpose({
         <p-item
           class="dtItem"
           label="角色"
-          :text="detailType === 'view' ? detailInfo.role : ''"
+          :showText="detailType === 'view'"
+          :text="
+            roleList.find((item) => item.value == detailInfo.role)?.label ||
+            detailInfo.role
+          "
         >
           <el-select
             v-model="detailInfo.role"
