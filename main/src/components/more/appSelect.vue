@@ -79,6 +79,7 @@ watch(
       :virtual-ref="appsRef"
       trigger="click"
       width="340"
+      popper-style="z-index: 6100;"
       ref="popoverRef"
     >
       <div class="list" v-loading="isLoading">

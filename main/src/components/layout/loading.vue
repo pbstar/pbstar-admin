@@ -39,7 +39,7 @@ const visible = computed(() => {
   height: 100%;
   background: var(--c-bg);
   user-select: none;
-  z-index: 9999;
+  z-index: 6000;
   overflow: hidden;
   display: flex;
   align-items: center;
