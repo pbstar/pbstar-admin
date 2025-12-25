@@ -35,9 +35,9 @@
 </template>
 <script setup>
 import { ref, watch, computed } from "vue";
-import PIcon from "../../base/p-icon/index.vue";
-import PDialog from "../../base/p-dialog/index.vue";
-import PButton from "../../base/p-button/index.vue";
+import pIcon from "../../base/p-icon/index.vue";
+import pDialog from "../../base/p-dialog/index.vue";
+import pButton from "../../base/p-button/index.vue";
 import IconList from "./IconList.vue";
 import * as ElIcons from "@element-plus/icons-vue";
 import iconJson from "@Passets/iconfont/iconfont.json";
