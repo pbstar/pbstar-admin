@@ -57,58 +57,63 @@ defineExpose({
       <div class="form">
         <p-item
           class="item"
-          :config="{
-            label: '用户名',
-            type: 'input',
-            isText: detailType === 'view',
-          }"
-          v-model="detailInfo.userName"
-        />
+          label="用户名"
+          :showText="detailType === 'view'"
+          :text="detailInfo.userName"
+        >
+          <el-input v-model="detailInfo.userName" placeholder="请输入用户名" />
+        </p-item>
         <p-item
           class="item"
-          :config="{
-            label: '请求方法',
-            type: 'input',
-            isText: detailType === 'view',
-          }"
-          v-model="detailInfo.method"
-        />
+          label="请求方法"
+          :showText="detailType === 'view'"
+          :text="detailInfo.method"
+        >
+          <el-input v-model="detailInfo.method" placeholder="请输入请求方法" />
+        </p-item>
         <p-item
           class="item"
-          :config="{
-            label: '请求路径',
-            type: 'input',
-            isText: detailType === 'view',
-          }"
-          v-model="detailInfo.path"
-        />
+          label="请求路径"
+          :showText="detailType === 'view'"
+          :text="detailInfo.path"
+        >
+          <el-input v-model="detailInfo.path" placeholder="请输入请求路径" />
+        </p-item>
         <p-item
           class="item"
-          :config="{
-            label: 'IP地址',
-            type: 'input',
-            isText: detailType === 'view',
-          }"
-          v-model="detailInfo.ip"
-        />
+          label="IP地址"
+          :showText="detailType === 'view'"
+          :text="detailInfo.ip"
+        >
+          <el-input v-model="detailInfo.ip" placeholder="请输入IP地址" />
+        </p-item>
         <p-item
           class="item"
-          :config="{
-            label: '请求参数',
-            type: 'textarea',
-            isText: detailType === 'view',
-          }"
-          v-model="detailInfo.param"
-        />
+          label="请求参数"
+          :showText="detailType === 'view'"
+          :text="detailInfo.param"
+          isTextWrap
+        >
+          <el-input
+            v-model="detailInfo.param"
+            type="textarea"
+            :rows="3"
+            placeholder="请输入请求参数"
+          />
+        </p-item>
         <p-item
           class="item"
-          :config="{
-            label: '操作时间',
-            type: 'dateTime',
-            isText: detailType === 'view',
-          }"
-          v-model="detailInfo.createTime"
-        />
+          label="操作时间"
+          :showText="detailType === 'view'"
+          :text="detailInfo.createTime"
+        >
+          <el-date-picker
+            v-model="detailInfo.createTime"
+            type="datetime"
+            placeholder="请选择操作时间"
+            value-format="YYYY-MM-DD HH:mm:ss"
+          />
+        </p-item>
       </div>
     </p-collapse>
   </div>

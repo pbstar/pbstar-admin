@@ -160,21 +160,28 @@ watch(
 
     <p-dialog type="box" title="教育背景详情页" v-model="isDetail">
       <div class="dialog-form">
-        <p-item
-          class="item"
-          :config="{ label: '名称', type: 'input' }"
-          v-model="detailInfo.eduName"
-        />
-        <p-item
-          class="item"
-          :config="{ label: '时间', type: 'dateRange' }"
-          v-model="detailInfo.dateRange"
-        />
-        <p-item
-          class="item"
-          :config="{ label: '备注', type: 'textarea' }"
-          v-model="detailInfo.remark"
-        />
+        <p-item class="item" label="名称">
+          <el-input v-model="detailInfo.eduName" placeholder="请输入名称" />
+        </p-item>
+        <p-item class="item" label="时间">
+          <el-date-picker
+            v-model="detailInfo.dateRange"
+            type="daterange"
+            range-separator="至"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+            style="width: 100%"
+            value-format="YYYY-MM-DD"
+          />
+        </p-item>
+        <p-item class="item" label="备注">
+          <el-input
+            v-model="detailInfo.remark"
+            type="textarea"
+            placeholder="请输入备注"
+            :rows="3"
+          />
+        </p-item>
       </div>
       <template #footer>
         <p-button type="primary" @click="handleSave()"> 保存 </p-button>

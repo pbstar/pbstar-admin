@@ -109,100 +109,91 @@ defineExpose({
   <div class="detail">
     <p-collapse title="基础信息" :isControl="false" :showDownLine="false">
       <div class="items">
+        <p-item class="dtItem" label="所属应用">
+          <el-select
+            v-model="detailInfo.appId"
+            placeholder="请选择所属应用"
+            disabled
+          >
+            <el-option
+              v-for="item in appList"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+        </p-item>
         <p-item
           class="dtItem"
-          :config="{
-            type: 'select',
-            label: '所属应用',
-            options: appList,
-            isDisabled: true,
-          }"
-          v-model="detailInfo.appId"
-        />
-        <p-item
-          class="dtItem"
-          :config="{
-            isText: detailType == 'view',
-            type: 'input',
-            label: '菜单名称',
-          }"
-          v-model="detailInfo.name"
-        />
-        <p-item
-          class="dtItem"
-          :config="{
-            isText: detailType == 'view',
-            type: 'input',
-            label: '菜单链接',
-          }"
-          v-model="detailInfo.url"
-        />
-        <p-item
-          class="dtItem"
-          :config="{
-            isText: detailType == 'view',
-            type: 'selectTree',
-            label: '上级菜单',
-            options: navList,
-            more: {
-              checkStrictly: true,
-            },
-          }"
-          v-model="detailInfo.parentId"
-        />
-        <p-item
-          class="dtItem"
-          :config="{
-            type: 'slot',
-            label: '菜单图标',
-          }"
+          label="菜单名称"
+          :showText="detailType === 'view'"
+          :text="detailInfo.name"
         >
+          <el-input v-model="detailInfo.name" placeholder="请输入菜单名称" />
+        </p-item>
+        <p-item
+          class="dtItem"
+          label="菜单链接"
+          :showText="detailType === 'view'"
+          :text="detailInfo.url"
+        >
+          <el-input v-model="detailInfo.url" placeholder="请输入菜单链接" />
+        </p-item>
+        <p-item
+          class="dtItem"
+          label="上级菜单"
+          :showText="detailType === 'view'"
+          :text="detailInfo.parentId"
+        >
+          <el-tree-select
+            v-model="detailInfo.parentId"
+            :data="navList"
+            :props="{ value: 'value', label: 'label', children: 'children' }"
+            check-strictly
+            placeholder="请选择上级菜单"
+          />
+        </p-item>
+        <p-item class="dtItem" label="菜单图标">
           <p-iconSelect title="选择图标" v-model="detailInfo.icon" />
         </p-item>
         <p-item
           class="dtItem"
-          :config="{
-            type: 'radio',
-            label: '是否显示在导航',
-            options: [
-              {
-                label: '是',
-                value: 1,
-              },
-              {
-                label: '否',
-                value: 0,
-              },
-            ],
-          }"
-          v-model="detailInfo.isNav"
-        />
-        <!-- 排序 -->
-        <p-item
-          class="dtItem"
-          :config="{
-            isText: detailType == 'view',
-            type: 'inputNumber',
-            label: '排序',
-          }"
-          v-model="detailInfo.index"
-        />
-        <p-item
-          class="dtItem"
-          :config="{
-            isText: detailType == 'view',
-            type: 'textarea',
-            label: '备注',
-          }"
-          v-model="detailInfo.remark"
-        />
-        <p-item
-          class="dtItem"
-          :config="{
-            type: 'slot',
-            label: '页面按钮',
-          }"
+          label="是否显示在导航"
+          :showText="detailType === 'view'"
+          :text="detailInfo.isNav === 1 ? '是' : '否'"
         >
+          <el-radio-group v-model="detailInfo.isNav">
+            <el-radio :value="1">是</el-radio>
+            <el-radio :value="0">否</el-radio>
+          </el-radio-group>
+        </p-item>
+        <p-item
+          class="dtItem"
+          label="排序"
+          :showText="detailType === 'view'"
+          :text="detailInfo.index"
+        >
+          <el-input-number
+            v-model="detailInfo.index"
+            :min="0"
+            placeholder="请输入排序"
+          />
+        </p-item>
+        <p-item
+          class="dtItem"
+          label="备注"
+          :showText="detailType === 'view'"
+          :text="detailInfo.remark"
+          isTextWrap
+        >
+          <el-input
+            v-model="detailInfo.remark"
+            type="textarea"
+            :rows="3"
+            placeholder="请输入备注"
+          />
+        </p-item>
+        <p-item class="dtItem" label="页面按钮">
           <btnTable :type="detailType" v-model="detailInfo.btnList" />
         </p-item>
       </div>

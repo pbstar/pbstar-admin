@@ -3,8 +3,11 @@ import { ref, onBeforeMount } from "vue";
 import { ElMessage } from "element-plus";
 import request from "@Passets/utils/request";
 import { pCollapse, pItem } from "@Pcomponents";
+import { useEnumStore } from "@Passets/stores/enum";
 import hobbyTable from "./hobbyTable.vue";
 import eduTable from "./eduTable.vue";
+
+const enumStore = useEnumStore();
 
 const props = defineProps({
   type: {
@@ -59,61 +62,75 @@ defineExpose({
       <div class="form">
         <p-item
           class="item"
-          :config="{
-            label: '姓名',
-            type: 'input',
-            isRequired: true,
-            isText: detailType === 'view',
-          }"
-          v-model="detailInfo.name"
-        />
+          label="姓名"
+          isRequired
+          :showText="detailType === 'view'"
+          :text="detailInfo.name"
+        >
+          <el-input v-model="detailInfo.name" placeholder="请输入姓名" />
+        </p-item>
         <p-item
           class="item"
-          :config="{
-            label: '年龄',
-            type: 'inputNumber',
-            isRequired: true,
-            isText: detailType === 'view',
-          }"
-          v-model="detailInfo.age"
-        />
+          label="年龄"
+          isRequired
+          :showText="detailType === 'view'"
+          :text="detailInfo.age"
+        >
+          <el-input-number v-model="detailInfo.age" placeholder="请输入年龄" />
+        </p-item>
         <p-item
           class="item"
-          :config="{
-            label: '性别',
-            type: 'select',
-            isRequired: true,
-            options: [
-              { label: '男', value: '1' },
-              { label: '女', value: '2' },
-            ],
-            isText: detailType === 'view',
-          }"
-          v-model="detailInfo.sex"
-        />
+          label="性别"
+          isRequired
+          :showText="detailType === 'view'"
+          :text="detailInfo.sex === '1' ? '男' : '女'"
+        >
+          <el-select v-model="detailInfo.sex" placeholder="请选择性别">
+            <el-option label="男" value="1" />
+            <el-option label="女" value="2" />
+          </el-select>
+        </p-item>
         <p-item
           class="item"
-          :config="{
-            label: '民族',
-            type: 'select',
-            enumKey: 'ethnic',
-            isText: detailType === 'view',
-          }"
-          v-model="detailInfo.ethnic"
-        />
+          label="民族"
+          :showText="detailType === 'view'"
+          :text="
+            detailType === 'view'
+              ? enumStore.getEnumLabel('ethnic', detailInfo.ethnic)
+              : ''
+          "
+        >
+          <el-select v-model="detailInfo.ethnic" placeholder="请选择民族">
+            <el-option
+              v-for="item in enumStore.getEnumOptions('ethnic')"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+        </p-item>
         <p-item
           class="item"
-          :config="{
-            label: '是否健康',
-            type: 'select',
-            enumKey: 'boolean',
-            isText: detailType === 'view',
-          }"
-          v-model="detailInfo.isHealthy"
-        />
-        <div class="item full">
+          label="是否健康"
+          :showText="detailType === 'view'"
+          :text="
+            detailType === 'view'
+              ? enumStore.getEnumLabel('boolean', detailInfo.isHealthy)
+              : ''
+          "
+        >
+          <el-select v-model="detailInfo.isHealthy" placeholder="请选择">
+            <el-option
+              v-for="item in enumStore.getEnumOptions('boolean')"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+        </p-item>
+        <p-item class="item full" label="爱好">
           <hobbyTable :type="detailType" v-model="detailInfo.hobbyList" />
-        </div>
+        </p-item>
       </div>
     </p-collapse>
     <p-collapse title="教育背景">

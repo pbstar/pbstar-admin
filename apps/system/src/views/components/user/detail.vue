@@ -76,53 +76,57 @@ defineExpose({
       <div class="items">
         <p-item
           class="dtItem"
-          :config="{
-            isText: detailType == 'view',
-            type: 'input',
-            label: '姓名',
-          }"
-          v-model="detailInfo.name"
-        />
+          label="姓名"
+          :showText="detailType === 'view'"
+          :text="detailInfo.name"
+        >
+          <el-input v-model="detailInfo.name" placeholder="请输入姓名" />
+        </p-item>
         <p-item
           class="dtItem"
-          :config="{
-            isText: detailType == 'view',
-            type: 'input',
-            label: '头像',
-          }"
-          v-model="detailInfo.avatar"
-        />
+          label="头像"
+          :showText="detailType === 'view'"
+          :text="detailInfo.avatar"
+        >
+          <el-input v-model="detailInfo.avatar" placeholder="请输入头像地址" />
+        </p-item>
         <p-item
           class="dtItem"
-          :config="{
-            isText: detailType == 'view',
-            type: 'input',
-            label: '账号',
-            isDisabled: detailInfo.id == '1',
-          }"
-          v-model="detailInfo.username"
-        />
+          label="账号"
+          :showText="detailType === 'view'"
+          :text="detailInfo.username"
+        >
+          <el-input
+            v-model="detailInfo.username"
+            placeholder="请输入账号"
+            :disabled="detailInfo.id == '1'"
+          />
+        </p-item>
+        <p-item class="dtItem" v-show="detailType == 'add'" label="密码">
+          <el-input v-model="detailInfo.password" placeholder="请输入密码" />
+        </p-item>
         <p-item
           class="dtItem"
-          v-show="detailType == 'add'"
-          :config="{
-            isText: detailType == 'view',
-            type: 'input',
-            label: '密码',
-          }"
-          v-model="detailInfo.password"
-        />
-        <p-item
-          class="dtItem"
-          :config="{
-            isText: detailType == 'view',
-            type: 'select',
-            label: '角色',
-            options: roleList,
-            isDisabled: detailInfo.id == '1',
-          }"
-          v-model="detailInfo.role"
-        />
+          label="角色"
+          :showText="detailType === 'view'"
+          :text="
+            roleList.find((item) => item.value == detailInfo.role)?.label ||
+            detailInfo.role
+          "
+        >
+          <el-select
+            v-model="detailInfo.role"
+            placeholder="请选择角色"
+            :disabled="detailInfo.id == '1'"
+          >
+            <el-option
+              v-for="item in roleList"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+        </p-item>
       </div>
     </p-collapse>
   </div>

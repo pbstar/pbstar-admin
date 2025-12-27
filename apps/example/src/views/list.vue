@@ -2,34 +2,39 @@
   <div class="page">
     <p-title :list="['用户列表']"></p-title>
     <p-search style="margin-top: 10px" @search="toSearch" @reset="toReset">
-      <p-item
-        class="item"
-        :config="{ label: '姓名', type: 'input' }"
-        v-model="searchValue.name"
-      />
-      <p-item
-        class="item"
-        :config="{ label: '年龄', type: 'inputNumber' }"
-        v-model="searchValue.age"
-      />
-      <p-item
-        class="item"
-        :config="{ label: '性别', type: 'select', options: sexOptions }"
-        v-model="searchValue.sex"
-      />
-      <p-item
-        class="item"
-        :config="{
-          label: '是否健康',
-          type: 'select',
-          enumKey: 'boolean',
-        }"
-        v-model="searchValue.isHealthy"
-      />
+      <p-item class="item" label="姓名">
+        <el-input v-model="searchValue.name" placeholder="请输入姓名" />
+      </p-item>
+      <p-item class="item" label="年龄">
+        <el-input-number
+          v-model="searchValue.age"
+          :controls="false"
+          placeholder="请输入年龄"
+        />
+      </p-item>
+      <p-item class="item" label="性别">
+        <el-select v-model="searchValue.sex" placeholder="请选择性别">
+          <el-option
+            v-for="item in sexOptions"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
+      </p-item>
+      <p-item class="item" label="是否健康">
+        <el-select v-model="searchValue.isHealthy" placeholder="请选择">
+          <el-option
+            v-for="item in enumStore.getEnumOptions('boolean')"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
+      </p-item>
     </p-search>
     <p-table
       style="margin-top: 10px"
-      ref="tableRef"
       :data="data"
       :pagination="pagination"
       @paginationChange="toPageChange"
@@ -137,7 +142,6 @@ import Detail from "./components/list/detail.vue";
 const data = ref([]);
 const enumStore = useEnumStore();
 
-const tableRef = ref(null);
 const pagination = ref({
   pageNumber: 1,
   pageSize: 10,

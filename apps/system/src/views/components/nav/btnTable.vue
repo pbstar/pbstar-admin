@@ -145,16 +145,12 @@ watch(
 
     <p-dialog type="box" title="按钮详情页" v-model="isDetail">
       <div class="dialog-form">
-        <p-item
-          class="item"
-          :config="{ label: '按钮名称', type: 'input' }"
-          v-model="detailInfo.name"
-        />
-        <p-item
-          class="item"
-          :config="{ label: '按钮Key', type: 'input' }"
-          v-model="detailInfo.key"
-        />
+        <p-item class="item" label="按钮名称">
+          <el-input v-model="detailInfo.name" placeholder="请输入按钮名称" />
+        </p-item>
+        <p-item class="item" label="按钮Key">
+          <el-input v-model="detailInfo.key" placeholder="请输入按钮Key" />
+        </p-item>
       </div>
       <template #footer>
         <p-button type="primary" @click="handleSave()"> 保存 </p-button>

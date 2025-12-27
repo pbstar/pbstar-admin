@@ -57,22 +57,20 @@ defineExpose({
       <div class="form">
         <p-item
           class="item"
-          :config="{
-            label: '枚举名称',
-            type: 'input',
-            isText: detailType === 'view',
-          }"
-          v-model="detailInfo.name"
-        />
+          label="枚举名称"
+          :showText="detailType === 'view'"
+          :text="detailInfo.name"
+        >
+          <el-input v-model="detailInfo.name" placeholder="请输入枚举名称" />
+        </p-item>
         <p-item
           class="item"
-          :config="{
-            label: '枚举key',
-            type: 'input',
-            isText: detailType === 'view',
-          }"
-          v-model="detailInfo.key"
-        />
+          label="枚举key"
+          :showText="detailType === 'view'"
+          :text="detailInfo.key"
+        >
+          <el-input v-model="detailInfo.key" placeholder="请输入枚举key" />
+        </p-item>
       </div>
     </p-collapse>
     <p-collapse title="枚举值">

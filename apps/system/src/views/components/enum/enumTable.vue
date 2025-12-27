@@ -159,16 +159,12 @@ watch(
     </p-table>
     <p-dialog type="box" title="枚举值详情页" v-model="isDetail">
       <div class="dialog-form">
-        <p-item
-          class="item"
-          :config="{ label: '枚举label', type: 'input' }"
-          v-model="detailInfo.label"
-        />
-        <p-item
-          class="item"
-          :config="{ label: '枚举value', type: 'input' }"
-          v-model="detailInfo.value"
-        />
+        <p-item class="item" label="枚举label">
+          <el-input v-model="detailInfo.label" placeholder="请输入枚举label" />
+        </p-item>
+        <p-item class="item" label="枚举value">
+          <el-input v-model="detailInfo.value" placeholder="请输入枚举value" />
+        </p-item>
       </div>
       <template #footer>
         <p-button type="primary" @click="handleSave()"> 保存 </p-button>

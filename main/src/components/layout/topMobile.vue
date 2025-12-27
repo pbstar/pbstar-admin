@@ -159,7 +159,7 @@ watch(
       position: fixed;
       top: 46px;
       left: 0;
-      z-index: 100;
+      z-index: 6100;
       overflow-y: auto;
       padding: 20px;
       .appSelect {

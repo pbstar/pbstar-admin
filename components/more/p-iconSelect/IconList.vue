@@ -14,7 +14,7 @@
 </template>
 
 <script setup>
-import PIcon from "../../base/p-icon/index.vue";
+import pIcon from "../../base/p-icon/index.vue";
 defineProps({
   icons: {
     type: Array,

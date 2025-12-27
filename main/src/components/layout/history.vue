@@ -1,12 +1,14 @@
 <script setup>
 import { pIcon } from "@Pcomponents";
-import { ref } from "vue";
+import { ref, nextTick } from "vue";
 import { useRouter } from "vue-router";
 import { useAppsStore } from "@/stores/apps";
 const router = useRouter();
 const appsStore = useAppsStore();
 const path = ref("");
 const list = ref([]);
+const historyBox = ref(null);
+const listRef = ref(null);
 
 // 添加历史记录
 const addItem = (fullPath) => {
@@ -22,6 +24,13 @@ const addItem = (fullPath) => {
     name: nav.name,
     appId: appsStore.appId,
     path: fullPath,
+  });
+  // 如果宽度超出，删除最前面的一条记录
+  nextTick(() => {
+    const width = historyBox.value.clientWidth - 100;
+    if (listRef.value.scrollWidth > width) {
+      list.value.shift();
+    }
   });
 };
 // 删除历史记录
@@ -47,27 +56,32 @@ const toPath = async (item) => {
   }
   router.push(item.path);
 };
-
+addItem(router.currentRoute.value.fullPath);
 router.afterEach((to, from) => {
   addItem(to.fullPath);
 });
 </script>
 <template>
-  <div class="historyBox">
-    <div class="home" @click="toPath({ appId: 0, path: '/' })">
+  <div class="historyBox" ref="historyBox">
+    <el-tag
+      class="home"
+      :effect="path === '/admin/pHome' ? 'dark' : 'plain'"
+      @click="toPath({ appId: 0, path: '/' })"
+    >
       <p-icon name="el-icon-house" />
-    </div>
-    <div class="list">
-      <div
-        class="item"
-        :class="item.path === path ? 'active' : ''"
+    </el-tag>
+    <div class="list" ref="listRef">
+      <el-tag
         v-for="(item, index) in list"
         :key="index"
+        class="item"
         @click="toPath(item)"
+        :effect="item.path === path ? 'dark' : 'plain'"
+        closable
+        @close="delItem(item.path)"
       >
-        <span>{{ item.name }}</span>
-        <p-icon name="el-icon-close" @click.stop="delItem(item.path)" />
-      </div>
+        <span class="name">{{ item.name }}</span>
+      </el-tag>
     </div>
   </div>
 </template>
@@ -80,48 +94,23 @@ router.afterEach((to, from) => {
   align-items: center;
 }
 .historyBox .home {
-  background-color: var(--c-bg);
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  border-radius: 12px;
   cursor: pointer;
-  font-size: 14px;
 }
 .historyBox .list {
-  width: calc(100% - 30px);
   display: flex;
   align-items: center;
-  overflow-x: auto;
-  &::-webkit-scrollbar {
-    display: none;
-  }
 }
 .historyBox .list .item {
-  height: 26px;
-  background-color: var(--c-bg);
-  display: flex;
-  align-items: center;
-  margin-left: 10px;
+  margin-left: 6px;
   cursor: pointer;
-  padding-left: 6px;
-  padding-right: 6px;
-  border-radius: 2px;
-  font-weight: 400;
-  font-size: 12px;
-  max-width: 120px;
-  span {
+  max-width: 126px;
+  .name {
+    display: inline-block;
+    max-width: 90px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
-  .icon {
-    margin-left: 2px;
-  }
-}
-.historyBox .list .item.active {
-  color: var(--c-text3);
 }
 </style>

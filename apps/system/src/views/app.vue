@@ -116,24 +116,15 @@ const handleBack = () => {
     <p-title :list="['应用管理']"></p-title>
 
     <p-search style="margin-top: 10px" @search="toSearch" @reset="toReset">
-      <p-item
-        class="item"
-        :config="{ label: '应用名称', type: 'input' }"
-        v-model="searchValue.name"
-      />
-      <p-item
-        class="item"
-        :config="{ label: '应用分组', type: 'input' }"
-        v-model="searchValue.group"
-      />
-      <p-item
-        class="item"
-        :config="{
-          label: '应用Key',
-          type: 'input',
-        }"
-        v-model="searchValue.key"
-      />
+      <p-item class="item" label="应用名称">
+        <el-input v-model="searchValue.name" placeholder="请输入应用名称" />
+      </p-item>
+      <p-item class="item" label="应用分组">
+        <el-input v-model="searchValue.group" placeholder="请输入应用分组" />
+      </p-item>
+      <p-item class="item" label="应用Key">
+        <el-input v-model="searchValue.key" placeholder="请输入应用Key" />
+      </p-item>
     </p-search>
 
     <p-table style="margin-top: 10px" :data="tableData">
