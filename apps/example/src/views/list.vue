@@ -25,7 +25,7 @@
       <p-item class="item" label="是否健康">
         <el-select v-model="searchValue.isHealthy" placeholder="请选择">
           <el-option
-            v-for="item in enumStore.getEnumOptions('boolean')"
+            v-for="item in booleanOptions"
             :key="item.value"
             :label="item.label"
             :value="item.value"
@@ -54,12 +54,12 @@
         </el-table-column>
         <el-table-column prop="ethnic" label="民族">
           <template #default="{ row }">
-            {{ enumStore.getEnumLabel("ethnic", row.ethnic) }}
+            {{ getOptionLabel(ethnicOptions, row.ethnic) }}
           </template>
         </el-table-column>
         <el-table-column prop="isHealthy" label="是否健康">
           <template #default="{ row }">
-            {{ enumStore.getEnumLabel("boolean", row.isHealthy) }}
+            {{ getOptionLabel(booleanOptions, row.isHealthy) }}
           </template>
         </el-table-column>
         <el-table-column
@@ -136,10 +136,9 @@ import {
   pIcon,
   pItem,
 } from "@Pcomponents";
-import { useEnumStore } from "@Passets/stores/enum";
+import { booleanOptions, ethnicOptions, getOptionLabel } from "@/constants/options";
 import Detail from "./components/list/detail.vue";
 const data = ref([]);
-const enumStore = useEnumStore();
 
 const pagination = ref({
   pageNumber: 1,
@@ -162,9 +161,7 @@ const getSexLabel = (value) => {
   return option ? option.label : value;
 };
 
-onMounted(async () => {
-  // 预加载枚举数据
-  await enumStore.getEnum("ethnic,boolean");
+onMounted(() => {
   initTable();
 });
 const toSearch = () => {

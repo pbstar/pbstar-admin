@@ -9,11 +9,6 @@ const router = createRouter({
       component: () => import("@/views/nav.vue"),
     },
     {
-      path: "/enum",
-      name: "enum",
-      component: () => import("@/views/enum.vue"),
-    },
-    {
       path: "/user",
       name: "user",
       component: () => import("@/views/user.vue"),

@@ -3,11 +3,9 @@ import { ref, onBeforeMount } from "vue";
 import { ElMessage } from "element-plus";
 import request from "@Passets/utils/request";
 import { pCollapse, pItem } from "@Pcomponents";
-import { useEnumStore } from "@Passets/stores/enum";
+import { booleanOptions, ethnicOptions, getOptionLabel } from "@/constants/options";
 import hobbyTable from "./hobbyTable.vue";
 import eduTable from "./eduTable.vue";
-
-const enumStore = useEnumStore();
 
 const props = defineProps({
   type: {
@@ -96,13 +94,13 @@ defineExpose({
           :showText="detailType === 'view'"
           :text="
             detailType === 'view'
-              ? enumStore.getEnumLabel('ethnic', detailInfo.ethnic)
+              ? getOptionLabel(ethnicOptions, detailInfo.ethnic)
               : ''
           "
         >
           <el-select v-model="detailInfo.ethnic" placeholder="请选择民族">
             <el-option
-              v-for="item in enumStore.getEnumOptions('ethnic')"
+              v-for="item in ethnicOptions"
               :key="item.value"
               :label="item.label"
               :value="item.value"
@@ -115,13 +113,13 @@ defineExpose({
           :showText="detailType === 'view'"
           :text="
             detailType === 'view'
-              ? enumStore.getEnumLabel('boolean', detailInfo.isHealthy)
+              ? getOptionLabel(booleanOptions, detailInfo.isHealthy)
               : ''
           "
         >
           <el-select v-model="detailInfo.isHealthy" placeholder="请选择">
             <el-option
-              v-for="item in enumStore.getEnumOptions('boolean')"
+              v-for="item in booleanOptions"
               :key="item.value"
               :label="item.label"
               :value="item.value"
