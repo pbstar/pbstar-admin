@@ -152,8 +152,18 @@ program
         fs.mkdirSync(appPath, { recursive: true });
       }
 
-      // 复制模板文件
-      await fs.copy(TEMPLATE_DIR, appPath);
+      // 复制模板文件（.gitignore 仅外部子应用需要，先排除）
+      await fs.copy(TEMPLATE_DIR, appPath, {
+        filter: (src) => !src.endsWith(".gitignore"),
+      });
+
+      // 外部子应用补充 .gitignore
+      if (appType === "out") {
+        await fs.copy(
+          path.join(TEMPLATE_DIR, ".gitignore"),
+          path.join(appPath, ".gitignore"),
+        );
+      }
 
       // 更新占位符
       await replaceInFile({

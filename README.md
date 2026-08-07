@@ -64,7 +64,7 @@ pnpm run create
 │ ├── app-common                # 公共子应用模块
 │ ├── example                   # 示例应用
 │ ├── system                    # 系统应用
-│ ├── private-app               # 私有子应用（外部子应用）
+│ ├── out-app                   # 外部子应用（独立git仓库）
 │ └── apps.json                 # 子应用配置
 ├── assets                      # 静态资源
 ├── build                       # 打包产物
