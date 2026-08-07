@@ -10,8 +10,8 @@
     "proUrl": "http://pbstar-admin-example.pbstar.cn/"
   },
   {
-    "key": "equipment",
+    "key": "private-app",
     "devPort": 8803,
-    "proUrl": "http://pbstar-admin-equipment.pbstar.cn/"
+    "proUrl": "http://pbstar-admin-private-app.pbstar.cn/"
   }
 ]
