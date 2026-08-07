@@ -3,7 +3,6 @@ import { ref, onBeforeMount } from "vue";
 import { ElMessage } from "element-plus";
 import request from "@Passets/utils/request";
 import { pCollapse, pItem, pIconSelect } from "@Pcomponents";
-import btnTable from "./btnTable.vue";
 
 const props = defineProps({
   type: {
@@ -192,9 +191,6 @@ defineExpose({
             :rows="3"
             placeholder="请输入备注"
           />
-        </p-item>
-        <p-item class="dtItem" label="页面按钮">
-          <btnTable :type="detailType" v-model="detailInfo.btnList" />
         </p-item>
       </div>
     </p-collapse>

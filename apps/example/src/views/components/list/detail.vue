@@ -4,8 +4,6 @@ import { ElMessage } from "element-plus";
 import request from "@Passets/utils/request";
 import { pCollapse, pItem } from "@Pcomponents";
 import { booleanOptions, ethnicOptions, getOptionLabel } from "@/constants/options";
-import hobbyTable from "./hobbyTable.vue";
-import eduTable from "./eduTable.vue";
 
 const props = defineProps({
   type: {
@@ -126,13 +124,7 @@ defineExpose({
             />
           </el-select>
         </p-item>
-        <p-item class="item full" label="爱好">
-          <hobbyTable :type="detailType" v-model="detailInfo.hobbyList" />
-        </p-item>
       </div>
-    </p-collapse>
-    <p-collapse title="教育背景">
-      <eduTable :type="detailType" :id="detailId" />
     </p-collapse>
   </div>
 </template>
