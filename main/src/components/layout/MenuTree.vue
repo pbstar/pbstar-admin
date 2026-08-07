@@ -1,54 +1,57 @@
 <template>
-  <el-menu class="menu" :default-active="activeIndex" @select="handleSelect">
-    <div class="item" v-for="(item, index) in menuList" :key="index">
-      <el-menu-item :index="item.id.toString()" v-if="!item.children">
-        <p-icon v-if="item.icon" :name="item.icon" />
-        <span>{{ item.name }}</span>
-      </el-menu-item>
-      <el-sub-menu :index="item.id.toString()" v-if="item.children">
-        <template #title>
-          <p-icon v-if="item.icon" :name="item.icon" />
-          <span>{{ item.name }}</span>
-        </template>
-        <div
-          class="items"
-          v-for="(items, indexs) in item.children"
-          :key="indexs + 's'"
-        >
-          <el-menu-item :index="items.id.toString()" v-if="!items.children">
-            {{ items.name }}
-          </el-menu-item>
-          <el-sub-menu :index="items.id.toString()" v-if="items.children">
-            <template #title>
-              <span>{{ items.name }}</span>
-            </template>
-            <div
-              class="itemss"
-              v-for="(itemss, indexss) in items.children"
-              :key="indexss + 'ss'"
-            >
-              <el-menu-item :index="itemss.id.toString()">
-                {{ itemss.name }}
-              </el-menu-item>
-            </div>
-          </el-sub-menu>
-        </div>
-      </el-sub-menu>
-    </div>
+  <!-- 根：渲染菜单容器 -->
+  <el-menu
+    v-if="isRoot"
+    class="menu"
+    :default-active="activeIndex"
+    @select="handleSelect"
+  >
+    <MenuTree
+      v-for="(item, index) in menuList"
+      :key="index"
+      :node="item"
+    />
   </el-menu>
+  <!-- 子节点：有 children 递归展开 -->
+  <el-sub-menu v-else-if="node.children" :index="String(node.id)">
+    <template #title>
+      <p-icon v-if="node.icon" :name="node.icon" />
+      <span>{{ node.name }}</span>
+    </template>
+    <MenuTree
+      v-for="(child, i) in node.children"
+      :key="i"
+      :node="child"
+    />
+  </el-sub-menu>
+  <!-- 叶子节点 -->
+  <el-menu-item v-else :index="String(node.id)">
+    <p-icon v-if="node.icon" :name="node.icon" />
+    <span>{{ node.name }}</span>
+  </el-menu-item>
 </template>
 
 <script setup>
 import { pIcon } from "@Pcomponents";
 
+defineOptions({ name: "MenuTree" });
+
 const props = defineProps({
   menuList: {
     type: Array,
-    required: true,
+    default: () => [],
   },
   activeIndex: {
     type: String,
     default: "",
+  },
+  isRoot: {
+    type: Boolean,
+    default: false,
+  },
+  node: {
+    type: Object,
+    default: () => ({}),
   },
 });
 
@@ -110,14 +113,6 @@ const handleSelect = (index) => {
   /* 子菜单缩进 */
   .menu :deep(.el-sub-menu .el-menu-item) {
     margin-left: 24px;
-  }
-
-  /* 孙菜单缩进 */
-  .menu :deep(.items .el-sub-menu__title) {
-    margin-left: 24px;
-  }
-  .menu :deep(.items .el-sub-menu .el-menu-item) {
-    margin-left: 36px;
   }
 
   /* 图标样式 */

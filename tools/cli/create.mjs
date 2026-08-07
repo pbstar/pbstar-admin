@@ -14,7 +14,6 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // 定义路径
 const TEMPLATE_DIR = path.join(__dirname, "../template");
-const TEMPLATE_MORE_DIR = path.join(__dirname, "../templateMore");
 const APPS_DIR = path.join(__dirname, "../../apps");
 
 // 定义命令
@@ -155,15 +154,6 @@ program
 
       // 复制模板文件
       await fs.copy(TEMPLATE_DIR, appPath);
-
-      // 补充模板文件
-      if (appType === "out") {
-        // 复制TEMPLATE_MORE_DIR文件夹下的.gitignore文件到子应用目录
-        await fs.copy(
-          path.join(TEMPLATE_MORE_DIR, ".gitignore"),
-          path.join(appPath, ".gitignore"),
-        );
-      }
 
       // 更新占位符
       await replaceInFile({

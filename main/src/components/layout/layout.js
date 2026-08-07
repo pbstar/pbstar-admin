@@ -11,15 +11,6 @@ export function useNavMenu() {
   const list = ref([]);
   const listTree = ref([]);
 
-  // 屏蔽无界嵌套引起的vue路由警告
-  const originalWarn = console.warn;
-  console.warn = (msg, ...args) => {
-    if (msg.includes("history.state") && msg.includes("manually replaced")) {
-      return;
-    }
-    originalWarn.apply(console, [msg, ...args]);
-  };
-
   const updateNavData = () => {
     if (appsStore.appId) {
       const app = appsStore.getApp();

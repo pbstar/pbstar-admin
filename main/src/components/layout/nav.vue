@@ -10,6 +10,7 @@ const { listTree, activeIndex, selectNav } = useNavMenu();
     <MenuTree
       :menuList="listTree"
       :activeIndex="activeIndex"
+      isRoot
       @select="selectNav"
     />
   </div>

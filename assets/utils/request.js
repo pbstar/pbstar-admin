@@ -1,8 +1,11 @@
 import axios from "axios";
 import { ElMessage } from "element-plus";
 
+// 独立axios实例，避免请求策略（超时/拦截器）相互干扰
+const service = axios.create({ timeout: 6000 });
+
 // 请求拦截器 - 添加token
-axios.interceptors.request.use((config) => {
+service.interceptors.request.use((config) => {
   const token = localStorage.getItem("p_token");
   if (token) {
     config.headers.token = token;
@@ -11,7 +14,7 @@ axios.interceptors.request.use((config) => {
 });
 
 // 响应拦截器 - 错误处理
-axios.interceptors.response.use(
+service.interceptors.response.use(
   (response) => response,
   (error) => {
     console.error("请求错误:", error);
@@ -34,16 +37,13 @@ axios.interceptors.response.use(
 const request = (config) => {
   const baseURL = config.url.startsWith("http") ? "" : "/api";
 
-  const requestConfig = {
+  return service({
     baseURL,
-    timeout: 6000,
     ...config,
     headers: {
       ...config.headers,
     },
-  };
-
-  return axios(requestConfig).then((response) => response.data);
+  }).then((response) => response.data);
 };
 
 /**

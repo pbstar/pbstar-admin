@@ -1,5 +1,4 @@
 // 基础组件
-export { default as pButton } from "./base/p-button/index.vue";
 export { default as pCollapse } from "./base/p-collapse/index.vue";
 export { default as pDialog } from "./base/p-dialog/index.vue";
 export { default as pIcon } from "./base/p-icon/index.vue";
@@ -12,7 +11,6 @@ export { default as pTitle } from "./base/p-title/index.vue";
 export { default as pTwinBox } from "./layout/p-twinBox/index.vue";
 
 // 扩展组件
-export { default as pCodeView } from "./more/p-codeView/index.vue";
 export { default as pIconSelect } from "./more/p-iconSelect/index.vue";
 export { default as pVerificationCode } from "./more/p-verificationCode/index.vue";
 

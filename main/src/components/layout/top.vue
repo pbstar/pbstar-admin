@@ -1,36 +1,11 @@
 <script setup>
-import { ref, watch } from "vue";
-import { useRouter } from "vue-router";
 import useSharedStore from "@Passets/stores/shared";
 import { bus } from "wujie";
-import request from "@Passets/utils/request";
 import { pIcon } from "@Pcomponents";
 import AppSelect from "../more/appSelect.vue";
-import { changeTheme } from "@Passets/utils/theme";
+import { useUserHeader } from "./useUserHeader";
 
 const sharedStore = useSharedStore();
-const router = useRouter();
-
-// 系统标题
-const title = ref(import.meta.env.PUBLIC_TITLE);
-// 用户名称
-const userName = ref(sharedStore.userInfo?.name || "管理员");
-// 用户头像
-const userImg = ref(sharedStore.userInfo?.avatar || "");
-// 主题模式
-const theme = ref(false);
-
-// 跳转个人资料
-const toUserInfo = () => {
-  router.push({ path: "/admin/pUser" });
-};
-
-// 切换主题
-const themeChange = () => {
-  changeTheme(theme.value);
-  sharedStore.isDark = theme.value;
-  bus.$emit("changeSharedPinia", { isDark: theme.value });
-};
 
 // 进入全屏
 const toFull = () => {
@@ -38,27 +13,8 @@ const toFull = () => {
   bus.$emit("changeSharedPinia", { isFull: true });
 };
 
-// 退出登录
-const toLoginOut = () => {
-  request.post({ url: "/main/logout" }).then((res) => {
-    if (res.code === 200) {
-      sharedStore.userInfo = null;
-      localStorage.removeItem("p_token");
-      bus.$emit("changeSharedPinia", { userInfo: null });
-      router.push({ path: "/login" });
-    }
-  });
-};
-
-watch(
-  () => sharedStore.userInfo,
-  (newVal) => {
-    if (newVal) {
-      userName.value = newVal.name || "管理员";
-      userImg.value = newVal.avatar || "";
-    }
-  },
-);
+const { title, userName, userImg, theme, themeChange, toUserInfo, toLoginOut } =
+  useUserHeader();
 </script>
 <template>
   <div class="box">

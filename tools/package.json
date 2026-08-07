@@ -5,10 +5,10 @@
   "type": "module",
   "scripts": {
     "create": "node ./cli/create.mjs",
-    "build": "node ./cli/build.mjs",
-    "dev": "node ./cli/dev.mjs",
-    "add": "node ./cli/add.mjs",
-    "remove": "node ./cli/remove.mjs"
+    "build": "node ./cli/serve.mjs build",
+    "dev": "node ./cli/serve.mjs dev",
+    "add": "node ./cli/dep.mjs add",
+    "remove": "node ./cli/dep.mjs remove"
   },
   "dependencies": {
     "chalk": "^5.6.0",

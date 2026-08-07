@@ -73,14 +73,7 @@ importers:
 
   assets: {}
 
-  components:
-    dependencies:
-      highlight.js:
-        specifier: ^11.11.1
-        version: 11.11.1
-      p-export-excel:
-        specifier: ^1.1.2
-        version: 1.1.2
+  components: {}
 
   main:
     dependencies:
@@ -1314,10 +1307,6 @@ packages:
     resolution: {integrity: sha512-0hJU9SCPvmMzIBdZFqNPXWa6dqh7WdH0cII9y+CyS8rG3nL48Bclra9HmKhVVUHyPWNH5Y7xDwAB7bfgSjkUMQ==}
     engines: {node: '>= 0.4'}
 
-  highlight.js@11.11.1:
-    resolution: {integrity: sha512-Xwwo44whKBVCYoliBQwaPvtd/2tYFkRQtXDWj1nackaV2JPXx3L0+Jvd8/qCJ2p+ML0/XVkJ2q+Mr+UVdpJK5w==}
-    engines: {node: '>=12.0.0'}
-
   hookable@5.5.3:
     resolution: {integrity: sha512-Yc+BQe8SvoXH1643Qez1zqLRmbA5rCL+sSmk6TVos0LWVfNIB7PGncdlId77WzLGSIB5KaWgTaNTs2lNVEI6VQ==}
 
@@ -1578,9 +1567,6 @@ packages:
 
   normalize-wheel-es@1.2.0:
     resolution: {integrity: sha512-Wj7+EJQ8mSuXr2iWfnujrimU35R2W4FAErEyTmJoJ7ucwTn2hOUSsRehMb5RSYkxXGTM7Y9QpvPmp++w5ftoJw==}
-
-  p-export-excel@1.1.2:
-    resolution: {integrity: sha512-1+lJY0TJx3Xz654/VSQy36cv8rC67S5D4SUUMiF1M33phst8WPV2Ohmg77NtFNAki/58WZUoUSqjyFTKJVFGFg==}
 
   package-json-from-dist@1.0.1:
     resolution: {integrity: sha512-UEZIS3/by4OC8vL3P2dTXRETpebLI2NiI5vIrjaD/5UtrkFX/tNbwjTSRAGC/+7CAo2pIcBaRgWmcBBHcsaCIw==}
@@ -3584,8 +3570,6 @@ snapshots:
     dependencies:
       function-bind: 1.1.2
 
-  highlight.js@11.11.1: {}
-
   hookable@5.5.3: {}
 
   html-void-elements@3.0.0: {}
@@ -3820,8 +3804,6 @@ snapshots:
   node-releases@2.0.27: {}
 
   normalize-wheel-es@1.2.0: {}
-
-  p-export-excel@1.1.2: {}
 
   package-json-from-dist@1.0.1: {}
 

@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import apps from "../../../apps/apps.json" with { type: "json" };
+import { setupRouterGuards } from "./permission";
 
 // 判断是否为开发环境
 const isDev = import.meta.env.DEV;
@@ -61,5 +62,7 @@ const router = createRouter({
     },
   ],
 });
+
+setupRouterGuards(router);
 
 export default router;

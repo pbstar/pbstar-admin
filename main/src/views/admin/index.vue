@@ -44,6 +44,7 @@ import history from "@/components/layout/history.vue";
 import LayoutLoading from "@/components/layout/loading.vue";
 import useSharedStore from "@Passets/stores/shared";
 import { useAppsStore } from "@/stores/apps";
+import { whiteList, isFreeLogin } from "@/utils/auth";
 import { bus } from "wujie";
 import request from "@Passets/utils/request";
 
@@ -51,24 +52,16 @@ const sharedStore = useSharedStore();
 const appsStore = useAppsStore();
 const router = useRouter();
 const route = useRoute();
-// 开发环境免登录配置
-const isFreeLogin =
-  import.meta.env.DEV && import.meta.env.PUBLIC_FREE_LOGIN === "T";
 const isFull = computed(() => {
   return sharedStore.isFull;
 });
 const isMobile = computed(() => {
   return window.innerWidth <= 700;
 });
-// 路由白名单
-const whiteList = ["/login", "/404", "/403"];
 const isMounted = ref(false);
 onBeforeMount(async () => {
   if (isFreeLogin || whiteList.includes(route.path)) {
     return;
-  }
-  if (!localStorage.getItem("p_token")) {
-    return router.push({ path: "/login" });
   }
   if (!sharedStore.userInfo) {
     await getUserInfo();
@@ -126,19 +119,6 @@ const getAppList = async () => {
   }
   appsStore.setApps(res.data);
 };
-router.beforeEach((to, from, next) => {
-  if (isFreeLogin || whiteList.includes(to.path)) {
-    return next();
-  }
-  if (!localStorage.getItem("p_token")) {
-    return next({ path: "/login" });
-  }
-  if (to.meta?.appKey && !appsStore.hasAppNav(to.query)) {
-    ElMessage.error("无权限访问");
-    return next({ path: "/403" });
-  }
-  next();
-});
 </script>
 <style scoped lang="scss">
 .pa_page {

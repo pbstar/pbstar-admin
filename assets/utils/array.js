@@ -1,26 +1,4 @@
 /**
- * 数组扁平化
- * @param {Array} arr 要扁平化的数组
- * @param {string} listKey 子数组的键名，默认为'children'
- * @returns {Array} 扁平化后的数组
- */
-export function flatten(arr, listKey = "children") {
-  const result = [];
-
-  const flattenRecursive = (array) => {
-    array.forEach((item) => {
-      result.push(item);
-      if (Array.isArray(item[listKey])) {
-        flattenRecursive(item[listKey]);
-      }
-    });
-  };
-
-  flattenRecursive(arr);
-  return result;
-}
-
-/**
  * 数组结构化（构建树形结构）
  * @param {Array} arr 要结构化的数组
  * @param {string} pidKey 父节点ID的键名，默认为'parentId'

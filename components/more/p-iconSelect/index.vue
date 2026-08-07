@@ -28,8 +28,8 @@
       </el-tabs>
     </div>
     <template #footer>
-      <p-button type="primary" @click="handleSave()"> 保存 </p-button>
-      <p-button @click="handleBack()"> 返回 </p-button>
+      <el-button type="primary" @click="handleSave()"> 保存 </el-button>
+      <el-button @click="handleBack()"> 返回 </el-button>
     </template>
   </p-dialog>
 </template>
@@ -37,7 +37,6 @@
 import { ref, watch, computed } from "vue";
 import pIcon from "../../base/p-icon/index.vue";
 import pDialog from "../../base/p-dialog/index.vue";
-import pButton from "../../base/p-button/index.vue";
 import IconList from "./IconList.vue";
 import * as ElIcons from "@element-plus/icons-vue";
 import iconJson from "@Passets/iconfont/iconfont.json";

@@ -2,7 +2,7 @@
 import { ref, onBeforeMount } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import request from "@Passets/utils/request";
-import { pTable, pSearch, pTitle, pDialog, pButton, pItem } from "@Pcomponents";
+import { pTable, pSearch, pTitle, pDialog, pItem } from "@Pcomponents";
 import Detail from "./components/role/detail.vue";
 
 const searchValue = ref({});
@@ -146,13 +146,13 @@ const handleBack = () => {
           width="200"
         >
           <template #default="{ row }">
-            <p-button type="primary" size="small" link @click="handleView(row)">
+            <el-button type="primary" size="small" link @click="handleView(row)">
               查看
-            </p-button>
-            <p-button type="primary" size="small" link @click="handleEdit(row)">
+            </el-button>
+            <el-button type="primary" size="small" link @click="handleEdit(row)">
               编辑
-            </p-button>
-            <p-button
+            </el-button>
+            <el-button
               v-if="row.id != 1"
               type="danger"
               size="small"
@@ -160,20 +160,20 @@ const handleBack = () => {
               @click="handleDelete(row)"
             >
               删除
-            </p-button>
+            </el-button>
           </template>
         </el-table-column>
       </template>
       <template #topLeft>
-        <p-button type="primary" @click="handleAdd()"> 新增 </p-button>
+        <el-button type="primary" @click="handleAdd()"> 新增 </el-button>
       </template>
     </p-table>
 
     <p-dialog title="角色管理详情页" type="drawer" v-model="isDetail">
       <Detail ref="detailRef" :type="detailType" :id="detailId"></Detail>
       <template #footer>
-        <p-button type="primary" @click="handleSave()"> 保存 </p-button>
-        <p-button @click="handleBack()"> 返回 </p-button>
+        <el-button type="primary" @click="handleSave()"> 保存 </el-button>
+        <el-button @click="handleBack()"> 返回 </el-button>
       </template>
     </p-dialog>
   </div>

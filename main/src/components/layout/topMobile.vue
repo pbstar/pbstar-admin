@@ -1,24 +1,15 @@
 <script setup>
-import { ref, watch } from "vue";
-import useSharedStore from "@Passets/stores/shared";
-import { useRouter } from "vue-router";
-import { bus } from "wujie";
-import request from "@Passets/utils/request";
+import { ref } from "vue";
 import { pIcon } from "@Pcomponents";
-import { changeTheme } from "@Passets/utils/theme";
 import AppSelect from "../more/appSelect.vue";
 import { useNavMenu } from "@/components/layout/layout";
 import MenuTree from "./MenuTree.vue";
-
-const sharedStore = useSharedStore();
-const router = useRouter();
+import { useUserHeader } from "./useUserHeader";
 
 const { listTree, activeIndex, selectNav } = useNavMenu();
+const { title, userName, userImg, theme, themeChange, toUserInfo, toLoginOut } =
+  useUserHeader();
 
-const title = ref(import.meta.env.PUBLIC_TITLE);
-const userName = ref(sharedStore.userInfo?.name || "管理员");
-const userImg = ref(sharedStore.userInfo?.avatar || "");
-const theme = ref(false);
 const isMore = ref(false);
 
 const select = (val) => {
@@ -26,38 +17,10 @@ const select = (val) => {
   isMore.value = false;
 };
 
-const toUserInfo = () => {
+const handleUserInfo = () => {
   isMore.value = false;
-  router.push({ path: "/admin/pUser" });
+  toUserInfo();
 };
-
-const themeChange = () => {
-  changeTheme(theme.value);
-  sharedStore.isDark = theme.value;
-  bus.$emit("changeSharedPinia", { isDark: theme.value });
-};
-
-// 退出登录
-const toLoginOut = () => {
-  request.post({ url: "/main/logout" }).then((res) => {
-    if (res.code === 200) {
-      sharedStore.userInfo = null;
-      localStorage.removeItem("p_token");
-      bus.$emit("changeSharedPinia", { userInfo: null });
-      router.push({ path: "/login" });
-    }
-  });
-};
-
-watch(
-  () => sharedStore.userInfo,
-  (newVal) => {
-    if (newVal) {
-      userName.value = newVal.name || "管理员";
-      userImg.value = newVal.avatar || "";
-    }
-  },
-);
 </script>
 
 <template>
@@ -84,6 +47,7 @@ watch(
         <MenuTree
           :menuList="listTree"
           :activeIndex="activeIndex"
+          isRoot
           @select="select"
         />
         <div class="mobile-controls">
@@ -106,7 +70,7 @@ watch(
               <p-icon name="el-icon-sunny" />
             </template>
           </el-switch>
-          <div class="userBox" @click="toUserInfo">
+          <div class="userBox" @click="handleUserInfo">
             <img v-if="userImg" :src="userImg" alt="" />
             <img v-else src="@/assets/imgs/user.png" alt="" />
             {{ userName }}
