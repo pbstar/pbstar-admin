@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pnpm install)",
+      "Bash(pnpm add *)",
+      "Bash(pnpm remove *)",
+      "Bash(pnpm run *)",
+      "Bash(pnpm dev)",
+      "Bash(pnpm build)",
+      "Bash(pnpm create)",
+      "Bash(pnpm -filter *)",
+      "Bash(git status)",
+      "Bash(git diff*)",
+      "Bash(git log*)",
+      "Bash(git show*)",
+      "Bash(git branch*)",
+      "Bash(git remote*)",
+      "Bash(git fetch*)",
+      "Bash(git blame*)",
+      "Bash(ls*)",
+      "Bash(find *)",
+      "Bash(cat *)",
+      "Bash(grep *)"
+    ]
+  }
+}
