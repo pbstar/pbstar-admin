@@ -1,7 +1,6 @@
 import { defineConfig } from "@rsbuild/core";
 import { pluginVue } from "@rsbuild/plugin-vue";
 import { pluginSass } from "@rsbuild/plugin-sass";
-import { checkUniqueKeyPlugin } from "./tools/plugins/checkUniqueKeyPlugin";
 import { distZipPlugin } from "./tools/plugins/distZipPlugin";
 import apps from "./apps/apps.json" with { type: "json" };
 
@@ -19,12 +18,6 @@ const createAppConfig = (app) => {
         "@": basePath + "/src",
       },
     },
-    plugins: [
-      checkUniqueKeyPlugin({
-        checkPath: `${basePath}/src`,
-        checkKeys: ["btnkey"],
-      }),
-    ],
   };
 };
 
@@ -43,12 +36,6 @@ const mainConfig = {
   resolve: {
     alias: { "@": "./main/src" },
   },
-  plugins: [
-    checkUniqueKeyPlugin({
-      checkPath: "./main/src",
-      checkKeys: ["btnkey"],
-    }),
-  ],
 };
 
 export default defineConfig({

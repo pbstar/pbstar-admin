@@ -25,7 +25,6 @@
     "@rsbuild/core": "^1.6.10",
     "@rsbuild/plugin-sass": "^1.4.0",
     "@rsbuild/plugin-vue": "^1.2.0",
-    "globby": "^14.1.0",
     "jszip": "^3.10.1"
   },
   "engines": {
