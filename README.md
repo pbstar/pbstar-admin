@@ -60,7 +60,6 @@ pnpm run create
 ## 📁 项目结构
 
 ```
-├── .husky                      # git hooks配置
 ├── apps                        # 子应用
 │ ├── app-common                # 公共子应用模块
 │ ├── example                   # 示例应用
@@ -74,7 +73,6 @@ pnpm run create
 ├── tools                       # 工具模块
 ├── .gitignore                  # git忽略文件
 ├── .gitmodules                 # git子模块配置
-├── .prettierrc                 # prettier配置
 ├── package.json                # 依赖
 ├── jsconfig.json               # js配置
 ├── pnpm-workspace.yaml         # 工作区配置
