@@ -9,7 +9,8 @@
     "dev": "pnpm run -filter tools dev",
     "add": "pnpm run -filter tools add",
     "remove": "pnpm run -filter tools remove",
-    "build": "pnpm run -filter tools build"
+    "build": "pnpm run -filter tools build",
+    "type-check": "vue-tsc -p main/tsconfig.json --noEmit && vue-tsc -p apps/system/tsconfig.json --noEmit && vue-tsc -p apps/example/tsconfig.json --noEmit && vue-tsc -p tools/tsconfig.json --noEmit"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.2",
@@ -22,13 +23,18 @@
     "vue-router": "^4.6.4"
   },
   "devDependencies": {
-    "@rsbuild/core": "^1.6.10",
-    "@rsbuild/plugin-sass": "^1.4.0",
-    "@rsbuild/plugin-vue": "^1.2.0",
-    "jszip": "^3.10.1"
+    "@rsbuild/core": "^2.1.10",
+    "@rsbuild/plugin-sass": "^2.0.1",
+    "@rsbuild/plugin-vue": "^2.0.1",
+    "@types/fs-extra": "^11.0.4",
+    "@types/node": "^26.2.0",
+    "jszip": "^3.10.1",
+    "tsx": "^4.23.12",
+    "typescript": "^5.9.3",
+    "vue-tsc": "^3.3.9"
   },
   "engines": {
-    "node": ">=18.12.0",
+    "node": ">=20.19.0",
     "pnpm": ">=9.15.0"
   },
   "packageManager": "pnpm@9.15.0",

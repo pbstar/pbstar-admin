@@ -35,7 +35,7 @@
     </template>
   </div>
 </template>
-<script setup>
+<script setup lang="ts">
 import { computed, onBeforeMount } from "vue";
 import { RouterView } from "vue-router";
 import { pIcon } from "@Pcomponents";

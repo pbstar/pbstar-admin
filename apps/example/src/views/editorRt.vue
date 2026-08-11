@@ -20,12 +20,16 @@
     </div>
   </div>
 </template>
-<script setup>
+<script setup lang="ts">
 import { onBeforeUnmount, ref, shallowRef } from "vue";
 import { Editor, Toolbar } from "@wangeditor-next/editor-for-vue";
+import type { IDomEditor } from "@wangeditor-next/editor";
 import "@wangeditor-next/editor/dist/css/style.css"; // 引入 css
 import { pTitle } from "@Pcomponents";
-const editorRef = shallowRef();
+const editorRef = shallowRef<IDomEditor>();
+
+// 编辑器模式（default 富文本 / simple 简洁）
+const mode: "default" | "simple" = "default";
 
 // 内容 HTML
 const valueHtml = ref("<p>hello world</p>");
@@ -39,7 +43,7 @@ onBeforeUnmount(() => {
   editor.destroy();
 });
 
-const handleCreated = (editor) => {
+const handleCreated = (editor: IDomEditor) => {
   editorRef.value = editor; // 记录 editor 实例，重要！
 };
 </script>

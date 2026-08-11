@@ -1,5 +1,6 @@
 import { createApp } from "vue";
 import { createPinia } from "pinia";
+import type { Component, Plugin } from "vue";
 import ElementPlus from "element-plus";
 import zhCn from "element-plus/es/locale/lang/zh-cn";
 import "element-plus/dist/index.css";
@@ -9,40 +10,41 @@ import { permission } from "@Passets/directives/permission";
 
 /**
  * 创建微应用实例的通用方法
- * @param {Component} App - 根组件
- * @param {Array} useList - 配置选项
+ * @param App 根组件
+ * @param useList 配置选项
  */
-export function createMicroApp(App, useList = []) {
-  let instance = null;
+export function createMicroApp(App: Component, useList: Plugin[] = []) {
+  let instance: ReturnType<typeof createApp> | null = null;
   const mainPinia = window.parent?.$mainPinia;
 
   const render = () => {
-    instance = createApp(App);
+    const app = createApp(App);
+    instance = app;
 
     // 配置Element Plus
-    instance.use(ElementPlus, {
+    app.use(ElementPlus, {
       locale: zhCn,
     });
 
     // 如果有主应用的Pinia，也使用它
     if (mainPinia) {
-      instance.use(mainPinia);
+      app.use(mainPinia);
     }
 
     // 配置Pinia
     const appPinia = createPinia();
-    instance.use(appPinia);
+    app.use(appPinia);
 
     // 配置其他插件
     useList.forEach((item) => {
-      instance.use(item);
+      app.use(item);
     });
 
     // 注册权限指令
-    instance.directive("permission", permission);
+    app.directive("permission", permission);
 
     // 挂载应用
-    instance.mount("#root");
+    app.mount("#root");
   };
 
   // 微前端环境下的生命周期

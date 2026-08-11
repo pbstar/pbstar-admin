@@ -12,11 +12,11 @@ export function useMicroApp() {
   const router = useRouter();
 
   // 处理共享状态变更
-  const handleSharedPinia = (e) => {
+  const handleSharedPinia = (e: Record<string, any>) => {
     Object.keys(e).forEach((key) => {
       // 只设置 store 中已存在的属性
       if (key in sharedStore) {
-        sharedStore[key] = e[key];
+        (sharedStore as Record<string, any>)[key] = e[key];
         if (key === "isDark") {
           changeTheme(e[key]);
         }
@@ -39,16 +39,19 @@ export function useMicroApp() {
   // 绑定事件监听器
   const bindEventListeners = () => {
     // 监听共享状态变更
-    window.$wujie?.bus.$on("changeSharedPinia", (e) => {
+    window.$wujie?.bus.$on("changeSharedPinia", (e: Record<string, any>) => {
       handleSharedPinia(e);
     });
 
     // 监听路由变更
-    window.$wujie?.bus.$on("subappRouteChange", (obj) => {
-      if (obj && obj.path && obj.key === window.$wujie?.bus.id) {
-        router.push(obj.path);
-      }
-    });
+    window.$wujie?.bus.$on(
+      "subappRouteChange",
+      (obj: { key?: string; path?: string }) => {
+        if (obj && obj.path && obj.key === window.$wujie?.bus.id) {
+          router.push(obj.path);
+        }
+      },
+    );
   };
 
   // 解绑事件监听器

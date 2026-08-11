@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "strict": true,
+    "jsx": "preserve",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "types": ["@rsbuild/core/types"],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@Pcomponents": ["../../components/index.ts"],
+      "@Pcomponents/*": ["../../components/*"],
+      "@Passets/*": ["../../assets/*"]
+    }
+  },
+  "include": [
+    "src/**/*",
+    "src/**/*.vue",
+    "../../app-common/**/*",
+    "../../components/**/*",
+    "../../components/**/*.vue",
+    "../../assets/**/*"
+  ]
+}

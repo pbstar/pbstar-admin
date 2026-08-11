@@ -25,14 +25,14 @@
     </div>
   </div>
 </template>
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from "vue";
 import { pTitle, pCollapse } from "@Pcomponents";
 import * as echarts from "echarts";
-const i1 = ref(null);
-const i2 = ref(null);
-const i3 = ref(null);
-const i4 = ref(null);
+const i1 = ref<HTMLDivElement | null>(null);
+const i2 = ref<HTMLDivElement | null>(null);
+const i3 = ref<HTMLDivElement | null>(null);
+const i4 = ref<HTMLDivElement | null>(null);
 
 onMounted(() => {
   initI1();

@@ -1,21 +1,21 @@
-<script setup>
+<script setup lang="ts">
 import { ref, onBeforeMount } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import request from "@Passets/utils/request";
 import { pTable, pSearch, pTitle, pDialog, pItem } from "@Pcomponents";
 import Detail from "./components/role/detail.vue";
 
-const searchValue = ref({});
-const tableData = ref([]);
+const searchValue = ref<Record<string, any>>({});
+const tableData = ref<any[]>([]);
 const pagination = ref({
   pageNumber: 1,
   pageSize: 10,
   total: 0,
 });
 const detailType = ref("");
-const detailId = ref("");
+const detailId = ref<string | number>("");
 const isDetail = ref(false);
-const detailRef = ref(null);
+const detailRef = ref<InstanceType<typeof Detail> | null>(null);
 
 onBeforeMount(() => {
   initTable();
@@ -29,7 +29,13 @@ const toReset = () => {
   searchValue.value = {};
   toSearch();
 };
-const tablePaginationChange = ({ pageNumber, pageSize }) => {
+const tablePaginationChange = ({
+  pageNumber,
+  pageSize,
+}: {
+  pageNumber: number;
+  pageSize: number;
+}) => {
   pagination.value.pageNumber = pageNumber;
   pagination.value.pageSize = pageSize;
   initTable();
@@ -55,17 +61,17 @@ const initTable = () => {
       }
     });
 };
-const handleView = (row) => {
+const handleView = (row: any) => {
   detailType.value = "view";
   detailId.value = row.id;
   isDetail.value = true;
 };
-const handleEdit = (row) => {
+const handleEdit = (row: any) => {
   detailType.value = "edit";
   detailId.value = row.id;
   isDetail.value = true;
 };
-const handleDelete = (row) => {
+const handleDelete = (row: any) => {
   ElMessageBox.confirm("确认删除吗?", "提示", {
     type: "warning",
   })
@@ -92,7 +98,7 @@ const handleAdd = () => {
   isDetail.value = true;
 };
 const handleSave = () => {
-  const detailInfo = detailRef.value.getFormValue();
+  const detailInfo = detailRef.value?.getFormValue();
   const url =
     detailType.value == "add" ? "/system/role/create" : "/system/role/update";
   request

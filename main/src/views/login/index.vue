@@ -44,7 +44,7 @@
     <div class="login-footer">京ICP备2025125905号</div>
   </div>
 </template>
-<script setup>
+<script setup lang="ts">
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
@@ -62,7 +62,7 @@ const title = import.meta.env.PUBLIC_TITLE;
 
 // 验证码
 let code = "";
-const changeCode = (e) => {
+const changeCode = (e: string) => {
   code = e;
 };
 

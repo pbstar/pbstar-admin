@@ -19,7 +19,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from "vue";
 const props = defineProps({
   list: { type: Array, default: () => [] },
@@ -28,7 +28,7 @@ const props = defineProps({
 const emit = defineEmits(["change"]);
 const activeTab = ref(0);
 
-const selectTab = (index) => {
+const selectTab = (index: number) => {
   if (props.list.length === 1) return;
   activeTab.value = index;
   emit("change", { value: props.list[index], index });

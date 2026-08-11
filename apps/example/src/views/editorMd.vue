@@ -12,7 +12,7 @@
     </div>
   </div>
 </template>
-<script setup>
+<script setup lang="ts">
 import { ref } from "vue";
 import { MdEditor } from "md-editor-v3";
 import useSharedStore from "@Passets/stores/shared";

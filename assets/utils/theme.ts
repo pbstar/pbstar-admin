@@ -1,8 +1,8 @@
 /**
  * 切换主题
- * @param {boolean} isDark 是否为暗色主题
+ * @param isDark 是否为暗色主题
  */
-export function changeTheme(isDark) {
+export function changeTheme(isDark: boolean) {
   const htmlElement = document.documentElement;
 
   if (isDark) {

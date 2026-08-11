@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { ref, onBeforeMount } from "vue";
 import { ElMessage } from "element-plus";
 import request from "@Passets/utils/request";
@@ -14,11 +14,11 @@ const props = defineProps({
     default: "",
   },
 });
-const detailInfo = ref({});
+const detailInfo = ref<Record<string, any>>({});
 const detailType = ref("");
-const detailId = ref("");
-const navList = ref([]);
-const btnList = ref([]);
+const detailId = ref<string | number>("");
+const navList = ref<any[]>([]);
+const btnList = ref<any[]>([]);
 
 onBeforeMount(() => {
   detailType.value = props.type;
@@ -36,7 +36,7 @@ const getNavList = () => {
     })
     .then((res) => {
       if (res.code === 200) {
-        navList.value = res.data.map((item) => {
+        navList.value = res.data.map((item: any) => {
           return {
             label: item.name,
             value: item.id.toString(),

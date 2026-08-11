@@ -1,4 +1,4 @@
-<script setup></script>
+<script setup lang="ts"></script>
 <template>
   <div class="box">
     <el-empty description="403" />

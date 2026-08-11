@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import useSharedStore from "@Passets/stores/shared";
 import { bus } from "wujie";
 import { pIcon } from "@Pcomponents";

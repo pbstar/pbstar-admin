@@ -30,7 +30,7 @@
     </div>
   </div>
 </template>
-<script setup>
+<script setup lang="ts">
 import { ref, watch } from "vue";
 import { ElMessage } from "element-plus";
 import request from "@Passets/utils/request";
@@ -39,7 +39,7 @@ import { pTitle, pItem } from "@Pcomponents";
 import { logout } from "@/utils/logout";
 
 const sharedStore = useSharedStore();
-const detailInfo = ref({});
+const detailInfo = ref<Record<string, any>>({});
 
 const toSave = () => {
   request

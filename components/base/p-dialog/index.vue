@@ -34,7 +34,7 @@
   </component>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed } from "vue";
 import { ElDialog, ElDrawer } from "element-plus";
 import { pIcon } from "@Pcomponents";
@@ -43,7 +43,7 @@ const props = defineProps({
   type: {
     type: String,
     default: "box",
-    validator: (value) => ["box", "drawer"].includes(value),
+    validator: (value: string) => ["box", "drawer"].includes(value),
   },
   modelValue: {
     type: Boolean,
@@ -76,7 +76,7 @@ const componentType = computed(() => {
 
 // 动态组件属性
 const componentProps = computed(() => {
-  const obj = {};
+  const obj: Record<string, string | boolean> = {};
   if (props.type === "box") {
     obj.width = isFullscreen.value ? "100%" : props.width || "500px";
     obj.fullscreen = isFullscreen.value;

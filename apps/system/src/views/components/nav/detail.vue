@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { ref, onBeforeMount } from "vue";
 import { ElMessage } from "element-plus";
 import request from "@Passets/utils/request";
@@ -18,14 +18,14 @@ const props = defineProps({
     default: "",
   },
 });
-const detailInfo = ref({
+const detailInfo = ref<Record<string, any>>({
   isNav: 1,
   appId: Number(props.appId),
 });
 const detailType = ref("");
-const detailId = ref("");
-const appList = ref([]); // 应用列表
-const navList = ref([]); // 菜单树结构
+const detailId = ref<string | number>("");
+const appList = ref<any[]>([]); // 应用列表
+const navList = ref<any[]>([]); // 菜单树结构
 
 onBeforeMount(() => {
   detailType.value = props.type;
@@ -44,7 +44,7 @@ const getAppList = () => {
     })
     .then((res) => {
       if (res && res.code === 200) {
-        appList.value = res.data.map((item) => {
+        appList.value = res.data.map((item: any) => {
           return {
             label: item.name,
             value: item.id,
@@ -66,7 +66,7 @@ const getNavList = () => {
     })
     .then((res) => {
       if (res.code === 200) {
-        navList.value = res.data.map((item) => {
+        navList.value = res.data.map((item: any) => {
           return {
             label: item.name,
             value: item.id,

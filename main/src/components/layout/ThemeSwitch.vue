@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { pIcon } from "@Pcomponents";
 import { useUserHeader } from "./useUserHeader";
 

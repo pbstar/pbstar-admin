@@ -9,12 +9,12 @@ const list = ["main", ...apps.map((item) => item.key)];
 
 /**
  * 处理应用模块的启动/构建
- * @param {"dev"|"build"} mode 操作类型
+ * @param mode 操作类型
  */
-const handleServe = async (mode) => {
+const handleServe = async (mode: "dev" | "build") => {
   const isDev = mode === "dev";
   try {
-    const answers = await inquirer.prompt([
+    const answers = await inquirer.prompt<{ appKey: string }>([
       {
         type: "list",
         name: "appKey",
@@ -24,13 +24,14 @@ const handleServe = async (mode) => {
     ]);
     const { appKey } = answers;
     // 构建命令
-    let command;
+    let command: string;
     if (appKey === "main") {
       command = isDev
         ? "rsbuild dev --environment main --port 8800 --open"
         : "rsbuild build --environment main";
     } else {
       const app = apps.find((item) => item.key === appKey);
+      if (!app) return;
       command = isDev
         ? `rsbuild dev --environment ${appKey} --port ${app.devPort}`
         : `rsbuild build --environment ${appKey}`;
@@ -47,7 +48,9 @@ program
   .description("运行应用模块")
   .command("dev")
   .description("启动应用模块")
-  .action(() => handleServe("dev"))
+  .action(() => handleServe("dev"));
+
+program
   .command("build")
   .description("构建应用模块")
   .action(() => handleServe("build"));

@@ -13,20 +13,17 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import pIcon from "../../base/p-icon/index.vue";
-defineProps({
-  icons: {
-    type: Array,
-    default: () => [],
-  },
-  active: {
-    type: String,
-    default: "",
-  },
-});
 
-defineEmits(["select"]);
+defineProps<{
+  icons: string[];
+  active: string;
+}>();
+
+defineEmits<{
+  (e: "select", icon: string): void;
+}>();
 </script>
 
 <style scoped lang="scss">

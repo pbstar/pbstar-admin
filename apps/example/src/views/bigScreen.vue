@@ -25,17 +25,17 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount } from "vue";
 import fitview from "fitview";
 import * as echarts from "echarts";
 
-const fitviewRef = ref(null);
-const echarts1Ref = ref(null);
-const echarts2Ref = ref(null);
-const echarts3Ref = ref(null);
-const echarts4Ref = ref(null);
-const fv = ref(null);
+const fitviewRef = ref<HTMLElement | null>(null);
+const echarts1Ref = ref<HTMLDivElement | null>(null);
+const echarts2Ref = ref<HTMLDivElement | null>(null);
+const echarts3Ref = ref<HTMLDivElement | null>(null);
+const echarts4Ref = ref<HTMLDivElement | null>(null);
+const fv = ref<any>(null);
 
 onMounted(() => {
   fv.value = new fitview({ el: fitviewRef.value });

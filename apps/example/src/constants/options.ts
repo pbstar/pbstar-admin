@@ -2,20 +2,26 @@
  * 静态选项常量（替代原枚举能力，供下拉与label映射使用）
  */
 
+/** 下拉选项 */
+export interface OptionItem {
+  label: string;
+  value: string;
+}
+
 // 是否健康
-export const booleanOptions = [
+export const booleanOptions: OptionItem[] = [
   { label: "是", value: "是" },
   { label: "否", value: "否" },
 ];
 
 // 性别
-export const sexOptions = [
+export const sexOptions: OptionItem[] = [
   { label: "男", value: "1" },
   { label: "女", value: "2" },
 ];
 
 // 民族（56个）
-export const ethnicOptions = [
+export const ethnicOptions: OptionItem[] = [
   "汉族",
   "蒙古族",
   "回族",
@@ -76,11 +82,11 @@ export const ethnicOptions = [
 
 /**
  * 根据 value 获取 label
- * @param {Array<{label:string,value:*} >} options 选项列表
- * @param {*} value 值
- * @returns {string} 对应 label，未匹配则返回原值
+ * @param options 选项列表
+ * @param value 值
+ * @returns 对应 label，未匹配则返回原值
  */
-export const getOptionLabel = (options, value) => {
+export const getOptionLabel = (options: OptionItem[], value: string) => {
   const item = options.find((o) => o.value === value);
   return item ? item.label : value;
 };

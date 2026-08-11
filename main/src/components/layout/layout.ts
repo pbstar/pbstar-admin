@@ -1,12 +1,14 @@
 import { ref, watch, effectScope } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useAppsStore } from "@/stores/apps";
+import type { NavItem } from "@/stores/apps";
+import type { TreeNode } from "@Passets/utils/array";
 import { HOME_PATH } from "@/utils/constants";
 
 // 菜单数据与选中项为模块级单例（桌面侧栏与移动端菜单共用同一份状态）
 const activeIndex = ref("1");
-const list = ref([]);
-const listTree = ref([]);
+const list = ref<NavItem[]>([]);
+const listTree = ref<TreeNode<NavItem>[]>([]);
 
 // 监听在独立 effect scope 中注册，仅首次实例化时执行一次：
 // 既不随组件卸载销毁（避免再次进入时菜单陈旧），也不随多个调用方重复累积
@@ -36,7 +38,7 @@ export function useNavMenu() {
     }
   };
 
-  const selectNav = (val) => {
+  const selectNav = (val: string) => {
     activeIndex.value = val;
     const url = list.value.find((item) => item.id.toString() === val)?.url;
     if (url) {
@@ -44,7 +46,7 @@ export function useNavMenu() {
     }
   };
 
-  const updateActiveIndex = (path) => {
+  const updateActiveIndex = (path: string) => {
     if (path) {
       const nav = list.value.find((item) => item.url === path);
       activeIndex.value = nav?.id.toString() || "1";

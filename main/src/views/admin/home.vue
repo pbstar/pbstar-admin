@@ -1,8 +1,8 @@
-<script setup>
+<script setup lang="ts">
 import { pIcon } from "@Pcomponents";
 
 // 打开外部链接
-const toPath = (path) => {
+const toPath = (path: string) => {
   window.open(path);
 };
 </script>

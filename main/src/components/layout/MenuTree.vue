@@ -31,33 +31,31 @@
   </el-menu-item>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { pIcon } from "@Pcomponents";
 
 defineOptions({ name: "MenuTree" });
 
-const props = defineProps({
-  menuList: {
-    type: Array,
-    default: () => [],
+const props = withDefaults(
+  defineProps<{
+    menuList?: any[];
+    activeIndex?: string;
+    isRoot?: boolean;
+    node?: any;
+  }>(),
+  {
+    menuList: () => [],
+    activeIndex: "",
+    isRoot: false,
+    node: () => ({}),
   },
-  activeIndex: {
-    type: String,
-    default: "",
-  },
-  isRoot: {
-    type: Boolean,
-    default: false,
-  },
-  node: {
-    type: Object,
-    default: () => ({}),
-  },
-});
+);
 
-const emit = defineEmits(["select"]);
+const emit = defineEmits<{
+  (e: "select", index: string): void;
+}>();
 
-const handleSelect = (index) => {
+const handleSelect = (index: string) => {
   emit("select", index);
 };
 </script>

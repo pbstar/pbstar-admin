@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 import { program } from "commander";
 import inquirer from "inquirer";
 import chalk from "chalk";
@@ -23,7 +21,10 @@ program
   .action(async () => {
     try {
       // 交互式问答
-      const answers = await inquirer.prompt([
+      const answers = await inquirer.prompt<{
+        appType: string;
+        appKey: string;
+      }>([
         {
           type: "list",
           name: "appType",
@@ -56,7 +57,7 @@ program
       // 如果是外部子应用，询问Git仓库地址
       let gitUrl = "";
       if (appType === "out") {
-        const gitAnswers = await inquirer.prompt([
+        const gitAnswers = await inquirer.prompt<{ gitUrl: string }>([
           {
             type: "input",
             name: "gitUrl",
@@ -103,7 +104,10 @@ program
           });
           console.log(chalk.green("Git子模块添加成功!"));
         } catch (error) {
-          console.error(chalk.red("Git子模块添加失败:"), error.message);
+          console.error(
+            chalk.red("Git子模块添加失败:"),
+            (error as Error).message,
+          );
           console.warn(
             chalk.yellow(
               "⚠️  Git子模块添加失败，可能是仓库为空或不存在。如果仓库为空，请先提交一次代码或重新创建带README的仓库。",
@@ -118,7 +122,9 @@ program
       if (fs.existsSync(appsJsonPath)) {
         const appsJson = fs.readJsonSync(appsJsonPath);
         // 检查子应用是否已存在
-        const appIndex = appsJson.findIndex((item) => item.key === appKey);
+        const appIndex = appsJson.findIndex(
+          (item: { key: string }) => item.key === appKey,
+        );
         if (appIndex !== -1) {
           console.error(
             chalk.red(
@@ -128,7 +134,9 @@ program
           process.exit(1);
         }
         // 计算新端口号（从现有最大端口+1）
-        const maxPort = Math.max(...appsJson.map((item) => item.devPort));
+        const maxPort = Math.max(
+          ...appsJson.map((item: { devPort: number }) => item.devPort),
+        );
         const port = maxPort + 1;
         // 验证端口号范围（8801-8899）
         if (port < 8801 || port > 8899) {

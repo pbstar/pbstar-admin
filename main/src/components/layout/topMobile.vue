@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from "vue";
 import { pIcon } from "@Pcomponents";
 import AppSelect from "../more/appSelect.vue";
@@ -12,7 +12,7 @@ const { title, userName, userImg, toUserInfo, toLoginOut } = useUserHeader();
 
 const isMore = ref(false);
 
-const select = (val) => {
+const select = (val: string) => {
   selectNav(val);
   isMore.value = false;
 };

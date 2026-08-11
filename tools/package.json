@@ -4,11 +4,11 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "create": "node ./cli/create.mjs",
-    "build": "node ./cli/serve.mjs build",
-    "dev": "node ./cli/serve.mjs dev",
-    "add": "node ./cli/dep.mjs add",
-    "remove": "node ./cli/dep.mjs remove"
+    "create": "tsx ./cli/create.ts",
+    "build": "tsx ./cli/serve.ts build",
+    "dev": "tsx ./cli/serve.ts dev",
+    "add": "tsx ./cli/dep.ts add",
+    "remove": "tsx ./cli/dep.ts remove"
   },
   "dependencies": {
     "chalk": "^5.6.0",

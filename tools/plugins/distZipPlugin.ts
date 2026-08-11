@@ -2,11 +2,12 @@ import JSZip from "jszip";
 import fs from "fs-extra";
 import path from "path";
 import dayjs from "dayjs";
+import type { RsbuildPlugin } from "@rsbuild/core";
 
 /**
  * 构建后生成zip文件的插件
  */
-export const distZipPlugin = () => ({
+export const distZipPlugin = (): RsbuildPlugin => ({
   name: "dist-zip",
   setup(api) {
     api.onAfterBuild(async () => {
@@ -24,7 +25,10 @@ export const distZipPlugin = () => ({
       const zip = new JSZip();
 
       // 递归添加文件到zip
-      const addFilesToZip = async (dirPath, zipFolder) => {
+      const addFilesToZip = async (
+        dirPath: string,
+        zipFolder: JSZip,
+      ): Promise<void> => {
         const items = await fs.readdir(dirPath);
 
         for (const item of items) {
@@ -33,7 +37,9 @@ export const distZipPlugin = () => ({
 
           if (stats.isDirectory()) {
             const subFolder = zipFolder.folder(item);
-            await addFilesToZip(itemPath, subFolder);
+            if (subFolder) {
+              await addFilesToZip(itemPath, subFolder);
+            }
           } else {
             const fileData = await fs.readFile(itemPath);
             zipFolder.file(item, fileData);

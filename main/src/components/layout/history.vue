@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { pIcon } from "@Pcomponents";
 import { ref, nextTick, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
@@ -8,12 +8,12 @@ const router = useRouter();
 const route = useRoute();
 const appsStore = useAppsStore();
 const path = ref("");
-const list = ref([]);
-const historyBox = ref(null);
-const listRef = ref(null);
+const list = ref<{ name: string; appId: number; path: string }[]>([]);
+const historyBox = ref<HTMLDivElement | null>(null);
+const listRef = ref<HTMLDivElement | null>(null);
 
 // 添加历史记录
-const addItem = (fullPath) => {
+const addItem = (fullPath: string) => {
   if (fullPath === path.value) return;
   path.value = fullPath;
   const hasPath = list.value.find((item) => item.path === fullPath);
@@ -29,14 +29,14 @@ const addItem = (fullPath) => {
   });
   // 如果宽度超出，删除最前面的一条记录
   nextTick(() => {
-    const width = historyBox.value.clientWidth - 100;
-    if (listRef.value.scrollWidth > width) {
+    const width = (historyBox.value?.clientWidth ?? 0) - 100;
+    if ((listRef.value?.scrollWidth ?? 0) > width) {
       list.value.shift();
     }
   });
 };
 // 删除历史记录
-const delItem = (url) => {
+const delItem = (url: string) => {
   list.value = list.value.filter((item) => item.path !== url);
   if (url === path.value) {
     // 清空后回退默认首页
@@ -50,7 +50,7 @@ const delItem = (url) => {
   }
 };
 // 跳转路径
-const toPath = async (item) => {
+const toPath = async (item: { appId: number; path: string }) => {
   if (item.path === path.value) return;
   if (item.appId !== appsStore.appId) {
     await appsStore.setAppId({

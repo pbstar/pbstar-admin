@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
+import type { RouteRecordRaw } from "vue-router";
 import apps from "../../../apps/apps.json" with { type: "json" };
 import { setupRouterGuards } from "./permission";
 
@@ -6,7 +7,7 @@ import { setupRouterGuards } from "./permission";
 const isDev = import.meta.env.DEV;
 
 // 动态生成子应用路由配置
-const appsRouter = apps.map((item) => {
+const appsRouter: RouteRecordRaw[] = apps.map((item) => {
   return {
     path: item.key,
     name: "admin_" + item.key,

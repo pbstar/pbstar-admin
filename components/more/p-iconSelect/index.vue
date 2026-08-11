@@ -33,7 +33,7 @@
     </template>
   </p-dialog>
 </template>
-<script setup>
+<script setup lang="ts">
 import { ref, watch, computed } from "vue";
 import pIcon from "../../base/p-icon/index.vue";
 import pDialog from "../../base/p-dialog/index.vue";
@@ -82,7 +82,7 @@ const handleBack = () => {
   visible.value = false;
 };
 
-const selectIcon = (name) => {
+const selectIcon = (name: string) => {
   iconActive.value = name;
 };
 

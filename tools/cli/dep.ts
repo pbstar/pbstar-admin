@@ -16,12 +16,12 @@ const list = [
 
 /**
  * 处理依赖包添加/移除
- * @param {"add"|"remove"} mode 操作类型
+ * @param mode 操作类型
  */
-const handleDep = async (mode) => {
+const handleDep = async (mode: "add" | "remove") => {
   const isAdd = mode === "add";
   try {
-    const prompts = [
+    const prompts: any[] = [
       {
         type: "list",
         name: "appKey",
@@ -42,7 +42,11 @@ const handleDep = async (mode) => {
         choices: ["dependencies", "devDependencies"],
       });
     }
-    const { appKey, packageName, packageType } = await inquirer.prompt(prompts);
+    const { appKey, packageName, packageType } = await inquirer.prompt<{
+      appKey: string;
+      packageName: string;
+      packageType: string;
+    }>(prompts);
     // 验证依赖包名称
     if (!packageName) {
       console.error(chalk.red("Error: 依赖包名称不能为空"));

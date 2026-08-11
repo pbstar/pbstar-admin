@@ -29,7 +29,7 @@
 
 ## 📋 环境要求
 
-- node >= 18.12.0（推荐使用 Node.js 22 LTS）
+- node >= 20.19.0（推荐使用 Node.js 22 LTS）
 - pnpm >= 9.15.0
 
 ## 🚀 快速开始
@@ -74,9 +74,9 @@ pnpm run create
 ├── .gitignore                  # git忽略文件
 ├── .gitmodules                 # git子模块配置
 ├── package.json                # 依赖
-├── jsconfig.json               # js配置
+├── tsconfig.base.json          # TypeScript 公共配置
 ├── pnpm-workspace.yaml         # 工作区配置
-├── rsbuild.config.mjs          # 打包配置
+├── rsbuild.config.ts           # 打包配置
 └── README.md                   # 说明
 ```
 

@@ -1,4 +1,5 @@
 import { defineConfig, loadEnv } from "@rsbuild/core";
+import type { EnvironmentConfig } from "@rsbuild/core";
 import { pluginVue } from "@rsbuild/plugin-vue";
 import { pluginSass } from "@rsbuild/plugin-sass";
 import { distZipPlugin } from "./tools/plugins/distZipPlugin";
@@ -9,11 +10,11 @@ const { rawPublicVars } = loadEnv();
 const PUBLIC_TITLE = rawPublicVars.PUBLIC_TITLE;
 const PUBLIC_API_BASE_URL = rawPublicVars.PUBLIC_API_BASE_URL;
 
-const createAppConfig = (app) => {
+const createAppConfig = (app: { key: string }): EnvironmentConfig => {
   const basePath = `./apps/${app.key}`;
   return {
     source: {
-      entry: { index: `${basePath}/src/main.js` },
+      entry: { index: `${basePath}/src/main.ts` },
     },
     output: {
       distPath: { root: `./build/dist/${app.key}` },
@@ -26,14 +27,14 @@ const createAppConfig = (app) => {
   };
 };
 
-const mainConfig = {
+const mainConfig: EnvironmentConfig = {
   html: {
     template: "./main/src/assets/html/index.html",
     title: PUBLIC_TITLE,
     favicon: "./main/src/assets/imgs/logo.png",
   },
   source: {
-    entry: { index: "./main/src/main.js" },
+    entry: { index: "./main/src/main.ts" },
   },
   output: {
     distPath: { root: "./build/dist/main" },

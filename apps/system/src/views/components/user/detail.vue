@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { ref, onBeforeMount } from "vue";
 import { ElMessage } from "element-plus";
 import request from "@Passets/utils/request";
@@ -14,10 +14,10 @@ const props = defineProps({
     default: "",
   },
 });
-const detailInfo = ref({});
+const detailInfo = ref<Record<string, any>>({});
 const detailType = ref("");
-const detailId = ref("");
-const roleList = ref([]);
+const detailId = ref<string | number>("");
+const roleList = ref<{ label: string; value: string }[]>([]);
 
 onBeforeMount(() => {
   detailType.value = props.type;
@@ -34,7 +34,7 @@ const getRoleList = () => {
     })
     .then((res) => {
       if (res.code === 200 && res.data) {
-        roleList.value = res.data.map((item) => {
+        roleList.value = res.data.map((item: any) => {
           return {
             label: item.name,
             value: item.role_key,

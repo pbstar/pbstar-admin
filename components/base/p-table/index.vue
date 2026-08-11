@@ -54,7 +54,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, watch, computed } from "vue";
 
 const props = defineProps({
@@ -90,7 +90,7 @@ const emit = defineEmits(["paginationChange", "selectionChange"]);
 const pageNumber = ref(1);
 const pageSize = ref(10);
 const total = ref(0);
-const selectionList = ref([]);
+const selectionList = ref<any[]>([]);
 
 // 是否显示分页
 const hasPagination = computed(() => {
@@ -98,12 +98,12 @@ const hasPagination = computed(() => {
 });
 
 // 计算序号
-const getIndex = (index) => {
+const getIndex = (index: number) => {
   return (pageNumber.value - 1) * pageSize.value + index + 1;
 };
 
 // 每页条数变化
-const handleSizeChange = (val) => {
+const handleSizeChange = (val: number) => {
   pageSize.value = val;
   emit("paginationChange", {
     pageNumber: pageNumber.value,
@@ -112,7 +112,7 @@ const handleSizeChange = (val) => {
 };
 
 // 当前页变化
-const handleCurrentChange = (val) => {
+const handleCurrentChange = (val: number) => {
   pageNumber.value = val;
   emit("paginationChange", {
     pageNumber: pageNumber.value,
@@ -120,7 +120,7 @@ const handleCurrentChange = (val) => {
   });
 };
 // 选择项变化
-const handleSelectionChange = (val) => {
+const handleSelectionChange = (val: any[]) => {
   selectionList.value = val;
   emit("selectionChange", val);
 };

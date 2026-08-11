@@ -1,18 +1,19 @@
-<script setup>
+<script setup lang="ts">
 import { pIcon } from "@Pcomponents";
 import { ref, onBeforeMount, watch } from "vue";
 import { useRouter } from "vue-router";
 import { useAppsStore } from "@/stores/apps";
+import type { AppItem } from "@/stores/apps";
 const appsStore = useAppsStore();
 const router = useRouter();
-const appsRef = ref(null);
-const popoverRef = ref(null);
-const appsList = ref([]);
-const appsTree = ref([]);
-const appActive = ref({});
+const appsRef = ref<HTMLElement | null>(null);
+const popoverRef = ref<{ hide: () => void } | null>(null);
+const appsList = ref<AppItem[]>([]);
+const appsTree = ref<{ name: string; children: AppItem[] }[]>([]);
+const appActive = ref<AppItem | null>(null);
 const isLoading = ref(false);
-const getAppsGroup = (myApps) => {
-  const groupMap = {};
+const getAppsGroup = (myApps: AppItem[]) => {
+  const groupMap: Record<string, { name: string; children: AppItem[] }> = {};
   myApps.forEach((item) => {
     if (!groupMap[item.group]) {
       groupMap[item.group] = {
@@ -30,12 +31,12 @@ onBeforeMount(() => {
   const appId = appsStore.appId;
   appsTree.value = getAppsGroup(appsList.value);
   if (appId) {
-    appActive.value = appsList.value.find((item) => item.id === appId);
+    appActive.value = appsList.value.find((item) => item.id === appId) || null;
   }
 });
 
 // 切换应用
-const toApp = async (app) => {
+const toApp = async (app: AppItem) => {
   if (app.id === appActive.value?.id) return;
   isLoading.value = true;
   const isOk = await appsStore.setAppId({
@@ -47,20 +48,20 @@ const toApp = async (app) => {
   const newApp = appsStore.getApp();
   if (newApp && newApp.navs) {
     const firstNav = newApp.navs.find((e) => e.url);
-    if (firstNav) {
+    if (firstNav?.url) {
       router.push(firstNav.url);
     }
   }
-  popoverRef.value.hide();
+  popoverRef.value?.hide();
 };
 watch(
   () => appsStore.appId,
   (newVal) => {
     if (newVal && newVal !== appActive.value?.id) {
       const newApp = appsList.value.find((item) => item.id === newVal);
-      appActive.value = newApp || {};
+      appActive.value = newApp || null;
     } else {
-      appActive.value = {};
+      appActive.value = null;
     }
   },
 );

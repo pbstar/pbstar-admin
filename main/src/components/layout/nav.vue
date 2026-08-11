@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { useNavMenu } from "@/components/layout/layout";
 import MenuTree from "./MenuTree.vue";
 

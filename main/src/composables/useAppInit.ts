@@ -62,7 +62,7 @@ export function useAppInit() {
     }
     await getAppList();
     if (route.meta?.appKey) {
-      const isOk = await appsStore.setAppId({ key: route.meta.appKey });
+      const isOk = await appsStore.setAppId({ key: route.meta.appKey as string });
       if (!isOk || !appsStore.hasAppNav(route.query)) {
         ElMessage.error("无权限访问");
         return router.push({ path: "/403" });

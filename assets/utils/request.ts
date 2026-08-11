@@ -1,5 +1,20 @@
 import axios from "axios";
+import type { AxiosRequestConfig } from "axios";
 import { ElMessage } from "element-plus";
+
+/** 后端统一响应结构 */
+export interface Res<T = any> {
+  code: number;
+  msg: string;
+  data: T;
+}
+
+/** 请求参数（url 必填，data/config 可选） */
+export interface RequestParams {
+  url: string;
+  data?: any;
+  config?: AxiosRequestConfig;
+}
 
 // 独立axios实例，避免请求策略（超时/拦截器）相互干扰
 const service = axios.create({ timeout: 6000 });
@@ -8,7 +23,7 @@ const service = axios.create({ timeout: 6000 });
 service.interceptors.request.use((config) => {
   const token = localStorage.getItem("p_token");
   if (token) {
-    config.headers.token = token;
+    config.headers.set("token", token);
   }
   return config;
 });
@@ -31,28 +46,26 @@ service.interceptors.response.use(
 
 /**
  * 基础请求方法
- * @param {Object} config 请求配置
- * @returns {Promise} 请求结果
+ * @param config 请求配置
+ * @returns 后端响应（code/msg/data）
  */
-const request = (config) => {
-  const baseURL = config.url.startsWith("http") ? "" : "/api";
+const request = async <T = any>(config: AxiosRequestConfig): Promise<Res<T>> => {
+  const baseURL = config.url?.startsWith("http") ? "" : "/api";
 
-  return service({
+  const response = await service({
     baseURL,
     ...config,
-    headers: {
-      ...config.headers,
-    },
-  }).then((response) => response.data);
+  });
+  return response.data as Res<T>;
 };
 
 /**
  * GET请求
- * @param {Object} param0 请求参数
- * @returns {Promise} 请求结果
+ * @param param0 请求参数
+ * @returns 后端响应
  */
-const get = ({ url, data, config = {} }) => {
-  return request({
+const get = <T = any>({ url, data, config = {} }: RequestParams): Promise<Res<T>> => {
+  return request<T>({
     method: "get",
     url,
     params: data,
@@ -62,11 +75,11 @@ const get = ({ url, data, config = {} }) => {
 
 /**
  * POST请求
- * @param {Object} param0 请求参数
- * @returns {Promise} 请求结果
+ * @param param0 请求参数
+ * @returns 后端响应
  */
-const post = ({ url, data, config = {} }) => {
-  return request({
+const post = <T = any>({ url, data, config = {} }: RequestParams): Promise<Res<T>> => {
+  return request<T>({
     method: "post",
     url,
     data,
@@ -76,10 +89,10 @@ const post = ({ url, data, config = {} }) => {
 
 /**
  * 文件下载
- * @param {string} url 下载地址
- * @param {string} fileName 文件名
+ * @param url 下载地址
+ * @param fileName 文件名
  */
-const download = async (url, fileName) => {
+const download = async (url: string, fileName: string): Promise<void> => {
   const isSameOrigin =
     url.startsWith("blob:") ||
     new URL(url, window.location.origin).origin === window.location.origin;

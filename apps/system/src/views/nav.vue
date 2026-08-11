@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { ref, onBeforeMount } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import request from "@Passets/utils/request";
@@ -13,14 +13,14 @@ import {
 import Detail from "./components/nav/detail.vue";
 import { structure } from "@Passets/utils/array";
 
-const searchValue = ref({});
-const tableData = ref([]);
+const searchValue = ref<Record<string, any>>({});
+const tableData = ref<any[]>([]);
 const detailType = ref("");
-const detailId = ref("");
+const detailId = ref<string | number>("");
 const isDetail = ref(false);
-const detailRef = ref(null);
+const detailRef = ref<InstanceType<typeof Detail> | null>(null);
 const currentNode = ref("");
-const data = ref([]);
+const data = ref<any[]>([]);
 
 onBeforeMount(() => {
   initTree();
@@ -34,8 +34,8 @@ const initTree = () => {
     .then((res) => {
       if (res && res.code === 200) {
         // 按group分组，转换为树形数组
-        const groupMap = {};
-        res.data.forEach((item) => {
+        const groupMap: Record<string, any> = {};
+        res.data.forEach((item: any) => {
           if (!groupMap[item.group]) {
             groupMap[item.group] = {
               label: item.group,
@@ -89,17 +89,17 @@ const initTable = () => {
       }
     });
 };
-const handleView = (row) => {
+const handleView = (row: any) => {
   detailType.value = "view";
   detailId.value = row.id;
   isDetail.value = true;
 };
-const handleEdit = (row) => {
+const handleEdit = (row: any) => {
   detailType.value = "edit";
   detailId.value = row.id;
   isDetail.value = true;
 };
-const handleDelete = (row) => {
+const handleDelete = (row: any) => {
   ElMessageBox.confirm("确认删除吗?", "提示", {
     type: "warning",
   })
@@ -130,7 +130,7 @@ const handleAdd = () => {
   isDetail.value = true;
 };
 const handleSave = () => {
-  const detailInfo = detailRef.value.getFormValue();
+  const detailInfo = detailRef.value?.getFormValue();
   const url =
     detailType.value == "add" ? "/system/nav/create" : "/system/nav/update";
   request
@@ -151,7 +151,7 @@ const handleSave = () => {
 const handleBack = () => {
   isDetail.value = false;
 };
-const handleNodeClick = (data) => {
+const handleNodeClick = (data: any) => {
   currentNode.value = data.value;
   if (data.type == "app") {
     initTable();
