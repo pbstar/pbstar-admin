@@ -57,8 +57,8 @@ import LoginRt from "./components/login-rt.vue";
 const sharedStore = useSharedStore();
 const router = useRouter();
 
-// 页面标题
-const title = ref(import.meta.env.PUBLIC_TITLE);
+// 页面标题（静态值，无需响应式）
+const title = import.meta.env.PUBLIC_TITLE;
 
 // 验证码
 let code = "";
@@ -108,14 +108,7 @@ const handleSubmit = async () => {
   });
   if (res.code === 200 && res.data) {
     localStorage.setItem("p_token", res.data.token);
-    sharedStore.userInfo = {
-      id: res.data.id,
-      name: res.data.name,
-      avatar: res.data.avatar,
-      username: res.data.username,
-      role: res.data.role,
-      btns: res.data.btns,
-    };
+    sharedStore.setUserInfo(res.data);
     router.push({ path: "/" });
     ElMessage.success("登录成功");
   } else {

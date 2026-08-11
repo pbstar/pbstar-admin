@@ -49,7 +49,7 @@
         </el-table-column>
         <el-table-column prop="sex" label="性别">
           <template #default="{ row }">
-            {{ getSexLabel(row.sex) }}
+            {{ getOptionLabel(sexOptions, row.sex) }}
           </template>
         </el-table-column>
         <el-table-column prop="ethnic" label="民族">
@@ -136,7 +136,7 @@ import {
   pIcon,
   pItem,
 } from "@Pcomponents";
-import { booleanOptions, ethnicOptions, getOptionLabel } from "@/constants/options";
+import { booleanOptions, ethnicOptions, sexOptions, getOptionLabel } from "@/constants/options";
 import Detail from "./components/list/detail.vue";
 const data = ref([]);
 
@@ -150,16 +150,6 @@ const isDetail = ref(false);
 const detailType = ref("");
 const detailId = ref("");
 const detailRef = ref(null);
-const sexOptions = ref([
-  { label: "男", value: "1" },
-  { label: "女", value: "2" },
-]);
-
-// 根据 value 获取 label
-const getSexLabel = (value) => {
-  const option = sexOptions.value.find((item) => item.value === value);
-  return option ? option.label : value;
-};
 
 onMounted(() => {
   initTable();

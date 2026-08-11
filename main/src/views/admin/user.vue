@@ -32,15 +32,14 @@
 </template>
 <script setup>
 import { ref, watch } from "vue";
-import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
 import request from "@Passets/utils/request";
 import useSharedStore from "@Passets/stores/shared";
 import { pTitle, pItem } from "@Pcomponents";
+import { logout } from "@/utils/logout";
 
 const sharedStore = useSharedStore();
 const detailInfo = ref({});
-const router = useRouter();
 
 const toSave = () => {
   request
@@ -51,9 +50,7 @@ const toSave = () => {
     .then((res) => {
       if (res && res.code === 200) {
         ElMessage.success("修改成功，请重新登录");
-        localStorage.removeItem("p_token");
-        sharedStore.userInfo = null;
-        router.push({ path: "/login" });
+        logout();
       } else {
         ElMessage.error(res?.msg || "操作异常");
       }

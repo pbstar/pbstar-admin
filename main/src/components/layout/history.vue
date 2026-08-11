@@ -1,9 +1,11 @@
 <script setup>
 import { pIcon } from "@Pcomponents";
-import { ref, nextTick } from "vue";
-import { useRouter } from "vue-router";
+import { ref, nextTick, watch } from "vue";
+import { useRouter, useRoute } from "vue-router";
 import { useAppsStore } from "@/stores/apps";
+import { HOME_PATH } from "@/utils/constants";
 const router = useRouter();
+const route = useRoute();
 const appsStore = useAppsStore();
 const path = ref("");
 const list = ref([]);
@@ -37,6 +39,7 @@ const addItem = (fullPath) => {
 const delItem = (url) => {
   list.value = list.value.filter((item) => item.path !== url);
   if (url === path.value) {
+    // 清空后回退默认首页
     let toPath = "";
     if (list.value.length === 0) {
       toPath = "/";
@@ -56,16 +59,18 @@ const toPath = async (item) => {
   }
   router.push(item.path);
 };
-addItem(router.currentRoute.value.fullPath);
-router.afterEach((to, from) => {
-  addItem(to.fullPath);
-});
+// 监听路由变化维护历史记录（watch 随组件销毁自动注销，避免全局钩子累积）
+watch(
+  () => route.fullPath,
+  (to) => addItem(to),
+  { immediate: true },
+);
 </script>
 <template>
   <div class="historyBox" ref="historyBox">
     <el-tag
       class="home"
-      :effect="path === '/admin/pHome' ? 'dark' : 'plain'"
+      :effect="path === HOME_PATH ? 'dark' : 'plain'"
       @click="toPath({ appId: 0, path: '/' })"
     >
       <p-icon name="el-icon-house" />

@@ -3,6 +3,7 @@ import useSharedStore from "@Passets/stores/shared";
 import { bus } from "wujie";
 import { pIcon } from "@Pcomponents";
 import AppSelect from "../more/appSelect.vue";
+import ThemeSwitch from "./ThemeSwitch.vue";
 import { useUserHeader } from "./useUserHeader";
 
 const sharedStore = useSharedStore();
@@ -13,8 +14,7 @@ const toFull = () => {
   bus.$emit("changeSharedPinia", { isFull: true });
 };
 
-const { title, userName, userImg, theme, themeChange, toUserInfo, toLoginOut } =
-  useUserHeader();
+const { title, userName, userImg, toUserInfo, toLoginOut } = useUserHeader();
 </script>
 <template>
   <div class="box">
@@ -25,25 +25,7 @@ const { title, userName, userImg, theme, themeChange, toUserInfo, toLoginOut } =
     <div class="right">
       <app-select class="appSelect" />
       <p-icon class="full" name="el-icon-full-screen" @click="toFull" />
-      <el-switch
-        v-model="theme"
-        inline-prompt
-        active-text="深色"
-        inactive-text="浅色"
-        style="
-          border-color: #fff;
-          --el-switch-on-color: #2c384d;
-          --el-switch-off-color: #2165c9;
-        "
-        @change="themeChange"
-      >
-        <template #active-action>
-          <p-icon name="el-icon-moon" />
-        </template>
-        <template #inactive-action>
-          <p-icon name="el-icon-sunny" />
-        </template>
-      </el-switch>
+      <ThemeSwitch />
       <div class="user">
         <el-dropdown trigger="click">
           <div class="userBox">

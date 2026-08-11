@@ -41,8 +41,8 @@ const handleRouteChange = () => {
     });
   } else {
     // 销毁当前应用实例
-    if (currentAppKey) {
-      destroyApp(currentAppKey);
+    if (currentAppKey.value) {
+      destroyApp(currentAppKey.value);
     }
     // 启动新的子应用
     currentAppKey.value = appKey;

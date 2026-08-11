@@ -1,9 +1,9 @@
 import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import useSharedStore from "@Passets/stores/shared";
-import { bus } from "wujie";
 import request from "@Passets/utils/request";
 import { setTheme } from "@/utils/theme";
+import { logout } from "@/utils/logout";
 
 /**
  * 顶部导航用户信息与常用操作（桌面/移动端共用）
@@ -12,8 +12,8 @@ export function useUserHeader() {
   const sharedStore = useSharedStore();
   const router = useRouter();
 
-  // 系统标题
-  const title = ref(import.meta.env.PUBLIC_TITLE);
+  // 系统标题（静态值，无需响应式）
+  const title = import.meta.env.PUBLIC_TITLE;
   // 用户名称
   const userName = ref(sharedStore.userInfo?.name || "管理员");
   // 用户头像
@@ -35,10 +35,7 @@ export function useUserHeader() {
   const toLoginOut = () => {
     request.post({ url: "/main/logout" }).then((res) => {
       if (res.code === 200) {
-        sharedStore.userInfo = null;
-        localStorage.removeItem("p_token");
-        bus.$emit("changeSharedPinia", { userInfo: null });
-        router.push({ path: "/login" });
+        logout();
       }
     });
   };

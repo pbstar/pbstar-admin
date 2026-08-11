@@ -1,24 +1,27 @@
 <template>
   <div class="pa_page">
-    <LayoutLoading v-if="!isMounted" type="main" isFixed />
+    <LayoutLoading v-if="!isMounted" :visible="true" isFixed />
     <template v-else>
-      <div class="top" v-show="!isFull">
+      <div class="top" v-show="!sharedStore.isFull">
         <AdminTop v-show="!isMobile" />
         <AdminTopMobile v-show="isMobile" />
       </div>
       <div class="main">
-        <div class="mLeft" v-show="!isFull && !isMobile">
+        <div
+          class="mLeft"
+          v-show="!sharedStore.isFull && !isMobile"
+        >
           <AdminNav />
         </div>
         <div
           class="mRight"
           :style="{
-            paddingLeft: isFull ? '0' : '10px',
-            paddingRight: isFull ? '0' : '10px',
+            paddingLeft: sharedStore.isFull ? '0' : '10px',
+            paddingRight: sharedStore.isFull ? '0' : '10px',
           }"
         >
-          <history class="history" v-show="!isFull && !isMobile" />
-          <div style="height: 0; width: 100%" v-show="isFull">
+          <history class="history" v-show="!sharedStore.isFull && !isMobile" />
+          <div style="height: 0; width: 100%" v-show="sharedStore.isFull">
             <div class="unfull" @click="toUnFull">
               <p-icon name="el-icon-close" />
             </div>
@@ -33,9 +36,8 @@
   </div>
 </template>
 <script setup>
-import { ref, computed, onBeforeMount } from "vue";
-import { ElMessage } from "element-plus";
-import { RouterView, useRouter, useRoute } from "vue-router";
+import { computed, onBeforeMount } from "vue";
+import { RouterView } from "vue-router";
 import { pIcon } from "@Pcomponents";
 import AdminTop from "@/components/layout/top.vue";
 import AdminTopMobile from "@/components/layout/topMobile.vue";
@@ -43,81 +45,22 @@ import AdminNav from "@/components/layout/nav.vue";
 import history from "@/components/layout/history.vue";
 import LayoutLoading from "@/components/layout/loading.vue";
 import useSharedStore from "@Passets/stores/shared";
-import { useAppsStore } from "@/stores/apps";
-import { whiteList, isFreeLogin } from "@/utils/auth";
 import { bus } from "wujie";
-import request from "@Passets/utils/request";
+import { useAppInit } from "@/composables/useAppInit";
 
 const sharedStore = useSharedStore();
-const appsStore = useAppsStore();
-const router = useRouter();
-const route = useRoute();
-const isFull = computed(() => {
-  return sharedStore.isFull;
-});
+const { isMounted, init } = useAppInit();
+
 const isMobile = computed(() => {
   return window.innerWidth <= 700;
 });
-const isMounted = ref(false);
-onBeforeMount(async () => {
-  if (isFreeLogin || whiteList.includes(route.path)) {
-    return;
-  }
-  if (!sharedStore.userInfo) {
-    await getUserInfo();
-  }
-  await getAppList();
-  if (route.meta?.appKey) {
-    const isOk = await appsStore.setAppId({ key: route.meta.appKey });
-    if (!isOk || !appsStore.hasAppNav(route.query)) {
-      ElMessage.error("无权限访问");
-      return router.push({ path: "/403" });
-    }
-  }
-  isMounted.value = true;
-});
+
+onBeforeMount(init);
+
 // 退出全屏
 const toUnFull = () => {
   sharedStore.isFull = false;
   bus.$emit("changeSharedPinia", { isFull: false });
-};
-// 获取用户信息
-const getUserInfo = async () => {
-  try {
-    const userRes = await request.post({
-      url: "/main/loginByToken",
-    });
-    if (userRes.code !== 200 || !userRes.data) {
-      ElMessage.error(userRes.msg || "获取用户信息失败");
-      localStorage.removeItem("p_token");
-      router.push({ path: "/login" });
-      return false;
-    }
-    localStorage.setItem("p_token", userRes.data.token);
-    sharedStore.userInfo = {
-      id: userRes.data.id,
-      name: userRes.data.name,
-      avatar: userRes.data.avatar,
-      username: userRes.data.username,
-      role: userRes.data.role,
-      btns: userRes.data.btns,
-    };
-  } catch (error) {
-    console.error(error);
-    router.push({ path: "/login" });
-    return false;
-  }
-};
-// 获取应用列表
-const getAppList = async () => {
-  const res = await request.get({
-    url: "/main/getMyAppList",
-  });
-  if (res.code !== 200 || !res.data) {
-    ElMessage.error(res.msg || "获取应用列表失败");
-    return false;
-  }
-  appsStore.setApps(res.data);
 };
 </script>
 <style scoped lang="scss">

@@ -8,6 +8,12 @@ export const booleanOptions = [
   { label: "否", value: "否" },
 ];
 
+// 性别
+export const sexOptions = [
+  { label: "男", value: "1" },
+  { label: "女", value: "2" },
+];
+
 // 民族（56个）
 export const ethnicOptions = [
   "汉族",

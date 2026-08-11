@@ -141,6 +141,7 @@ program
         }
         appsJson.push({
           key: appKey,
+          appType,
           devPort: port,
           proUrl: "",
         });

@@ -3,7 +3,7 @@ import { ref, onBeforeMount } from "vue";
 import { ElMessage } from "element-plus";
 import request from "@Passets/utils/request";
 import { pCollapse, pItem } from "@Pcomponents";
-import { booleanOptions, ethnicOptions, getOptionLabel } from "@/constants/options";
+import { booleanOptions, ethnicOptions, sexOptions, getOptionLabel } from "@/constants/options";
 
 const props = defineProps({
   type: {
@@ -79,11 +79,19 @@ defineExpose({
           label="性别"
           isRequired
           :showText="detailType === 'view'"
-          :text="detailInfo.sex === '1' ? '男' : '女'"
+          :text="
+            detailType === 'view'
+              ? getOptionLabel(sexOptions, detailInfo.sex)
+              : ''
+          "
         >
           <el-select v-model="detailInfo.sex" placeholder="请选择性别">
-            <el-option label="男" value="1" />
-            <el-option label="女" value="2" />
+            <el-option
+              v-for="item in sexOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
           </el-select>
         </p-item>
         <p-item

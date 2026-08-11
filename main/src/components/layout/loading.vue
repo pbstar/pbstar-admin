@@ -12,9 +12,10 @@ import useSharedStore from "@Passets/stores/shared";
 
 const sharedStore = useSharedStore();
 const props = defineProps({
-  type: {
-    type: String,
-    default: "appRoute",
+  // 显式控制显隐；缺省时跟随子应用路由 loading 状态
+  visible: {
+    type: Boolean,
+    default: undefined,
   },
   isFixed: {
     type: Boolean,
@@ -22,10 +23,10 @@ const props = defineProps({
   },
 });
 const visible = computed(() => {
-  if (props.type === "appRoute") {
-    return sharedStore.isAppRouteLoading;
+  if (props.visible !== undefined) {
+    return props.visible;
   }
-  return true;
+  return sharedStore.isAppRouteLoading;
 });
 </script>
 

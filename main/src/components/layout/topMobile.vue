@@ -4,11 +4,11 @@ import { pIcon } from "@Pcomponents";
 import AppSelect from "../more/appSelect.vue";
 import { useNavMenu } from "@/components/layout/layout";
 import MenuTree from "./MenuTree.vue";
+import ThemeSwitch from "./ThemeSwitch.vue";
 import { useUserHeader } from "./useUserHeader";
 
 const { listTree, activeIndex, selectNav } = useNavMenu();
-const { title, userName, userImg, theme, themeChange, toUserInfo, toLoginOut } =
-  useUserHeader();
+const { title, userName, userImg, toUserInfo, toLoginOut } = useUserHeader();
 
 const isMore = ref(false);
 
@@ -51,25 +51,7 @@ const handleUserInfo = () => {
           @select="select"
         />
         <div class="mobile-controls">
-          <el-switch
-            v-model="theme"
-            inline-prompt
-            active-text="深色"
-            inactive-text="浅色"
-            style="
-              border-color: #fff;
-              --el-switch-on-color: #2c384d;
-              --el-switch-off-color: #2165c9;
-            "
-            @change="themeChange"
-          >
-            <template #active-action>
-              <p-icon name="el-icon-moon" />
-            </template>
-            <template #inactive-action>
-              <p-icon name="el-icon-sunny" />
-            </template>
-          </el-switch>
+          <ThemeSwitch />
           <div class="userBox" @click="handleUserInfo">
             <img v-if="userImg" :src="userImg" alt="" />
             <img v-else src="@/assets/imgs/user.png" alt="" />
@@ -139,7 +121,7 @@ const handleUserInfo = () => {
         gap: 24px;
         align-items: center;
 
-        .el-switch {
+        :deep(.el-switch) {
           transform: scale(1.2);
         }
 

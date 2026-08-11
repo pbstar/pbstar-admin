@@ -20,10 +20,12 @@ export const useAppsStore = defineStore("apps", () => {
       };
     });
   };
-  const setAppId = async ({ id, key }) => {
+  const setAppId = async ({ id, key } = {}) => {
     let aId = 0;
     if (id) {
-      aId = id;
+      // 校验 id 属于当前用户的应用，避免传入未知 id
+      const app = myApps.value.find((item) => item.id === id);
+      if (app) aId = app.id;
     } else if (key) {
       const app = myApps.value.find((item) => item.key === key);
       if (app) aId = app.id;
@@ -47,16 +49,9 @@ export const useAppsStore = defineStore("apps", () => {
   const getApp = () => {
     return myApps.value.find((item) => item.id === appId.value) || null;
   };
+  // setApps 已剔除多余字段，直接返回即可（navs/navsTree 为内部字段）
   const getApps = () => {
-    return myApps.value.map((item) => {
-      return {
-        id: item.id,
-        key: item.key,
-        name: item.name,
-        icon: item.icon,
-        group: item.group,
-      };
-    });
+    return myApps.value;
   };
   const setAppNavs = (aId, navs) => {
     const app = myApps.value.find((item) => item.id === aId);

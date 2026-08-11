@@ -13,7 +13,3 @@ export { default as pTwinBox } from "./layout/p-twinBox/index.vue";
 // 扩展组件
 export { default as pIconSelect } from "./more/p-iconSelect/index.vue";
 export { default as pVerificationCode } from "./more/p-verificationCode/index.vue";
-
-// 页面组件
-export { default as pPage403 } from "./page/403.vue";
-export { default as pPage404 } from "./page/404.vue";

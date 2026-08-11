@@ -1,8 +1,13 @@
-import { defineConfig } from "@rsbuild/core";
+import { defineConfig, loadEnv } from "@rsbuild/core";
 import { pluginVue } from "@rsbuild/plugin-vue";
 import { pluginSass } from "@rsbuild/plugin-sass";
 import { distZipPlugin } from "./tools/plugins/distZipPlugin";
 import apps from "./apps/apps.json" with { type: "json" };
+
+// 配置文件运行在 Node 侧，显式读取 .env 环境变量（import.meta.env 不可靠）
+const { rawPublicVars } = loadEnv();
+const PUBLIC_TITLE = rawPublicVars.PUBLIC_TITLE;
+const PUBLIC_API_BASE_URL = rawPublicVars.PUBLIC_API_BASE_URL;
 
 const createAppConfig = (app) => {
   const basePath = `./apps/${app.key}`;
@@ -24,7 +29,7 @@ const createAppConfig = (app) => {
 const mainConfig = {
   html: {
     template: "./main/src/assets/html/index.html",
-    title: import.meta.env.PUBLIC_TITLE,
+    title: PUBLIC_TITLE,
     favicon: "./main/src/assets/imgs/logo.png",
   },
   source: {
@@ -50,7 +55,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: import.meta.env.PUBLIC_API_BASE_URL,
+        target: PUBLIC_API_BASE_URL,
         pathRewrite: { "^/api": "" },
         changeOrigin: true,
       },
