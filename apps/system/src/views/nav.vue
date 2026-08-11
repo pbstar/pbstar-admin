@@ -7,7 +7,6 @@ import {
   pSearch,
   pTitle,
   pDialog,
-  pTwinBox,
   pIcon,
   pItem,
 } from "@Pcomponents";
@@ -166,8 +165,8 @@ const handleNodeClick = (data) => {
   <div class="page">
     <p-title :list="['菜单管理']"></p-title>
 
-    <p-twinBox class="content">
-      <template #plan1>
+    <div class="content">
+      <div class="plan1">
         <el-tree
           style="margin-top: 10px"
           :data="data"
@@ -177,8 +176,8 @@ const handleNodeClick = (data) => {
           @node-click="handleNodeClick"
           :current-node-key="currentNode"
         />
-      </template>
-      <template #plan2>
+      </div>
+      <div class="plan2">
         <p-search style="margin-top: 10px" @search="toSearch" @reset="toReset">
           <p-item class="item" label="菜单名称">
             <el-input v-model="searchValue.name" placeholder="请输入菜单名称" />
@@ -248,8 +247,8 @@ const handleNodeClick = (data) => {
             <el-button type="primary" @click="handleAdd()"> 新增 </el-button>
           </template>
         </p-table>
-      </template>
-    </p-twinBox>
+      </div>
+    </div>
 
     <p-dialog
       title="菜单管理详情页"
@@ -281,6 +280,27 @@ const handleNodeClick = (data) => {
   flex-direction: column;
   .content {
     flex: 1;
+    min-height: 0;
+    display: flex;
+
+    // 桌面：左树右表
+    @media (min-width: 701px) {
+      .plan1 {
+        width: 220px;
+        padding-right: 10px;
+      }
+      .plan2 {
+        flex: 1;
+        padding-left: 10px;
+      }
+    }
+    // 移动端：上下堆叠
+    @media (max-width: 700px) {
+      flex-direction: column;
+      .plan1 {
+        padding-bottom: 10px;
+      }
+    }
   }
 
   .item {
