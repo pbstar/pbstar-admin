@@ -2,7 +2,6 @@
 import { ref, watch, onUnmounted, nextTick } from "vue";
 import { useRoute } from "vue-router";
 import { startApp, destroyApp, bus } from "wujie";
-import { InstanceofPlugin } from "wujie-polyfill";
 import useSharedStore from "@Passets/stores/shared";
 import LayoutLoading from "@/components/layout/loading.vue";
 
@@ -14,9 +13,6 @@ const subappContainer = ref<HTMLElement | null>(null);
 
 // 当前子应用key
 const currentAppKey = ref("");
-
-// 插件配置
-const plugins = [InstanceofPlugin()];
 
 // 监听子应用共享状态变更
 const handleSharedPiniaChange = (data: Record<string, any>) => {
@@ -66,7 +62,6 @@ const startSubApp = (appKey: string, appUrl: string, subPath: string) => {
         path: subPath,
         sharedPinia: sharedStore,
       },
-      plugins,
       beforeLoad: () => {
         // 子应用开始加载
         sharedStore.isAppRouteLoading = true;
