@@ -61,10 +61,10 @@ export function useMicroApp() {
   };
 
   // 路由守卫 - 控制loading状态
-  router.beforeEach((to, from, next) => {
+  router.beforeEach(() => {
     // 通过bus向主应用同步loading状态
     window.$wujie?.bus.$emit("changeSharedPinia", { isAppRouteLoading: true });
-    next();
+    return true;
   });
 
   router.afterEach(() => {
