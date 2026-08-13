@@ -1,6 +1,7 @@
 import axios from "axios";
 import type { AxiosRequestConfig } from "axios";
 import { ElMessage } from "element-plus";
+import { isMockEnabled, matchMock } from "@Passets/mock";
 
 /** 后端统一响应结构 */
 export interface Res<T = any> {
@@ -50,6 +51,11 @@ service.interceptors.response.use(
  * @returns 后端响应（code/msg/data）
  */
 const request = async <T = any>(config: AxiosRequestConfig): Promise<Res<T>> => {
+  const mockRes = isMockEnabled
+    ? matchMock(config.method || "get", config.url || "", config.params ?? config.data)
+    : null;
+  if (mockRes) return mockRes as Promise<Res<T>>;
+
   const baseURL = config.url?.startsWith("http") ? "" : "/api";
 
   const response = await service({
