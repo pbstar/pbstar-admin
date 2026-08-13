@@ -46,6 +46,34 @@ const startDevServers = (commands: string[]): void => {
 };
 
 /**
+ * 手动打印已启动 dev 服务的访问地址（替代 rsbuild 默认打印，输出更简洁美观）
+ * @param appKeys 已选择的应用模块
+ */
+const printDevUrls = (appKeys: string[]): void => {
+  const hasMain = appKeys.includes("main");
+
+  console.log();
+  console.log(chalk.cyan.bold("  🚀 PbstarAdmin 开发服务已启动"));
+  console.log(chalk.gray("  ──────────────────────────────"));
+
+  if (hasMain) {
+    // 主应用是访问入口，突出打印；子应用地址默认不打印，避免刷屏
+    console.log(
+      `  ${chalk.green("➜")}  ${chalk.bold("main")}  ${chalk.cyan.underline("http://localhost:8800")}`,
+    );
+  } else {
+    // 单独调试子应用（未选主应用）时，打印子应用地址
+    appKeys.forEach((key) => {
+      const app = apps.find((item) => item.key === key)!;
+      console.log(
+        `  ${chalk.green("➜")}  ${chalk.bold(key)}  ${chalk.cyan.underline(`http://localhost:${app.devPort}`)}`,
+      );
+    });
+  }
+  console.log();
+};
+
+/**
  * 处理应用模块的启动/构建
  * @param mode 操作类型
  */
@@ -70,6 +98,7 @@ const handleServe = async (mode: "dev" | "build") => {
     if (isDev) {
       // dev 模式：长驻进程，并行启动多个
       startDevServers(commands);
+      printDevUrls(appKeys);
     } else {
       // build 模式：串行构建，输出清晰、资源占用平稳
       commands.forEach((command) =>

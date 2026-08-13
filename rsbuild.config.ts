@@ -61,6 +61,7 @@ export default defineConfig({
         changeOrigin: true,
       },
     },
+    printUrls: false,
   },
   environments: {
     main: mainConfig,
