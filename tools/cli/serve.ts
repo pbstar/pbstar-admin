@@ -1,3 +1,5 @@
+import { existsSync, readdirSync } from "fs";
+import { join } from "path";
 import { execSync, spawn } from "child_process";
 import { program } from "commander";
 import inquirer from "inquirer";
@@ -7,6 +9,18 @@ import apps from "../../apps/apps.json" with { type: "json" };
 
 // 可操作的应用模块列表
 const list = ["main", ...apps.map((item) => item.key)];
+
+/**
+ * 检测外部子应用（git submodule）是否已初始化
+ * 未执行 `git submodule update --init` 时目录为空，直接启动会报出不直观的构建错误
+ * @param appKey 应用模块 key
+ */
+const isUninitializedSubmodule = (appKey: string): boolean => {
+  const app = apps.find((item) => item.key === appKey);
+  if (!app || app.appType !== "out") return false;
+  const appPath = join("../apps", appKey);
+  return !existsSync(appPath) || readdirSync(appPath).length === 0;
+};
 
 /**
  * 根据应用模块生成启动/构建命令
@@ -92,13 +106,30 @@ const handleServe = async (mode: "dev" | "build") => {
     };
     const { appKeys } = await inquirer.prompt<{ appKeys: string[] }>([question]);
 
-    const isSingle = appKeys.length === 1;
-    const commands = appKeys.map((key) => buildCommand(key, mode, isSingle));
+    // 外部子应用未初始化（git submodule 未拉取）时给出友好提示并跳过，而非让 rsbuild 报错
+    const uninitialized = appKeys.filter(isUninitializedSubmodule);
+    if (uninitialized.length > 0) {
+      uninitialized.forEach((key) => {
+        console.log(
+          chalk.yellow(
+            `⚠️  外部子应用 "${key}" 尚未初始化，请先执行 git submodule update --init 拉取代码，已跳过该应用。`,
+          ),
+        );
+      });
+    }
+    const validAppKeys = appKeys.filter((key) => !uninitialized.includes(key));
+    if (validAppKeys.length === 0) {
+      console.error(chalk.red("Error: 没有可用的应用模块，操作已取消。"));
+      process.exit(1);
+    }
+
+    const isSingle = validAppKeys.length === 1;
+    const commands = validAppKeys.map((key) => buildCommand(key, mode, isSingle));
 
     if (isDev) {
       // dev 模式：长驻进程，并行启动多个
       startDevServers(commands);
-      printDevUrls(appKeys);
+      printDevUrls(validAppKeys);
     } else {
       // build 模式：串行构建，输出清晰、资源占用平稳
       commands.forEach((command) =>
