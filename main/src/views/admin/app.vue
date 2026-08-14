@@ -4,6 +4,7 @@ import { useRoute } from "vue-router";
 import { startApp, destroyApp, bus } from "wujie";
 import useSharedStore from "@Passets/stores/shared";
 import LayoutLoading from "@/components/layout/loading.vue";
+import AppLoadError from "@/components/layout/AppLoadError.vue";
 
 const route = useRoute();
 const sharedStore = useSharedStore();
@@ -13,6 +14,9 @@ const subappContainer = ref<HTMLElement | null>(null);
 
 // 当前子应用key
 const currentAppKey = ref("");
+
+// 子应用是否加载失败（组件化空态，替代直接操作 innerHTML）
+const loadFailed = ref(false);
 
 // 监听子应用共享状态变更
 const handleSharedPiniaChange = (data: Record<string, any>) => {
@@ -49,6 +53,7 @@ const handleRouteChange = () => {
 // 启动子应用
 const startSubApp = (appKey: string, appUrl: string, subPath: string) => {
   // 开启loading
+  loadFailed.value = false;
   sharedStore.isAppRouteLoading = true;
 
   // 创建新的子应用实例
@@ -74,14 +79,26 @@ const startSubApp = (appKey: string, appUrl: string, subPath: string) => {
       },
       loadError: (url, err) => {
         sharedStore.isAppRouteLoading = false;
-        // 这个回调函数会在该子应用加载失败时触发
+        // 这个回调函数会在该子应用加载失败时触发，用状态驱动空态而非直接操作 DOM
         console.error(`子应用【${appKey}】的资源 ${url} 加载失败:`, err);
-        subappContainer.value!.innerHTML = `
-          <div style="text-align: center; padding: 50px;">子应用【${appKey}】加载失败</div>
-        `;
+        loadFailed.value = true;
       },
     });
   });
+};
+
+// 重试加载失败的子应用
+const handleRetry = () => {
+  const { appKey, appUrl } = route.meta;
+  if (!appKey || !appUrl) return;
+  // wujie 加载失败时可能已污染容器 DOM，先清空再重新挂载
+  if (currentAppKey.value) {
+    destroyApp(currentAppKey.value);
+  }
+  subappContainer.value!.innerHTML = "";
+  const subPath = (route.query[appKey as string] ?? "") as string;
+  currentAppKey.value = appKey as string;
+  startSubApp(appKey as string, appUrl as string, subPath);
 };
 
 // 绑定事件监听
@@ -103,7 +120,8 @@ onUnmounted(() => {
 
 <template>
   <div class="subapp-container">
-    <div ref="subappContainer" class="subapp"></div>
+    <div v-show="!loadFailed" ref="subappContainer" class="subapp"></div>
+    <AppLoadError v-if="loadFailed" @retry="handleRetry" />
     <LayoutLoading />
   </div>
 </template>

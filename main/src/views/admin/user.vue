@@ -25,7 +25,14 @@
         </div>
       </div>
       <div class="btn">
-        <el-button type="primary" @click="toSave">保存</el-button>
+        <el-button
+          type="primary"
+          :loading="saving"
+          :disabled="saving"
+          @click="toSave"
+        >
+          保存
+        </el-button>
       </div>
     </div>
   </div>
@@ -40,8 +47,12 @@ import { logout } from "@/utils/logout";
 
 const sharedStore = useSharedStore();
 const detailInfo = ref<Record<string, any>>({});
+const saving = ref(false);
 
 const toSave = () => {
+  // 防重复点击：保存中直接忽略后续点击
+  if (saving.value) return;
+  saving.value = true;
   request
     .post({
       url: "/main/updateMyInfo",
@@ -54,6 +65,9 @@ const toSave = () => {
       } else {
         ElMessage.error(res?.msg || "操作异常");
       }
+    })
+    .finally(() => {
+      saving.value = false;
     });
 };
 watch(

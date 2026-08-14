@@ -6,6 +6,21 @@ import AppSelect from "../more/appSelect.vue";
 import ThemeSwitch from "./ThemeSwitch.vue";
 import { useUserHeader } from "./useUserHeader";
 
+withDefaults(
+  defineProps<{
+    isMobile?: boolean;
+    isCollapse?: boolean;
+  }>(),
+  {
+    isMobile: false,
+    isCollapse: false,
+  },
+);
+
+defineEmits<{
+  (e: "toggle-nav"): void;
+}>();
+
 const sharedStore = useSharedStore();
 
 // 进入全屏
@@ -16,9 +31,16 @@ const toFull = () => {
 
 const { title, userName, userImg, toUserInfo, toLoginOut } = useUserHeader();
 </script>
+
 <template>
   <div class="box">
     <div class="left">
+      <!-- 宽屏时折叠/展开侧边栏，窄屏时打开菜单抽屉，图标随对应状态切换 -->
+      <div class="navBtn" @click="$emit('toggle-nav')">
+        <p-icon
+          :name="isMobile ? 'el-icon-menu' : isCollapse ? 'el-icon-expand' : 'el-icon-fold'"
+        />
+      </div>
       <img src="@/assets/imgs/logo-w.png" alt="" class="logo" />
       <div class="title">{{ title }}</div>
     </div>
@@ -31,7 +53,7 @@ const { title, userName, userImg, toUserInfo, toLoginOut } = useUserHeader();
           <div class="userBox">
             <img v-if="userImg" :src="userImg" alt="" />
             <img v-else src="@/assets/imgs/user.png" alt="" />
-            {{ userName }}
+            <span class="userName">{{ userName }}</span>
             <p-icon class="icon" name="el-icon-caret-bottom" />
           </div>
           <template #dropdown>
@@ -45,6 +67,7 @@ const { title, userName, userImg, toUserInfo, toLoginOut } = useUserHeader();
     </div>
   </div>
 </template>
+
 <style scoped lang="scss">
 .box {
   width: 100%;
@@ -59,16 +82,32 @@ const { title, userName, userImg, toUserInfo, toLoginOut } = useUserHeader();
     height: 100%;
     display: flex;
     align-items: center;
-    img {
+    min-width: 0;
+
+    .navBtn {
+      width: 40px;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .logo {
       width: 32px;
       height: 32px;
       border-radius: 8px;
-      margin-left: 10px;
+      flex-shrink: 0;
     }
     .title {
       font-size: 20px;
       font-weight: bold;
       margin-left: 6px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
   }
   .right {
@@ -101,6 +140,36 @@ const { title, userName, userImg, toUserInfo, toLoginOut } = useUserHeader();
         }
         .icon {
           margin-left: 8px;
+        }
+      }
+    }
+  }
+
+  @media (max-width: 700px) {
+    .left {
+      .logo {
+        width: 30px;
+        height: 30px;
+        margin-left: 0;
+      }
+      .title {
+        font-size: 16px;
+        max-width: 120px;
+      }
+    }
+    .right {
+      padding-right: 10px;
+      .appSelect {
+        margin-right: 10px;
+        width: auto;
+      }
+      .full {
+        display: none;
+      }
+      .user .userBox {
+        margin-left: 10px;
+        .userName {
+          display: none;
         }
       }
     }

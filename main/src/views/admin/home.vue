@@ -1,128 +1,236 @@
 <script setup lang="ts">
-import { pIcon } from "@Pcomponents";
+import { ref, onBeforeMount } from "vue";
+import { useRouter } from "vue-router";
+import { pIcon, pTitle } from "@Pcomponents";
+import request from "@Passets/utils/request";
+import { useAppsStore } from "@/stores/apps";
+import type { AppItem } from "@/stores/apps";
 
-// 打开外部链接
-const toPath = (path: string) => {
-  window.open(path);
+interface RecentLog {
+  id: any;
+  userName: string;
+  method: string;
+  path: string;
+  createTime: string;
+}
+
+interface DashboardStats {
+  userCount: number;
+  appCount: number;
+  roleCount: number;
+  todayLoginCount: number;
+  recentLogs: RecentLog[];
+}
+
+const router = useRouter();
+const appsStore = useAppsStore();
+
+const stats = ref<{ icon: string; label: string; value: number }[]>([]);
+const recentLogs = ref<RecentLog[]>([]);
+const myApps = ref<AppItem[]>([]);
+
+// 拉取仪表盘概览数据（用户/应用/角色/今日登录 + 最近操作日志）
+const loadStats = async () => {
+  const res = await request.get<DashboardStats>({
+    url: "/main/getDashboardStats",
+  });
+  if (res.code !== 200 || !res.data) return;
+  const data = res.data;
+  stats.value = [
+    { icon: "el-icon-user", label: "用户数", value: data.userCount },
+    { icon: "el-icon-grid", label: "应用数", value: data.appCount },
+    { icon: "el-icon-avatar", label: "角色数", value: data.roleCount },
+    { icon: "el-icon-right", label: "今日登录", value: data.todayLoginCount },
+  ];
+  recentLogs.value = data.recentLogs;
 };
+
+// 跳转到指定应用的第一个可用导航
+const toApp = async (app: AppItem) => {
+  const isOk = await appsStore.setAppId({ id: app.id });
+  if (!isOk) return;
+  const current = appsStore.getApp();
+  const firstNav = current?.navs?.find((item) => item.url);
+  if (firstNav?.url) {
+    router.push(firstNav.url);
+  }
+};
+
+onBeforeMount(() => {
+  loadStats();
+  myApps.value = appsStore.getApps();
+});
 </script>
+
 <template>
   <div class="page">
-    <div class="welcome-container">
-      <div class="logo-text">
-        <span>欢迎使用</span>
-        <span class="gradient-text">PbstarAdmin</span>
-        <span>微后台</span>
+    <div class="stat-grid">
+      <div class="stat-card" v-for="item in stats" :key="item.label">
+        <p-icon :name="item.icon" size="24" class="icon" />
+        <div class="info">
+          <div class="num">{{ item.value }}</div>
+          <div class="label">{{ item.label }}</div>
+        </div>
       </div>
-      <div class="description">现代化、模块化、轻便化的后台管理解决方案</div>
     </div>
-    <div class="btns">
-      <el-button
-        type="primary"
-        size="large"
-        @click="toPath('http://pbstar-admin-docs.pbstar.cn')"
-      >
-        <p-icon name="el-icon-document" class="icon" />
-        官方文档
-      </el-button>
-      <el-button
-        size="large"
-        @click="toPath('https://github.com/pbstar/pbstar-admin')"
-      >
-        <p-icon name="el-icon-star" class="icon" />
-        GitHub
-      </el-button>
+    <div class="panel-grid">
+      <div class="panel">
+        <p-title :list="['最近操作日志']" />
+        <div class="log-list">
+          <div class="log-item" v-for="log in recentLogs" :key="log.id">
+            <span class="user">{{ log.userName }}</span>
+            <span class="method">{{ log.method }}</span>
+            <span class="path">{{ log.path }}</span>
+            <span class="time">{{ log.createTime }}</span>
+          </div>
+          <el-empty v-if="!recentLogs.length" description="暂无操作日志" />
+        </div>
+      </div>
+      <div class="panel">
+        <p-title :list="['我的应用']" />
+        <div class="app-list">
+          <div
+            class="app-item"
+            v-for="app in myApps"
+            :key="app.id"
+            @click="toApp(app)"
+          >
+            <p-icon :name="app.icon" size="20" class="icon" />
+            <span class="name">{{ app.name }}</span>
+          </div>
+          <el-empty v-if="!myApps.length" description="暂无应用" />
+        </div>
+      </div>
     </div>
   </div>
 </template>
+
 <style scoped lang="scss">
 .page {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
   width: 100%;
-  padding-bottom: 120px;
-  justify-content: center;
-  align-items: center;
+  height: 100%;
+  padding: 16px;
+  overflow-y: auto;
   background: var(--c-bg);
 
-  .welcome-container {
-    text-align: center;
-
-    .logo-text {
-      margin-bottom: 20px;
-      display: flex;
-      justify-content: center;
-      align-items: flex-end;
-      font-size: 24px;
-      line-height: 24px;
-      color: var(--c-text2);
-
-      .gradient-text {
-        font-size: 48px;
-        line-height: 48px;
-        font-weight: bold;
-        margin: 0 12px -4px;
-        background: linear-gradient(
-          135deg,
-          var(--c-text3) 0%,
-          var(--c-bg-theme-light) 40%,
-          var(--c-bg-theme) 100%
-        );
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-      }
-    }
-
-    .description {
-      font-size: 16px;
-      color: var(--c-text2);
-      opacity: 0.8;
-    }
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 16px;
   }
 
-  .btns {
-    margin-top: 60px;
+  .stat-card {
     display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 20px;
+    border-radius: 8px;
+    background: var(--c-bg-box);
 
     .icon {
-      margin-right: 5px;
+      color: var(--c-text3);
+    }
+
+    .info {
+      .num {
+        font-size: 24px;
+        font-weight: bold;
+        color: var(--c-text);
+        line-height: 1.2;
+      }
+      .label {
+        font-size: 13px;
+        color: var(--c-text2);
+        margin-top: 4px;
+      }
     }
   }
 
-  // 响应式布局
-  @media (max-width: 700px) {
-    .welcome-container {
-      .logo-text {
-        flex-direction: column;
-        align-items: center;
-        font-size: 18px;
-        line-height: 18px;
+  .panel-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 16px;
+  }
 
-        .gradient-text {
-          font-size: 32px;
-          line-height: 32px;
-          margin: 8px 0;
-        }
+  .panel {
+    padding: 16px;
+    border-radius: 8px;
+    background: var(--c-bg-box);
+  }
+
+  .log-list {
+    margin-top: 12px;
+
+    .log-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 0;
+      font-size: 13px;
+      color: var(--c-text2);
+      border-bottom: 1px solid var(--c-border);
+
+      &:last-child {
+        border-bottom: none;
       }
 
-      .description {
-        font-size: 14px;
-        padding: 0 20px;
+      .user {
+        color: var(--c-text);
+        font-weight: 500;
+      }
+      .method {
+        color: var(--c-text3);
+      }
+      .path {
+        flex: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .time {
+        flex-shrink: 0;
       }
     }
+  }
 
-    .btns {
-      flex-direction: column;
+  .app-list {
+    margin-top: 12px;
+
+    .app-item {
+      display: flex;
       align-items: center;
-      gap: 16px;
-      margin-top: 40px;
+      gap: 8px;
+      padding: 10px 8px;
+      border-radius: 6px;
+      color: var(--c-text);
+      cursor: pointer;
 
-      .el-button {
-        width: 200px;
-        margin-left: 0;
-        margin-right: 0;
+      &:hover {
+        background: var(--c-menu-hover-bg);
       }
+
+      .icon {
+        color: var(--c-text3);
+      }
+    }
+  }
+
+  @media (max-width: 900px) {
+    .stat-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .panel-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 500px) {
+    .stat-grid {
+      grid-template-columns: 1fr;
+    }
+    .log-list .log-item .time {
+      display: none;
     }
   }
 }

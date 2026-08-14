@@ -19,6 +19,7 @@ const routes: Record<string, MockHandler> = {
   "get:/main/getMyAppList": mainMock.getMyAppList,
   "get:/main/getMyNavListByAppId": mainMock.getMyNavListByAppId,
   "post:/main/updateMyInfo": mainMock.updateMyInfo,
+  "get:/main/getDashboardStats": mainMock.getDashboardStats,
 
   "post:/system/user/getList": userMock.getList,
   "get:/system/user/getDetail": userMock.getDetail,

@@ -9,6 +9,6 @@
   width: 100%;
   padding-top: 60px;
   padding-bottom: 100px;
-  background-color: #fff;
+  background-color: var(--c-bg);
 }
 </style>

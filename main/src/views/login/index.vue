@@ -39,8 +39,6 @@
         <p>普通用户：user/123456</p>
       </div>
     </div>
-    <LoginLb class="login-lb" />
-    <LoginRt class="login-rt" />
     <div class="login-footer">京ICP备2025125905号</div>
   </div>
 </template>
@@ -51,8 +49,6 @@ import { ElMessage } from "element-plus";
 import { pIcon, pVerificationCode } from "@Pcomponents";
 import request from "@Passets/utils/request";
 import useSharedStore from "@Passets/stores/shared";
-import LoginLb from "./components/login-lb.vue";
-import LoginRt from "./components/login-rt.vue";
 
 const sharedStore = useSharedStore();
 const router = useRouter();
@@ -124,12 +120,13 @@ const handleSubmit = async () => {
   height: 100vh;
   position: relative;
   overflow: hidden;
+  background-color: var(--c-bg-box);
 }
 .login-center {
   width: 520px;
   padding: 36px 60px;
-  background-color: #fff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background-color: var(--c-bg);
+  box-shadow: 0 2px 8px var(--c-shadow);
   display: flex;
   flex-direction: column;
   .top {
@@ -166,26 +163,9 @@ const handleSubmit = async () => {
     margin-top: 10px;
     p {
       font-size: 13px;
-      color: #999;
+      color: var(--c-text2);
     }
   }
-}
-.login-lb {
-  position: absolute;
-  bottom: -500px;
-  left: -300px;
-  width: 900px;
-  height: 800px;
-  overflow: hidden;
-  z-index: -1;
-}
-.login-rt {
-  position: absolute;
-  top: -750px;
-  right: -450px;
-  width: 900px;
-  overflow: hidden;
-  z-index: -1;
 }
 .login-footer {
   position: absolute;
@@ -194,25 +174,18 @@ const handleSubmit = async () => {
   right: 0;
   text-align: center;
   font-size: 13px;
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: var(--c-bg);
   height: 36px;
   line-height: 36px;
-  color: #666;
+  color: var(--c-text2);
   z-index: 0;
-  border-top: 1px solid #f0f0f0;
+  border-top: 1px solid var(--c-border);
   backdrop-filter: blur(5px);
 }
 @media screen and (max-width: 700px) {
   .login-center {
     width: 90%;
     padding: 20px;
-  }
-  .login-lb {
-    left: -360px;
-  }
-  .login-rt {
-    right: -550px;
-    top: -700px;
   }
 }
 </style>

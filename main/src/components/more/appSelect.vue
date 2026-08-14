@@ -182,7 +182,7 @@ watch(
 }
 @media (max-width: 700px) {
   .apps {
-    width: 100%;
+    width: 120px;
     background-color: var(--c-bg-theme);
     color: var(--c-text-theme);
   }

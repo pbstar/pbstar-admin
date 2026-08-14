@@ -4,6 +4,7 @@
     v-if="isRoot"
     class="menu"
     :default-active="activeIndex"
+    :collapse="collapse"
     @select="handleSelect"
   >
     <MenuTree
@@ -42,12 +43,14 @@ const props = withDefaults(
     activeIndex?: string;
     isRoot?: boolean;
     node?: any;
+    collapse?: boolean;
   }>(),
   {
     menuList: () => [],
     activeIndex: "",
     isRoot: false,
     node: () => ({}),
+    collapse: false,
   },
 );
 
@@ -126,6 +129,20 @@ const handleSelect = (index: string) => {
     margin-right: 0;
     top: 16px;
     right: 12px;
+  }
+
+  /* 折叠态：图标居中，取消之前为展开态设置的左右内边距/缩进 */
+  .menu.el-menu--collapse {
+    width: 64px;
+  }
+  .menu.el-menu--collapse :deep(.el-menu-item),
+  .menu.el-menu--collapse :deep(.el-sub-menu__title) {
+    margin: 0 4px 4px !important;
+    padding: 0 !important;
+    text-align: center;
+  }
+  .menu.el-menu--collapse :deep(.el-sub-menu .el-menu-item) {
+    margin-left: 4px;
   }
 
   /* 滚动条美化 */

@@ -2,7 +2,8 @@
 import { useNavMenu } from "@/components/layout/layout";
 import MenuTree from "./MenuTree.vue";
 
-const { listTree, activeIndex, selectNav } = useNavMenu();
+// 折叠状态由顶部 AppHeader 的按钮统一触发（避免多处按钮做同一件事）
+const { listTree, activeIndex, selectNav, isCollapse } = useNavMenu();
 </script>
 
 <template>
@@ -10,13 +11,14 @@ const { listTree, activeIndex, selectNav } = useNavMenu();
     <MenuTree
       :menuList="listTree"
       :activeIndex="activeIndex"
+      :collapse="isCollapse"
       isRoot
       @select="selectNav"
     />
   </div>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 .navBox {
   width: 100%;
   height: 100%;

@@ -12,9 +12,9 @@ const { theme, themeChange } = useUserHeader();
     active-text="深色"
     inactive-text="浅色"
     style="
-      border-color: #fff;
-      --el-switch-on-color: #2c384d;
-      --el-switch-off-color: #2165c9;
+      border-color: var(--c-text-theme);
+      --el-switch-on-color: var(--c-bg-box);
+      --el-switch-off-color: var(--c-bg-theme);
     "
     @change="themeChange"
   >

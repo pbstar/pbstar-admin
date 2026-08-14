@@ -73,3 +73,11 @@ export function removeByIdList<T extends { id: any }>(list: T[], idList: any[]):
 export function findById<T extends { id: any }>(list: T[], id: any): T | undefined {
   return list.find((item) => String(item.id) === String(id));
 }
+
+/**
+ * 判断 createTime（形如 "2026-08-10 09:00:00"）是否为当天
+ */
+export function isToday(createTime: string): boolean {
+  const today = new Date().toISOString().slice(0, 10);
+  return createTime.slice(0, 10) === today;
+}
