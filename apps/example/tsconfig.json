@@ -12,7 +12,8 @@
   "include": [
     "src/**/*",
     "src/**/*.vue",
-    "../app-common/**/*",
+    "../appInit.ts",
+    "../useMicroApp.ts",
     "../../components/**/*",
     "../../components/**/*.vue",
     "../../assets/**/*"

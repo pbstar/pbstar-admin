@@ -61,8 +61,6 @@ importers:
         specifier: ^3.3.9
         version: 3.3.9(typescript@5.9.3)
 
-  apps/app-common: {}
-
   apps/example:
     dependencies:
       '@wangeditor-next/editor':

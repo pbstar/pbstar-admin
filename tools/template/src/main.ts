@@ -1,4 +1,4 @@
-import { createMicroApp } from "../../app-common/appInit";
+import { createMicroApp } from "../../../apps/appInit";
 import App from "./App.vue";
 import router from "./router";
 
