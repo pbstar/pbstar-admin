@@ -148,10 +148,4 @@ const props = defineProps({
     margin-top: 4px;
   }
 }
-
-@media screen and (max-width: 700px) {
-  .label {
-    width: 80px;
-  }
-}
 </style>

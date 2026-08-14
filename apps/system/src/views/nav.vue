@@ -283,23 +283,13 @@ const handleNodeClick = (data: any) => {
     min-height: 0;
     display: flex;
 
-    // 桌面：左树右表
-    @media (min-width: 701px) {
-      .plan1 {
-        width: 220px;
-        padding-right: 10px;
-      }
-      .plan2 {
-        flex: 1;
-        padding-left: 10px;
-      }
+    .plan1 {
+      width: 220px;
+      padding-right: 10px;
     }
-    // 移动端：上下堆叠
-    @media (max-width: 700px) {
-      flex-direction: column;
-      .plan1 {
-        padding-bottom: 10px;
-      }
+    .plan2 {
+      flex: 1;
+      padding-left: 10px;
     }
   }
 

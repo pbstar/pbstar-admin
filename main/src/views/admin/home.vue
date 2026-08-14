@@ -216,22 +216,5 @@ onBeforeMount(() => {
     }
   }
 
-  @media (max-width: 900px) {
-    .stat-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-    .panel-grid {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  @media (max-width: 500px) {
-    .stat-grid {
-      grid-template-columns: 1fr;
-    }
-    .log-list .log-item .time {
-      display: none;
-    }
-  }
 }
 </style>

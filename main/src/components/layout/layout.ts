@@ -9,8 +9,6 @@ import { HOME_PATH } from "@/utils/constants";
 const activeIndex = ref("1");
 const list = ref<NavItem[]>([]);
 const listTree = ref<TreeNode<NavItem>[]>([]);
-// 侧边栏折叠状态，同样为模块级单例，跟随菜单数据一起管理
-const isCollapse = ref(false);
 
 // 监听在独立 effect scope 中注册，仅首次实例化时执行一次：
 // 既不随组件卸载销毁（避免再次进入时菜单陈旧），也不随多个调用方重复累积
@@ -55,11 +53,6 @@ export function useNavMenu() {
     }
   };
 
-  // 切换侧边栏折叠状态
-  const toggleCollapse = () => {
-    isCollapse.value = !isCollapse.value;
-  };
-
   if (!scopeCreated) {
     scopeCreated = true;
     effectScope().run(() => {
@@ -84,7 +77,5 @@ export function useNavMenu() {
     listTree,
     activeIndex,
     selectNav,
-    isCollapse,
-    toggleCollapse,
   };
 }

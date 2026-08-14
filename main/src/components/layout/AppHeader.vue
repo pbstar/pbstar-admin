@@ -4,38 +4,17 @@ import AppSelect from "../more/appSelect.vue";
 import ThemeSwitch from "./ThemeSwitch.vue";
 import { useUserHeader } from "./useUserHeader";
 
-withDefaults(
-  defineProps<{
-    isMobile?: boolean;
-    isCollapse?: boolean;
-  }>(),
-  {
-    isMobile: false,
-    isCollapse: false,
-  },
-);
-
-defineEmits<{
-  (e: "toggle-nav"): void;
-}>();
-
 const { title, userName, userImg, toUserInfo, toLoginOut } = useUserHeader();
 </script>
 
 <template>
   <div class="box">
     <div class="left">
-      <!-- 宽屏时折叠/展开侧边栏，窄屏时打开菜单抽屉，图标随对应状态切换 -->
-      <div class="navBtn" @click="$emit('toggle-nav')">
-        <p-icon
-          :name="isMobile ? 'el-icon-menu' : isCollapse ? 'el-icon-expand' : 'el-icon-fold'"
-        />
-      </div>
+      <AppSelect class="appSelect" />
       <img src="@/assets/imgs/logo-w.png" alt="" class="logo" />
       <div class="title">{{ title }}</div>
     </div>
     <div class="right">
-      <app-select class="appSelect" />
       <ThemeSwitch />
       <div class="user">
         <el-dropdown trigger="click">
@@ -71,32 +50,21 @@ const { title, userName, userImg, toUserInfo, toLoginOut } = useUserHeader();
     height: 100%;
     display: flex;
     align-items: center;
-    min-width: 0;
+    padding-left: 12px;
 
-    .navBtn {
-      width: 40px;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      cursor: pointer;
-      flex-shrink: 0;
+    .appSelect {
+      margin-right: 12px;
     }
 
     .logo {
       width: 32px;
       height: 32px;
       border-radius: 8px;
-      flex-shrink: 0;
     }
     .title {
       font-size: 20px;
       font-weight: bold;
       margin-left: 6px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
     }
   }
   .right {
@@ -104,9 +72,6 @@ const { title, userName, userImg, toUserInfo, toLoginOut } = useUserHeader();
     display: flex;
     align-items: center;
     padding-right: 20px;
-    .appSelect {
-      margin-right: 20px;
-    }
     .user {
       display: flex;
       align-items: center;
@@ -124,33 +89,6 @@ const { title, userName, userImg, toUserInfo, toLoginOut } = useUserHeader();
         }
         .icon {
           margin-left: 8px;
-        }
-      }
-    }
-  }
-
-  @media (max-width: 700px) {
-    .left {
-      .logo {
-        width: 30px;
-        height: 30px;
-        margin-left: 0;
-      }
-      .title {
-        font-size: 16px;
-        max-width: 120px;
-      }
-    }
-    .right {
-      padding-right: 10px;
-      .appSelect {
-        margin-right: 10px;
-        width: auto;
-      }
-      .user .userBox {
-        margin-left: 10px;
-        .userName {
-          display: none;
         }
       }
     }

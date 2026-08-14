@@ -182,10 +182,4 @@ const handleSubmit = async () => {
   border-top: 1px solid var(--c-border);
   backdrop-filter: blur(5px);
 }
-@media screen and (max-width: 700px) {
-  .login-center {
-    width: 90%;
-    padding: 20px;
-  }
-}
 </style>

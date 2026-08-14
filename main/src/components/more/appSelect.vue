@@ -4,6 +4,7 @@ import { ref, onBeforeMount, watch } from "vue";
 import { useRouter } from "vue-router";
 import { useAppsStore } from "@/stores/apps";
 import type { AppItem } from "@/stores/apps";
+
 const appsStore = useAppsStore();
 const router = useRouter();
 const appsRef = ref<HTMLElement | null>(null);
@@ -12,6 +13,7 @@ const appsList = ref<AppItem[]>([]);
 const appsTree = ref<{ name: string; children: AppItem[] }[]>([]);
 const appActive = ref<AppItem | null>(null);
 const isLoading = ref(false);
+
 const getAppsGroup = (myApps: AppItem[]) => {
   const groupMap: Record<string, { name: string; children: AppItem[] }> = {};
   myApps.forEach((item) => {
@@ -54,6 +56,7 @@ const toApp = async (app: AppItem) => {
   }
   popoverRef.value?.hide();
 };
+
 watch(
   () => appsStore.appId,
   (newVal) => {
@@ -85,7 +88,7 @@ watch(
     >
       <div class="list" v-loading="isLoading">
         <div class="fItem" v-for="(item, index) in appsTree" :key="index">
-          <div class="title">{{ item.name }}</div>
+          <div class="fItemTitle">{{ item.name }}</div>
           <div class="children" v-if="item.children">
             <div
               class="child"
@@ -135,7 +138,7 @@ watch(
   padding: 12px;
   .fItem {
     width: 100%;
-    .title {
+    .fItemTitle {
       border-bottom: 1px solid var(--c-border);
       height: 30px;
       line-height: 30px;
@@ -178,13 +181,6 @@ watch(
         color: var(--c-text-theme);
       }
     }
-  }
-}
-@media (max-width: 700px) {
-  .apps {
-    width: 120px;
-    background-color: var(--c-bg-theme);
-    color: var(--c-text-theme);
   }
 }
 </style>
