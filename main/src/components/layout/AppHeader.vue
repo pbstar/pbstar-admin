@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import useSharedStore from "@Passets/stores/shared";
-import { bus } from "wujie";
 import { pIcon } from "@Pcomponents";
 import AppSelect from "../more/appSelect.vue";
 import ThemeSwitch from "./ThemeSwitch.vue";
@@ -21,14 +19,6 @@ defineEmits<{
   (e: "toggle-nav"): void;
 }>();
 
-const sharedStore = useSharedStore();
-
-// 进入全屏
-const toFull = () => {
-  sharedStore.isFull = true;
-  bus.$emit("changeSharedPinia", { isFull: true });
-};
-
 const { title, userName, userImg, toUserInfo, toLoginOut } = useUserHeader();
 </script>
 
@@ -46,7 +36,6 @@ const { title, userName, userImg, toUserInfo, toLoginOut } = useUserHeader();
     </div>
     <div class="right">
       <app-select class="appSelect" />
-      <p-icon class="full" name="el-icon-full-screen" @click="toFull" />
       <ThemeSwitch />
       <div class="user">
         <el-dropdown trigger="click">
@@ -118,11 +107,6 @@ const { title, userName, userImg, toUserInfo, toLoginOut } = useUserHeader();
     .appSelect {
       margin-right: 20px;
     }
-    .full {
-      margin-right: 20px;
-      font-size: 20px;
-      cursor: pointer;
-    }
     .user {
       display: flex;
       align-items: center;
@@ -162,9 +146,6 @@ const { title, userName, userImg, toUserInfo, toLoginOut } = useUserHeader();
       .appSelect {
         margin-right: 10px;
         width: auto;
-      }
-      .full {
-        display: none;
       }
       .user .userBox {
         margin-left: 10px;

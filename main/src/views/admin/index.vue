@@ -2,7 +2,7 @@
   <div class="pa_page">
     <LayoutLoading v-if="!isMounted" :visible="true" isFixed />
     <template v-else>
-      <div class="top" v-show="!sharedStore.isFull">
+      <div class="top">
         <AppHeader
           :isMobile="isMobile"
           :isCollapse="isCollapse"
@@ -13,7 +13,6 @@
         <div
           class="mLeft"
           :class="{ 'is-collapse': isCollapse, 'is-mobile-open': isMobile && mobileNavOpen }"
-          v-show="!sharedStore.isFull"
         >
           <AdminNav />
         </div>
@@ -22,19 +21,8 @@
           v-show="isMobile && mobileNavOpen"
           @click="mobileNavOpen = false"
         ></div>
-        <div
-          class="mRight"
-          :style="{
-            paddingLeft: sharedStore.isFull ? '0' : '10px',
-            paddingRight: sharedStore.isFull ? '0' : '10px',
-          }"
-        >
-          <history class="history" v-show="!sharedStore.isFull" />
-          <div style="height: 0; width: 100%" v-show="sharedStore.isFull">
-            <div class="unfull" @click="toUnFull">
-              <p-icon name="el-icon-close" />
-            </div>
-          </div>
+        <div class="mRight">
+          <history class="history" />
           <div class="mApp">
             <RouterView />
           </div>
@@ -46,19 +34,15 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, onBeforeMount, watch } from "vue";
 import { RouterView } from "vue-router";
-import { pIcon } from "@Pcomponents";
 import AppHeader from "@/components/layout/AppHeader.vue";
 import AdminNav from "@/components/layout/nav.vue";
 import history from "@/components/layout/history.vue";
 import LayoutLoading from "@/components/layout/loading.vue";
 import { useNavMenu } from "@/components/layout/layout";
-import useSharedStore from "@Passets/stores/shared";
-import { bus } from "wujie";
 import { useAppInit } from "@/composables/useAppInit";
 
 const MOBILE_BREAKPOINT = 700;
 
-const sharedStore = useSharedStore();
 const { isMounted, init } = useAppInit();
 const { isCollapse, toggleCollapse } = useNavMenu();
 
@@ -97,12 +81,6 @@ onUnmounted(() => {
 });
 
 onBeforeMount(init);
-
-// 退出全屏
-const toUnFull = () => {
-  sharedStore.isFull = false;
-  bus.$emit("changeSharedPinia", { isFull: false });
-};
 </script>
 <style scoped lang="scss">
 .pa_page {
@@ -146,6 +124,7 @@ const toUnFull = () => {
     .mRight {
       height: 100%;
       flex: 1;
+      padding: 0 10px;
       overflow: auto;
       display: flex;
       flex-direction: column;
@@ -159,24 +138,6 @@ const toUnFull = () => {
         flex: 1;
         overflow-y: auto;
         overflow-x: hidden;
-      }
-      .unfull {
-        position: fixed;
-        bottom: 100px;
-        right: 30px;
-        z-index: 2100;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        background-color: var(--c-bg-theme);
-        color: var(--c-text-theme);
-        cursor: pointer;
-        opacity: 0.8;
-        //上下跳动动画
-        animation: upDown 1s infinite;
       }
     }
   }
@@ -199,17 +160,6 @@ const toUnFull = () => {
         transform: translateX(0);
       }
     }
-  }
-}
-@keyframes upDown {
-  0% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-5px);
-  }
-  100% {
-    transform: translateY(0);
   }
 }
 </style>
