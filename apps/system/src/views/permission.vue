@@ -7,11 +7,18 @@ import {
   pSearch,
   pTitle,
   pDialog,
-  pIcon,
   pItem,
 } from "@Pcomponents";
-import Detail from "./components/nav/detail.vue";
+import Detail from "./components/permission/detail.vue";
 import { structure } from "@Passets/utils/array";
+
+const typeOptions = [
+  { label: "分组", value: "group" },
+  { label: "菜单", value: "menu" },
+  { label: "按钮", value: "button" },
+];
+const typeLabelMap: Record<string, string> = { group: "分组", menu: "菜单", button: "按钮" };
+const typeTagMap: Record<string, string> = { group: "info", menu: "", button: "warning" };
 
 const searchValue = ref<Record<string, any>>({});
 const tableData = ref<any[]>([]);
@@ -69,7 +76,7 @@ const toReset = () => {
   toSearch();
 };
 const initTable = () => {
-  const params = {
+  const params: Record<string, any> = {
     ...searchValue.value,
   };
   if (currentNode.value && !currentNode.value.startsWith("group")) {
@@ -78,12 +85,12 @@ const initTable = () => {
   tableData.value = [];
   request
     .post({
-      url: "/system/nav/getList",
+      url: "/system/permission/getList",
       data: params,
     })
     .then((res) => {
       if (res && res.code === 200) {
-        tableData.value = structure(res.data);
+        tableData.value = structure(res.data, "groupId");
       } else {
         ElMessage.error(res?.msg || "操作异常");
       }
@@ -106,7 +113,7 @@ const handleDelete = (row: any) => {
     .then(() => {
       request
         .post({
-          url: "/system/nav/delete",
+          url: "/system/permission/delete",
           data: { idList: [row.id] },
         })
         .then((res) => {
@@ -132,7 +139,7 @@ const handleAdd = () => {
 const handleSave = () => {
   const detailInfo = detailRef.value?.getFormValue();
   const url =
-    detailType.value == "add" ? "/system/nav/create" : "/system/nav/update";
+    detailType.value == "add" ? "/system/permission/create" : "/system/permission/update";
   request
     .post({
       url,
@@ -163,7 +170,7 @@ const handleNodeClick = (data: any) => {
 
 <template>
   <div class="page">
-    <p-title :list="['菜单管理']"></p-title>
+    <p-title :list="['权限管理']"></p-title>
 
     <div class="content">
       <div class="plan1">
@@ -179,35 +186,30 @@ const handleNodeClick = (data: any) => {
       </div>
       <div class="plan2">
         <p-search style="margin-top: 10px" @search="toSearch" @reset="toReset">
-          <p-item class="item" label="菜单名称">
-            <el-input v-model="searchValue.name" placeholder="请输入菜单名称" />
+          <p-item class="item" label="名称">
+            <el-input v-model="searchValue.name" placeholder="请输入名称" />
           </p-item>
-          <p-item class="item" label="菜单链接">
-            <el-input v-model="searchValue.url" placeholder="请输入菜单链接" />
+          <p-item class="item" label="类型">
+            <el-select v-model="searchValue.type" placeholder="请选择类型" clearable>
+              <el-option
+                v-for="item in typeOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
           </p-item>
         </p-search>
 
         <p-table style="margin-top: 10px" :data="tableData">
           <template #column>
-            <el-table-column prop="name" label="菜单名称" />
-            <el-table-column prop="url" label="菜单链接" />
-            <el-table-column prop="icon" label="菜单图标">
+            <el-table-column prop="name" label="名称" />
+            <el-table-column prop="type" label="类型" width="90">
               <template #default="{ row }">
-                <div v-if="row.icon" style="display: flex; align-items: center">
-                  <p-icon
-                    style="margin-right: 5px; font-size: 16px"
-                    :name="row.icon"
-                  />
-                  <span>{{ row.icon }}</span>
-                </div>
+                <el-tag :type="typeTagMap[row.type]">{{ typeLabelMap[row.type] }}</el-tag>
               </template>
             </el-table-column>
-            <el-table-column prop="isNav" label="显示在导航">
-              <template #default="{ row }">
-                <span>{{ row.isNav == 1 ? "是" : "否" }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column prop="index" label="排序" />
+            <el-table-column prop="key" label="权限Key" />
             <el-table-column prop="remark" label="备注" />
             <el-table-column
               prop="operation"
@@ -251,7 +253,7 @@ const handleNodeClick = (data: any) => {
     </div>
 
     <p-dialog
-      title="菜单管理详情页"
+      title="权限管理详情页"
       type="drawer"
       width="600px"
       v-model="isDetail"

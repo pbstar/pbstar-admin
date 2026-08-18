@@ -1,18 +1,18 @@
 import { ref } from "vue";
 import { defineStore } from "pinia";
 import type { LocationQuery } from "vue-router";
-import { structure } from "@Passets/utils/array";
-import type { TreeNode } from "@Passets/utils/array";
-import request from "@Passets/utils/request";
-import { ElMessage } from "element-plus";
+import { filterMenuTree } from "@Passets/utils/permission";
+import type { MenuItem } from "@Passets/utils/permission";
+import useSharedStore from "@Passets/stores/shared";
+import { appMenuMap } from "@/utils/appMenus";
 
-/** 导航项（菜单/历史记录共用结构） */
+/** 导航项（菜单/历史记录共用结构，树形，id 为权限 key） */
 export interface NavItem {
-  id: any;
+  id: string;
   name: string;
   url: string | null;
   icon: string;
-  parentId?: any;
+  children?: NavItem[];
 }
 
 /** 应用信息 */
@@ -22,8 +22,13 @@ export interface AppItem {
   name: string;
   icon: string;
   group: string;
-  navs: NavItem[];
-  navsTree: TreeNode<NavItem>[];
+  navs: NavItem[]; // 扁平化的可见导航项（供按 url 查找的场景使用）
+  navsTree: NavItem[]; // 权限过滤后的菜单树（供侧边栏渲染）
+}
+
+/** 递归展开菜单树为扁平数组（保留 children 引用无关字段） */
+function flattenNavs(items: NavItem[]): NavItem[] {
+  return items.flatMap((item) => [item, ...(item.children ? flattenNavs(item.children) : [])]);
 }
 
 export const useAppsStore = defineStore("apps", () => {
@@ -44,28 +49,19 @@ export const useAppsStore = defineStore("apps", () => {
     });
   };
 
-  const setAppId = async ({ id, key }: { id?: number; key?: string } = {}) => {
+  const setAppId = ({ id, key }: { id?: number; key?: string } = {}) => {
     let aId = 0;
+    let appKey = "";
     if (id) {
       // 校验 id 属于当前用户的应用，避免传入未知 id
       const app = myApps.value.find((item) => item.id === id);
-      if (app) aId = app.id;
+      if (app) { aId = app.id; appKey = app.key; }
     } else if (key) {
       const app = myApps.value.find((item) => item.key === key);
-      if (app) aId = app.id;
+      if (app) { aId = app.id; appKey = app.key; }
     }
     if (aId) {
-      const navRes = await request.get({
-        url: "/main/getMyNavListByAppId",
-        data: {
-          appId: aId,
-        },
-      });
-      if (navRes.code !== 200) {
-        ElMessage.error("获取应用导航失败！请稍后重试");
-        return false;
-      }
-      setAppNavs(aId, navRes.data);
+      setAppNavs(aId, appMenuMap[appKey] || []);
     }
     appId.value = aId;
     return true;
@@ -80,21 +76,22 @@ export const useAppsStore = defineStore("apps", () => {
     return myApps.value;
   };
 
-  const setAppNavs = (aId: number, navs: any[]) => {
+  const setAppNavs = (aId: number, menuItems: MenuItem[]) => {
     const app = myApps.value.find((item) => item.id === aId);
     if (!app) return;
-    app.navs = navs.map((e) => {
-      return {
-        id: e.id,
-        name: e.name,
-        url: e.url
-          ? `/admin/${app.key}?${app.key}=${encodeURIComponent(e.url)}`
-          : null,
-        icon: e.icon,
-        parentId: e.parent_id,
-      };
+    const sharedStore = useSharedStore();
+    const visible = filterMenuTree(menuItems, sharedStore.userInfo?.permissions);
+    const toNavItem = (item: MenuItem): NavItem => ({
+      id: item.key ?? item.name,
+      name: item.name,
+      url: item.url
+        ? `/admin/${app.key}?${app.key}=${encodeURIComponent(item.url)}`
+        : null,
+      icon: item.icon || "",
+      children: item.children?.map(toNavItem),
     });
-    app.navsTree = structure(app.navs);
+    app.navsTree = visible.map(toNavItem);
+    app.navs = flattenNavs(app.navsTree);
   };
 
   // 检查应用是否有导航

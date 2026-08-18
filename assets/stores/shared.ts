@@ -8,7 +8,7 @@ export interface UserInfo {
   avatar: string;
   username: string;
   role: any;
-  btns: any;
+  permissions: any;
 }
 
 /**
@@ -30,7 +30,7 @@ export default defineStore("shared", () => {
       avatar: user.avatar,
       username: user.username,
       role: user.role,
-      btns: user.btns,
+      permissions: user.permissions,
     };
   };
 

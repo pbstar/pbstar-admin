@@ -17,50 +17,47 @@ const props = defineProps({
 const detailInfo = ref<Record<string, any>>({});
 const detailType = ref("");
 const detailId = ref<string | number>("");
-const navList = ref<any[]>([]);
-const btnList = ref<any[]>([]);
+const permissionTree = ref<any[]>([]);
 
 onBeforeMount(() => {
   detailType.value = props.type;
   detailId.value = props.id;
-  getBtnList();
-  getNavList();
+  getPermissionTree();
   if (detailType.value == "view" || detailType.value == "edit") {
     getDetailInfo();
   }
 });
-const getNavList = () => {
-  request
-    .post({
-      url: "/system/nav/getList",
-    })
-    .then((res) => {
-      if (res.code === 200) {
-        navList.value = res.data.map((item: any) => {
-          return {
-            label: item.name,
-            value: item.id.toString(),
-            parentId: item.parentId?.toString() || "",
-          };
-        });
-      } else {
-        ElMessage.error(res.msg || "获取菜单失败");
-      }
-    });
-};
 
-const getBtnList = () => {
-  request
-    .post({
-      url: "/system/nav/getBtnList",
-    })
-    .then((res) => {
-      if (res.code === 200) {
-        btnList.value = res.data;
-      } else {
-        ElMessage.error(res.msg || "获取按钮失败");
-      }
+/** 组装 tree-select 数据：应用（虚拟根）-> 分组 -> 菜单/按钮叶子（可勾选，value 为其 key） */
+const getPermissionTree = () => {
+  Promise.all([
+    request.post({ url: "/system/app/getList" }),
+    request.post({ url: "/system/permission/getList" }),
+  ]).then(([appRes, permissionRes]) => {
+    if (appRes.code !== 200 || permissionRes.code !== 200) {
+      ElMessage.error(appRes.msg || permissionRes.msg || "获取权限数据失败");
+      return;
+    }
+    const apps = appRes.data;
+    const permissions = permissionRes.data;
+    permissionTree.value = apps.map((app: any) => {
+      const appPermissions = permissions.filter((item: any) => item.appId === app.id);
+      const groups = appPermissions.filter((item: any) => item.type === "group");
+      return {
+        label: app.name,
+        value: `__app_${app.id}`,
+        disabled: true,
+        children: groups.map((group: any) => ({
+          label: group.name,
+          value: `__group_${group.id}`,
+          disabled: true,
+          children: appPermissions
+            .filter((item: any) => item.groupId === group.id)
+            .map((item: any) => ({ label: item.name, value: item.key })),
+        })),
+      };
     });
+  });
 };
 
 const getDetailInfo = () => {
@@ -74,11 +71,8 @@ const getDetailInfo = () => {
     .then((res) => {
       if (res && res.code == 200) {
         detailInfo.value = res.data;
-        if (detailInfo.value.navs) {
-          detailInfo.value.navs = detailInfo.value.navs.split(",");
-        }
-        if (detailInfo.value.btns) {
-          detailInfo.value.btns = detailInfo.value.btns.split(",");
+        if (detailInfo.value.permissions) {
+          detailInfo.value.permissions = detailInfo.value.permissions.split(",");
         }
       } else {
         ElMessage.error(res.msg || "操作异常");
@@ -86,14 +80,12 @@ const getDetailInfo = () => {
     });
 };
 const getFormValue = () => {
-  const info = {
-    ...detailInfo.value,
-  };
-  if (info.navs) {
-    info.navs = info.navs.join(",");
-  }
-  if (info.btns) {
-    info.btns = info.btns.join(",");
+  const info = { ...detailInfo.value };
+  if (Array.isArray(info.permissions)) {
+    // 防御性过滤虚拟应用/分组节点（disabled 节点正常不会进入勾选值）
+    info.permissions = info.permissions
+      .filter((v: string) => !v.startsWith("__app_") && !v.startsWith("__group_"))
+      .join(",");
   }
   return info;
 };
@@ -129,34 +121,17 @@ defineExpose({
         </p-item>
         <p-item
           class="dtItem"
-          label="菜单权限"
+          label="权限"
           :showText="detailType === 'view'"
-          :text="detailInfo.navs"
+          :text="detailInfo.permissions"
         >
           <el-tree-select
-            v-model="detailInfo.navs"
-            :data="navList"
-            :props="{ value: 'value', label: 'label', children: 'children' }"
+            v-model="detailInfo.permissions"
+            :data="permissionTree"
             show-checkbox
             multiple
             :check-strictly="false"
-            placeholder="请选择菜单权限"
-            :disabled="detailInfo.id == '1'"
-          />
-        </p-item>
-        <p-item
-          class="dtItem"
-          label="按钮权限"
-          :showText="detailType === 'view'"
-          :text="detailInfo.btns"
-        >
-          <el-tree-select
-            v-model="detailInfo.btns"
-            :data="btnList"
-            show-checkbox
-            multiple
-            :check-strictly="false"
-            placeholder="请选择按钮权限"
+            placeholder="请选择权限"
             :disabled="detailInfo.id == '1'"
           />
         </p-item>

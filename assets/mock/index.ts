@@ -3,7 +3,7 @@ import type { MockHandler } from "./types";
 import * as mainMock from "./data/main";
 import * as userMock from "./data/user";
 import * as roleMock from "./data/role";
-import * as navMock from "./data/nav";
+import * as permissionMock from "./data/permission";
 import * as appMock from "./data/app";
 import * as logMock from "./data/log";
 import * as personMock from "./data/person";
@@ -17,7 +17,6 @@ const routes: Record<string, MockHandler> = {
   "post:/main/loginByToken": mainMock.loginByToken,
   "post:/main/logout": mainMock.logout,
   "get:/main/getMyAppList": mainMock.getMyAppList,
-  "get:/main/getMyNavListByAppId": mainMock.getMyNavListByAppId,
   "post:/main/updateMyInfo": mainMock.updateMyInfo,
   "get:/main/getDashboardStats": mainMock.getDashboardStats,
 
@@ -34,12 +33,11 @@ const routes: Record<string, MockHandler> = {
   "post:/system/role/update": roleMock.update,
   "post:/system/role/delete": roleMock.deleteRoles,
 
-  "post:/system/nav/getList": navMock.getList,
-  "post:/system/nav/getBtnList": navMock.getBtnList,
-  "get:/system/nav/getDetail": navMock.getDetail,
-  "post:/system/nav/create": navMock.create,
-  "post:/system/nav/update": navMock.update,
-  "post:/system/nav/delete": navMock.deleteNavs,
+  "post:/system/permission/getList": permissionMock.getList,
+  "get:/system/permission/getDetail": permissionMock.getDetail,
+  "post:/system/permission/create": permissionMock.create,
+  "post:/system/permission/update": permissionMock.update,
+  "post:/system/permission/delete": permissionMock.deletePermissions,
 
   "post:/system/app/getList": appMock.getList,
   "get:/system/app/getDetail": appMock.getDetail,

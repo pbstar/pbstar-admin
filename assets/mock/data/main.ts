@@ -2,7 +2,6 @@ import { ok, fail, isToday } from "../utils";
 import { users } from "./user";
 import { roles } from "./role";
 import { apps } from "./app";
-import { navs } from "./nav";
 import { logs } from "./log";
 
 /** 当前登录用户 id（模拟服务端会话，login 时写入，logout 时清空） */
@@ -19,7 +18,7 @@ function buildUserInfo(userId: any) {
     avatar: user.avatar,
     username: user.username,
     role: user.role,
-    btns: role?.btns || "",
+    permissions: role?.permissions || "",
   };
 }
 
@@ -46,19 +45,6 @@ export function logout() {
 
 export function getMyAppList() {
   return ok(apps.map((a) => ({ id: a.id, key: a.key, name: a.name, icon: a.icon, group: a.group })));
-}
-
-export function getMyNavListByAppId(data: any) {
-  const list = navs
-    .filter((n) => String(n.appId) === String(data?.appId))
-    .map((n) => ({
-      id: n.id,
-      name: n.name,
-      url: n.url,
-      icon: n.icon,
-      parent_id: n.parentId,
-    }));
-  return ok(list);
 }
 
 export function updateMyInfo(data: any) {

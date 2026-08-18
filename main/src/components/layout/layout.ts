@@ -28,7 +28,7 @@ export function useNavMenu() {
     } else {
       list.value = [
         {
-          id: 1,
+          id: "home",
           name: "首页",
           url: HOME_PATH,
           icon: "el-icon-house",

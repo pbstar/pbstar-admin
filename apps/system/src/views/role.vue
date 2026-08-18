@@ -143,8 +143,7 @@ const handleBack = () => {
       <template #column>
         <el-table-column prop="name" label="角色名称" />
         <el-table-column prop="key" label="角色Key" />
-        <el-table-column prop="navs" label="菜单权限" />
-        <el-table-column prop="btns" label="按钮权限" />
+        <el-table-column prop="permissions" label="权限" show-overflow-tooltip />
         <el-table-column
           prop="operation"
           label="操作"

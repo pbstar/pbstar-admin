@@ -4,9 +4,9 @@ const router = createRouter({
   history: createWebHistory(),
   routes: [
     {
-      path: "/nav",
-      name: "nav",
-      component: () => import("@/views/nav.vue"),
+      path: "/permission",
+      name: "permission",
+      component: () => import("@/views/permission.vue"),
     },
     {
       path: "/user",
