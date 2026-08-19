@@ -10,7 +10,7 @@
     "add": "pnpm run -filter tools add",
     "remove": "pnpm run -filter tools remove",
     "build": "pnpm run -filter tools build",
-    "type-check": "vue-tsc -p main/tsconfig.json --noEmit && vue-tsc -p apps/system/tsconfig.json --noEmit && vue-tsc -p apps/example/tsconfig.json --noEmit && vue-tsc -p tools/tsconfig.json --noEmit"
+    "type-check": "pnpm run -filter tools type-check"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.2",
