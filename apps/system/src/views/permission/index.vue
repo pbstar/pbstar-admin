@@ -11,7 +11,7 @@ import {
 } from "@Pcomponents";
 import Detail from "./components/detail.vue";
 import { structure } from "@Passets/utils/array";
-import appGroups from "@/constants/apps";
+import appGroups from "@Passets/constants/apps";
 
 const typeOptions = [
   { label: "分组", value: "group" },

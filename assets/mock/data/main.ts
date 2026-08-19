@@ -3,12 +3,6 @@ import { users } from "./user";
 import { roles } from "./role";
 import { logs } from "./log";
 
-/** 应用列表种子数据（原"应用管理"模块的数据，现仅供应用切换器/仪表盘统计使用） */
-const apps = [
-  { id: 1, key: "system", name: "系统管理", icon: "el-icon-setting", group: "内置应用" },
-  { id: 2, key: "example", name: "示例应用", icon: "el-icon-menu", group: "内置应用" },
-];
-
 /** 当前登录用户 id（模拟服务端会话，login 时写入，logout 时清空） */
 let currentUserId: any = null;
 
@@ -48,10 +42,6 @@ export function logout() {
   return ok(null);
 }
 
-export function getMyAppList() {
-  return ok(apps.map((a) => ({ id: a.id, key: a.key, name: a.name, icon: a.icon, group: a.group })));
-}
-
 export function updateMyInfo(data: any) {
   const user = users.find((u) => String(u.id) === String(currentUserId));
   if (!user) return fail("登录已失效，请重新登录");
@@ -62,14 +52,14 @@ export function updateMyInfo(data: any) {
   return ok(null);
 }
 
-/** 仪表盘概览：由现有用户/应用/角色/日志数据聚合而来，不引入新业务概念 */
+/** 仪表盘概览：由现有用户/角色/日志数据聚合而来，应用数用固定值（应用清单已迁至前端 assets/constants/apps.ts） */
 export function getDashboardStats() {
   const todayLoginCount = logs.filter(
     (log) => log.path === "/main/login" && isToday(log.createTime),
   ).length;
   return ok({
     userCount: users.length,
-    appCount: apps.length,
+    appCount: 3,
     roleCount: roles.length,
     todayLoginCount,
     recentLogs: logs.slice(-5).reverse(),

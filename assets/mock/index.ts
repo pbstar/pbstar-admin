@@ -15,7 +15,6 @@ const routes: Record<string, MockHandler> = {
   "post:/main/login": mainMock.login,
   "post:/main/loginByToken": mainMock.loginByToken,
   "post:/main/logout": mainMock.logout,
-  "get:/main/getMyAppList": mainMock.getMyAppList,
   "post:/main/updateMyInfo": mainMock.updateMyInfo,
   "get:/main/getDashboardStats": mainMock.getDashboardStats,
 

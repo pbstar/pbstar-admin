@@ -5,6 +5,7 @@ import { filterMenuTree } from "@Passets/utils/permission";
 import type { MenuItem } from "@Passets/utils/permission";
 import useSharedStore from "@Passets/stores/shared";
 import { loadAppMenus } from "@/utils/appMenus";
+import { apps as appList } from "@Passets/constants/apps";
 
 /** 导航项（菜单/历史记录共用结构，树形，id 为权限 key） */
 export interface NavItem {
@@ -35,9 +36,16 @@ export const useAppsStore = defineStore("apps", () => {
   const myApps = ref<AppItem[]>([]); // 存储用户的应用
   const appId = ref(0); // 存储当前激活的应用
 
-  const setApps = (apps: any[]) => {
-    myApps.value = apps.map((item) => {
-      return {
+  // 应用列表不再请求后端，改为前端硬编码清单 + 按 permissions 过滤：
+  // 应用可见 ⇔ 该应用下至少存在一个当前用户可见的菜单（复用 filterMenuTree）
+  const setMyApps = async () => {
+    const sharedStore = useSharedStore();
+    const permissions = sharedStore.userInfo?.permissions;
+    const visible: AppItem[] = [];
+    for (const item of appList) {
+      const menus = await loadAppMenus(item.key);
+      if (!filterMenuTree(menus, permissions).length) continue;
+      visible.push({
         id: item.id,
         key: item.key,
         name: item.name,
@@ -45,8 +53,9 @@ export const useAppsStore = defineStore("apps", () => {
         group: item.group,
         navs: [],
         navsTree: [],
-      };
-    });
+      });
+    }
+    myApps.value = visible;
   };
 
   const setAppId = async ({ id, key }: { id?: number; key?: string } = {}) => {
@@ -71,7 +80,7 @@ export const useAppsStore = defineStore("apps", () => {
     return myApps.value.find((item) => item.id === appId.value) || null;
   };
 
-  // setApps 已剔除多余字段，直接返回即可（navs/navsTree 为内部字段）
+  // setMyApps 已剔除多余字段，直接返回即可（navs/navsTree 为内部字段）
   const getApps = () => {
     return myApps.value;
   };
@@ -112,7 +121,7 @@ export const useAppsStore = defineStore("apps", () => {
 
   return {
     appId,
-    setApps,
+    setMyApps,
     setAppId,
     getApp,
     getApps,

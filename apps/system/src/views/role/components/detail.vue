@@ -3,7 +3,7 @@ import { ref, onBeforeMount } from "vue";
 import { ElMessage } from "element-plus";
 import request from "@Passets/utils/request";
 import { pCollapse, pItem } from "@Pcomponents";
-import appGroups from "@/constants/apps";
+import appGroups from "@Passets/constants/apps";
 
 /** 应用列表已改为按分组维护的二级数组，这里展平供权限树逐个应用挂靠 */
 const apps = appGroups.flatMap((group) => group.apps);
