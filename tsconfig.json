@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "paths": {
+      "@Pcomponents": ["./components/index.ts"],
+      "@Pcomponents/*": ["./components/*"],
+      "@Passets/*": ["./assets/*"]
+    }
+  },
+  "include": [
+    "assets/**/*",
+    "components/**/*",
+    "components/**/*.vue",
+    "env.d.ts"
+  ]
+}
