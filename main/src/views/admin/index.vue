@@ -6,7 +6,7 @@
         <AppHeader />
       </div>
       <div class="main">
-        <div class="mLeft">
+        <div class="mLeft" :class="{ collapsed }">
           <AdminNav />
         </div>
         <div class="mRight">
@@ -27,8 +27,10 @@ import AdminNav from "@/components/layout/nav.vue";
 import history from "@/components/layout/history.vue";
 import LayoutLoading from "@/components/layout/loading.vue";
 import { useAppInit } from "@/composables/useAppInit";
+import { useSiderCollapse } from "@/components/layout/layout";
 
 const { isMounted, init } = useAppInit();
+const { collapsed } = useSiderCollapse();
 
 onBeforeMount(init);
 </script>
@@ -42,7 +44,7 @@ onBeforeMount(init);
   overflow: hidden;
 
   .top {
-    height: 50px;
+    height: var(--header-height);
     width: 100%;
     flex-shrink: 0;
   }
@@ -53,9 +55,14 @@ onBeforeMount(init);
     display: flex;
 
     .mLeft {
-      width: 200px;
+      width: var(--sider-width);
       height: 100%;
       flex-shrink: 0;
+      border-right: 1px solid var(--c-border);
+    }
+
+    .mLeft.collapsed {
+      width: var(--sider-width-collapsed);
     }
 
     .mRight {

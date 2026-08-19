@@ -3,7 +3,10 @@
   <el-menu
     v-if="isRoot"
     class="menu"
+    :class="{ collapsed: collapse }"
     :default-active="activeIndex"
+    :collapse="collapse"
+    :collapse-transition="false"
     @select="handleSelect"
   >
     <MenuTree
@@ -42,12 +45,14 @@ const props = withDefaults(
     activeIndex?: string;
     isRoot?: boolean;
     node?: any;
+    collapse?: boolean;
   }>(),
   {
     menuList: () => [],
     activeIndex: "",
     isRoot: false,
     node: () => ({}),
+    collapse: false,
   },
 );
 
@@ -82,9 +87,9 @@ const handleSelect = (index: string) => {
   padding: 0 12px !important;
 }
 
-/* 激活状态样式 */
+/* 激活状态样式：仅左侧细竖线 + 文字变主题色，不做背景色块的双重强调 */
 .menu :deep(.el-menu-item.is-active) {
-  background: var(--c-menu-active-bg) !important;
+  background: transparent !important;
   color: var(--c-text3) !important;
   position: relative;
 }
@@ -95,21 +100,33 @@ const handleSelect = (index: string) => {
   left: 0;
   top: 50%;
   transform: translateY(-50%);
-  width: 3px;
-  height: 24px;
+  width: 2px;
+  height: 16px;
   background: var(--c-text3);
-  border-radius: 2px;
 }
 
-/* 悬停效果 */
+/* 悬停效果：仅文字/图标颜色变化，不做背景跳动 */
 .menu :deep(.el-menu-item:hover),
 .menu :deep(.el-sub-menu__title:hover) {
-  background: var(--c-menu-hover-bg) !important;
+  background: transparent !important;
+  color: var(--c-text3) !important;
 }
 
 /* 子菜单缩进 */
 .menu :deep(.el-sub-menu .el-menu-item) {
   margin-left: 24px;
+}
+
+/* 折叠态：菜单项收窄为图标居中，不再有左右外边距 */
+.menu.collapsed :deep(.el-menu-item),
+.menu.collapsed :deep(.el-sub-menu__title) {
+  margin: 0 8px 4px;
+  padding: 0 !important;
+  justify-content: center;
+}
+
+.menu.collapsed :deep(.el-sub-menu .el-menu-item) {
+  margin-left: 8px;
 }
 
 /* 图标样式 */

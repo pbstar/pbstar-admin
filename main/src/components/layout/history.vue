@@ -1,3 +1,31 @@
+<template>
+  <div class="historyBox" ref="historyBox">
+    <div
+      class="tab home"
+      :class="{ active: path === HOME_PATH }"
+      @click="toPath({ appId: 0, path: '/' })"
+    >
+      <p-icon name="el-icon-house" />
+    </div>
+    <div class="list" ref="listRef">
+      <div
+        v-for="(item, index) in list"
+        :key="index"
+        class="tab"
+        :class="{ active: item.path === path }"
+        @click="toPath(item)"
+      >
+        <span class="name">{{ item.name }}</span>
+        <p-icon
+          class="close"
+          name="el-icon-Close"
+          size="12"
+          @click.stop="delItem(item.path)"
+        />
+      </div>
+    </div>
+  </div>
+</template>
 <script setup lang="ts">
 import { pIcon } from "@Pcomponents";
 import { ref, nextTick, watch } from "vue";
@@ -66,56 +94,48 @@ watch(
   { immediate: true },
 );
 </script>
-<template>
-  <div class="historyBox" ref="historyBox">
-    <el-tag
-      class="home"
-      :effect="path === HOME_PATH ? 'dark' : 'plain'"
-      @click="toPath({ appId: 0, path: '/' })"
-    >
-      <p-icon name="el-icon-house" />
-    </el-tag>
-    <div class="list" ref="listRef">
-      <el-tag
-        v-for="(item, index) in list"
-        :key="index"
-        class="item"
-        @click="toPath(item)"
-        :effect="item.path === path ? 'dark' : 'plain'"
-        closable
-        @close="delItem(item.path)"
-      >
-        <span class="name">{{ item.name }}</span>
-      </el-tag>
-    </div>
-  </div>
-</template>
-<style scoped>
+<style scoped lang="scss">
 .historyBox {
   width: 100%;
   height: 40px;
-  padding: 5px 0;
   display: flex;
   align-items: center;
-}
-.historyBox .home {
-  border-radius: 12px;
-  cursor: pointer;
+  border-bottom: 1px solid var(--c-border);
 }
 .historyBox .list {
   display: flex;
   align-items: center;
+  height: 100%;
 }
-.historyBox .list .item {
-  margin-left: 6px;
+.tab {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  padding: 0 var(--space-3);
+  border-right: 1px solid var(--c-border-light);
+  border-bottom: 2px solid transparent;
+  color: var(--c-text2);
   cursor: pointer;
-  max-width: 126px;
-  .name {
-    display: inline-block;
-    max-width: 90px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
+  font-size: var(--font-size-sm);
+}
+.tab.active {
+  color: var(--c-text3);
+  border-bottom-color: var(--c-bg-theme);
+}
+.tab:hover {
+  color: var(--c-text3);
+}
+.tab .name {
+  max-width: 96px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.tab .close {
+  margin-left: var(--space-2);
+  visibility: hidden;
+}
+.tab:hover .close {
+  visibility: visible;
 }
 </style>

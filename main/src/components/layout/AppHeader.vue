@@ -9,9 +9,10 @@ const { title, userName, userImg, toUserInfo, toLoginOut } = useUserHeader();
 <template>
   <div class="box">
     <div class="left">
-      <AppSelect class="appSelect" />
       <img src="@/assets/imgs/logo-w.png" alt="" class="logo" />
       <div class="title">{{ title }}</div>
+      <div class="divider"></div>
+      <AppSelect class="appSelect" />
     </div>
     <div class="right">
       <div class="user">
@@ -38,7 +39,7 @@ const { title, userName, userImg, toUserInfo, toLoginOut } = useUserHeader();
 .box {
   width: 100%;
   height: 100%;
-  background-color: var(--c-bg-theme);
+  background-color: var(--c-bg-header);
   color: var(--c-text-theme);
   display: flex;
   justify-content: space-between;
@@ -48,45 +49,47 @@ const { title, userName, userImg, toUserInfo, toLoginOut } = useUserHeader();
     height: 100%;
     display: flex;
     align-items: center;
-    padding-left: 12px;
-
-    .appSelect {
-      margin-right: 12px;
-    }
+    padding-left: var(--space-4);
 
     .logo {
-      width: 32px;
-      height: 32px;
-      border-radius: 8px;
+      width: 28px;
+      height: 28px;
     }
     .title {
-      font-size: 20px;
-      font-weight: bold;
-      margin-left: 6px;
+      font-size: var(--font-size-lg);
+      font-weight: 600;
+      margin-left: var(--space-2);
+      white-space: nowrap;
+    }
+
+    .divider {
+      width: 1px;
+      height: 20px;
+      background: rgba(255, 255, 255, 0.16);
+      margin: 0 var(--space-4);
     }
   }
   .right {
     height: 100%;
     display: flex;
     align-items: center;
-    padding-right: 20px;
+    padding-right: var(--space-5);
     .user {
       display: flex;
       align-items: center;
       .userBox {
-        margin-left: 20px;
         display: flex;
         align-items: center;
         color: var(--c-text-theme);
         cursor: pointer;
         img {
-          width: 32px;
-          height: 32px;
+          width: 28px;
+          height: 28px;
           border-radius: 50%;
-          margin-right: 8px;
+          margin-right: var(--space-2);
         }
         .icon {
-          margin-left: 8px;
+          margin-left: var(--space-2);
         }
       }
     }

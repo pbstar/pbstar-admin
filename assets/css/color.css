@@ -2,23 +2,51 @@
 :root {
   /* 背景色 */
   --c-bg: #ffffff; /* 主背景 */
-  --c-bg-box: #edf3fa; /* 容器背景 */
-  --c-bg-theme: #3b82f6; /* 主题背景 */
-  --c-bg-theme-light: #b7cefd; /* 主题背景-浅 */
+  --c-bg-box: #f1f4f8; /* 容器/页面背景（中性灰，替代原浅蓝） */
+  --c-bg-theme: #2563eb; /* 主题/品牌色（企业蓝，比原色深一档） */
+  --c-bg-theme-light: #c3d7fb; /* 主题背景-浅 */
+  --c-bg-header: #29344a; /* 顶部栏背景（深灰蓝，非纯黑，克制而不压抑） */
 
   /* 文字色 */
   --c-text: #1e293b; /* 主文字 */
-  --c-text2: #4b5563; /* 次要文字 */
-  --c-text3: #0376fa; /* 重要文字 */
-  --c-text-theme: #ffffff; /* 主题文字 */
+  --c-text2: #64748b; /* 次要文字 */
+  --c-text3: #1d4ed8; /* 重要/强调文字（与主题色同色系，略深以保证对比度） */
+  --c-text-theme: #ffffff; /* 深色底上的文字（顶部栏/主题色按钮等） */
 
   /* 边框色 */
   --c-border: #e2e8f0; /* 主边框 */
+  --c-border-light: #f1f5f9; /* 极浅分割线 */
+
+  /* 菜单态 */
+  --c-menu-active-bg: rgba(37, 99, 235, 0.08);
+  --c-menu-hover-bg: rgba(37, 99, 235, 0.05);
 
   /* 其他 */
-  --c-scrollbar-thumb: #a8c9ff; /* 滚动条 */
+  --c-scrollbar-thumb: #aac2ec; /* 滚动条 */
   --c-scrollbar-track: #d9e1eb; /* 滚动条轨道 */
-  --c-menu-active-bg: rgba(59, 130, 246, 0.12);
-  --c-menu-hover-bg: rgba(59, 130, 246, 0.1);
-  --c-shadow: rgba(0, 0, 0, 0.1); /* 卡片/浮层阴影 */
+  --c-shadow: rgba(0, 0, 0, 0.1); /* 仅用于下拉菜单/弹层等浮层元素 */
+
+  /* 布局尺寸 */
+  --sider-width: 200px; /* 侧边栏展开宽度 */
+  --sider-width-collapsed: 64px; /* 侧边栏折叠宽度 */
+  --header-height: 50px; /* 顶部栏高度 */
+
+  /* 间距 */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+
+  /* 圆角（企业级偏好小圆角，不用大圆角卡片） */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+
+  /* 字号 */
+  --font-size-xs: 12px;
+  --font-size-sm: 13px;
+  --font-size-md: 14px;
+  --font-size-lg: 16px;
+  --font-size-xl: 18px;
 }

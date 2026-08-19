@@ -108,61 +108,67 @@ watch(
 </template>
 <style scoped lang="scss">
 .apps {
-  background-color: var(--c-bg);
-  color: var(--c-text3);
+  background-color: transparent;
+  color: var(--c-text-theme);
   display: flex;
   justify-content: space-between;
   align-items: center;
   height: 30px;
   width: 154px;
   line-height: 30px;
-  padding: 0 6px;
-  border-radius: 5px;
-  font-size: 14px;
+  padding: 0 var(--space-2);
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-md);
   cursor: pointer;
   .nameBox {
     display: flex;
     align-items: center;
     .name {
-      margin-left: 5px;
+      margin-left: var(--space-1);
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
   }
 }
+.apps:hover {
+  border-color: rgba(255, 255, 255, 0.24);
+}
 .list {
   width: 320px;
   height: 200px;
   overflow-y: auto;
-  padding: 12px;
+  padding: var(--space-3);
   .fItem {
     width: 100%;
     .fItemTitle {
       border-bottom: 1px solid var(--c-border);
       height: 30px;
       line-height: 30px;
+      color: var(--c-text2);
+      font-size: var(--font-size-sm);
     }
     .children {
       width: 100%;
       display: flex;
       flex-wrap: wrap;
-      padding-top: 6px;
+      padding-top: var(--space-2);
       .child {
         width: 140px;
         height: 30px;
         line-height: 30px;
-        margin-right: 10px;
-        margin-bottom: 6px;
+        margin-right: var(--space-3);
+        margin-bottom: var(--space-2);
         border: 1px solid var(--c-border);
         color: var(--c-text);
         display: flex;
         align-items: center;
-        padding: 0 5px;
-        border-radius: 5px;
+        padding: 0 var(--space-2);
+        border-radius: var(--radius-sm);
         cursor: pointer;
         .cIcon {
-          margin-right: 3px;
+          margin-right: var(--space-1);
         }
         span {
           overflow: hidden;
@@ -174,10 +180,11 @@ watch(
         margin-right: 0;
       }
       .child:hover {
-        background-color: var(--c-bg-box);
+        border-color: var(--c-text3);
       }
       .child.active {
         background-color: var(--c-bg-theme);
+        border-color: var(--c-bg-theme);
         color: var(--c-text-theme);
       }
     }

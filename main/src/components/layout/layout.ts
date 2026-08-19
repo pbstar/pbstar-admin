@@ -10,6 +10,9 @@ const activeIndex = ref("1");
 const list = ref<NavItem[]>([]);
 const listTree = ref<TreeNode<NavItem>[]>([]);
 
+// 侧边栏折叠状态，供顶部栏折叠按钮与侧边栏容器共用
+const collapsed = ref(false);
+
 // 监听在独立 effect scope 中注册，仅首次实例化时执行一次：
 // 既不随组件卸载销毁（避免再次进入时菜单陈旧），也不随多个调用方重复累积
 let scopeCreated = false;
@@ -77,5 +80,19 @@ export function useNavMenu() {
     listTree,
     activeIndex,
     selectNav,
+  };
+}
+
+/**
+ * 侧边栏折叠状态（顶部栏折叠按钮、侧边栏容器、菜单树共用）
+ */
+export function useSiderCollapse() {
+  const toggleCollapsed = () => {
+    collapsed.value = !collapsed.value;
+  };
+
+  return {
+    collapsed,
+    toggleCollapsed,
   };
 }
