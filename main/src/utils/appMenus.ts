@@ -1,9 +1,27 @@
 import type { MenuItem } from "@Passets/utils/permission";
-import { systemMenus } from "../../../apps/system/src/constants/menus";
-import { exampleMenus } from "../../../apps/example/src/constants/menus";
+import apps from "../../../apps/apps.json" with { type: "json" };
 
-/** appKey -> 该应用的全量硬编码菜单，与 apps/apps.json 的 key 对应；out-app 为外部应用，不在此维护 */
-export const appMenuMap: Record<string, MenuItem[]> = {
-  system: systemMenus,
-  example: exampleMenus,
-};
+/** 已加载过的子应用菜单缓存，避免切换应用时重复动态 import */
+const menuCache = new Map<string, MenuItem[]>();
+
+/**
+ * 动态加载指定子应用的硬编码菜单
+ * 各子应用在自己的 src/constants/menus.ts 里 export default 维护，
+ * 这里按 apps.json 的 key 动态 import，新增/删除子应用无需再手动改这个文件
+ * 仅 in 类型（monorepo 内置）子应用参与聚合；out 类型外部子应用权限自理，不在此加载
+ * @param appKey 应用 key，对应 apps.json 里的 key
+ */
+export async function loadAppMenus(appKey: string): Promise<MenuItem[]> {
+  if (menuCache.has(appKey)) return menuCache.get(appKey)!;
+  const app = apps.find((item) => item.key === appKey);
+  if (!app || app.appType !== "in") return [];
+  try {
+    const mod = await import(`../../../apps/${appKey}/src/constants/menus`);
+    const menus: MenuItem[] = mod.default ?? [];
+    menuCache.set(appKey, menus);
+    return menus;
+  } catch (err) {
+    console.error(`加载子应用【${appKey}】菜单失败:`, err);
+    return [];
+  }
+}

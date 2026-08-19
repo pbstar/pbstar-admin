@@ -24,6 +24,6 @@ pnpm run type-check             # 跑 vue-tsc 类型检查
 
 - **子应用清单**：`apps/apps.json` 是唯一来源（`key`/`appType`/`devPort`/`proUrl`），驱动 rsbuild 的多 environment 配置和主应用路由。新增子应用用 `pnpm run create`，不要手改。
 - **微前端挂载**：[main/src/views/admin/app.vue](main/src/views/admin/app.vue) 用 wujie 的 `startApp`/`destroyApp` 按路由启停子应用；主子应用间用共享 Pinia（`assets/stores/shared.ts`）+ wujie `bus` 事件同步状态。
-- **权限模型**（菜单+按钮已合并为统一模型）：各子应用在自己的 `src/constants/menus.ts` 维护硬编码菜单树，后端返回逗号分隔的权限 key 字符串；[assets/utils/permission.ts](assets/utils/permission.ts) 的 `hasPermission`/`filterMenuTree` 是唯一判断逻辑，按钮权限用 `v-permission="'key'"` 指令。新增菜单/按钮只需加一条菜单项 + 保证后端权限里有对应 key。
+- **权限模型**（菜单+按钮已合并为统一模型）：各子应用在自己的 `src/constants/menus.ts` 维护硬编码菜单树（`export default`），main 侧的 [main/src/utils/appMenus.ts](main/src/utils/appMenus.ts) 按 `apps.json` 的 key 动态 `import()` 聚合，新增子应用无需手动改 main 代码。后端返回逗号分隔的权限 key 字符串；[assets/utils/permission.ts](assets/utils/permission.ts) 的 `hasPermission`/`filterMenuTree` 是唯一判断逻辑，按钮权限用 `v-permission="'key'"` 指令。新增菜单/按钮只需加一条菜单项 + 保证后端权限里有对应 key。
 - **路径别名**：`@` 指向当前应用自己的 `src`；`@Pcomponents` 指向根目录 `components/`（共享组件库）；`@Passets` 指向根目录 `assets/`（共享 stores/utils/directives）。
 - **环境变量**：`.env.development`/`.env.production`（gitignore，本地维护，`.env.example` 是提交的模板），变量统一 `PUBLIC_` 前缀。

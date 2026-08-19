@@ -1,7 +1,7 @@
 import type { MenuItem } from "@Passets/utils/permission";
 
 /** system 应用的全量菜单结构（硬编码维护，与后台权限管理的 key 字段一一对应） */
-export const systemMenus: MenuItem[] = [
+const menus: MenuItem[] = [
   {
     name: "系统管理",
     icon: "el-icon-setting",
@@ -14,3 +14,5 @@ export const systemMenus: MenuItem[] = [
     ],
   },
 ];
+
+export default menus;

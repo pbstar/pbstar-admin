@@ -4,7 +4,7 @@ import type { LocationQuery } from "vue-router";
 import { filterMenuTree } from "@Passets/utils/permission";
 import type { MenuItem } from "@Passets/utils/permission";
 import useSharedStore from "@Passets/stores/shared";
-import { appMenuMap } from "@/utils/appMenus";
+import { loadAppMenus } from "@/utils/appMenus";
 
 /** 导航项（菜单/历史记录共用结构，树形，id 为权限 key） */
 export interface NavItem {
@@ -49,7 +49,7 @@ export const useAppsStore = defineStore("apps", () => {
     });
   };
 
-  const setAppId = ({ id, key }: { id?: number; key?: string } = {}) => {
+  const setAppId = async ({ id, key }: { id?: number; key?: string } = {}) => {
     let aId = 0;
     let appKey = "";
     if (id) {
@@ -61,7 +61,7 @@ export const useAppsStore = defineStore("apps", () => {
       if (app) { aId = app.id; appKey = app.key; }
     }
     if (aId) {
-      setAppNavs(aId, appMenuMap[appKey] || []);
+      await setAppNavs(aId, appKey);
     }
     appId.value = aId;
     return true;
@@ -76,9 +76,10 @@ export const useAppsStore = defineStore("apps", () => {
     return myApps.value;
   };
 
-  const setAppNavs = (aId: number, menuItems: MenuItem[]) => {
+  const setAppNavs = async (aId: number, appKey: string) => {
     const app = myApps.value.find((item) => item.id === aId);
     if (!app) return;
+    const menuItems = await loadAppMenus(appKey);
     const sharedStore = useSharedStore();
     const visible = filterMenuTree(menuItems, sharedStore.userInfo?.permissions);
     const toNavItem = (item: MenuItem): NavItem => ({
