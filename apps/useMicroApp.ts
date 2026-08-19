@@ -1,7 +1,6 @@
 import { useRouter } from "vue-router";
 import { onUnmounted } from "vue";
 import useSharedStore from "@Passets/stores/shared";
-import { changeTheme } from "@Passets/utils/theme";
 
 /**
  * 微前端子应用公共逻辑
@@ -17,9 +16,6 @@ export function useMicroApp() {
       // 只设置 store 中已存在的属性
       if (key in sharedStore) {
         (sharedStore as Record<string, any>)[key] = e[key];
-        if (key === "isDark") {
-          changeTheme(e[key]);
-        }
       }
     });
   };

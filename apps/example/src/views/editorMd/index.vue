@@ -7,7 +7,7 @@
         :footers="[]"
         :noUploadImg="false"
         :toolbarsExclude="['github']"
-        :theme="sharedStore.isDark ? 'dark' : 'light'"
+        :theme="'light'"
       />
     </div>
   </div>
@@ -15,10 +15,8 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { MdEditor } from "md-editor-v3";
-import useSharedStore from "@Passets/stores/shared";
 import "md-editor-v3/lib/style.css";
 import { pTitle } from "@Pcomponents";
-const sharedStore = useSharedStore();
 const text = ref("## hello world");
 </script>
 <style lang="scss" scoped>

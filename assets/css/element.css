@@ -3,12 +3,6 @@
   --el-color-primary: var(--c-bg-theme);
 }
 
-html.dark {
-  --el-bg-color: var(--c-bg);
-  --el-fill-color-lighter: var(--c-bg);
-  --el-fill-color-light: var(--c-bg);
-}
-
 /* 表单元素高度统一 */
 .el-button:not(.is-link) {
   height: 30px;

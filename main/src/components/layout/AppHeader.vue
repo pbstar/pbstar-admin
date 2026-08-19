@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { pIcon } from "@Pcomponents";
 import AppSelect from "../more/appSelect.vue";
-import ThemeSwitch from "./ThemeSwitch.vue";
 import { useUserHeader } from "./useUserHeader";
 
 const { title, userName, userImg, toUserInfo, toLoginOut } = useUserHeader();
@@ -15,7 +14,6 @@ const { title, userName, userImg, toUserInfo, toLoginOut } = useUserHeader();
       <div class="title">{{ title }}</div>
     </div>
     <div class="right">
-      <ThemeSwitch />
       <div class="user">
         <el-dropdown trigger="click">
           <div class="userBox">
