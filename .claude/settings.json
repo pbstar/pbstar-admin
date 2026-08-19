@@ -2,13 +2,11 @@
   "permissions": {
     "allow": [
       "Bash(pnpm install)",
-      "Bash(pnpm add *)",
-      "Bash(pnpm remove *)",
-      "Bash(pnpm run *)",
       "Bash(pnpm dev)",
       "Bash(pnpm build)",
-      "Bash(pnpm create)",
-      "Bash(pnpm -filter *)",
+      "Bash(pnpm run dev)",
+      "Bash(pnpm run build)",
+      "Bash(pnpm type-check *)",
       "Bash(git status)",
       "Bash(git diff*)",
       "Bash(git log*)",
@@ -21,6 +19,16 @@
       "Bash(find *)",
       "Bash(cat *)",
       "Bash(grep *)"
+    ],
+    "deny": [
+      "Bash(git push --force*)",
+      "Bash(git push -f*)",
+      "Bash(git reset --hard*)",
+      "Bash(rm -rf *)",
+      "Bash(sudo *)",
+      "Bash(cat .env*)",
+      "Read(.env*)",
+      "Edit(.env*)"
     ]
   }
 }
