@@ -11,6 +11,7 @@ import {
 } from "@Pcomponents";
 import Detail from "./components/detail.vue";
 import { structure } from "@Passets/utils/array";
+import appGroups from "@/constants/apps";
 
 const typeOptions = [
   { label: "分组", value: "group" },
@@ -33,40 +34,24 @@ onBeforeMount(() => {
   initTree();
 });
 const initTree = () => {
-  data.value = [];
-  request
-    .post({
-      url: "/system/app/getList",
-    })
-    .then((res) => {
-      if (res && res.code === 200) {
-        // 按group分组，转换为树形数组
-        const groupMap: Record<string, any> = {};
-        res.data.forEach((item: any) => {
-          if (!groupMap[item.group]) {
-            groupMap[item.group] = {
-              label: item.group,
-              value: `group_${item.group}`,
-              type: "group",
-              children: [],
-            };
-          }
-          if (!currentNode.value) {
-            currentNode.value = item.id.toString();
-            initTable();
-          }
-          groupMap[item.group].children.push({
-            label: item.name,
-            value: item.id.toString(),
-            type: "app",
-            ...item,
-          });
-        });
-        data.value = Object.values(groupMap);
-      } else {
-        ElMessage.error(res?.msg || "操作异常");
+  // 应用列表已改为前端常量维护，按分组转换为树形数组
+  data.value = appGroups.map((group) => ({
+    label: group.group,
+    value: `group_${group.group}`,
+    type: "group",
+    children: group.apps.map((app) => {
+      if (!currentNode.value) {
+        currentNode.value = app.id.toString();
+        initTable();
       }
-    });
+      return {
+        label: app.name,
+        value: app.id.toString(),
+        type: "app",
+        ...app,
+      };
+    }),
+  }));
 };
 const toSearch = () => {
   initTable();

@@ -3,6 +3,10 @@ import { ref, onBeforeMount } from "vue";
 import { ElMessage } from "element-plus";
 import request from "@Passets/utils/request";
 import { pCollapse, pItem } from "@Pcomponents";
+import appGroups from "@/constants/apps";
+
+/** 应用列表已改为按分组维护的二级数组，这里展平供权限树逐个应用挂靠 */
+const apps = appGroups.flatMap((group) => group.apps);
 
 const props = defineProps({
   type: {
@@ -30,17 +34,13 @@ onBeforeMount(() => {
 
 /** 组装 tree-select 数据：应用（虚拟根）-> 分组 -> 菜单/按钮叶子（可勾选，value 为其 key） */
 const getPermissionTree = () => {
-  Promise.all([
-    request.post({ url: "/system/app/getList" }),
-    request.post({ url: "/system/permission/getList" }),
-  ]).then(([appRes, permissionRes]) => {
-    if (appRes.code !== 200 || permissionRes.code !== 200) {
-      ElMessage.error(appRes.msg || permissionRes.msg || "获取权限数据失败");
+  request.post({ url: "/system/permission/getList" }).then((permissionRes) => {
+    if (permissionRes.code !== 200) {
+      ElMessage.error(permissionRes.msg || "获取权限数据失败");
       return;
     }
-    const apps = appRes.data;
     const permissions = permissionRes.data;
-    permissionTree.value = apps.map((app: any) => {
+    permissionTree.value = apps.map((app) => {
       const appPermissions = permissions.filter((item: any) => item.appId === app.id);
       const groups = appPermissions.filter((item: any) => item.type === "group");
       return {
