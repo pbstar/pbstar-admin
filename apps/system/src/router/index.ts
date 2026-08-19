@@ -6,27 +6,27 @@ const router = createRouter({
     {
       path: "/permission",
       name: "permission",
-      component: () => import("@/views/permission.vue"),
+      component: () => import("@/views/permission/index.vue"),
     },
     {
       path: "/user",
       name: "user",
-      component: () => import("@/views/user.vue"),
+      component: () => import("@/views/user/index.vue"),
     },
     {
       path: "/role",
       name: "role",
-      component: () => import("@/views/role.vue"),
+      component: () => import("@/views/role/index.vue"),
     },
     {
       path: "/log",
       name: "log",
-      component: () => import("@/views/log.vue"),
+      component: () => import("@/views/log/index.vue"),
     },
     {
       path: "/app",
       name: "app",
-      component: () => import("@/views/app.vue"),
+      component: () => import("@/views/app/index.vue"),
     },
     {
       path: "/:pathMatch(.*)*",

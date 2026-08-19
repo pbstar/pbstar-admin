@@ -11,7 +11,7 @@ const router = createRouter({
     {
       path: "/list",
       name: "list",
-      component: () => import("@/views/list.vue"),
+      component: () => import("@/views/list/index.vue"),
     },
     {
       path: "/:pathMatch(.*)*",

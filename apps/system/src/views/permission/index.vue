@@ -9,7 +9,7 @@ import {
   pDialog,
   pItem,
 } from "@Pcomponents";
-import Detail from "./components/permission/detail.vue";
+import Detail from "./components/detail.vue";
 import { structure } from "@Passets/utils/array";
 
 const typeOptions = [

@@ -3,7 +3,7 @@ import { ref, onBeforeMount } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import request from "@Passets/utils/request";
 import { pTable, pSearch, pTitle, pDialog, pItem } from "@Pcomponents";
-import Detail from "./components/log/detail.vue";
+import Detail from "./components/detail.vue";
 
 const searchValue = ref<Record<string, any>>({});
 const tableData = ref<any[]>([]);

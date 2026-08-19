@@ -137,7 +137,7 @@ import {
   pItem,
 } from "@Pcomponents";
 import { booleanOptions, ethnicOptions, sexOptions, getOptionLabel } from "@/constants/options";
-import Detail from "./components/list/detail.vue";
+import Detail from "./components/detail.vue";
 const data = ref<any[]>([]);
 
 const pagination = ref({

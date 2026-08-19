@@ -2,16 +2,20 @@
 import { ref, onBeforeMount } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import request from "@Passets/utils/request";
-import { pTable, pSearch, pTitle, pDialog, pItem } from "@Pcomponents";
-import Detail from "./components/role/detail.vue";
+import {
+  pTable,
+  pSearch,
+  pTitle,
+  pDialog,
+  pIcon,
+  pItem,
+} from "@Pcomponents";
+import Detail from "./components/detail.vue";
+import { structure } from "@Passets/utils/array";
 
 const searchValue = ref<Record<string, any>>({});
 const tableData = ref<any[]>([]);
-const pagination = ref({
-  pageNumber: 1,
-  pageSize: 10,
-  total: 0,
-});
+
 const detailType = ref("");
 const detailId = ref<string | number>("");
 const isDetail = ref(false);
@@ -22,40 +26,25 @@ onBeforeMount(() => {
 });
 
 const toSearch = () => {
-  pagination.value.pageNumber = 1;
   initTable();
 };
 const toReset = () => {
   searchValue.value = {};
   toSearch();
 };
-const tablePaginationChange = ({
-  pageNumber,
-  pageSize,
-}: {
-  pageNumber: number;
-  pageSize: number;
-}) => {
-  pagination.value.pageNumber = pageNumber;
-  pagination.value.pageSize = pageSize;
-  initTable();
-};
 const initTable = () => {
   const params = {
-    pageNumber: pagination.value.pageNumber,
-    pageSize: pagination.value.pageSize,
     ...searchValue.value,
   };
   tableData.value = [];
   request
     .post({
-      url: "/system/role/getList",
+      url: "/system/app/getList",
       data: params,
     })
     .then((res) => {
       if (res && res.code === 200) {
-        tableData.value = res.data.list;
-        pagination.value.total = res.data.total;
+        tableData.value = structure(res.data);
       } else {
         ElMessage.error(res?.msg || "操作异常");
       }
@@ -78,7 +67,7 @@ const handleDelete = (row: any) => {
     .then(() => {
       request
         .post({
-          url: "/system/role/delete",
+          url: "/system/app/delete",
           data: { idList: [row.id] },
         })
         .then((res) => {
@@ -100,7 +89,7 @@ const handleAdd = () => {
 const handleSave = () => {
   const detailInfo = detailRef.value?.getFormValue();
   const url =
-    detailType.value == "add" ? "/system/role/create" : "/system/role/update";
+    detailType.value == "add" ? "/system/app/create" : "/system/app/update";
   request
     .post({
       url,
@@ -123,27 +112,36 @@ const handleBack = () => {
 
 <template>
   <div class="page">
-    <p-title :list="['角色管理']"></p-title>
+    <p-title :list="['应用管理']"></p-title>
 
     <p-search style="margin-top: 10px" @search="toSearch" @reset="toReset">
-      <p-item class="item" label="角色名称">
-        <el-input v-model="searchValue.name" placeholder="请输入角色名称" />
+      <p-item class="item" label="应用名称">
+        <el-input v-model="searchValue.name" placeholder="请输入应用名称" />
       </p-item>
-      <p-item class="item" label="角色Key">
-        <el-input v-model="searchValue.key" placeholder="请输入角色Key" />
+      <p-item class="item" label="应用分组">
+        <el-input v-model="searchValue.group" placeholder="请输入应用分组" />
+      </p-item>
+      <p-item class="item" label="应用Key">
+        <el-input v-model="searchValue.key" placeholder="请输入应用Key" />
       </p-item>
     </p-search>
 
-    <p-table
-      style="margin-top: 10px"
-      :data="tableData"
-      :pagination="pagination"
-      @paginationChange="tablePaginationChange"
-    >
+    <p-table style="margin-top: 10px" :data="tableData">
       <template #column>
-        <el-table-column prop="name" label="角色名称" />
-        <el-table-column prop="key" label="角色Key" />
-        <el-table-column prop="permissions" label="权限" show-overflow-tooltip />
+        <el-table-column prop="name" label="应用名称" />
+        <el-table-column prop="group" label="应用分组" />
+        <el-table-column prop="key" label="应用Key" />
+        <el-table-column prop="icon" label="应用图标">
+          <template #default="{ row }">
+            <div v-if="row.icon" style="display: flex; align-items: center">
+              <p-icon
+                style="margin-right: 5px; font-size: 16px"
+                :name="row.icon"
+              />
+              <span>{{ row.icon }}</span>
+            </div>
+          </template>
+        </el-table-column>
         <el-table-column
           prop="operation"
           label="操作"
@@ -158,7 +156,6 @@ const handleBack = () => {
               编辑
             </el-button>
             <el-button
-              v-if="row.id != 1"
               type="danger"
               size="small"
               link
@@ -174,11 +171,11 @@ const handleBack = () => {
       </template>
     </p-table>
 
-    <p-dialog title="角色管理详情页" type="drawer" v-model="isDetail">
+    <p-dialog title="应用管理详情页" type="drawer" v-model="isDetail">
       <Detail ref="detailRef" :type="detailType" :id="detailId"></Detail>
       <template #footer>
         <el-button type="primary" @click="handleSave()"> 保存 </el-button>
-        <el-button @click="handleBack()"> 返回 </el-button>
+        <el-button @click="handleBack()">返回</el-button>
       </template>
     </p-dialog>
   </div>

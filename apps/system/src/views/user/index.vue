@@ -1,21 +1,18 @@
 <script setup lang="ts">
-import { ref, onBeforeMount } from "vue";
+import { ref, onBeforeMount, onMounted } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import request from "@Passets/utils/request";
-import {
-  pTable,
-  pSearch,
-  pTitle,
-  pDialog,
-  pIcon,
-  pItem,
-} from "@Pcomponents";
-import Detail from "./components/app/detail.vue";
-import { structure } from "@Passets/utils/array";
+import { pTable, pSearch, pTitle, pDialog, pItem } from "@Pcomponents";
+import Detail from "./components/detail.vue";
 
 const searchValue = ref<Record<string, any>>({});
 const tableData = ref<any[]>([]);
-
+const roleOptions = ref<{ label: string; value: string }[]>([]);
+const pagination = ref({
+  pageNumber: 1,
+  pageSize: 10,
+  total: 0,
+});
 const detailType = ref("");
 const detailId = ref<string | number>("");
 const isDetail = ref(false);
@@ -24,31 +21,73 @@ const detailRef = ref<InstanceType<typeof Detail> | null>(null);
 onBeforeMount(() => {
   initTable();
 });
+onMounted(() => {
+  getRoleList();
+});
 
 const toSearch = () => {
+  pagination.value.pageNumber = 1;
   initTable();
 };
 const toReset = () => {
   searchValue.value = {};
   toSearch();
 };
+const tablePaginationChange = ({
+  pageNumber,
+  pageSize,
+}: {
+  pageNumber: number;
+  pageSize: number;
+}) => {
+  pagination.value.pageNumber = pageNumber;
+  pagination.value.pageSize = pageSize;
+  initTable();
+};
 const initTable = () => {
   const params = {
+    pageNumber: pagination.value.pageNumber,
+    pageSize: pagination.value.pageSize,
     ...searchValue.value,
   };
   tableData.value = [];
   request
     .post({
-      url: "/system/app/getList",
+      url: "/system/user/getList",
       data: params,
     })
     .then((res) => {
       if (res && res.code === 200) {
-        tableData.value = structure(res.data);
+        tableData.value = res.data.list;
+        pagination.value.total = res.data.total;
       } else {
         ElMessage.error(res?.msg || "操作异常");
       }
     });
+};
+const getRoleList = () => {
+  request
+    .get({
+      url: "/system/role/getAllList",
+    })
+    .then((res) => {
+      if (res.code === 200 && res.data) {
+        roleOptions.value = res.data.map((item: any) => {
+          return {
+            label: item.name,
+            value: item.role_key,
+          };
+        });
+      } else {
+        ElMessage.error(res.msg || "获取角色列表失败");
+      }
+    });
+};
+
+// 根据 role_key 获取角色名称
+const getRoleLabel = (roleKey: string) => {
+  const role = roleOptions.value.find((item) => item.value === roleKey);
+  return role ? role.label : roleKey;
 };
 const handleView = (row: any) => {
   detailType.value = "view";
@@ -67,7 +106,7 @@ const handleDelete = (row: any) => {
     .then(() => {
       request
         .post({
-          url: "/system/app/delete",
+          url: "/system/user/delete",
           data: { idList: [row.id] },
         })
         .then((res) => {
@@ -89,7 +128,7 @@ const handleAdd = () => {
 const handleSave = () => {
   const detailInfo = detailRef.value?.getFormValue();
   const url =
-    detailType.value == "add" ? "/system/app/create" : "/system/app/update";
+    detailType.value == "add" ? "/system/user/create" : "/system/user/update";
   request
     .post({
       url,
@@ -112,34 +151,51 @@ const handleBack = () => {
 
 <template>
   <div class="page">
-    <p-title :list="['应用管理']"></p-title>
+    <p-title :list="['用户管理']"></p-title>
 
     <p-search style="margin-top: 10px" @search="toSearch" @reset="toReset">
-      <p-item class="item" label="应用名称">
-        <el-input v-model="searchValue.name" placeholder="请输入应用名称" />
+      <p-item class="item" label="姓名">
+        <el-input v-model="searchValue.name" placeholder="请输入姓名" />
       </p-item>
-      <p-item class="item" label="应用分组">
-        <el-input v-model="searchValue.group" placeholder="请输入应用分组" />
+      <p-item class="item" label="账号">
+        <el-input v-model="searchValue.username" placeholder="请输入账号" />
       </p-item>
-      <p-item class="item" label="应用Key">
-        <el-input v-model="searchValue.key" placeholder="请输入应用Key" />
+      <p-item class="item" label="角色">
+        <el-select v-model="searchValue.role" placeholder="请选择角色">
+          <el-option
+            v-for="item in roleOptions"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
       </p-item>
     </p-search>
 
-    <p-table style="margin-top: 10px" :data="tableData">
+    <p-table
+      style="margin-top: 10px"
+      :data="tableData"
+      :pagination="pagination"
+      @paginationChange="tablePaginationChange"
+    >
       <template #column>
-        <el-table-column prop="name" label="应用名称" />
-        <el-table-column prop="group" label="应用分组" />
-        <el-table-column prop="key" label="应用Key" />
-        <el-table-column prop="icon" label="应用图标">
+        <el-table-column prop="name" label="姓名" />
+        <el-table-column prop="avatar" label="头像">
           <template #default="{ row }">
-            <div v-if="row.icon" style="display: flex; align-items: center">
-              <p-icon
-                style="margin-right: 5px; font-size: 16px"
-                :name="row.icon"
+            <div style="display: flex">
+              <img
+                style="width: 26px; height: 26px; border-radius: 50%"
+                v-if="row.avatar"
+                :src="row.avatar"
+                alt=""
               />
-              <span>{{ row.icon }}</span>
             </div>
+          </template>
+        </el-table-column>
+        <el-table-column prop="username" label="账号" />
+        <el-table-column prop="role" label="角色">
+          <template #default="{ row }">
+            {{ getRoleLabel(row.role) }}
           </template>
         </el-table-column>
         <el-table-column
@@ -156,6 +212,7 @@ const handleBack = () => {
               编辑
             </el-button>
             <el-button
+              v-if="row.id != 1"
               type="danger"
               size="small"
               link
@@ -167,15 +224,17 @@ const handleBack = () => {
         </el-table-column>
       </template>
       <template #topLeft>
-        <el-button type="primary" @click="handleAdd()"> 新增 </el-button>
+        <el-button v-permission="'user_add'" type="primary" @click="handleAdd()">
+          新增
+        </el-button>
       </template>
     </p-table>
 
-    <p-dialog title="应用管理详情页" type="drawer" v-model="isDetail">
+    <p-dialog title="用户管理详情页" type="drawer" v-model="isDetail">
       <Detail ref="detailRef" :type="detailType" :id="detailId"></Detail>
       <template #footer>
         <el-button type="primary" @click="handleSave()"> 保存 </el-button>
-        <el-button @click="handleBack()">返回</el-button>
+        <el-button @click="handleBack()"> 返回 </el-button>
       </template>
     </p-dialog>
   </div>
