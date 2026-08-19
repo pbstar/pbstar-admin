@@ -1,6 +1,6 @@
 import { execSync } from "child_process";
+import { input, select } from "@inquirer/prompts";
 import { program } from "commander";
-import inquirer from "inquirer";
 import chalk from "chalk";
 import apps from "../../apps/apps.json" with { type: "json" };
 
@@ -21,32 +21,23 @@ const list = [
 const handleDep = async (mode: "add" | "remove") => {
   const isAdd = mode === "add";
   try {
-    const prompts: any[] = [
-      {
-        type: "list",
-        name: "appKey",
-        message: isAdd ? "请选择要添加依赖包的工程:" : "请选择要移除依赖包的工程:",
-        choices: list,
-      },
-      {
-        type: "input",
-        name: "packageName",
-        message: isAdd ? "请输入要添加的依赖包名称:" : "请输入要移除的依赖包名称:",
-      },
-    ];
+    const appKey = await select({
+      message: isAdd ? "请选择要添加依赖包的工程:" : "请选择要移除依赖包的工程:",
+      choices: list.map((key) => ({ value: key, name: key })),
+    });
+    const packageName = await input({
+      message: isAdd ? "请输入要添加的依赖包名称:" : "请输入要移除的依赖包名称:",
+    });
+    let packageType = "";
     if (isAdd) {
-      prompts.push({
-        type: "list",
-        name: "packageType",
+      packageType = await select({
         message: "请选择要添加的依赖包类型:",
-        choices: ["dependencies", "devDependencies"],
+        choices: [
+          { value: "dependencies", name: "dependencies" },
+          { value: "devDependencies", name: "devDependencies" },
+        ],
       });
     }
-    const { appKey, packageName, packageType } = await inquirer.prompt<{
-      appKey: string;
-      packageName: string;
-      packageType: string;
-    }>(prompts);
     // 验证依赖包名称
     if (!packageName) {
       console.error(chalk.red("Error: 依赖包名称不能为空"));

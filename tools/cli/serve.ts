@@ -1,9 +1,8 @@
 import { existsSync, readdirSync } from "fs";
 import { join } from "path";
 import { execSync, spawn, spawnSync } from "child_process";
+import { checkbox } from "@inquirer/prompts";
 import { program } from "commander";
-import inquirer from "inquirer";
-import type { DistinctQuestion } from "inquirer";
 import chalk from "chalk";
 import apps from "../../apps/apps.json" with { type: "json" };
 
@@ -69,29 +68,15 @@ const startDevServers = (commands: string[]): void => {
 
 /**
  * 手动打印已启动 dev 服务的访问地址（替代 rsbuild 默认打印，输出更简洁美观）
- * @param appKeys 已选择的应用模块
  */
-const printDevUrls = (appKeys: string[]): void => {
-  const hasMain = appKeys.includes("main");
-
+const printDevUrls = (): void => {
   console.log();
   console.log(chalk.cyan.bold("  🚀 PbstarAdmin 开发服务已启动"));
   console.log(chalk.gray("  ──────────────────────────────"));
-
-  if (hasMain) {
-    // 主应用是访问入口，突出打印；子应用地址默认不打印，避免刷屏
-    console.log(
-      `  ${chalk.green("➜")}  ${chalk.bold("main")}  ${chalk.cyan.underline("http://localhost:8800")}`,
-    );
-  } else {
-    // 单独调试子应用（未选主应用）时，打印子应用地址
-    appKeys.forEach((key) => {
-      const app = apps.find((item) => item.key === key)!;
-      console.log(
-        `  ${chalk.green("➜")}  ${chalk.bold(key)}  ${chalk.cyan.underline(`http://localhost:${app.devPort}`)}`,
-      );
-    });
-  }
+  // main 是唯一访问入口，子应用经 wujie 挂载，固定打印 main 即可
+  console.log(
+    `  ${chalk.green("➜")}  ${chalk.bold("main")}  ${chalk.cyan.underline("http://localhost:8800")}`,
+  );
   console.log();
 };
 
@@ -102,17 +87,18 @@ const printDevUrls = (appKeys: string[]): void => {
 const handleServe = async (mode: "dev" | "build") => {
   const isDev = mode === "dev";
   try {
-    const question: DistinctQuestion<{ appKeys: string[] }> = {
-      type: "checkbox",
-      name: "appKeys",
+    const appKeys = await checkbox({
       message: isDev
         ? "请选择要启动的应用模块(空格多选):"
         : "请选择要构建的应用模块(空格多选):",
-      choices: list,
-      validate: (selected) =>
-        selected.length > 0 ? true : "请至少选择一个应用模块",
-    };
-    const { appKeys } = await inquirer.prompt<{ appKeys: string[] }>([question]);
+      // main 是唯一访问入口，子应用经 wujie 挂载，不支持单独运行，故锁定为必选
+      choices: list.map((key) => ({
+        value: key,
+        name: key,
+        checked: key === "main",
+        disabled: key === "main",
+      })),
+    });
 
     // 外部子应用未初始化（git submodule 未拉取）时给出友好提示并跳过，而非让 rsbuild 报错
     const uninitialized = appKeys.filter(isUninitializedSubmodule);
@@ -137,7 +123,7 @@ const handleServe = async (mode: "dev" | "build") => {
     if (isDev) {
       // dev 模式：长驻进程，并行启动多个
       startDevServers(commands);
-      printDevUrls(validAppKeys);
+      printDevUrls();
     } else {
       // build 模式：串行构建，输出清晰、资源占用平稳
       commands.forEach((command) =>

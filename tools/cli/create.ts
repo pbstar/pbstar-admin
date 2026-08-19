@@ -1,5 +1,5 @@
 import { program } from "commander";
-import inquirer from "inquirer";
+import { input, select } from "@inquirer/prompts";
 import chalk from "chalk";
 import fs from "fs-extra";
 import path from "path";
@@ -21,63 +21,50 @@ program
   .action(async () => {
     try {
       // 交互式问答
-      const answers = await inquirer.prompt<{
-        appType: string;
-        appKey: string;
-      }>([
-        {
-          type: "list",
-          name: "appType",
-          message: "子应用类型:",
-          choices: ["in", "out"],
+      const appType = await select({
+        message: "子应用类型:",
+        choices: [
+          { value: "in", name: "in" },
+          { value: "out", name: "out" },
+        ],
+      });
+      const appKey = await input({
+        message: "子应用Key:",
+        validate: (value) => {
+          const blackList = ["main", "components"];
+          if (value.trim() === "") {
+            return "请输入子应用Key";
+          }
+          if (blackList.includes(value)) {
+            return "子应用Key不能为" + value;
+          }
+          if (!/^[a-z0-9-]+$/.test(value)) {
+            return "子应用Key只能包含小写字母、数字和连字符";
+          }
+          return true;
         },
-        {
-          type: "input",
-          name: "appKey",
-          message: "子应用Key:",
-          validate: (input) => {
-            const blackList = ["main", "components"];
-            if (input.trim() === "") {
-              return "请输入子应用Key";
-            }
-            if (blackList.includes(input)) {
-              return "子应用Key不能为" + input;
-            }
-            if (!/^[a-z0-9-]+$/.test(input)) {
-              return "子应用Key只能包含小写字母、数字和连字符";
-            }
-            return true;
-          },
-        },
-      ]);
-
-      const { appType, appKey } = answers;
+      });
       const appPath = path.join(APPS_DIR, appKey);
 
       // 如果是外部子应用，询问Git仓库地址
       let gitUrl = "";
       if (appType === "out") {
-        const gitAnswers = await inquirer.prompt<{ gitUrl: string }>([
-          {
-            type: "input",
-            name: "gitUrl",
-            message: "请输入Git仓库地址:",
-            validate: (input) => {
-              if (input.trim() === "") {
-                return "请输入Git仓库地址";
-              }
-              // 简单的Git仓库地址验证
-              if (
-                !input.match(/^https?:\/\/.+\.git$/) &&
-                !input.match(/^git@.+:.+\.git$/)
-              ) {
-                return "请输入有效的Git仓库地址（https或ssh格式）";
-              }
-              return true;
-            },
+        gitUrl = await input({
+          message: "请输入Git仓库地址:",
+          validate: (value) => {
+            if (value.trim() === "") {
+              return "请输入Git仓库地址";
+            }
+            // 简单的Git仓库地址验证
+            if (
+              !value.match(/^https?:\/\/.+\.git$/) &&
+              !value.match(/^git@.+:.+\.git$/)
+            ) {
+              return "请输入有效的Git仓库地址（https或ssh格式）";
+            }
+            return true;
           },
-        ]);
-        gitUrl = gitAnswers.gitUrl;
+        });
       }
 
       // 检查目录是否存在
