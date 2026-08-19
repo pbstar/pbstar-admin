@@ -1,6 +1,6 @@
 import { existsSync, readdirSync } from "fs";
 import { join } from "path";
-import { execSync, spawn } from "child_process";
+import { execSync, spawn, spawnSync } from "child_process";
 import { program } from "commander";
 import inquirer from "inquirer";
 import type { DistinctQuestion } from "inquirer";
@@ -45,14 +45,22 @@ const buildCommand = (appKey: string, mode: "dev" | "build", isSingle: boolean):
  * @param commands 命令列表
  */
 const startDevServers = (commands: string[]): void => {
+  // Windows 下 node_modules/.bin 内的命令是 .cmd/.ps1 shim，spawn 不开 shell 会直接 ENOENT
+  const isWin = process.platform === "win32";
   const children = commands.map((command) => {
     const [cmd, ...args] = command.split(" ");
-    return spawn(cmd, args, { stdio: "inherit", cwd: "../" });
+    return spawn(cmd, args, { stdio: "inherit", cwd: "../", shell: isWin });
   });
 
   // Ctrl+C / kill 时一并结束所有 dev 服务，避免残留进程
   const killAll = (signal: NodeJS.Signals) => {
-    children.forEach((child) => child.kill(signal));
+    children.forEach((child) => {
+      if (isWin && child.pid) {
+        spawnSync("taskkill", ["/pid", String(child.pid), "/T", "/F"]);
+      } else {
+        child.kill(signal);
+      }
+    });
     process.exit(0);
   };
   process.once("SIGINT", () => killAll("SIGINT"));
