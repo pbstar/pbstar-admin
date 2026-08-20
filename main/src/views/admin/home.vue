@@ -66,7 +66,9 @@ onBeforeMount(() => {
   <div class="page">
     <div class="stat-grid">
       <div class="stat-card" v-for="item in stats" :key="item.label">
-        <p-icon :name="item.icon" size="24" class="icon" />
+        <div class="iconBox">
+          <p-icon :name="item.icon" size="22" />
+        </div>
         <div class="info">
           <div class="num">{{ item.value }}</div>
           <div class="label">{{ item.label }}</div>
@@ -95,8 +97,11 @@ onBeforeMount(() => {
             :key="app.id"
             @click="toApp(app)"
           >
-            <p-icon :name="app.icon" size="20" class="icon" />
+            <div class="iconBox">
+              <p-icon :name="app.icon" size="18" />
+            </div>
             <span class="name">{{ app.name }}</span>
+            <p-icon class="arrow" name="el-icon-ArrowRight" size="14" />
           </div>
           <el-empty v-if="!myApps.length" description="暂无应用" />
         </div>
@@ -109,40 +114,57 @@ onBeforeMount(() => {
 .page {
   width: 100%;
   height: 100%;
-  padding: 16px;
+  padding: var(--space-3);
   overflow-y: auto;
   background: var(--c-bg);
+  border-radius: var(--radius-md);
 
   .stat-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
-    margin-bottom: 16px;
+    gap: var(--space-3);
+    margin-bottom: var(--space-3);
   }
 
   .stat-card {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 20px;
-    border-radius: 8px;
-    background: var(--c-bg-box);
+    gap: var(--space-3);
+    padding: var(--space-4) var(--space-5);
+    border-radius: var(--radius-md);
+    background: var(--c-bg);
+    border: 1px solid var(--c-border-light);
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow 0.2s;
 
-    .icon {
+    &:hover {
+      box-shadow: var(--shadow-md);
+    }
+
+    .iconBox {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-md);
+      background: var(--c-bg-theme-tint);
       color: var(--c-text3);
+      flex-shrink: 0;
     }
 
     .info {
       .num {
         font-size: 24px;
-        font-weight: bold;
+        font-weight: 700;
         color: var(--c-text);
         line-height: 1.2;
+        font-variant-numeric: tabular-nums;
       }
       .label {
-        font-size: 13px;
+        font-size: var(--font-size-sm);
         color: var(--c-text2);
-        margin-top: 4px;
+        margin-top: 2px;
       }
     }
   }
@@ -150,26 +172,28 @@ onBeforeMount(() => {
   .panel-grid {
     display: grid;
     grid-template-columns: 2fr 1fr;
-    gap: 16px;
+    gap: var(--space-3);
   }
 
   .panel {
-    padding: 16px;
-    border-radius: 8px;
-    background: var(--c-bg-box);
+    padding: var(--space-3);
+    border-radius: var(--radius-md);
+    background: var(--c-bg);
+    border: 1px solid var(--c-border-light);
+    box-shadow: var(--shadow-sm);
   }
 
   .log-list {
-    margin-top: 12px;
+    margin-top: var(--space-2);
 
     .log-item {
       display: flex;
       align-items: center;
-      gap: 12px;
-      padding: 8px 0;
-      font-size: 13px;
+      gap: var(--space-3);
+      padding: var(--space-2) 0;
+      font-size: var(--font-size-sm);
       color: var(--c-text2);
-      border-bottom: 1px solid var(--c-border);
+      border-bottom: 1px solid var(--c-border-light);
 
       &:last-child {
         border-bottom: none;
@@ -195,26 +219,52 @@ onBeforeMount(() => {
   }
 
   .app-list {
-    margin-top: 12px;
+    margin-top: var(--space-2);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
 
     .app-item {
       display: flex;
       align-items: center;
-      gap: 8px;
-      padding: 10px 8px;
-      border-radius: 6px;
+      gap: var(--space-2);
+      padding: var(--space-2);
+      border-radius: var(--radius-sm);
       color: var(--c-text);
       cursor: pointer;
+      transition: background-color 0.15s;
 
       &:hover {
         background: var(--c-menu-hover-bg);
+
+        .arrow {
+          color: var(--c-text3);
+          transform: translateX(2px);
+        }
       }
 
-      .icon {
+      .iconBox {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 30px;
+        height: 30px;
+        border-radius: var(--radius-sm);
+        background: var(--c-bg-theme-tint);
         color: var(--c-text3);
+        flex-shrink: 0;
+      }
+
+      .name {
+        flex: 1;
+        font-size: var(--font-size-sm);
+      }
+
+      .arrow {
+        color: var(--c-text2);
+        transition: color 0.15s, transform 0.15s;
       }
     }
   }
-
 }
 </style>

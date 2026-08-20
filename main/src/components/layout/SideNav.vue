@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useNavMenu, useSiderCollapse } from "@/components/layout/layout";
+import { useNavMenu, useSiderCollapse } from "@/components/layout/useLayoutState";
 import { pIcon } from "@Pcomponents";
 import MenuTree from "./MenuTree.vue";
 
@@ -45,12 +45,13 @@ const { collapsed, toggleCollapsed } = useSiderCollapse();
     align-items: center;
     justify-content: center;
     color: var(--c-text2);
-    border-top: 1px solid var(--c-border-light);
     cursor: pointer;
-  }
+    transition: background-color 0.15s, color 0.15s;
 
-  .collapseBtn:hover {
-    color: var(--c-text3);
+    &:hover {
+      color: var(--c-text3);
+      background: var(--c-menu-hover-bg);
+    }
   }
 }
 </style>

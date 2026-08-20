@@ -100,27 +100,41 @@ watch(
   height: 40px;
   display: flex;
   align-items: center;
-  border-bottom: 1px solid var(--c-border);
+  gap: var(--space-2);
+}.historyBox .home {
+  flex-shrink: 0;
 }
 .historyBox .list {
   display: flex;
   align-items: center;
   height: 100%;
+  gap: var(--space-2);
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 .tab {
-  height: 100%;
+  flex-shrink: 0;
+  height: 28px;
   display: flex;
   align-items: center;
-  padding: 0 var(--space-3);
-  border-right: 1px solid var(--c-border-light);
-  border-bottom: 2px solid transparent;
+  padding: 0 10px;
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-sm);
   color: var(--c-text2);
   cursor: pointer;
   font-size: var(--font-size-sm);
+  background: var(--c-bg);
+  transition: color 0.15s, border-color 0.15s;
 }
 .tab.active {
   color: var(--c-text3);
-  border-bottom-color: var(--c-bg-theme);
+  border-color: var(--c-bg-theme);
+  background: var(--c-bg-theme-tint);
+  font-weight: 500;
 }
 .tab:hover {
   color: var(--c-text3);
@@ -134,8 +148,14 @@ watch(
 .tab .close {
   margin-left: var(--space-2);
   visibility: hidden;
+  border-radius: 50%;
+  transition: color 0.15s;
 }
-.tab:hover .close {
+.tab:hover .close,
+.tab.active .close {
   visibility: visible;
+}
+.tab .close:hover {
+  color: var(--c-text);
 }
 </style>

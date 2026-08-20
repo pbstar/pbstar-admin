@@ -78,20 +78,22 @@ const handleSelect = (index: string) => {
 .menu :deep(.el-menu-item),
 .menu :deep(.el-sub-menu__title) {
   font-size: 14px;
-  height: 36px;
-  line-height: 36px;
-  margin: 0 12px;
+  height: 38px;
+  line-height: 38px;
+  margin: 0 10px;
   margin-bottom: 4px;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   color: var(--c-text);
   padding: 0 12px !important;
+  transition: background-color 0.15s, color 0.15s;
 }
 
-/* 激活状态样式：仅左侧细竖线 + 文字变主题色，不做背景色块的双重强调 */
+/* 激活状态：浅色 tint 背景 + 左侧主色条 + 文字主题色 */
 .menu :deep(.el-menu-item.is-active) {
-  background: transparent !important;
+  background: var(--c-menu-active-bg) !important;
   color: var(--c-text3) !important;
   position: relative;
+  font-weight: 600;
 }
 
 .menu :deep(.el-menu-item.is-active)::after {
@@ -100,15 +102,16 @@ const handleSelect = (index: string) => {
   left: 0;
   top: 50%;
   transform: translateY(-50%);
-  width: 2px;
-  height: 16px;
-  background: var(--c-text3);
+  width: 3px;
+  height: 18px;
+  border-radius: 2px;
+  background: var(--c-bg-theme);
 }
 
-/* 悬停效果：仅文字/图标颜色变化，不做背景跳动 */
+/* 悬停效果：淡背景 + 文字主题色 */
 .menu :deep(.el-menu-item:hover),
 .menu :deep(.el-sub-menu__title:hover) {
-  background: transparent !important;
+  background: var(--c-menu-hover-bg) !important;
   color: var(--c-text3) !important;
 }
 
@@ -133,6 +136,14 @@ const handleSelect = (index: string) => {
 .menu :deep(.el-icon) {
   font-size: 18px;
   vertical-align: middle;
+  color: var(--c-text2);
+  transition: color 0.15s;
+}
+
+/* 激活/悬停时图标跟随文字变主题色 */
+.menu :deep(.el-menu-item:hover .el-icon),
+.menu :deep(.el-sub-menu__title:hover .el-icon),
+.menu :deep(.el-menu-item.is-active .el-icon) {
   color: var(--c-text3);
 }
 

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { pIcon } from "@Pcomponents";
-import AppSelect from "../more/appSelect.vue";
+import AppSelect from "../more/AppSelect.vue";
 import { useUserHeader } from "./useUserHeader";
 
 const { title, userName, userImg, toUserInfo, toLoginOut } = useUserHeader();
@@ -60,6 +60,7 @@ const { title, userName, userImg, toUserInfo, toLoginOut } = useUserHeader();
       font-weight: 600;
       margin-left: var(--space-2);
       white-space: nowrap;
+      letter-spacing: 0.5px;
     }
 
     .divider {
@@ -82,15 +83,26 @@ const { title, userName, userImg, toUserInfo, toLoginOut } = useUserHeader();
         align-items: center;
         color: var(--c-text-theme);
         cursor: pointer;
+        padding: 4px var(--space-2);
+        border-radius: var(--radius-sm);
+        transition: background-color 0.2s;
         img {
           width: 28px;
           height: 28px;
           border-radius: 50%;
           margin-right: var(--space-2);
+          border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .userName {
+          font-size: var(--font-size-sm);
         }
         .icon {
           margin-left: var(--space-2);
+          color: rgba(255, 255, 255, 0.55);
         }
+      }
+      .userBox:hover {
+        background-color: rgba(255, 255, 255, 0.08);
       }
     }
   }

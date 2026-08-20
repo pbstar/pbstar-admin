@@ -3,7 +3,7 @@ import { ref, watch, onUnmounted, nextTick } from "vue";
 import { useRoute } from "vue-router";
 import { startApp, destroyApp, bus } from "wujie";
 import useSharedStore from "@Passets/stores/shared";
-import LayoutLoading from "@/components/layout/loading.vue";
+import LayoutLoading from "@/components/layout/LayoutLoading.vue";
 import AppLoadError from "@/components/layout/AppLoadError.vue";
 
 const route = useRoute();

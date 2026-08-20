@@ -7,10 +7,10 @@
       </div>
       <div class="main">
         <div class="mLeft" :class="{ collapsed }">
-          <AdminNav />
+          <SideNav />
         </div>
         <div class="mRight">
-          <history class="history" />
+          <HistoryTabs class="history" />
           <div class="mApp">
             <RouterView />
           </div>
@@ -23,11 +23,11 @@
 import { onBeforeMount } from "vue";
 import { RouterView } from "vue-router";
 import AppHeader from "@/components/layout/AppHeader.vue";
-import AdminNav from "@/components/layout/nav.vue";
-import history from "@/components/layout/history.vue";
-import LayoutLoading from "@/components/layout/loading.vue";
+import SideNav from "@/components/layout/SideNav.vue";
+import HistoryTabs from "@/components/layout/HistoryTabs.vue";
+import LayoutLoading from "@/components/layout/LayoutLoading.vue";
 import { useAppInit } from "@/composables/useAppInit";
-import { useSiderCollapse } from "@/components/layout/layout";
+import { useSiderCollapse } from "@/components/layout/useLayoutState";
 
 const { isMounted, init } = useAppInit();
 const { collapsed } = useSiderCollapse();
@@ -68,7 +68,7 @@ onBeforeMount(init);
     .mRight {
       height: 100%;
       flex: 1;
-      padding: 0 10px;
+      padding: var(--space-2) var(--space-3) var(--space-3);
       overflow: auto;
       display: flex;
       flex-direction: column;
@@ -82,6 +82,7 @@ onBeforeMount(init);
         flex: 1;
         overflow-y: auto;
         overflow-x: hidden;
+        border-radius: var(--radius-md);
       }
     }
   }

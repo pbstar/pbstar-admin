@@ -76,16 +76,17 @@ watch(
         <p-icon :name="appActive?.icon" size="16" />
         <span class="name">{{ appActive?.name || "选择应用" }}</span>
       </div>
-      <p-icon name="el-icon-ArrowDown" size="16" />
+      <p-icon name="el-icon-ArrowDown" size="16" class="arrow" />
     </div>
     <el-popover
       virtual-triggering
       :virtual-ref="appsRef"
       trigger="click"
-      width="340"
+      width="380"
       popper-style="z-index: 6100;"
       ref="popoverRef"
     >
+      <!-- 应用中心面板 -->
       <div class="list" v-loading="isLoading">
         <div class="fItem" v-for="(item, index) in appsTree" :key="index">
           <div class="fItemTitle">{{ item.name }}</div>
@@ -97,8 +98,16 @@ watch(
               :key="indexs + 's'"
               @click="toApp(child)"
             >
-              <p-icon class="cIcon" :name="child.icon" />
-              <span>{{ child.name }}</span>
+              <div class="cIcon">
+                <p-icon :name="child.icon" :size="18" />
+              </div>
+              <span class="cName">{{ child.name }}</span>
+              <p-icon
+                v-if="child.id === appActive?.id"
+                class="cCheck"
+                name="el-icon-CircleCheckFilled"
+                :size="16"
+              />
             </div>
           </div>
         </div>
@@ -113,79 +122,98 @@ watch(
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 30px;
-  width: 154px;
-  line-height: 30px;
+  height: 32px;
+  width: 160px;
+  line-height: 32px;
   padding: 0 var(--space-2);
   border: 1px solid transparent;
   border-radius: var(--radius-sm);
   font-size: var(--font-size-md);
   cursor: pointer;
+  transition: background-color 0.2s;
   .nameBox {
     display: flex;
     align-items: center;
     .name {
-      margin-left: var(--space-1);
+      margin-left: var(--space-2);
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
+      font-weight: 500;
     }
+  }
+  .arrow {
+    transition: transform 0.2s;
   }
 }
 .apps:hover {
-  border-color: rgba(255, 255, 255, 0.24);
+  background-color: rgba(255, 255, 255, 0.08);
 }
+/* 应用中心面板 */
 .list {
-  width: 320px;
-  height: 200px;
+  max-height: 320px;
   overflow-y: auto;
-  padding: var(--space-3);
+  padding: var(--space-2) var(--space-3) var(--space-3);
   .fItem {
     width: 100%;
     .fItemTitle {
-      border-bottom: 1px solid var(--c-border);
-      height: 30px;
-      line-height: 30px;
+      padding: var(--space-2) 0 var(--space-1);
       color: var(--c-text2);
-      font-size: var(--font-size-sm);
+      font-size: var(--font-size-xs);
+      font-weight: 600;
+      letter-spacing: 0.5px;
     }
     .children {
       width: 100%;
-      display: flex;
-      flex-wrap: wrap;
-      padding-top: var(--space-2);
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-2);
+      padding-bottom: var(--space-1);
       .child {
-        width: 140px;
-        height: 30px;
-        line-height: 30px;
-        margin-right: var(--space-3);
-        margin-bottom: var(--space-2);
-        border: 1px solid var(--c-border);
-        color: var(--c-text);
         display: flex;
         align-items: center;
-        padding: 0 var(--space-2);
-        border-radius: var(--radius-sm);
+        padding: var(--space-2) var(--space-3);
+        border: 1px solid var(--c-border);
+        border-radius: var(--radius-md);
+        background: var(--c-bg);
+        color: var(--c-text);
         cursor: pointer;
-        .cIcon {
-          margin-right: var(--space-1);
+        transition: border-color 0.2s, box-shadow 0.2s, transform 0.1s;
+        &:hover {
+          border-color: var(--c-bg-theme-light);
+          box-shadow: var(--shadow-md);
         }
-        span {
+        &:active {
+          transform: scale(0.98);
+        }
+        .cIcon {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 32px;
+          height: 32px;
+          border-radius: var(--radius-sm);
+          background: var(--c-bg-theme-tint);
+          color: var(--c-text3);
+          flex-shrink: 0;
+        }
+        .cName {
+          flex: 1;
+          margin-left: var(--space-2);
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
+          font-size: var(--font-size-sm);
+          font-weight: 500;
         }
-      }
-      .child:nth-child(2n) {
-        margin-right: 0;
-      }
-      .child:hover {
-        border-color: var(--c-text3);
-      }
-      .child.active {
-        background-color: var(--c-bg-theme);
-        border-color: var(--c-bg-theme);
-        color: var(--c-text-theme);
+        .cCheck {
+          color: var(--c-bg-theme);
+          flex-shrink: 0;
+        }
+        &.active {
+          border-color: var(--c-bg-theme);
+          background: var(--c-bg-theme-tint);
+        }
       }
     }
   }

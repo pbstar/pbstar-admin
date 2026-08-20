@@ -2,10 +2,11 @@
 :root {
   /* 背景色 */
   --c-bg: #ffffff; /* 主背景 */
-  --c-bg-box: #f1f4f8; /* 容器/页面背景（中性灰，替代原浅蓝） */
-  --c-bg-theme: #2563eb; /* 主题/品牌色（企业蓝，比原色深一档） */
-  --c-bg-theme-light: #c3d7fb; /* 主题背景-浅 */
-  --c-bg-header: #29344a; /* 顶部栏背景（深灰蓝，非纯黑，克制而不压抑） */
+  --c-bg-box: #f5f7fa; /* 容器/页面背景（极浅冷灰，衬托白卡片层次） */
+  --c-bg-theme: #2563eb; /* 主题/品牌色（企业蓝） */
+  --c-bg-theme-light: #dbe7fd; /* 主题背景-浅 */
+  --c-bg-theme-tint: rgba(37, 99, 235, 0.08); /* 主题背景-极浅（激活态底色） */
+  --c-bg-header: #0f172a; /* 顶部栏背景（深空蓝黑，与浅色工作区形成经典层次） */
 
   /* 文字色 */
   --c-text: #1e293b; /* 主文字 */
@@ -14,17 +15,22 @@
   --c-text-theme: #ffffff; /* 深色底上的文字（顶部栏/主题色按钮等） */
 
   /* 边框色 */
-  --c-border: #e2e8f0; /* 主边框 */
+  --c-border: #e5e9f0; /* 主边框 */
   --c-border-light: #f1f5f9; /* 极浅分割线 */
 
   /* 菜单态 */
   --c-menu-active-bg: rgba(37, 99, 235, 0.08);
-  --c-menu-hover-bg: rgba(37, 99, 235, 0.05);
+  --c-menu-hover-bg: rgba(15, 23, 42, 0.04);
 
   /* 其他 */
-  --c-scrollbar-thumb: #aac2ec; /* 滚动条 */
-  --c-scrollbar-track: #d9e1eb; /* 滚动条轨道 */
-  --c-shadow: rgba(0, 0, 0, 0.1); /* 仅用于下拉菜单/弹层等浮层元素 */
+  --c-scrollbar-thumb: #c4cdd9; /* 滚动条 */
+  --c-scrollbar-track: transparent; /* 滚动条轨道 */
+
+  /* 阴影分级（低透明度 + 大模糊，浮层/卡片通用；--c-shadow 兼容旧引用） */
+  --c-shadow: rgba(15, 23, 42, 0.1);
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04), 0 1px 3px rgba(15, 23, 42, 0.06);
+  --shadow-md: 0 2px 4px rgba(15, 23, 42, 0.04), 0 4px 12px rgba(15, 23, 42, 0.08);
+  --shadow-lg: 0 8px 24px rgba(15, 23, 42, 0.12);
 
   /* 布局尺寸 */
   --sider-width: 200px; /* 侧边栏展开宽度 */
@@ -39,9 +45,10 @@
   --space-5: 24px;
   --space-6: 32px;
 
-  /* 圆角（企业级偏好小圆角，不用大圆角卡片） */
-  --radius-sm: 4px;
-  --radius-md: 6px;
+  /* 圆角（卡片化界面，比传统后台放宽一档） */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
 
   /* 字号 */
   --font-size-xs: 12px;

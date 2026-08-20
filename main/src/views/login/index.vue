@@ -1,6 +1,6 @@
 <template>
   <div class="login-container">
-    <!-- 左侧品牌区：纯色块 + 已有 Logo，不引入额外插画资源 -->
+    <!-- 左侧品牌区：深空蓝渐变 + 光晕/网格纹理，纯 CSS 实现，不依赖插画资源 -->
     <div class="login-brand">
       <div class="brand-header">
         <img src="@/assets/imgs/logo-w.png" alt="" />
@@ -9,21 +9,32 @@
       <div class="brand-main">
         <h2>企业级后台管理平台</h2>
         <p>统一管理多应用、多角色的一体化控制台</p>
-        <div class="brand-line"></div>
+        <ul class="brand-features">
+          <li><p-icon name="el-icon-CircleCheckFilled" :size="15" />多应用统一管控</li>
+          <li><p-icon name="el-icon-CircleCheckFilled" :size="15" />细粒度角色权限</li>
+          <li><p-icon name="el-icon-CircleCheckFilled" :size="15" />全链路操作审计</li>
+        </ul>
       </div>
-      <!-- 大尺寸低透明度水印，用现有 Logo 增加层次，不依赖新插画素材 -->
-      <img class="brand-watermark" src="@/assets/imgs/logo-w.png" alt="" />
+      <div class="brand-footer">© {{ year }} {{ title }}</div>
+      <!-- 装饰层：光晕 + 网格纹理 -->
+      <div class="brand-glow brand-glow-1"></div>
+      <div class="brand-glow brand-glow-2"></div>
+      <div class="brand-grid"></div>
     </div>
 
     <!-- 右侧表单区 -->
     <div class="login-form-panel">
       <div class="formInner">
         <div class="top">
-          <h3>欢迎登录</h3>
-          <p>请输入账号信息进入系统</p>
+          <h3>欢迎回来</h3>
+          <p>请使用您的账号登录系统</p>
         </div>
         <div class="formBox">
-          <el-input v-model="loginForm.username" placeholder="请输入账号">
+          <el-input
+            v-model="loginForm.username"
+            placeholder="请输入账号"
+            clearable
+          >
             <template #prefix>
               <p-icon name="el-icon-user" />
             </template>
@@ -32,6 +43,7 @@
             v-model="loginForm.password"
             placeholder="请输入密码"
             type="password"
+            show-password
           >
             <template #prefix>
               <p-icon name="el-icon-lock" />
@@ -50,10 +62,24 @@
           </el-input>
           <el-button type="primary" @click="handleSubmit"> 登 录 </el-button>
         </div>
-        <div class="users">
-          <p>超管：admin/123456</p>
-          <p>普通管理员：common/123456</p>
-          <p>普通用户：user/123456</p>
+        <!-- 演示账号卡片：点击自动填充，方便体验 -->
+        <div class="demo-card">
+          <div class="demo-title">
+            <p-icon name="el-icon-InfoFilled" :size="14" />
+            <span>演示账号（点击填充）</span>
+          </div>
+          <div class="demo-users">
+            <button
+              v-for="item in demoUsers"
+              :key="item.username"
+              type="button"
+              class="demo-user"
+              @click="fillDemoUser(item)"
+            >
+              <span class="role">{{ item.label }}</span>
+              <span class="cred">{{ item.username }} / {{ item.password }}</span>
+            </button>
+          </div>
         </div>
       </div>
       <div class="login-footer">京ICP备2025125905号</div>
@@ -71,8 +97,16 @@ import useSharedStore from "@Passets/stores/shared";
 const sharedStore = useSharedStore();
 const router = useRouter();
 
-// 页面标题（静态值，无需响应式）
+// 页面标题与版权年份（静态值，无需响应式）
 const title = import.meta.env.PUBLIC_TITLE;
+const year = new Date().getFullYear();
+
+// 演示账号清单
+const demoUsers = [
+  { label: "超管", username: "admin", password: "123456" },
+  { label: "管理员", username: "common", password: "123456" },
+  { label: "用户", username: "user", password: "123456" },
+];
 
 // 验证码
 let code = "";
@@ -86,6 +120,12 @@ const loginForm = ref({
   password: "",
   captcha: "",
 });
+
+// 点击演示账号自动填充
+const fillDemoUser = (item: { username: string; password: string }) => {
+  loginForm.value.username = item.username;
+  loginForm.value.password = item.password;
+};
 
 // 表单验证
 const validateForm = () => {
@@ -139,24 +179,28 @@ const handleSubmit = async () => {
   overflow: hidden;
 }
 
-/* 左侧品牌区 */
+/* ========== 左侧品牌区 ========== */
 .login-brand {
-  flex: 0 0 44%;
-  min-width: 420px;
+  flex: 0 0 46%;
+  min-width: 440px;
   height: 100%;
   position: relative;
   overflow: hidden;
-  background-color: var(--c-bg-header);
   color: var(--c-text-theme);
   display: flex;
   flex-direction: column;
+  /* 深空蓝渐变：从品牌蓝过渡到深蓝黑，底部最暗，托起光晕层次 */
+  background: linear-gradient(160deg, #1d4ed8 0%, #16336e 55%, #0f172a 100%);
+
+  > * {
+    position: relative;
+    z-index: 1;
+  }
 
   .brand-header {
     display: flex;
     align-items: center;
     padding: var(--space-6) var(--space-6) 0;
-    position: relative;
-    z-index: 1;
     img {
       width: 32px;
       height: 32px;
@@ -165,6 +209,7 @@ const handleSubmit = async () => {
       margin-left: var(--space-2);
       font-size: var(--font-size-lg);
       font-weight: 600;
+      letter-spacing: 0.5px;
     }
   }
 
@@ -174,38 +219,92 @@ const handleSubmit = async () => {
     flex-direction: column;
     justify-content: center;
     padding: 0 var(--space-6);
-    position: relative;
-    z-index: 1;
     h2 {
-      font-size: 30px;
-      font-weight: 600;
-      line-height: 1.4;
+      font-size: 34px;
+      font-weight: 700;
+      line-height: 1.35;
+      letter-spacing: 1px;
     }
     p {
       margin-top: var(--space-3);
       font-size: var(--font-size-md);
-      color: rgba(255, 255, 255, 0.72);
+      color: rgba(255, 255, 255, 0.66);
     }
-    .brand-line {
-      margin-top: var(--space-5);
-      width: 48px;
-      height: 3px;
-      background-color: var(--c-bg-theme-light);
+    .brand-features {
+      margin-top: var(--space-6);
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+      li {
+        display: flex;
+        align-items: center;
+        gap: var(--space-2);
+        font-size: var(--font-size-md);
+        color: rgba(255, 255, 255, 0.85);
+        :deep(.el-icon) {
+          color: #7da6ff;
+        }
+      }
     }
   }
 
-  .brand-watermark {
+  .brand-footer {
+    padding: 0 var(--space-6) var(--space-5);
+    font-size: var(--font-size-xs);
+    color: rgba(255, 255, 255, 0.4);
+  }
+
+  /* 光晕：两团低透明度径向渐变，营造空间纵深 */
+  .brand-glow {
     position: absolute;
-    right: -60px;
-    bottom: -60px;
-    width: 320px;
-    height: 320px;
-    opacity: 0.08;
+    border-radius: 50%;
+    pointer-events: none;
     z-index: 0;
+  }
+  .brand-glow-1 {
+    width: 560px;
+    height: 560px;
+    right: -180px;
+    top: -140px;
+    background: radial-gradient(
+      circle,
+      rgba(96, 165, 250, 0.28) 0%,
+      transparent 65%
+    );
+  }
+  .brand-glow-2 {
+    width: 420px;
+    height: 420px;
+    left: -140px;
+    bottom: -120px;
+    background: radial-gradient(
+      circle,
+      rgba(37, 99, 235, 0.32) 0%,
+      transparent 65%
+    );
+  }
+
+  /* 网格纹理：细线 + 顶部到底部的透明度渐隐，科技感底纹 */
+  .brand-grid {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 44px 44px;
+    mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.9), transparent 75%);
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.9),
+      transparent 75%
+    );
   }
 }
 
-/* 右侧表单区 */
+/* ========== 右侧表单区 ========== */
 .login-form-panel {
   flex: 1;
   height: 100%;
@@ -214,20 +313,23 @@ const handleSubmit = async () => {
   align-items: center;
   justify-content: center;
   position: relative;
+  padding: var(--space-6);
 
   .formInner {
-    width: 360px;
+    width: 380px;
+    max-width: 100%;
 
     .top {
       margin-bottom: var(--space-6);
       h3 {
-        font-size: 24px;
-        font-weight: 600;
+        font-size: 26px;
+        font-weight: 700;
         color: var(--c-text);
+        letter-spacing: 0.5px;
       }
       p {
         margin-top: var(--space-2);
-        font-size: var(--font-size-sm);
+        font-size: var(--font-size-md);
         color: var(--c-text2);
       }
     }
@@ -235,24 +337,97 @@ const handleSubmit = async () => {
 
   :deep(.el-input) {
     margin-top: var(--space-4);
+    --el-input-bg-color: #f5f7fa;
+    .el-input__wrapper {
+      border-radius: var(--radius-md);
+      box-shadow: 0 0 0 1px var(--c-border) inset;
+      transition: box-shadow 0.2s;
+      &:hover {
+        box-shadow: 0 0 0 1px var(--c-text3) inset;
+      }
+      &.is-focus {
+        box-shadow: 0 0 0 1px var(--c-bg-theme) inset;
+      }
+    }
   }
   :deep(.el-input__inner),
   :deep(.el-input__prefix),
   :deep(.el-input__suffix),
   :deep(.el-input__wrapper),
   :deep(.el-button) {
-    height: 40px;
+    height: 44px;
+  }
+  :deep(.el-input__prefix) {
+    color: var(--c-text2);
   }
   :deep(.el-button) {
-    margin-top: var(--space-6);
+    margin-top: var(--space-5);
     width: 100%;
+    font-size: var(--font-size-md);
+    font-weight: 600;
+    letter-spacing: 6px;
+    border: none;
+    border-radius: var(--radius-md);
+    background: linear-gradient(90deg, #2563eb, #1d4ed8);
+    transition: opacity 0.2s, transform 0.1s;
+    &:hover {
+      opacity: 0.9;
+    }
+    &:active {
+      transform: scale(0.99);
+    }
   }
 
-  .users {
-    margin-top: var(--space-4);
-    p {
+  /* 演示账号卡片 */
+  .demo-card {
+    margin-top: var(--space-5);
+    padding: var(--space-4);
+    border: 1px dashed var(--c-border);
+    border-radius: var(--radius-md);
+    background: var(--c-bg-box);
+    .demo-title {
+      display: flex;
+      align-items: center;
+      gap: var(--space-1);
       font-size: var(--font-size-xs);
       color: var(--c-text2);
+      :deep(.el-icon) {
+        color: var(--c-text3);
+      }
+    }
+    .demo-users {
+      margin-top: var(--space-2);
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-2);
+      .demo-user {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 2px;
+        padding: var(--space-2) var(--space-3);
+        border: none;
+        border-radius: var(--radius-sm);
+        background: var(--c-bg);
+        box-shadow: var(--shadow-sm);
+        cursor: pointer;
+        transition: box-shadow 0.2s, transform 0.1s;
+        &:hover {
+          box-shadow: var(--shadow-md);
+        }
+        &:active {
+          transform: scale(0.98);
+        }
+        .role {
+          font-size: var(--font-size-xs);
+          color: var(--c-text3);
+          font-weight: 600;
+        }
+        .cred {
+          font-size: var(--font-size-xs);
+          color: var(--c-text2);
+        }
+      }
     }
   }
 
