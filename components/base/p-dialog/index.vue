@@ -35,9 +35,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 import { ElDialog, ElDrawer } from "element-plus";
-import { pIcon } from "@Pcomponents";
+import pIcon from "../p-icon/index.vue";
 
 const props = defineProps({
   type: {
@@ -69,6 +69,16 @@ const toggleFullscreen = () => {
   isFullscreen.value = !isFullscreen.value;
 };
 
+// 关闭弹窗后重置全屏状态，避免下次打开残留全屏态
+watch(
+  () => props.modelValue,
+  (val) => {
+    if (!val) {
+      isFullscreen.value = false;
+    }
+  },
+);
+
 // 动态组件类型
 const componentType = computed(() => {
   return props.type === "box" ? ElDialog : ElDrawer;
@@ -93,8 +103,11 @@ const componentProps = computed(() => {
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  padding-bottom: 10px;
+  padding-bottom: var(--space-3);
   border-bottom: 1px solid var(--c-border);
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  color: var(--c-text);
 }
 
 .dialog-header-btn-group {
@@ -104,12 +117,21 @@ const componentProps = computed(() => {
 
 .dialog-header-btn {
   cursor: pointer;
-  margin-left: 10px;
+  margin-left: var(--space-3);
+  color: var(--c-text2);
+  border-radius: var(--radius-sm);
+  transition: color 0.15s;
+
+  &:hover {
+    color: var(--c-text3);
+  }
 }
 </style>
 
 <style lang="scss">
 .p-dialog-custom {
+  --el-dialog-border-radius: var(--radius-lg);
+
   .el-drawer__header {
     margin-bottom: 0;
   }

@@ -11,6 +11,7 @@
     </div>
     <!-- 表格 -->
     <el-table
+      v-loading="loading"
       class="table"
       :data="data"
       :border="true"
@@ -43,11 +44,11 @@
           class="pagination"
           v-model:current-page="pageNumber"
           v-model:page-size="pageSize"
-          :page-sizes="[10, 20, 50, 100]"
+          :page-sizes="pageSizes"
           layout="total, sizes, prev, pager, next, jumper"
           :total="total"
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
+          @size-change="handlePaginationChange"
+          @current-change="handlePaginationChange"
         />
       </div>
     </div>
@@ -55,7 +56,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed } from "vue";
+import { ref, watch, computed, nextTick } from "vue";
 
 const props = defineProps({
   // 表格数据
@@ -83,6 +84,16 @@ const props = defineProps({
     type: [String, Number],
     default: "800",
   },
+  // 加载状态
+  loading: {
+    type: Boolean,
+    default: false,
+  },
+  // 每页条数可选项
+  pageSizes: {
+    type: Array,
+    default: () => [10, 20, 50, 100],
+  },
 });
 
 const emit = defineEmits(["paginationChange", "selectionChange"]);
@@ -90,7 +101,6 @@ const emit = defineEmits(["paginationChange", "selectionChange"]);
 const pageNumber = ref(1);
 const pageSize = ref(10);
 const total = ref(0);
-const selectionList = ref<any[]>([]);
 
 // 是否显示分页
 const hasPagination = computed(() => {
@@ -102,26 +112,23 @@ const getIndex = (index: number) => {
   return (pageNumber.value - 1) * pageSize.value + index + 1;
 };
 
-// 每页条数变化
-const handleSizeChange = (val: number) => {
-  pageSize.value = val;
-  emit("paginationChange", {
-    pageNumber: pageNumber.value,
-    pageSize: pageSize.value,
-  });
-};
-
-// 当前页变化
-const handleCurrentChange = (val: number) => {
-  pageNumber.value = val;
-  emit("paginationChange", {
-    pageNumber: pageNumber.value,
-    pageSize: pageSize.value,
+// 分页变化：el-pagination 在“改变每页条数导致总页数缩小”时会连续触发
+// size-change 和 current-change 两个事件，这里合并到同一个 tick 只 emit 一次，
+// 避免父组件收到两次 paginationChange 而重复发起请求
+let paginationEmitScheduled = false;
+const handlePaginationChange = () => {
+  if (paginationEmitScheduled) return;
+  paginationEmitScheduled = true;
+  nextTick(() => {
+    paginationEmitScheduled = false;
+    emit("paginationChange", {
+      pageNumber: pageNumber.value,
+      pageSize: pageSize.value,
+    });
   });
 };
 // 选择项变化
 const handleSelectionChange = (val: any[]) => {
-  selectionList.value = val;
   emit("selectionChange", val);
 };
 
@@ -145,13 +152,18 @@ watch(
 <style scoped lang="scss">
 .tabulation {
   width: 100%;
-  padding-bottom: 10px;
+  padding: var(--space-3);
+  padding-bottom: var(--space-2);
+  background: var(--c-bg);
+  border: 1px solid var(--c-border-light);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
   .topBtn {
     height: 34px;
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
-    margin-bottom: 10px;
+    margin-bottom: var(--space-3);
     .tLeft {
       display: flex;
       align-items: center;
@@ -165,6 +177,8 @@ watch(
   }
   .table {
     width: 100%;
+    --el-table-border-color: var(--c-border);
+    --el-table-border: 1px solid var(--c-border);
     :deep(thead th) {
       background: var(--c-bg-box);
       color: var(--c-text2);
@@ -184,7 +198,7 @@ watch(
     justify-content: space-between;
     .bRight {
       .pagination {
-        padding-top: 10px;
+        padding-top: var(--space-3);
       }
     }
   }

@@ -4,7 +4,7 @@
     <div class="content">
       <div class="info">
         <div class="form">
-          <p-item class="item" label="姓名" required>
+          <p-item class="item" label="姓名" isRequired>
             <el-input v-model="detailInfo.name" placeholder="请输入姓名" />
           </p-item>
           <p-item class="item" label="头像">
@@ -13,7 +13,7 @@
               placeholder="请输入头像地址"
             />
           </p-item>
-          <p-item class="item" label="账号" required>
+          <p-item class="item" label="账号" isRequired>
             <el-input v-model="detailInfo.username" placeholder="请输入账号" />
           </p-item>
           <p-item class="item" label="密码">

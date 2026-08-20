@@ -54,12 +54,13 @@ const router = createRouter({
     {
       path: "/403",
       name: "403",
-      component: () => import("@Pcomponents/page/403.vue"),
+      component: () => import("@Pcomponents/page/error.vue"),
+      props: { code: "403" },
     },
     {
       path: "/:pathMatch(.*)*",
       name: "notFound",
-      component: () => import("@Pcomponents/page/404.vue"),
+      component: () => import("@Pcomponents/page/error.vue"),
     },
   ],
 });

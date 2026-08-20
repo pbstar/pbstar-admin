@@ -30,8 +30,9 @@ defineEmits<{
 .icon-list {
   display: flex;
   flex-wrap: wrap;
-  height: 510px;
+  height: 100%;
   overflow-y: auto;
+  align-content: flex-start;
 }
 
 .icon-item {

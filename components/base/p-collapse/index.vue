@@ -8,22 +8,15 @@
       >
         <template #title>
           <div class="title">
-            <img src="@Passets/imgs/sa_quan.png" alt="" />
+            <span class="bar"></span>
             <span>{{ props.title }}</span>
           </div>
         </template>
         <template #icon="{ isActive }">
-          <img
+          <p-icon
             class="btn"
-            v-show="!isActive"
-            src="@Passets/imgs/jian_down.png"
-            alt=""
-          />
-          <img
-            class="btn"
-            v-show="isActive"
-            src="@Passets/imgs/jian_up.png"
-            alt=""
+            :name="isActive ? 'el-icon-ArrowUp' : 'el-icon-ArrowDown'"
+            :size="14"
           />
         </template>
         <slot></slot>
@@ -33,7 +26,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
+import pIcon from "../p-icon/index.vue";
 
 const props = defineProps({
   // 折叠面板标题
@@ -61,6 +55,14 @@ const props = defineProps({
 // 当前激活的面板
 const activeName = ref(props.isCollapse ? "" : "1");
 
+// 响应外部对 isCollapse 的动态修改
+watch(
+  () => props.isCollapse,
+  (val) => {
+    activeName.value = val ? "" : "1";
+  },
+);
+
 // 计算折叠面板样式类名
 const collapseClasses = computed(() => ({
   collapse: true,
@@ -72,6 +74,13 @@ const collapseClasses = computed(() => ({
 .collapse {
   width: 100%;
   margin-bottom: 1px;
+  :deep(.btn) {
+    color: var(--c-text2);
+    transition: color 0.15s;
+  }
+  :deep(.el-collapse-item__header:hover .btn) {
+    color: var(--c-text3);
+  }
   :deep(.el-collapse),
   :deep(.el-collapse-item__wrap) {
     border-bottom: none;
@@ -90,11 +99,17 @@ const collapseClasses = computed(() => ({
   .title {
     display: flex;
     align-items: center;
-    span {
+    .bar {
+      width: 3px;
+      height: 14px;
+      border-radius: 2px;
+      background: var(--c-bg-theme);
+    }
+    span:last-child {
       color: var(--c-text);
-      font-weight: bold;
-      font-size: 14px;
-      margin-left: 9px;
+      font-weight: 600;
+      font-size: var(--font-size-md);
+      margin-left: var(--space-2);
     }
   }
 }
@@ -102,7 +117,7 @@ const collapseClasses = computed(() => ({
   :deep(.el-collapse-item__header) {
     cursor: default;
     .btn {
-      display: none;
+      visibility: hidden;
     }
   }
 }

@@ -14,16 +14,34 @@
   </el-input>
   <p-dialog :title="props.title" width="700px" v-model="visible" type="box">
     <div class="box">
-      <el-tabs v-model="iconType">
+      <el-input
+        v-model="keyword"
+        class="keyword"
+        placeholder="输入关键词搜索图标"
+        clearable
+      >
+        <template #prefix>
+          <p-icon name="el-icon-Search" />
+        </template>
+      </el-input>
+      <el-tabs v-model="iconType" class="tabs">
         <el-tab-pane label="Element Plus" name="1">
-          <IconList :icons="elList" :active="iconActive" @select="selectIcon" />
-        </el-tab-pane>
-        <el-tab-pane label="Iconfont" name="2">
           <IconList
-            :icons="iconList"
+            v-if="filteredElList.length"
+            :icons="filteredElList"
             :active="iconActive"
             @select="selectIcon"
           />
+          <el-empty v-else description="无匹配图标" />
+        </el-tab-pane>
+        <el-tab-pane label="Iconfont" name="2">
+          <IconList
+            v-if="filteredIconList.length"
+            :icons="filteredIconList"
+            :active="iconActive"
+            @select="selectIcon"
+          />
+          <el-empty v-else description="无匹配图标" />
         </el-tab-pane>
       </el-tabs>
     </div>
@@ -58,6 +76,7 @@ const visible = ref(false);
 const input = ref(props.modelValue);
 const iconActive = ref(props.modelValue);
 const iconType = ref("1");
+const keyword = ref("");
 
 const elList = computed(() =>
   Object.keys(ElIcons).map((item) => "el-icon-" + item),
@@ -67,9 +86,23 @@ const iconList = computed(() =>
   iconJson.glyphs.map((item) => iconJson.css_prefix_text + item.font_class),
 );
 
+// 按关键词过滤（不区分大小写）
+const filteredElList = computed(() => {
+  const kw = keyword.value.trim().toLowerCase();
+  if (!kw) return elList.value;
+  return elList.value.filter((item) => item.toLowerCase().includes(kw));
+});
+
+const filteredIconList = computed(() => {
+  const kw = keyword.value.trim().toLowerCase();
+  if (!kw) return iconList.value;
+  return iconList.value.filter((item) => item.toLowerCase().includes(kw));
+});
+
 const openDialog = () => {
   iconActive.value = input.value;
   iconType.value = input.value?.startsWith("p-icon-") ? "2" : "1";
+  keyword.value = "";
   visible.value = true;
 };
 
@@ -96,5 +129,28 @@ watch(
 <style scoped lang="scss">
 .box {
   height: 560px;
+  display: flex;
+  flex-direction: column;
+
+  .keyword {
+    flex-shrink: 0;
+    margin-bottom: 10px;
+  }
+
+  .tabs {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+
+    :deep(.el-tabs__content) {
+      flex: 1;
+      min-height: 0;
+    }
+
+    :deep(.el-tab-pane) {
+      height: 100%;
+    }
+  }
 }
 </style>

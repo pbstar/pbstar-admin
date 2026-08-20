@@ -2,6 +2,11 @@
 import { ref } from "vue";
 
 const props = defineProps({
+  // 标题
+  title: {
+    type: String,
+    default: "查询条件",
+  },
   // 是否显示重置按钮
   showReset: {
     type: Boolean,
@@ -18,7 +23,7 @@ const showSearch = ref(true);
 <template>
   <div class="search">
     <div class="searchTitle">
-      <span class="searchTitleText">查询条件</span>
+      <span class="searchTitleText">{{ props.title }}</span>
       <el-button
         type="primary"
         size="small"
@@ -46,23 +51,27 @@ const showSearch = ref(true);
 <style scoped lang="scss">
 .search {
   width: 100%;
-  background: var(--c-bg-box);
+  background: var(--c-bg);
   color: var(--c-text2);
-  padding: 5px 5px 0;
+  padding: var(--space-3) var(--space-3) 0;
+  border: 1px solid var(--c-border-light);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
 
   .searchTitle {
     display: flex;
     align-items: center;
     justify-content: space-between;
     height: 18px;
-    margin: 5px;
+    margin: 0 0 var(--space-2);
 
     .searchTitleText {
-      font-size: 14px;
-      font-weight: bold;
+      font-size: var(--font-size-sm);
+      font-weight: 600;
       border-left: 3px solid var(--c-bg-theme);
-      padding-left: 5px;
+      padding-left: var(--space-2);
       line-height: 18px;
+      color: var(--c-text);
     }
   }
 
@@ -74,13 +83,13 @@ const showSearch = ref(true);
     .searchPlaceholder {
       width: 160px;
       height: 30px;
-      margin-bottom: 10px;
+      margin-bottom: var(--space-3);
     }
 
     .searchBtn {
       position: absolute;
-      right: 10px;
-      bottom: 10px;
+      right: var(--space-2);
+      bottom: var(--space-3);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -89,7 +98,7 @@ const showSearch = ref(true);
   }
 
   .searchContentNo {
-    height: 5px;
+    height: var(--space-2);
   }
 }
 </style>

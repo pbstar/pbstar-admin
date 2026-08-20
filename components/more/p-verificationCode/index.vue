@@ -64,6 +64,7 @@ const makeCode = (chars: string, length: number) => {
 };
 
 const drawText = (ctx: CanvasRenderingContext2D, txt: string, i: number) => {
+  ctx.save();
   ctx.fillStyle = randomColor(50, 160);
   ctx.font = `${randomNum(props.fontSizeMin, props.fontSizeMax)}px SimHei`;
   const x =
@@ -74,8 +75,7 @@ const drawText = (ctx: CanvasRenderingContext2D, txt: string, i: number) => {
   ctx.translate(x, y);
   ctx.rotate((deg * Math.PI) / 180);
   ctx.fillText(txt, 0, 0);
-  ctx.rotate((-deg * Math.PI) / 180);
-  ctx.translate(-x, -y);
+  ctx.restore();
 };
 
 const drawLine = (ctx: CanvasRenderingContext2D) => {
