@@ -1,5 +1,5 @@
 import type { Router } from "vue-router";
-import { isFreeLogin, whiteList } from "@/utils/auth";
+import { isPublicPath } from "@/utils/auth";
 
 /**
  * 注册全局路由守卫（仅执行一次）
@@ -9,7 +9,7 @@ import { isFreeLogin, whiteList } from "@/utils/auth";
 export function setupRouterGuards(router: Router) {
   router.beforeEach((to) => {
     // 免登录或白名单直接放行
-    if (isFreeLogin || whiteList.includes(to.path)) {
+    if (isPublicPath(to.path)) {
       return true;
     }
     // 未登录跳转登录页

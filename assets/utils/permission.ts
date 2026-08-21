@@ -4,7 +4,7 @@
 export interface MenuItem {
   key?: string;
   name: string;
-  url?: string;
+  url?: string | null;
   icon?: string;
   children?: MenuItem[];
 }

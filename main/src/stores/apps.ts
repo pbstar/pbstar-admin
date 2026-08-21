@@ -8,12 +8,10 @@ import { loadAppMenus } from "@/utils/appMenus";
 import { apps as appList } from "@Passets/constants/apps";
 
 /** 导航项（菜单/历史记录共用结构，树形，id 为权限 key） */
-export interface NavItem {
-  id: string;
-  name: string;
-  url: string | null;
-  icon: string;
-  children?: NavItem[];
+export interface NavItem extends MenuItem {
+  id: string;            // item.key ?? item.name（el-menu index 用）
+  url: string | null;    // 覆盖为完整地址 /admin/{key}?{key}=...
+  children?: NavItem[];  // 覆盖为 NavItem[]
 }
 
 /** 应用信息 */

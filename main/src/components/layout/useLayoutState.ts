@@ -2,13 +2,12 @@ import { ref, watch, effectScope } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useAppsStore } from "@/stores/apps";
 import type { NavItem } from "@/stores/apps";
-import type { TreeNode } from "@Passets/utils/array";
 import { HOME_PATH } from "@/utils/constants";
 
 // 菜单数据与选中项为模块级单例（桌面侧栏与移动端菜单共用同一份状态）
 const activeIndex = ref("1");
 const list = ref<NavItem[]>([]);
-const listTree = ref<TreeNode<NavItem>[]>([]);
+const listTree = ref<NavItem[]>([]);
 
 // 侧边栏折叠状态，供顶部栏折叠按钮与侧边栏容器共用
 const collapsed = ref(false);

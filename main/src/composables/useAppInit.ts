@@ -3,7 +3,7 @@ import { ElMessage } from "element-plus";
 import { useRouter, useRoute } from "vue-router";
 import useSharedStore from "@Passets/stores/shared";
 import { useAppsStore } from "@/stores/apps";
-import { whiteList, isFreeLogin } from "@/utils/auth";
+import { isPublicPath } from "@/utils/auth";
 import { logout } from "@/utils/logout";
 import request from "@Passets/utils/request";
 
@@ -43,7 +43,7 @@ export function useAppInit() {
   // 初始化
   const init = async () => {
     // 免登录或白名单直接放行（需提前置 isMounted，避免页面永久 loading）
-    if (isFreeLogin || whiteList.includes(route.path)) {
+    if (isPublicPath(route.path)) {
       isMounted.value = true;
       return;
     }
