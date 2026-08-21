@@ -136,6 +136,7 @@ const props = defineProps({
       max-width: 100%;
       flex: 1;
       height: auto;
+      min-height: 30px;
       padding: 5px var(--space-2);
       line-height: 20px;
       color: var(--c-text);

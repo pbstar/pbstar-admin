@@ -340,14 +340,6 @@ const handleSubmit = async () => {
     --el-input-bg-color: #f5f7fa;
     .el-input__wrapper {
       border-radius: var(--radius-md);
-      box-shadow: 0 0 0 1px var(--c-border) inset;
-      transition: box-shadow 0.2s;
-      &:hover {
-        box-shadow: 0 0 0 1px var(--c-text3) inset;
-      }
-      &.is-focus {
-        box-shadow: 0 0 0 1px var(--c-bg-theme) inset;
-      }
     }
   }
   :deep(.el-input__inner),
@@ -409,15 +401,7 @@ const handleSubmit = async () => {
         border: none;
         border-radius: var(--radius-sm);
         background: var(--c-bg);
-        box-shadow: var(--shadow-sm);
         cursor: pointer;
-        transition: box-shadow 0.2s, transform 0.1s;
-        &:hover {
-          box-shadow: var(--shadow-md);
-        }
-        &:active {
-          transform: scale(0.98);
-        }
         .role {
           font-size: var(--font-size-xs);
           color: var(--c-text3);

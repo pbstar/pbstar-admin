@@ -178,13 +178,9 @@ watch(
         background: var(--c-bg);
         color: var(--c-text);
         cursor: pointer;
-        transition: border-color 0.2s, box-shadow 0.2s, transform 0.1s;
+        transition: border-color 0.2s, transform 0.1s;
         &:hover {
           border-color: var(--c-bg-theme-light);
-          box-shadow: var(--shadow-md);
-        }
-        &:active {
-          transform: scale(0.98);
         }
         .cIcon {
           display: flex;

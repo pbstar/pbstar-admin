@@ -134,12 +134,6 @@ onBeforeMount(() => {
     border-radius: var(--radius-md);
     background: var(--c-bg);
     border: 1px solid var(--c-border-light);
-    box-shadow: var(--shadow-sm);
-    transition: box-shadow 0.2s;
-
-    &:hover {
-      box-shadow: var(--shadow-md);
-    }
 
     .iconBox {
       display: flex;
@@ -179,8 +173,7 @@ onBeforeMount(() => {
     padding: var(--space-3);
     border-radius: var(--radius-md);
     background: var(--c-bg);
-    border: 1px solid var(--c-border-light);
-    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--c-border);
   }
 
   .log-list {

@@ -186,7 +186,7 @@ const handleNodeClick = (data: any) => {
           </p-item>
         </p-search>
 
-        <p-table style="margin-top: 10px" :data="tableData">
+        <p-table style="margin-top: 10px" :data="tableData" row-key="id">
           <template #column>
             <el-table-column prop="name" label="名称" />
             <el-table-column prop="type" label="类型" width="90">
@@ -271,8 +271,7 @@ const handleNodeClick = (data: any) => {
     display: flex;
 
     .plan1 {
-      width: 220px;
-      padding-right: 10px;
+      width: 200px;
     }
     .plan2 {
       flex: 1;

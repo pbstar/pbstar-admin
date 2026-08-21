@@ -14,6 +14,7 @@
       v-loading="loading"
       class="table"
       :data="data"
+      :row-key="rowKey"
       :border="true"
       :stripe="true"
       :max-height="maxHeight"
@@ -63,6 +64,11 @@ const props = defineProps({
   data: {
     type: Array,
     default: () => [],
+  },
+  // 行唯一键（如 row-key="id"）。设置后若数据含 children，el-table 会开启树形表格
+  rowKey: {
+    type: [String, Function],
+    default: undefined,
   },
   // 分页配置
   pagination: {
