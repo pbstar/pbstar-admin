@@ -5,6 +5,7 @@ import { startApp, destroyApp, bus } from "wujie";
 import useSharedStore from "@Passets/stores/shared";
 import LayoutLoading from "@/components/layout/LayoutLoading.vue";
 import AppLoadError from "@/components/layout/AppLoadError.vue";
+import { wujieErrorPatchPlugin } from "@/utils/wujiePatches";
 
 const route = useRoute();
 const sharedStore = useSharedStore();
@@ -66,6 +67,7 @@ const startSubApp = (appKey: string, appUrl: string, subPath: string) => {
       url: appUrl,
       el: subappContainer.value!,
       sync: true,
+      plugins: [wujieErrorPatchPlugin],
       props: {
         path: subPath,
         sharedPinia: sharedStore,
