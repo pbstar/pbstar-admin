@@ -51,7 +51,7 @@ export function getDetail(data: any) {
 
 export function create(data: any) {
   const role: RoleRecord = {
-    id: nextId(),
+    id: nextId(roles),
     name: data?.name || "",
     key: data?.key || "",
     permissions: data?.permissions || "",

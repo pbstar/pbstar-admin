@@ -63,7 +63,7 @@ export function getDetail(data: any) {
 
 export function create(data: any) {
   const log: LogRecord = {
-    id: nextId(),
+    id: nextId(logs),
     userName: data?.userName || "",
     method: data?.method || "",
     path: data?.path || "",

@@ -58,7 +58,7 @@ export function getDetail(data: any) {
 
 export function create(data: any) {
   const user: UserRecord = {
-    id: nextId(),
+    id: nextId(users),
     name: data?.name || "",
     avatar: data?.avatar || "",
     username: data?.username || "",

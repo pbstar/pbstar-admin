@@ -3,15 +3,16 @@ import { users } from "./user";
 import { roles } from "./role";
 import { logs } from "./log";
 
-/** 当前登录用户 id（模拟服务端会话，login 时写入，logout 时清空） */
-let currentUserId: any = null;
+/** 当前登录用户 id：从 localStorage 的 token 还原（token 即 mock-token-<id>，前端存于 p_token，刷新后据此还原登录态） */
+const getCurrentUserId = () =>
+  (localStorage.getItem("p_token") || "").replace("mock-token-", "");
 
 function buildUserInfo(userId: any) {
   const user = users.find((u) => String(u.id) === String(userId));
   if (!user) return null;
   const role = roles.find((r) => r.key === user.role);
   return {
-    token: `mock-token-${user.id}-${Date.now()}`,
+    token: `mock-token-${user.id}`,
     id: user.id,
     name: user.name,
     avatar: user.avatar,
@@ -26,11 +27,11 @@ export function login(data: any) {
     (u) => u.username === data?.username && u.password === data?.password,
   );
   if (!user) return fail("账号或密码错误");
-  currentUserId = user.id;
   return ok(buildUserInfo(user.id));
 }
 
 export function loginByToken() {
+  const currentUserId = getCurrentUserId();
   if (!currentUserId) return fail("登录已失效，请重新登录");
   const info = buildUserInfo(currentUserId);
   if (!info) return fail("登录已失效，请重新登录");
@@ -38,11 +39,11 @@ export function loginByToken() {
 }
 
 export function logout() {
-  currentUserId = null;
   return ok(null);
 }
 
 export function updateMyInfo(data: any) {
+  const currentUserId = getCurrentUserId();
   const user = users.find((u) => String(u.id) === String(currentUserId));
   if (!user) return fail("登录已失效，请重新登录");
   user.name = data?.name ?? user.name;

@@ -1,11 +1,8 @@
 import type { Res } from "@Passets/utils/request";
 
-let autoId = 10000;
-
-/** 生成自增 mock id（避免与种子数据的固定 id 冲突） */
-export function nextId(): number {
-  autoId += 1;
-  return autoId;
+/** 生成自增 mock id：取数组当前最大 id + 1，避免与种子数据冲突，也无需维护额外状态 */
+export function nextId<T extends { id: any }>(list: T[]): number {
+  return list.reduce((max, item) => Math.max(max, Number(item.id) || 0), 0) + 1;
 }
 
 /** 成功响应包装 */

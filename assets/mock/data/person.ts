@@ -32,7 +32,7 @@ export function getDetail(data: any) {
 
 export function create(data: any) {
   const person: PersonRecord = {
-    id: nextId(),
+    id: nextId(persons),
     name: data?.name || "",
     age: data?.age ?? 0,
     sex: data?.sex || "",

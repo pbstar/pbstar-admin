@@ -76,7 +76,7 @@ export function getDetail(data: any) {
 
 export function create(data: any) {
   const permission: PermissionRecord = {
-    id: nextId(),
+    id: nextId(permissions),
     appId: data?.appId,
     type: data?.type || "menu",
     groupId: data?.type === "group" ? "" : (data?.groupId ?? ""),
