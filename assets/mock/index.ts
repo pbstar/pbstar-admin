@@ -1,14 +1,12 @@
 import type { Res } from "@Passets/utils/request";
 import type { MockHandler } from "./types";
+import { persist } from "./persist";
 import * as mainMock from "./data/main";
 import * as userMock from "./data/user";
 import * as roleMock from "./data/role";
 import * as permissionMock from "./data/permission";
 import * as logMock from "./data/log";
 import * as personMock from "./data/person";
-
-/** mock 总开关：仅开发环境 + PUBLIC_MOCK=T 时生效，生产环境永久关闭 */
-export const isMockEnabled = import.meta.env.DEV && import.meta.env.PUBLIC_MOCK === "T";
 
 /** method:url -> handler 路由表 */
 const routes: Record<string, MockHandler> = {
@@ -68,6 +66,10 @@ export function matchMock(method: string, url: string, data: any): Promise<Res<a
   }
 
   return new Promise((resolve) => {
-    setTimeout(() => resolve(handler(data)), MOCK_DELAY);
+    setTimeout(() => {
+      const result = handler(data);
+      persist();
+      resolve(result);
+    }, MOCK_DELAY);
   });
 }
