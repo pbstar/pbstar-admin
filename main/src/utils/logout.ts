@@ -1,5 +1,6 @@
 import router from "@/router";
 import useSharedStore from "@Passets/stores/shared";
+import { useAppsStore } from "@/stores/apps";
 import { bus } from "wujie";
 
 /**
@@ -10,6 +11,8 @@ export function logout() {
   localStorage.removeItem("p_token");
   const sharedStore = useSharedStore();
   sharedStore.userInfo = null;
+  // 清空当前激活应用：切号后 appId 若残留旧值，侧边栏会沿用上一账号的菜单
+  useAppsStore().setAppId();
   bus.$emit("changeSharedPinia", { userInfo: null });
   router.push({ path: "/login" });
 }

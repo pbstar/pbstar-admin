@@ -1,44 +1,35 @@
-import { ref, watch, effectScope } from "vue";
+import { ref, computed, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useAppsStore } from "@/stores/apps";
 import type { NavItem } from "@/stores/apps";
 import { HOME_PATH } from "@/utils/constants";
 
-// 菜单数据与选中项为模块级单例（桌面侧栏与移动端菜单共用同一份状态）
+// 选中项与折叠态为模块级单例（桌面侧栏与移动端菜单共用同一份状态）
 const activeIndex = ref("1");
-const list = ref<NavItem[]>([]);
-const listTree = ref<NavItem[]>([]);
-
-// 侧边栏折叠状态，供顶部栏折叠按钮与侧边栏容器共用
 const collapsed = ref(false);
 
-// 监听在独立 effect scope 中注册，仅首次实例化时执行一次：
-// 既不随组件卸载销毁（避免再次进入时菜单陈旧），也不随多个调用方重复累积
-let scopeCreated = false;
+// 默认首页导航项（未进入任何子应用时展示）
+const HOME_NAV: NavItem[] = [
+  { id: "home", name: "首页", url: HOME_PATH, icon: "el-icon-house" },
+];
 
 export function useNavMenu() {
   const router = useRouter();
   const route = useRoute();
   const appsStore = useAppsStore();
 
-  const updateNavData = () => {
-    if (appsStore.appId) {
-      const app = appsStore.getApp();
-      if (!app) return;
-      list.value = app.navs;
-      listTree.value = app.navsTree;
-    } else {
-      list.value = [
-        {
-          id: "home",
-          name: "首页",
-          url: HOME_PATH,
-          icon: "el-icon-house",
-        },
-      ];
-      listTree.value = list.value;
-    }
-  };
+  // 菜单数据直接派生于应用的 navsTree：账号/权限切换触发 setMyApps/setAppNavs 重算时这里会同步刷新，
+  // 不再依赖 appId 变化触发快照更新（此前 appId 不变时侧边栏会滞留上一账号的菜单）
+  const list = computed<NavItem[]>(() => {
+    if (!appsStore.appId) return HOME_NAV;
+    const app = appsStore.getApp();
+    return app ? app.navs : HOME_NAV;
+  });
+  const listTree = computed<NavItem[]>(() => {
+    if (!appsStore.appId) return HOME_NAV;
+    const app = appsStore.getApp();
+    return app ? app.navsTree : HOME_NAV;
+  });
 
   const selectNav = (val: string) => {
     activeIndex.value = val;
@@ -55,25 +46,14 @@ export function useNavMenu() {
     }
   };
 
-  if (!scopeCreated) {
-    scopeCreated = true;
-    effectScope().run(() => {
-      watch(
-        () => appsStore.appId,
-        () => {
-          updateNavData();
-          updateActiveIndex(route.fullPath);
-        },
-        { immediate: true },
-      );
-      watch(
-        () => route.fullPath,
-        (newPath) => {
-          updateActiveIndex(newPath);
-        },
-      );
-    });
-  }
+  // 仅监听路由变化更新选中项；菜单数据本身由 computed 派生，无需再监听 appId
+  watch(
+    () => route.fullPath,
+    (newPath) => {
+      updateActiveIndex(newPath);
+    },
+    { immediate: true },
+  );
 
   return {
     listTree,
