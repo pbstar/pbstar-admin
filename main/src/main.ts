@@ -8,21 +8,10 @@ import "@Passets/css/base.css";
 import App from "./App.vue";
 import router from "./router";
 import { permission } from "@Passets/directives/permission";
+import { applyWujiePatches } from "@/utils/wujiePatches";
 
-// 屏蔽无界嵌套引起的vue路由警告（仅执行一次的幂等补丁，防止重复包装叠加）
-if (!window.__warnPatched) {
-  const originalWarn = console.warn;
-  console.warn = (msg, ...args) => {
-    if (
-      String(msg).includes("history.state") &&
-      String(msg).includes("manually replaced")
-    ) {
-      return;
-    }
-    originalWarn.apply(console, [msg, ...args]);
-  };
-  window.__warnPatched = true;
-}
+// 应用 wujie 运行时补丁（history.state 警告 + 子应用切换竞态未捕获异常降噪，幂等）
+applyWujiePatches();
 
 // 创建Vue应用实例
 const app = createApp(App);

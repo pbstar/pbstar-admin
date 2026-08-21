@@ -21,7 +21,10 @@ const loadFailed = ref(false);
 // 监听子应用共享状态变更
 const handleSharedPiniaChange = (data: Record<string, any>) => {
   Object.keys(data).forEach((key) => {
-    if (key in sharedStore) {
+    if (key === "isAppRouteLoading") {
+      // 走兜底逻辑，防止总线写入与 afterMount 竞态导致蒙层卡死
+      sharedStore.setRouteLoading(data[key]);
+    } else if (key in sharedStore) {
       (sharedStore as Record<string, any>)[key] = data[key];
     }
   });
@@ -54,7 +57,7 @@ const handleRouteChange = () => {
 const startSubApp = (appKey: string, appUrl: string, subPath: string) => {
   // 开启loading
   loadFailed.value = false;
-  sharedStore.isAppRouteLoading = true;
+  sharedStore.setRouteLoading(true);
 
   // 创建新的子应用实例
   nextTick(() => {
@@ -69,16 +72,16 @@ const startSubApp = (appKey: string, appUrl: string, subPath: string) => {
       },
       beforeLoad: () => {
         // 子应用开始加载
-        sharedStore.isAppRouteLoading = true;
+        sharedStore.setRouteLoading(true);
       },
       afterMount: () => {
         // 延迟关闭loading,确保子应用渲染完成
         setTimeout(() => {
-          sharedStore.isAppRouteLoading = false;
+          sharedStore.setRouteLoading(false);
         }, 200);
       },
       loadError: (url, err) => {
-        sharedStore.isAppRouteLoading = false;
+        sharedStore.setRouteLoading(false);
         // 这个回调函数会在该子应用加载失败时触发，用状态驱动空态而非直接操作 DOM
         console.error(`子应用【${appKey}】的资源 ${url} 加载失败:`, err);
         loadFailed.value = true;
