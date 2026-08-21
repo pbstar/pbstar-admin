@@ -261,7 +261,7 @@ const handleNodeClick = (data: any) => {
 .page {
   width: 100%;
   min-height: 100%;
-  padding: 0 10px;
+  padding: 0 10px 10px;
   background-color: var(--c-bg);
   display: flex;
   flex-direction: column;

@@ -153,13 +153,11 @@ watch(
 .tabulation {
   width: 100%;
   padding: var(--space-3);
-  padding-bottom: var(--space-2);
   background: var(--c-bg);
-  border: 1px solid var(--c-border-light);
+  border: 1px solid var(--c-border);
   border-radius: var(--radius-md);
-  box-shadow: var(--shadow-sm);
   .topBtn {
-    height: 34px;
+    height: 30px;
     display: flex;
     justify-content: space-between;
     align-items: flex-end;

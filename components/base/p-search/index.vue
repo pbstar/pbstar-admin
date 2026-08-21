@@ -54,9 +54,8 @@ const showSearch = ref(true);
   background: var(--c-bg);
   color: var(--c-text2);
   padding: var(--space-3) var(--space-3) 0;
-  border: 1px solid var(--c-border-light);
+  border: 1px solid var(--c-border);
   border-radius: var(--radius-md);
-  box-shadow: var(--shadow-sm);
 
   .searchTitle {
     display: flex;
@@ -98,7 +97,7 @@ const showSearch = ref(true);
   }
 
   .searchContentNo {
-    height: var(--space-2);
+    height: var(--space-1);
   }
 }
 </style>

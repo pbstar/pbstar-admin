@@ -22,7 +22,7 @@ const text = ref("## hello world");
 <style lang="scss" scoped>
 .page {
   width: 100%;
-  padding: 0 10px;
+  padding: 0 10px 10px;
   background-color: var(--c-bg);
   .content {
     width: 100%;

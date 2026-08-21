@@ -187,7 +187,7 @@ const handleBack = () => {
 <style scoped lang="scss">
 .page {
   width: 100%;
-  padding: 0 10px;
+  padding: 0 10px 10px;
   background-color: var(--c-bg);
 
   .item {
