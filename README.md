@@ -67,10 +67,9 @@ pnpm run create
 │ ├── out-app                   # 外部子应用（独立git仓库）
 │ └── apps.json                 # 子应用配置
 ├── assets                      # 静态资源
-├── build                       # 打包产物
 ├── components                  # 组件库
 ├── main                        # 主应用
-├── tools                       # 工具模块
+├── develop                     # 开发模块
 ├── .gitignore                  # git忽略文件
 ├── .gitmodules                 # git子模块配置
 ├── package.json                # 依赖

@@ -15,10 +15,10 @@ pnpm run dev                  # 交互式选择要启动的应用模块
 pnpm run build                # 交互式选择要构建的应用模块
 pnpm run create                # 交互式创建新子应用
 pnpm run add / remove          # 交互式为指定工程增删依赖
-pnpm run type-check             # 跑 vue-tsc 类型检查
+pnpm run check             # 跑 vue-tsc 类型检查
 ```
 
-没有 ESLint/Prettier 配置，也没有测试框架——改动后主要靠 `type-check` 和 `dev` 实跑验证。
+没有 ESLint/Prettier 配置，也没有测试框架——改动后主要靠 `check` 和 `dev` 实跑验证。
 
 ## 关键架构点
 

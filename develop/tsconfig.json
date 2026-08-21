@@ -4,5 +4,6 @@
     "lib": ["ES2023"],
     "types": ["node"]
   },
-  "include": ["cli/**/*", "plugins/**/*"]
+  "include": ["cli/**/*", "plugins/**/*"],
+  "exclude": ["cli/template"]
 }

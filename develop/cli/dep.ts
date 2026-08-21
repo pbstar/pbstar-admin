@@ -9,7 +9,7 @@ const list = [
   "全局工程",
   "assets",
   "components",
-  "tools",
+  "develop",
   "main",
   ...apps.map((item) => item.key),
 ];

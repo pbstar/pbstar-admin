@@ -2,7 +2,7 @@ import { defineConfig, loadEnv } from "@rsbuild/core";
 import type { EnvironmentConfig } from "@rsbuild/core";
 import { pluginVue } from "@rsbuild/plugin-vue";
 import { pluginSass } from "@rsbuild/plugin-sass";
-import { distZipPlugin } from "./tools/plugins/distZipPlugin";
+import { distZipPlugin } from "./develop/plugins/distZipPlugin";
 import apps from "./apps/apps.json" with { type: "json" };
 
 // 配置文件运行在 Node 侧，显式读取 .env 环境变量（import.meta.env 不可靠）
@@ -17,7 +17,7 @@ const createAppConfig = (app: { key: string }): EnvironmentConfig => {
       entry: { index: `${basePath}/src/main.ts` },
     },
     output: {
-      distPath: { root: `./build/dist/${app.key}` },
+      distPath: { root: `./develop/dist/${app.key}` },
     },
     resolve: {
       alias: {
@@ -37,7 +37,7 @@ const mainConfig: EnvironmentConfig = {
     entry: { index: "./main/src/main.ts" },
   },
   output: {
-    distPath: { root: "./build/dist/main" },
+    distPath: { root: "./develop/dist/main" },
   },
   resolve: {
     alias: { "@": "./main/src" },

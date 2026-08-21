@@ -5,12 +5,12 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "create": "pnpm run -filter tools create",
-    "dev": "pnpm run -filter tools dev",
-    "add": "pnpm run -filter tools add",
-    "remove": "pnpm run -filter tools remove",
-    "build": "pnpm run -filter tools build",
-    "type-check": "pnpm run -filter tools type-check"
+    "create": "pnpm run -filter develop create",
+    "dev": "pnpm run -filter develop dev",
+    "add": "pnpm run -filter develop add",
+    "remove": "pnpm run -filter develop remove",
+    "build": "pnpm run -filter develop build",
+    "check": "pnpm run -filter develop check"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.2",

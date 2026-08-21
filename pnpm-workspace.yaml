@@ -2,5 +2,5 @@ packages:
   - "main"
   - "components"
   - "assets"
-  - "tools"
+  - "develop"
   - "apps/*"

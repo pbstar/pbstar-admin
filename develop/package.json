@@ -1,5 +1,5 @@
 {
-  "name": "tools",
+  "name": "develop",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -9,7 +9,7 @@
     "dev": "tsx ./cli/serve.ts dev",
     "add": "tsx ./cli/dep.ts add",
     "remove": "tsx ./cli/dep.ts remove",
-    "type-check": "tsx ./cli/typeCheck.ts"
+    "check": "tsx ./cli/check.ts"
   },
   "dependencies": {
     "@inquirer/prompts": "^8.5.2",

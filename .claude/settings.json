@@ -6,7 +6,7 @@
       "Bash(pnpm build)",
       "Bash(pnpm run dev)",
       "Bash(pnpm run build)",
-      "Bash(pnpm type-check *)",
+      "Bash(pnpm check *)",
       "Bash(git status)",
       "Bash(git diff*)",
       "Bash(git log*)",

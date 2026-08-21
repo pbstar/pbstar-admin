@@ -13,7 +13,7 @@ export const distZipPlugin = (): RsbuildPlugin => ({
     api.onAfterBuild(async () => {
       const { distPath, rootPath } = api.context;
       const distName = path.basename(distPath);
-      const zipDir = path.join(rootPath, "build", "distZip");
+      const zipDir = path.join(rootPath, "develop", "distZip");
       const zipPath = path.join(
         zipDir,
         `${distName}${dayjs().format("YYYYMMDDHHmm")}.zip`,
