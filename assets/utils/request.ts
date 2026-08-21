@@ -1,8 +1,8 @@
 import axios from "axios";
 import type { AxiosRequestConfig } from "axios";
 import { ElMessage } from "element-plus";
-import { isMockEnabled } from "@Passets/mock/persist";
-import { matchMock } from "@Passets/mock";
+import { isMockEnabled } from "../../develop/mock/persist";
+import { matchMock } from "../../develop/mock";
 
 /** 后端统一响应结构 */
 export interface Res<T = any> {

@@ -1,5 +1,4 @@
 import type { Res } from "@Passets/utils/request";
-import type { MockHandler } from "./types";
 import { persist } from "./persist";
 import * as mainMock from "./data/main";
 import * as userMock from "./data/user";
@@ -7,6 +6,7 @@ import * as roleMock from "./data/role";
 import * as permissionMock from "./data/permission";
 import * as personMock from "./data/person";
 
+type MockHandler = (data: any) => Res<any>;
 /** method:url -> handler 路由表 */
 const routes: Record<string, MockHandler> = {
   "post:/main/login": mainMock.login,
@@ -51,10 +51,16 @@ const MOCK_DELAY = 200;
  * @param data 请求参数
  * @returns 命中路由表时返回 Promise<Res>；未命中或 mock 未开启时返回 null，交由真实请求处理
  */
-export function matchMock(method: string, url: string, data: any): Promise<Res<any>> | null {
+export function matchMock(
+  method: string,
+  url: string,
+  data: any,
+): Promise<Res<any>> | null {
   const handler = routes[`${method.toLowerCase()}:${url}`];
   if (!handler) {
-    console.warn(`[mock] 未登记的接口，将发起真实请求：${method.toUpperCase()} ${url}`);
+    console.warn(
+      `[mock] 未登记的接口，将发起真实请求：${method.toUpperCase()} ${url}`,
+    );
     return null;
   }
 
