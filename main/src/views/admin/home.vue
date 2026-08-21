@@ -6,30 +6,19 @@ import request from "@Passets/utils/request";
 import { useAppsStore } from "@/stores/apps";
 import type { AppItem } from "@/stores/apps";
 
-interface RecentLog {
-  id: any;
-  userName: string;
-  method: string;
-  path: string;
-  createTime: string;
-}
-
 interface DashboardStats {
   userCount: number;
   appCount: number;
   roleCount: number;
-  todayLoginCount: number;
-  recentLogs: RecentLog[];
 }
 
 const router = useRouter();
 const appsStore = useAppsStore();
 
 const stats = ref<{ icon: string; label: string; value: number }[]>([]);
-const recentLogs = ref<RecentLog[]>([]);
 const myApps = ref<AppItem[]>([]);
 
-// 拉取仪表盘概览数据（用户/应用/角色/今日登录 + 最近操作日志）
+// 拉取仪表盘概览数据（用户/应用/角色）
 const loadStats = async () => {
   const res = await request.get<DashboardStats>({
     url: "/main/getDashboardStats",
@@ -40,9 +29,7 @@ const loadStats = async () => {
     { icon: "el-icon-user", label: "用户数", value: data.userCount },
     { icon: "el-icon-grid", label: "应用数", value: data.appCount },
     { icon: "el-icon-avatar", label: "角色数", value: data.roleCount },
-    { icon: "el-icon-right", label: "今日登录", value: data.todayLoginCount },
   ];
-  recentLogs.value = data.recentLogs;
 };
 
 // 跳转到指定应用的第一个可用导航
@@ -77,18 +64,6 @@ onBeforeMount(() => {
     </div>
     <div class="panel-grid">
       <div class="panel">
-        <p-title :list="['最近操作日志']" />
-        <div class="log-list">
-          <div class="log-item" v-for="log in recentLogs" :key="log.id">
-            <span class="user">{{ log.userName }}</span>
-            <span class="method">{{ log.method }}</span>
-            <span class="path">{{ log.path }}</span>
-            <span class="time">{{ log.createTime }}</span>
-          </div>
-          <el-empty v-if="!recentLogs.length" description="暂无操作日志" />
-        </div>
-      </div>
-      <div class="panel">
         <p-title :list="['我的应用']" />
         <div class="app-list">
           <div
@@ -121,7 +96,7 @@ onBeforeMount(() => {
 
   .stat-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: var(--space-3);
     margin-bottom: var(--space-3);
   }
@@ -165,7 +140,7 @@ onBeforeMount(() => {
 
   .panel-grid {
     display: grid;
-    grid-template-columns: 2fr 1fr;
+    grid-template-columns: 1fr;
     gap: var(--space-3);
   }
 
@@ -174,41 +149,6 @@ onBeforeMount(() => {
     border-radius: var(--radius-md);
     background: var(--c-bg);
     border: 1px solid var(--c-border);
-  }
-
-  .log-list {
-    margin-top: var(--space-2);
-
-    .log-item {
-      display: flex;
-      align-items: center;
-      gap: var(--space-3);
-      padding: var(--space-2) 0;
-      font-size: var(--font-size-sm);
-      color: var(--c-text2);
-      border-bottom: 1px solid var(--c-border-light);
-
-      &:last-child {
-        border-bottom: none;
-      }
-
-      .user {
-        color: var(--c-text);
-        font-weight: 500;
-      }
-      .method {
-        color: var(--c-text3);
-      }
-      .path {
-        flex: 1;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-      .time {
-        flex-shrink: 0;
-      }
-    }
   }
 
   .app-list {

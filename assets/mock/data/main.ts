@@ -1,7 +1,6 @@
-import { ok, fail, isToday } from "../utils";
+import { ok, fail } from "../utils";
 import { users } from "./user";
 import { roles } from "./role";
-import { logs } from "./log";
 
 /** 当前登录用户 id：从 localStorage 的 token 还原（token 即 mock-token-<id>，前端存于 p_token，刷新后据此还原登录态） */
 const getCurrentUserId = () =>
@@ -53,16 +52,11 @@ export function updateMyInfo(data: any) {
   return ok(null);
 }
 
-/** 仪表盘概览：由现有用户/角色/日志数据聚合而来，应用数用固定值（应用清单已迁至前端 assets/constants/apps.ts） */
+/** 仪表盘概览：由现有用户/角色数据聚合而来，应用数用固定值（应用清单已迁至前端 assets/constants/apps.ts） */
 export function getDashboardStats() {
-  const todayLoginCount = logs.filter(
-    (log) => log.path === "/main/login" && isToday(log.createTime),
-  ).length;
   return ok({
     userCount: users.length,
     appCount: 3,
     roleCount: roles.length,
-    todayLoginCount,
-    recentLogs: logs.slice(-5).reverse(),
   });
 }

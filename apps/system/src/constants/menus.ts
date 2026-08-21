@@ -15,12 +15,6 @@ const menus: MenuItem[] = [
     url: "/permission",
     icon: "el-icon-menu",
   },
-  {
-    key: "system_log",
-    name: "操作日志",
-    url: "/log",
-    icon: "el-icon-document",
-  },
 ];
 
 export default menus;

@@ -1,7 +1,6 @@
 import { users } from "./data/user";
 import { roles } from "./data/role";
 import { permissions } from "./data/permission";
-import { logs } from "./data/log";
 import { persons } from "./data/person";
 
 /** mock 总开关：仅开发环境 + PUBLIC_MOCK=T 时生效，生产环境永久关闭 */
@@ -14,7 +13,6 @@ type MockData = {
   users: typeof users;
   roles: typeof roles;
   permissions: typeof permissions;
-  logs: typeof logs;
   persons: typeof persons;
 };
 
@@ -29,7 +27,6 @@ function restore(data: Partial<MockData>) {
   replace(users, data.users);
   replace(roles, data.roles);
   replace(permissions, data.permissions);
-  replace(logs, data.logs);
   replace(persons, data.persons);
 }
 
@@ -38,7 +35,7 @@ export function persist() {
   if (!isMockEnabled) return;
   localStorage.setItem(
     STORAGE_KEY,
-    JSON.stringify({ users, roles, permissions, logs, persons }),
+    JSON.stringify({ users, roles, permissions, persons }),
   );
 }
 

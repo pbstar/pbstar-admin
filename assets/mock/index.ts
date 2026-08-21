@@ -5,7 +5,6 @@ import * as mainMock from "./data/main";
 import * as userMock from "./data/user";
 import * as roleMock from "./data/role";
 import * as permissionMock from "./data/permission";
-import * as logMock from "./data/log";
 import * as personMock from "./data/person";
 
 /** method:url -> handler 路由表 */
@@ -34,12 +33,6 @@ const routes: Record<string, MockHandler> = {
   "post:/system/permission/create": permissionMock.create,
   "post:/system/permission/update": permissionMock.update,
   "post:/system/permission/delete": permissionMock.deletePermissions,
-
-  "post:/system/log/getList": logMock.getList,
-  "get:/system/log/getDetail": logMock.getDetail,
-  "post:/system/log/create": logMock.create,
-  "post:/system/log/update": logMock.update,
-  "post:/system/log/delete": logMock.deleteLogs,
 
   "post:/example/person/getList": personMock.getList,
   "get:/example/person/getDetail": personMock.getDetail,

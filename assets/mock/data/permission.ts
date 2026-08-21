@@ -23,7 +23,6 @@ export const permissions: PermissionRecord[] = [
   { id: 1, appId: 1, type: "group", groupId: "", key: "", name: "用户管理", remark: "" },
   { id: 2, appId: 1, type: "group", groupId: "", key: "", name: "角色管理", remark: "" },
   { id: 3, appId: 1, type: "group", groupId: "", key: "", name: "权限管理", remark: "" },
-  { id: 5, appId: 1, type: "group", groupId: "", key: "", name: "操作日志", remark: "" },
   // ---- 用户管理组 ----
   { id: 6, appId: 1, type: "menu", groupId: 1, key: "system_user", name: "用户管理", remark: "" },
   { id: 7, appId: 1, type: "button", groupId: 1, key: "user_add", name: "新增", remark: "" },
@@ -35,9 +34,8 @@ export const permissions: PermissionRecord[] = [
   { id: 12, appId: 1, type: "button", groupId: 2, key: "role_add", name: "新增", remark: "" },
   { id: 13, appId: 1, type: "button", groupId: 2, key: "role_edit", name: "编辑", remark: "" },
   { id: 14, appId: 1, type: "button", groupId: 2, key: "role_delete", name: "删除", remark: "" },
-  // ---- 权限管理组 / 日志组：暂无按钮 ----
+  // ---- 权限管理组：暂无按钮 ----
   { id: 15, appId: 1, type: "menu", groupId: 3, key: "system_permission", name: "权限管理", remark: "" },
-  { id: 17, appId: 1, type: "menu", groupId: 5, key: "system_log", name: "操作日志", remark: "" },
   // ---- example 应用：分组 ----
   { id: 18, appId: 2, type: "group", groupId: "", key: "", name: "用户列表", remark: "" },
   { id: 19, appId: 2, type: "group", groupId: "", key: "", name: "图表", remark: "" },
