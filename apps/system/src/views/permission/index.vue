@@ -19,7 +19,7 @@ const typeOptions = [
   { label: "按钮", value: "button" },
 ];
 const typeLabelMap: Record<string, string> = { group: "分组", menu: "菜单", button: "按钮" };
-const typeTagMap: Record<string, string> = { group: "info", menu: "", button: "warning" };
+const typeTagMap: Record<string, string> = { group: "info", menu: "primary", button: "warning" };
 
 const searchValue = ref<Record<string, any>>({});
 const tableData = ref<any[]>([]);

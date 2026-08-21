@@ -20,7 +20,7 @@ const appGroups: AppGroup[] = [
   {
     group: "内置应用",
     apps: [
-      { id: 1, name: "系统管理", key: "system", icon: "el-icon-setting" },
+      { id: 1, name: "系统应用", key: "system", icon: "el-icon-setting" },
       { id: 2, name: "示例应用", key: "example", icon: "el-icon-menu" },
       { id: 3, name: "外部应用", key: "out-app", icon: "el-icon-link" },
     ],

@@ -7,12 +7,12 @@
         <span class="name">{{ title }}</span>
       </div>
       <div class="brand-main">
-        <h2>企业级后台管理平台</h2>
-        <p>统一管理多应用、多角色的一体化控制台</p>
+        <h2>现代化企业级微后台</h2>
+        <p>基于 wujie 微前端 · Rsbuild 高性能构建 · pnpm monorepo</p>
         <ul class="brand-features">
-          <li><p-icon name="el-icon-CircleCheckFilled" :size="15" />多应用统一管控</li>
-          <li><p-icon name="el-icon-CircleCheckFilled" :size="15" />细粒度角色权限</li>
-          <li><p-icon name="el-icon-CircleCheckFilled" :size="15" />全链路操作审计</li>
+          <li><p-icon name="el-icon-CircleCheckFilled" :size="15" />微前端架构，多应用动态解耦</li>
+          <li><p-icon name="el-icon-CircleCheckFilled" :size="15" />企业级组件化，跨应用复用</li>
+          <li><p-icon name="el-icon-CircleCheckFilled" :size="15" />全链路工程化，完整 CLI 工具链</li>
         </ul>
       </div>
       <div class="brand-footer">© {{ year }} {{ title }}</div>
@@ -373,7 +373,7 @@ const handleSubmit = async () => {
   /* 演示账号卡片 */
   .demo-card {
     margin-top: var(--space-5);
-    padding: var(--space-4);
+    padding: var(--space-4) var(--space-2);
     border: 1px dashed var(--c-border);
     border-radius: var(--radius-md);
     background: var(--c-bg-box);
@@ -397,7 +397,7 @@ const handleSubmit = async () => {
         flex-direction: column;
         align-items: flex-start;
         gap: 2px;
-        padding: var(--space-2) var(--space-3);
+        padding: var(--space-2);
         border: none;
         border-radius: var(--radius-sm);
         background: var(--c-bg);
@@ -408,6 +408,7 @@ const handleSubmit = async () => {
           font-weight: 600;
         }
         .cred {
+          text-wrap: nowrap;
           font-size: var(--font-size-xs);
           color: var(--c-text2);
         }

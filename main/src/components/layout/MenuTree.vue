@@ -120,6 +120,16 @@ const handleSelect = (index: string) => {
   margin-left: 24px;
 }
 
+/* 菜单项文字过长时省略号，避免单行溢出（折叠态文字由 el-menu 隐藏，仅展开态生效） */
+.menu:not(.collapsed) :deep(.el-menu-item span),
+.menu:not(.collapsed) :deep(.el-sub-menu__title span) {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 /* 折叠态：菜单项收窄为图标居中，不再有左右外边距 */
 .menu.collapsed :deep(.el-menu-item),
 .menu.collapsed :deep(.el-sub-menu__title) {
