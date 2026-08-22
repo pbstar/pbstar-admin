@@ -14,7 +14,7 @@ const props = defineProps({
     default: "",
   },
   appKey: {
-    type: [String, Number],
+    type: String,
     default: "",
   },
 });

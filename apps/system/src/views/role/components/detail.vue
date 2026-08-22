@@ -45,7 +45,7 @@ const getPermissionTree = () => {
       const groups = appPermissions.filter((item: any) => item.type === "group");
       return {
         label: app.name,
-        value: app.appKey,
+        value: `__app_${app.appKey}`,
         disabled: true,
         children: groups.map((group: any) => ({
           label: group.name,

@@ -135,7 +135,7 @@ program
           process.exit(1);
         }
         appsJson.push({
-          appKey: appKey,
+          appKey,
           appType,
           devPort: port,
           proUrl: "",

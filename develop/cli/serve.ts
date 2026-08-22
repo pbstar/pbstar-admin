@@ -12,7 +12,7 @@ const list = ["main", ...apps.map((item) => item.appKey)];
 /**
  * 检测外部子应用（git submodule）是否已初始化
  * 未执行 `git submodule update --init` 时目录为空，直接启动会报出不直观的构建错误
- * @param appKey 应用模块 appKey
+ * @param appKey 应用模块标识
  */
 const isUninitializedSubmodule = (appKey: string): boolean => {
   const app = apps.find((item) => item.appKey === appKey);
@@ -23,7 +23,7 @@ const isUninitializedSubmodule = (appKey: string): boolean => {
 
 /**
  * 根据应用模块生成启动/构建命令
- * @param appKey 应用模块 appKey
+ * @param appKey 应用模块标识
  * @param mode 操作类型
  * @param isSingle 是否单选（仅 dev 模式主应用据此决定是否自动打开浏览器）
  */
@@ -103,22 +103,22 @@ const handleServe = async (mode: "dev" | "build") => {
     // 外部子应用未初始化（git submodule 未拉取）时给出友好提示并跳过，而非让 rsbuild 报错
     const uninitialized = appKeys.filter(isUninitializedSubmodule);
     if (uninitialized.length > 0) {
-      uninitialized.forEach((key) => {
+      uninitialized.forEach((appKey) => {
         console.log(
           chalk.yellow(
-            `⚠️  外部子应用 "${key}" 尚未初始化，请先执行 git submodule update --init 拉取代码，已跳过该应用。`,
+            `⚠️  外部子应用 "${appKey}" 尚未初始化，请先执行 git submodule update --init 拉取代码，已跳过该应用。`,
           ),
         );
       });
     }
-    const validAppKeys = appKeys.filter((key) => !uninitialized.includes(key));
+    const validAppKeys = appKeys.filter((appKey) => !uninitialized.includes(appKey));
     if (validAppKeys.length === 0) {
       console.error(chalk.red("Error: 没有可用的应用模块，操作已取消。"));
       process.exit(1);
     }
 
     const isSingle = validAppKeys.length === 1;
-    const commands = validAppKeys.map((key) => buildCommand(key, mode, isSingle));
+    const commands = validAppKeys.map((appKey) => buildCommand(appKey, mode, isSingle));
 
     if (isDev) {
       // dev 模式：长驻进程，并行启动多个
