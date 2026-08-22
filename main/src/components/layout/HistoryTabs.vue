@@ -31,7 +31,7 @@ import { pIcon } from "@Pcomponents";
 import { ref, nextTick, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useAppsStore } from "@/stores/apps";
-import { HOME_PATH } from "@/utils/constants";
+import { HOME_PATH } from "@/utils/appMenus";
 const router = useRouter();
 const route = useRoute();
 const appsStore = useAppsStore();

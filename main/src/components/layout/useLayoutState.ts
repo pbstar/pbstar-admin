@@ -2,7 +2,7 @@ import { ref, computed, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useAppsStore } from "@/stores/apps";
 import type { NavItem } from "@/stores/apps";
-import { HOME_PATH } from "@/utils/constants";
+import { HOME_PATH } from "@/utils/appMenus";
 
 // 选中项与折叠态为模块级单例（桌面侧栏与移动端菜单共用同一份状态）
 const activeIndex = ref("1");

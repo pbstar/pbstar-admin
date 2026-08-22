@@ -27,12 +27,10 @@ import SideNav from "@/components/layout/SideNav.vue";
 import HistoryTabs from "@/components/layout/HistoryTabs.vue";
 import LayoutLoading from "@/components/layout/LayoutLoading.vue";
 import { useSiderCollapse } from "@/components/layout/useLayoutState";
-import { isPublicPath } from "@/utils/auth";
-import { logout } from "@/utils/logout";
+import { isPublicPath, getUserInfo, logout } from "@/utils/auth";
 import { useAppsStore } from "@/stores/apps";
 import useSharedStore from "@Passets/stores/shared";
 import { ElMessage } from "element-plus";
-import request from "@Passets/utils/request";
 
 const { collapsed } = useSiderCollapse();
 const appsStore = useAppsStore();
@@ -40,25 +38,6 @@ const router = useRouter();
 const route = useRoute();
 const sharedStore = useSharedStore();
 const isMounted = ref(false);
-
-// 获取用户信息
-const getUserInfo = async (): Promise<boolean> => {
-  try {
-    const userRes = await request.post({
-      url: "/main/loginByToken",
-    });
-    if (userRes.code !== 200 || !userRes.data) {
-      ElMessage.error(userRes.msg || "获取用户信息失败");
-      return false;
-    }
-    localStorage.setItem("p_token", userRes.data.token);
-    sharedStore.setUserInfo(userRes.data);
-    return true;
-  } catch (error) {
-    console.error(error);
-    return false;
-  }
-};
 
 const init = async () => {
   // 免登录或白名单直接放行（需提前置 isMounted，避免页面永久 loading）

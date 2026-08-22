@@ -43,7 +43,7 @@ import { ElMessage } from "element-plus";
 import request from "@Passets/utils/request";
 import useSharedStore from "@Passets/stores/shared";
 import { pTitle, pItem } from "@Pcomponents";
-import { logout } from "@/utils/logout";
+import { logout } from "@/utils/auth";
 
 const sharedStore = useSharedStore();
 const detailInfo = ref<Record<string, any>>({});

@@ -2,7 +2,7 @@ import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import useSharedStore from "@Passets/stores/shared";
 import request from "@Passets/utils/request";
-import { logout } from "@/utils/logout";
+import { logout } from "@/utils/auth";
 
 /**
  * 顶部导航用户信息与常用操作（桌面/移动端共用）

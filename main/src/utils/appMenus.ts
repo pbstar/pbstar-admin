@@ -1,6 +1,9 @@
 import type { MenuItem } from "@Passets/utils/permission";
 import apps from "../../../apps/apps.json" with { type: "json" };
 
+// 默认首页路径（登录后 /admin 重定向、导航默认首页、历史栏首页标签共用）
+export const HOME_PATH = "/admin/pHome";
+
 /** 已加载过的子应用菜单缓存，避免切换应用时重复动态 import */
 const menuCache = new Map<string, MenuItem[]>();
 
