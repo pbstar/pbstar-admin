@@ -3,6 +3,7 @@ import { input, select } from "@inquirer/prompts";
 import { program } from "commander";
 import chalk from "chalk";
 import apps from "../../apps/apps.json" with { type: "json" };
+import { banner, divider, ok, fail } from "./ui";
 
 const projects = [
   "全局工程",
@@ -15,22 +16,23 @@ const projects = [
 
 const handleDep = async (mode: "add" | "remove") => {
   const isAdd = mode === "add";
+  banner(isAdd ? "📦 添加依赖包" : "🗑 移除依赖包");
   try {
     const currentValue = await select({
       message: isAdd
-        ? "请选择要添加依赖包的工程:"
-        : "请选择要移除依赖包的工程:",
+        ? "请选择要添加依赖包的工程"
+        : "请选择要移除依赖包的工程",
       choices: projects.map((value) => ({ value, name: value })),
     });
     const packageName = await input({
       message: isAdd
-        ? "请输入要添加的依赖包名称:"
-        : "请输入要移除的依赖包名称:",
+        ? "请输入要添加的依赖包名称"
+        : "请输入要移除的依赖包名称",
     });
     let packageType = "";
     if (isAdd) {
       packageType = await select({
-        message: "请选择要添加的依赖包类型:",
+        message: "请选择要添加的依赖包类型",
         choices: [
           { value: "dependencies", name: "dependencies" },
           { value: "devDependencies", name: "devDependencies" },
@@ -38,7 +40,7 @@ const handleDep = async (mode: "add" | "remove") => {
       });
     }
     if (!packageName) {
-      console.error(chalk.red("Error: 依赖包名称不能为空"));
+      fail("依赖包名称不能为空");
       process.exit(1);
     }
     let command = `pnpm ${isAdd ? "add" : "remove"} ${packageName}`;
@@ -50,9 +52,12 @@ const handleDep = async (mode: "add" | "remove") => {
     if (isAdd && packageType === "devDependencies") {
       command += " -D";
     }
+    divider();
+    ok(`执行：${chalk.cyan(command)}`);
     execSync(command, { stdio: "inherit", cwd: "../" });
   } catch (err) {
-    console.error(chalk.red("Error:"), err);
+    fail("操作失败：");
+    console.error(err);
     process.exit(1);
   }
 };

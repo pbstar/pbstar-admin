@@ -5,6 +5,7 @@ import { checkbox } from "@inquirer/prompts";
 import { program } from "commander";
 import chalk from "chalk";
 import apps from "../../apps/apps.json" with { type: "json" };
+import { banner, divider, ok, warn, fail, urlRow, padRight } from "./ui";
 
 const allAppKeys = ["main", ...apps.map((item) => item.appKey)];
 
@@ -58,66 +59,85 @@ const startDevServers = (commands: string[]): void => {
 
 /**
  * 手动打印已启动 dev 服务的访问地址（替代 rsbuild 默认打印，输出更简洁美观）
+ * main 是唯一访问入口：子应用经 wujie 运行时挂载，弱化展示便于排查即可
  */
-const printDevUrls = (): void => {
+const printDevUrls = (appKeys: string[]): void => {
+  banner("🚀 PbstarAdmin 开发服务已启动");
+  divider();
+
+  const subApps = apps.filter((app) => appKeys.includes(app.appKey));
+  urlRow("主应用", "main", "http://localhost:8800");
+  subApps.forEach((app) => {
+    console.log(
+      `  ${chalk.gray("▸")}  ${chalk.gray.bold(padRight(app.appKey, 22))} ${chalk.gray("http://localhost:" + app.devPort)}`,
+    );
+  });
+
   console.log();
-  console.log(chalk.cyan.bold("  🚀 PbstarAdmin 开发服务已启动"));
-  console.log(chalk.gray("  ──────────────────────────────"));
-  // main 是唯一访问入口，子应用经 wujie 挂载，固定打印 main 即可
   console.log(
-    `  ${chalk.green("➜")}  ${chalk.bold("main")}  ${chalk.cyan.underline("http://localhost:8800")}`,
+    chalk.gray("  ✨ 子应用经 wujie 运行时加载，请通过主应用地址访问。按 Ctrl+C 停止全部服务。"),
   );
-  console.log();
 };
 
 const handleServe = async (mode: "dev" | "build") => {
   const isDev = mode === "dev";
+  const verb = isDev ? "启动" : "构建";
+  banner(isDev ? "🚀 PbstarAdmin 开发服务" : "📦 PbstarAdmin 构建");
   try {
     const appKeys = await checkbox({
-      message: isDev
-        ? "请选择要启动的应用模块(空格多选):"
-        : "请选择要构建的应用模块(空格多选):",
+      message: `请选择要${verb}的应用模块`,
       // main 是唯一访问入口，子应用经 wujie 挂载，不支持单独运行，故锁定为必选
-      choices: allAppKeys.map((value) => ({
-        value,
-        name: value,
-        checked: value === "main",
-        disabled: value === "main",
-      })),
+      choices: allAppKeys.map((value) => {
+        const app = apps.find((item) => item.appKey === value);
+        return {
+          value,
+          name: value === "main" ? "main（主应用）" : value,
+          description:
+            value === "main"
+              ? "唯一访问入口，经 wujie 加载子应用，固定参与"
+              : app
+                ? `devPort ${app.devPort}`
+                : undefined,
+          checked: value === "main",
+          disabled: value === "main" ? "必选" : false,
+        };
+      }),
     });
 
     // 外部子应用未初始化（git submodule 未拉取）时给出友好提示并跳过，而非让 rsbuild 报错
     const uninitialized = appKeys.filter(isUninitializedSubmodule);
-    if (uninitialized.length > 0) {
-      uninitialized.forEach((appKey) => {
-        console.log(
-          chalk.yellow(
-            `⚠️  外部子应用 "${appKey}" 尚未初始化，请先执行 git submodule update --init 拉取代码，已跳过该应用。`,
-          ),
-        );
-      });
-    }
+    uninitialized.forEach((appKey) => {
+      warn(
+        `外部子应用 "${appKey}" 尚未初始化，已跳过。请先执行 git submodule update --init 拉取代码。`,
+      );
+    });
     const validAppKeys = appKeys.filter((appKey) => !uninitialized.includes(appKey));
     if (validAppKeys.length === 0) {
-      console.error(chalk.red("Error: 没有可用的应用模块，操作已取消。"));
+      fail("没有可用的应用模块，操作已取消。");
       process.exit(1);
     }
 
     const isSingle = validAppKeys.length === 1;
     const commands = validAppKeys.map((appKey) => buildCommand(appKey, mode, isSingle));
 
+    divider();
+    ok(`将${verb} ${validAppKeys.length} 个应用：${chalk.bold(validAppKeys.join("、"))}`);
+    console.log();
+
     if (isDev) {
       // dev 模式：长驻进程，并行启动多个
       startDevServers(commands);
-      printDevUrls();
+      printDevUrls(validAppKeys);
     } else {
       // build 模式：串行构建，输出清晰、资源占用平稳
       commands.forEach((command) =>
         execSync(command, { stdio: "inherit", cwd: "../" }),
       );
+      ok("构建完成");
     }
   } catch (err) {
-    console.error(chalk.red("Error:"), err);
+    fail("操作失败：");
+    console.error(err);
     process.exit(1);
   }
 };

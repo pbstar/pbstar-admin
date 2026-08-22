@@ -4,6 +4,7 @@ import { fileURLToPath } from "url";
 import path from "path";
 import chalk from "chalk";
 import apps from "../../apps/apps.json" with { type: "json" };
+import { banner, divider, ok } from "./ui";
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), "../../");
 
@@ -17,9 +18,12 @@ const targets = [
   ...apps.map((app) => `apps/${app.appKey}/tsconfig.json`),
 ].filter((tsconfig) => existsSync(path.join(ROOT, tsconfig)));
 
-targets.forEach((tsconfig) => {
-  console.log(chalk.cyan(`\n▶ check: ${tsconfig}`));
+banner("🔍 TypeScript 类型检查");
+
+targets.forEach((tsconfig, index) => {
+  console.log(chalk.cyan(`  ▶ [${index + 1}/${targets.length}] ${tsconfig}`));
   execSync(`vue-tsc -p ${tsconfig} --noEmit`, { stdio: "inherit", cwd: ROOT });
 });
 
-console.log(chalk.green("\n✅ 全部工程类型检查通过"));
+divider();
+ok(`全部 ${targets.length} 个工程类型检查通过`);
