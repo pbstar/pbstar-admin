@@ -24,6 +24,10 @@ const createAppConfig = (app: { key: string }): EnvironmentConfig => {
         "@": basePath + "/src",
       },
     },
+    dev: {
+      hmr: false,
+      liveReload: false,
+    },
   };
 };
 
