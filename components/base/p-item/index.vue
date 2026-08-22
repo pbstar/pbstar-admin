@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 const props = defineProps({
   label: {
     type: String,
@@ -16,10 +16,13 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-  // text是否换行
   isTextWrap: {
     type: Boolean,
     default: false,
+  },
+  labelWidth: {
+    type: String,
+    default: "100px",
   },
 });
 </script>
@@ -27,7 +30,7 @@ const props = defineProps({
 <template>
   <div class="item">
     <!-- 标签区域 -->
-    <div v-if="props.label" class="label">
+    <div v-if="props.label" class="label" :style="{ width: props.labelWidth }">
       <span v-show="props.isRequired" class="required">*</span>
       <el-tooltip
         v-if="props.label.length > 8"
@@ -46,7 +49,7 @@ const props = defineProps({
           <slot></slot>
         </div>
         <div
-          v-if="props.showText"
+          v-else
           :class="props.isTextWrap ? 'val-text-wrap' : 'val-text'"
         >
           {{ props.text }}
@@ -69,19 +72,18 @@ const props = defineProps({
 
 .label {
   height: 30px;
-  width: 100px;
   line-height: 16px;
-  margin-right: 6px;
+  margin-right: var(--space-2);
   flex-shrink: 0;
-  font-size: 14px;
-  color: var(--c-text);
+  font-size: var(--font-size-md);
+  color: var(--c-text2);
   display: flex;
   align-items: center;
   justify-content: flex-end;
 
   .required {
     margin-right: 4px;
-    color: red;
+    color: var(--el-color-danger, #f56c6c);
   }
 
   .label-text {
@@ -114,10 +116,11 @@ const props = defineProps({
       max-width: 100%;
       flex: 1;
       height: 30px;
-      padding: 0 6px;
+      padding: 0 var(--space-2);
       line-height: 30px;
       color: var(--c-text);
-      border-bottom: 1px solid var(--c-border);
+      background: var(--c-bg-box);
+      border-radius: var(--radius-sm);
       overflow-x: auto;
       overflow-y: hidden;
       white-space: nowrap;
@@ -131,10 +134,12 @@ const props = defineProps({
       max-width: 100%;
       flex: 1;
       height: auto;
-      padding: 5px 6px;
+      min-height: 30px;
+      padding: 5px var(--space-2);
       line-height: 20px;
       color: var(--c-text);
-      border-bottom: 1px solid var(--c-border);
+      background: var(--c-bg-box);
+      border-radius: var(--radius-sm);
       word-break: break-word;
     }
 
@@ -146,12 +151,6 @@ const props = defineProps({
 
   .tip-box {
     margin-top: 4px;
-  }
-}
-
-@media screen and (max-width: 700px) {
-  .label {
-    width: 80px;
   }
 }
 </style>

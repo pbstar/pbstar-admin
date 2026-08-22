@@ -11,8 +11,10 @@
     </div>
     <!-- 表格 -->
     <el-table
+      v-loading="loading"
       class="table"
       :data="data"
+      :row-key="rowKey"
       :border="true"
       :stripe="true"
       :max-height="maxHeight"
@@ -43,45 +45,53 @@
           class="pagination"
           v-model:current-page="pageNumber"
           v-model:page-size="pageSize"
-          :page-sizes="[10, 20, 50, 100]"
+          :page-sizes="pageSizes"
           layout="total, sizes, prev, pager, next, jumper"
           :total="total"
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
+          @size-change="handlePaginationChange"
+          @current-change="handlePaginationChange"
         />
       </div>
     </div>
   </div>
 </template>
 
-<script setup>
-import { ref, watch, computed } from "vue";
+<script setup lang="ts">
+import { ref, watch, computed, nextTick } from "vue";
 
 const props = defineProps({
-  // 表格数据
   data: {
     type: Array,
     default: () => [],
   },
-  // 分页配置
+  // 行唯一键（如 row-key="id"）。设置后若数据含 children，el-table 会开启树形表格
+  rowKey: {
+    type: [String, Function],
+    default: undefined,
+  },
   pagination: {
     type: Object,
     default: () => ({}),
   },
-  // 是否显示选择列
   showSelection: {
     type: Boolean,
     default: false,
   },
-  // 是否显示序号列
   showIndex: {
     type: Boolean,
     default: true,
   },
-  // 表格最大高度
   maxHeight: {
     type: [String, Number],
     default: "800",
+  },
+  loading: {
+    type: Boolean,
+    default: false,
+  },
+  pageSizes: {
+    type: Array,
+    default: () => [10, 20, 50, 100],
   },
 });
 
@@ -90,42 +100,34 @@ const emit = defineEmits(["paginationChange", "selectionChange"]);
 const pageNumber = ref(1);
 const pageSize = ref(10);
 const total = ref(0);
-const selectionList = ref([]);
 
-// 是否显示分页
 const hasPagination = computed(() => {
   return props.pagination && Object.keys(props.pagination).length > 0;
 });
 
-// 计算序号
-const getIndex = (index) => {
+const getIndex = (index: number) => {
   return (pageNumber.value - 1) * pageSize.value + index + 1;
 };
 
-// 每页条数变化
-const handleSizeChange = (val) => {
-  pageSize.value = val;
-  emit("paginationChange", {
-    pageNumber: pageNumber.value,
-    pageSize: pageSize.value,
+// 分页变化：el-pagination 在“改变每页条数导致总页数缩小”时会连续触发
+// size-change 和 current-change 两个事件，这里合并到同一个 tick 只 emit 一次，
+// 避免父组件收到两次 paginationChange 而重复发起请求
+let paginationEmitScheduled = false;
+const handlePaginationChange = () => {
+  if (paginationEmitScheduled) return;
+  paginationEmitScheduled = true;
+  nextTick(() => {
+    paginationEmitScheduled = false;
+    emit("paginationChange", {
+      pageNumber: pageNumber.value,
+      pageSize: pageSize.value,
+    });
   });
 };
-
-// 当前页变化
-const handleCurrentChange = (val) => {
-  pageNumber.value = val;
-  emit("paginationChange", {
-    pageNumber: pageNumber.value,
-    pageSize: pageSize.value,
-  });
-};
-// 选择项变化
-const handleSelectionChange = (val) => {
-  selectionList.value = val;
+const handleSelectionChange = (val: any[]) => {
   emit("selectionChange", val);
 };
 
-// 监听分页信息变化
 watch(
   () => props.pagination,
   (val) => {
@@ -145,13 +147,16 @@ watch(
 <style scoped lang="scss">
 .tabulation {
   width: 100%;
-  padding-bottom: 10px;
+  padding: var(--space-3);
+  background: var(--c-bg);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-md);
   .topBtn {
-    height: 34px;
+    height: 30px;
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
-    margin-bottom: 10px;
+    margin-bottom: var(--space-3);
     .tLeft {
       display: flex;
       align-items: center;
@@ -165,6 +170,8 @@ watch(
   }
   .table {
     width: 100%;
+    --el-table-border-color: var(--c-border);
+    --el-table-border: 1px solid var(--c-border);
     :deep(thead th) {
       background: var(--c-bg-box);
       color: var(--c-text2);
@@ -184,7 +191,7 @@ watch(
     justify-content: space-between;
     .bRight {
       .pagination {
-        padding-top: 10px;
+        padding-top: var(--space-3);
       }
     }
   }

@@ -1,15 +1,10 @@
 <template>
   <div class="p-title">
     <div class="tabs">
-      <div
-        v-for="(tab, i) in list"
-        :key="i"
-        :class="[
-          'tab',
-          { active: activeTab === i, disabled: list.length === 1 },
-        ]"
-        @click="selectTab(i)"
-      >
+      <div v-for="(tab, i) in list" :key="i" :class="[
+        'tab',
+        { active: activeTab === i, disabled: list.length === 1 },
+      ]" @click="selectTab(i)">
         {{ tab }}
       </div>
     </div>
@@ -19,18 +14,29 @@
   </div>
 </template>
 
-<script setup>
-import { ref } from "vue";
+<script setup lang="ts">
+import { ref, watch } from "vue";
 const props = defineProps({
   list: { type: Array, default: () => [] },
+  // 当前激活的 tab 下标（受控用法可配合 v-model 使用，非受控用法可不传）
+  modelValue: { type: Number, default: 0 },
 });
 
-const emit = defineEmits(["change"]);
-const activeTab = ref(0);
+const emit = defineEmits(["change", "update:modelValue"]);
+const activeTab = ref(props.modelValue);
 
-const selectTab = (index) => {
+// 支持外部通过 v-model 编程式切换 tab
+watch(
+  () => props.modelValue,
+  (val) => {
+    activeTab.value = val;
+  },
+);
+
+const selectTab = (index: number) => {
   if (props.list.length === 1) return;
   activeTab.value = index;
+  emit("update:modelValue", index);
   emit("change", { value: props.list[index], index });
 };
 </script>
@@ -48,19 +54,26 @@ const selectTab = (index) => {
     flex-shrink: 0;
 
     .tab {
-      margin-right: 20px;
+      margin-right: var(--space-5);
       line-height: 40px;
       cursor: pointer;
-      font-size: 14px;
+      font-size: var(--font-size-md);
       color: var(--c-text2);
+      transition: color 0.15s;
 
       &:last-child {
         margin-right: 0;
       }
 
+      &:not(.disabled):not(.active):hover {
+        color: var(--c-text3);
+      }
+
       &.active {
         color: var(--c-text);
-        font-weight: bold;
+        font-weight: 600;
+        line-height: 34px;
+        border-top: 3px solid transparent;
         border-bottom: 3px solid var(--c-bg-theme);
       }
 

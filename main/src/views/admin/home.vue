@@ -1,127 +1,201 @@
-<script setup>
-import { pIcon } from "@Pcomponents";
+<script setup lang="ts">
+import { ref, onBeforeMount } from "vue";
+import { useRouter } from "vue-router";
+import { pIcon, pTitle } from "@Pcomponents";
+import request from "@Passets/utils/request";
+import { useAppsStore } from "@/stores/apps";
+import type { AppItem } from "@/stores/apps";
 
-// 打开外部链接
-const toPath = (path) => {
-  window.open(path);
+interface DashboardStats {
+  userCount: number;
+  appCount: number;
+  roleCount: number;
+}
+
+const router = useRouter();
+const appsStore = useAppsStore();
+
+const stats = ref<{ icon: string; label: string; value: number }[]>([]);
+const myApps = ref<AppItem[]>([]);
+
+// 拉取仪表盘概览数据（用户/应用/角色）
+const loadStats = async () => {
+  const res = await request.get<DashboardStats>({
+    url: "/main/getDashboardStats",
+  });
+  if (res.code !== 200 || !res.data) return;
+  const data = res.data;
+  stats.value = [
+    { icon: "el-icon-user", label: "用户数", value: data.userCount },
+    { icon: "el-icon-grid", label: "应用数", value: data.appCount },
+    { icon: "el-icon-avatar", label: "角色数", value: data.roleCount },
+  ];
 };
+
+// 跳转到指定应用的第一个可用导航
+const toApp = async (app: AppItem) => {
+  const isOk = await appsStore.setAppKey(app.appKey);
+  if (!isOk) return;
+  const current = appsStore.getApp();
+  const firstNav = current?.navs?.find((item) => item.url);
+  if (firstNav?.url) {
+    router.push(firstNav.url);
+  }
+};
+
+onBeforeMount(() => {
+  loadStats();
+  myApps.value = appsStore.getApps();
+});
 </script>
+
 <template>
   <div class="page">
-    <div class="welcome-container">
-      <div class="logo-text">
-        <span>欢迎使用</span>
-        <span class="gradient-text">PbstarAdmin</span>
-        <span>微后台</span>
+    <div class="stat-grid">
+      <div class="stat-card" v-for="item in stats" :key="item.label">
+        <div class="iconBox">
+          <p-icon :name="item.icon" size="22" />
+        </div>
+        <div class="info">
+          <div class="num">{{ item.value }}</div>
+          <div class="label">{{ item.label }}</div>
+        </div>
       </div>
-      <div class="description">现代化、模块化、轻便化的后台管理解决方案</div>
     </div>
-    <div class="btns">
-      <el-button
-        type="primary"
-        size="large"
-        @click="toPath('http://pbstar-admin-docs.pbstar.cn')"
-      >
-        <p-icon name="el-icon-document" class="icon" />
-        官方文档
-      </el-button>
-      <el-button
-        size="large"
-        @click="toPath('https://github.com/pbstar/pbstar-admin')"
-      >
-        <p-icon name="el-icon-star" class="icon" />
-        GitHub
-      </el-button>
+    <div class="panel-grid">
+      <div class="panel">
+        <p-title :list="['我的应用']" />
+        <div class="app-list">
+          <div
+            class="app-item"
+            v-for="app in myApps"
+            :key="app.appKey"
+            @click="toApp(app)"
+          >
+            <div class="iconBox">
+              <p-icon :name="app.icon" size="18" />
+            </div>
+            <span class="name">{{ app.name }}</span>
+            <p-icon class="arrow" name="el-icon-ArrowRight" size="14" />
+          </div>
+          <el-empty v-if="!myApps.length" description="暂无应用" />
+        </div>
+      </div>
     </div>
   </div>
 </template>
+
 <style scoped lang="scss">
 .page {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
   width: 100%;
-  padding-bottom: 120px;
-  justify-content: center;
-  align-items: center;
+  height: 100%;
+  padding: var(--space-3);
+  overflow-y: auto;
   background: var(--c-bg);
+  border-radius: var(--radius-md);
 
-  .welcome-container {
-    text-align: center;
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-3);
+    margin-bottom: var(--space-3);
+  }
 
-    .logo-text {
-      margin-bottom: 20px;
+  .stat-card {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-4) var(--space-5);
+    border-radius: var(--radius-md);
+    background: var(--c-bg);
+    border: 1px solid var(--c-border-light);
+
+    .iconBox {
       display: flex;
+      align-items: center;
       justify-content: center;
-      align-items: flex-end;
-      font-size: 24px;
-      line-height: 24px;
-      color: var(--c-text2);
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-md);
+      background: var(--c-bg-theme-tint);
+      color: var(--c-text3);
+      flex-shrink: 0;
+    }
 
-      .gradient-text {
-        font-size: 48px;
-        line-height: 48px;
-        font-weight: bold;
-        margin: 0 12px -4px;
-        background: linear-gradient(
-          135deg,
-          var(--c-text3) 0%,
-          var(--c-bg-theme-light) 40%,
-          var(--c-bg-theme) 100%
-        );
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
+    .info {
+      .num {
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--c-text);
+        line-height: 1.2;
+        font-variant-numeric: tabular-nums;
+      }
+      .label {
+        font-size: var(--font-size-sm);
+        color: var(--c-text2);
+        margin-top: 2px;
       }
     }
-
-    .description {
-      font-size: 16px;
-      color: var(--c-text2);
-      opacity: 0.8;
-    }
   }
 
-  .btns {
-    margin-top: 60px;
+  .panel-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+  }
+
+  .panel {
+    padding: var(--space-3);
+    border-radius: var(--radius-md);
+    background: var(--c-bg);
+    border: 1px solid var(--c-border);
+  }
+
+  .app-list {
+    margin-top: var(--space-2);
     display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
 
-    .icon {
-      margin-right: 5px;
-    }
-  }
+    .app-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: var(--space-2);
+      border-radius: var(--radius-sm);
+      color: var(--c-text);
+      cursor: pointer;
+      transition: background-color 0.15s;
 
-  // 响应式布局
-  @media (max-width: 700px) {
-    .welcome-container {
-      .logo-text {
-        flex-direction: column;
-        align-items: center;
-        font-size: 18px;
-        line-height: 18px;
+      &:hover {
+        background: var(--c-menu-hover-bg);
 
-        .gradient-text {
-          font-size: 32px;
-          line-height: 32px;
-          margin: 8px 0;
+        .arrow {
+          color: var(--c-text3);
+          transform: translateX(2px);
         }
       }
 
-      .description {
-        font-size: 14px;
-        padding: 0 20px;
+      .iconBox {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 30px;
+        height: 30px;
+        border-radius: var(--radius-sm);
+        background: var(--c-bg-theme-tint);
+        color: var(--c-text3);
+        flex-shrink: 0;
       }
-    }
 
-    .btns {
-      flex-direction: column;
-      align-items: center;
-      gap: 16px;
-      margin-top: 40px;
+      .name {
+        flex: 1;
+        font-size: var(--font-size-sm);
+      }
 
-      .el-button {
-        width: 200px;
-        margin-left: 0;
-        margin-right: 0;
+      .arrow {
+        color: var(--c-text2);
+        transition: color 0.15s, transform 0.15s;
       }
     }
   }

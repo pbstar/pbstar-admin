@@ -10,8 +10,9 @@
   ></i>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from "vue";
+import type { Component } from "vue";
 import * as ElIcons from "@element-plus/icons-vue";
 import "@Passets/iconfont/iconfont.css";
 
@@ -34,11 +35,11 @@ const epIcon = computed(() => {
   const iconName = props.name
     .replace("el-icon", "")
     .replace(/-(\w)/g, (_, c) => c.toUpperCase());
-  if (!iconName || !ElIcons[iconName]) {
+  if (!iconName || !(ElIcons as Record<string, Component>)[iconName]) {
     console.warn(`图标 ${iconName} 不存在`);
     return null;
   }
-  return ElIcons[iconName];
+  return (ElIcons as Record<string, Component>)[iconName];
 });
 
 const iconStyle = computed(() => {

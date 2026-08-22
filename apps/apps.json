@@ -1,17 +1,20 @@
 [
   {
-    "key": "system",
+    "appKey": "system",
+    "appType": "in",
     "devPort": 8801,
     "proUrl": "http://pbstar-admin-system.pbstar.cn/"
   },
   {
-    "key": "example",
+    "appKey": "example",
+    "appType": "in",
     "devPort": 8802,
     "proUrl": "http://pbstar-admin-example.pbstar.cn/"
   },
   {
-    "key": "equipment",
+    "appKey": "out-app",
+    "appType": "out",
     "devPort": 8803,
-    "proUrl": "http://pbstar-admin-equipment.pbstar.cn/"
+    "proUrl": "http://pbstar-admin-out-app.pbstar.cn/"
   }
 ]

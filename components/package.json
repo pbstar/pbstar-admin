@@ -3,8 +3,5 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "dependencies": {
-    "highlight.js": "^11.11.1",
-    "p-export-excel": "^1.1.2"
-  }
+  "dependencies": {}
 }

@@ -7,7 +7,7 @@
     @click="generateCaptcha"
   ></canvas>
 </template>
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from "vue";
 
 const props = defineProps({
@@ -42,19 +42,20 @@ const props = defineProps({
 });
 
 const emit = defineEmits(["changeCode"]);
-const captchaCanvas = ref(null);
+const captchaCanvas = ref<HTMLCanvasElement | null>(null);
 const identifyCode = ref("");
 
-const randomNum = (min, max) => Math.floor(Math.random() * (max - min) + min);
+const randomNum = (min: number, max: number) =>
+  Math.floor(Math.random() * (max - min) + min);
 
-const randomColor = (min, max) => {
+const randomColor = (min: number, max: number) => {
   const r = randomNum(min, max);
   const g = randomNum(min, max);
   const b = randomNum(min, max);
   return `rgb(${r},${g},${b})`;
 };
 
-const makeCode = (chars, length) => {
+const makeCode = (chars: string, length: number) => {
   identifyCode.value = "";
   for (let i = 0; i < length; i++) {
     identifyCode.value += chars[randomNum(0, chars.length)];
@@ -62,7 +63,8 @@ const makeCode = (chars, length) => {
   emit("changeCode", identifyCode.value);
 };
 
-const drawText = (ctx, txt, i) => {
+const drawText = (ctx: CanvasRenderingContext2D, txt: string, i: number) => {
+  ctx.save();
   ctx.fillStyle = randomColor(50, 160);
   ctx.font = `${randomNum(props.fontSizeMin, props.fontSizeMax)}px SimHei`;
   const x =
@@ -73,11 +75,10 @@ const drawText = (ctx, txt, i) => {
   ctx.translate(x, y);
   ctx.rotate((deg * Math.PI) / 180);
   ctx.fillText(txt, 0, 0);
-  ctx.rotate((-deg * Math.PI) / 180);
-  ctx.translate(-x, -y);
+  ctx.restore();
 };
 
-const drawLine = (ctx) => {
+const drawLine = (ctx: CanvasRenderingContext2D) => {
   for (let i = 0; i < 4; i++) {
     ctx.strokeStyle = randomColor(100, 200);
     ctx.beginPath();
@@ -93,7 +94,7 @@ const drawLine = (ctx) => {
   }
 };
 
-const drawDot = (ctx) => {
+const drawDot = (ctx: CanvasRenderingContext2D) => {
   for (let i = 0; i < 30; i++) {
     ctx.fillStyle = randomColor(0, 255);
     ctx.beginPath();
@@ -110,7 +111,8 @@ const drawDot = (ctx) => {
 
 const generateCaptcha = () => {
   makeCode(props.identifyCodes, 4);
-  const ctx = captchaCanvas.value.getContext("2d");
+  const ctx = captchaCanvas.value?.getContext("2d");
+  if (!ctx) return;
   ctx.textBaseline = "bottom";
 
   ctx.fillStyle = randomColor(

@@ -1,114 +1,110 @@
-<script setup>
+<script setup lang="ts">
 import { ref, watch, onUnmounted, nextTick } from "vue";
 import { useRoute } from "vue-router";
 import { startApp, destroyApp, bus } from "wujie";
-import { InstanceofPlugin } from "wujie-polyfill";
 import useSharedStore from "@Passets/stores/shared";
-import LayoutLoading from "@/components/layout/loading.vue";
+import LayoutLoading from "@/components/layout/LayoutLoading.vue";
+import AppLoadError from "@/components/layout/AppLoadError.vue";
+import { wujieErrorPatchPlugin } from "@/utils/wujiePatches";
 
 const route = useRoute();
 const sharedStore = useSharedStore();
 
-// 当前应用信息
-const subappContainer = ref(null);
-
-// 当前子应用key
+const subappContainer = ref<HTMLElement | null>(null);
 const currentAppKey = ref("");
 
-// 插件配置
-const plugins = [InstanceofPlugin()];
+// 子应用加载失败空态（状态驱动，替代直接操作 innerHTML）
+const loadFailed = ref(false);
 
-// 监听子应用共享状态变更
-const handleSharedPiniaChange = (data) => {
+const handleSharedPiniaChange = (data: Record<string, any>) => {
   Object.keys(data).forEach((key) => {
-    if (key in sharedStore) {
-      sharedStore[key] = data[key];
+    if (key === "isAppRouteLoading") {
+      // 兜底：防止总线写入与 afterMount 竞态导致蒙层卡死
+      sharedStore.setRouteLoading(data[key]);
+    } else if (key in sharedStore) {
+      (sharedStore as Record<string, any>)[key] = data[key];
     }
   });
 };
 
-// 路由变化处理
 const handleRouteChange = () => {
   const { appKey, appUrl } = route.meta;
   if (!appKey || !appUrl || !route.query) return;
-  const subPath = route.query[appKey] || "";
+  const subPath = (route.query[appKey as string] ?? "") as string;
 
   if (appKey === currentAppKey.value) {
-    // 通知子应用路由变化
-    bus.$emit("subappRouteChange", {
-      key: appKey,
-      path: subPath,
-    });
+    bus.$emit("subappRouteChange", { appKey, path: subPath });
   } else {
-    // 销毁当前应用实例
-    if (currentAppKey) {
-      destroyApp(currentAppKey);
+    if (currentAppKey.value) {
+      destroyApp(currentAppKey.value);
     }
-    // 启动新的子应用
-    currentAppKey.value = appKey;
-    startSubApp(appKey, appUrl, subPath);
+    currentAppKey.value = appKey as string;
+    startSubApp(appKey as string, appUrl as string, subPath);
   }
 };
 
-// 启动子应用
-const startSubApp = (appKey, appUrl, subPath) => {
-  // 开启loading
-  sharedStore.isAppRouteLoading = true;
+const startSubApp = (appKey: string, appUrl: string, subPath: string) => {
+  loadFailed.value = false;
+  sharedStore.setRouteLoading(true);
 
-  // 创建新的子应用实例
   nextTick(() => {
     startApp({
       name: appKey,
       url: appUrl,
-      el: subappContainer.value,
+      el: subappContainer.value!,
       sync: true,
+      plugins: [wujieErrorPatchPlugin],
       props: {
         path: subPath,
         sharedPinia: sharedStore,
       },
-      plugins,
       beforeLoad: () => {
-        // 子应用开始加载
-        sharedStore.isAppRouteLoading = true;
+        sharedStore.setRouteLoading(true);
       },
       afterMount: () => {
-        // 延迟关闭loading,确保子应用渲染完成
+        // 延迟关闭 loading，确保子应用渲染完成
         setTimeout(() => {
-          sharedStore.isAppRouteLoading = false;
+          sharedStore.setRouteLoading(false);
         }, 200);
       },
       loadError: (url, err) => {
-        sharedStore.isAppRouteLoading = false;
-        // 这个回调函数会在该子应用加载失败时触发
+        sharedStore.setRouteLoading(false);
         console.error(`子应用【${appKey}】的资源 ${url} 加载失败:`, err);
-        subappContainer.value.innerHTML = `
-          <div style="text-align: center; padding: 50px;">子应用【${appKey}】加载失败</div>
-        `;
+        loadFailed.value = true;
       },
     });
   });
 };
 
-// 绑定事件监听
-bus.$on("changeSharedPinia", handleSharedPiniaChange);
+const handleRetry = () => {
+  const { appKey, appUrl } = route.meta;
+  if (!appKey || !appUrl) return;
+  // 加载失败时容器 DOM 可能已被污染，先清空再重新挂载
+  if (currentAppKey.value) {
+    destroyApp(currentAppKey.value);
+  }
+  subappContainer.value!.innerHTML = "";
+  const subPath = (route.query[appKey as string] ?? "") as string;
+  currentAppKey.value = appKey as string;
+  startSubApp(appKey as string, appUrl as string, subPath);
+};
 
-// 监听路由变化
+bus.$on("changeSharedPinia", handleSharedPiniaChange);
 watch(() => route.fullPath, handleRouteChange, { immediate: true });
 
-// 清理
 onUnmounted(() => {
   if (currentAppKey.value) {
     destroyApp(currentAppKey.value);
   }
   currentAppKey.value = "";
-  // 解绑事件监听
-  bus.$off("changeSharedPinia");
+  bus.$off("changeSharedPinia", handleSharedPiniaChange);
 });
 </script>
 
 <template>
   <div class="subapp-container">
-    <div ref="subappContainer" class="subapp"></div>
+    <div v-show="!loadFailed" ref="subappContainer" class="subapp"></div>
+    <AppLoadError v-if="loadFailed" @retry="handleRetry" />
     <LayoutLoading />
   </div>
 </template>

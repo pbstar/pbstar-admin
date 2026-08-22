@@ -4,7 +4,7 @@
     <div class="content">
       <div class="info">
         <div class="form">
-          <p-item class="item" label="姓名" required>
+          <p-item class="item" label="姓名" isRequired>
             <el-input v-model="detailInfo.name" placeholder="请输入姓名" />
           </p-item>
           <p-item class="item" label="头像">
@@ -13,7 +13,7 @@
               placeholder="请输入头像地址"
             />
           </p-item>
-          <p-item class="item" label="账号" required>
+          <p-item class="item" label="账号" isRequired>
             <el-input v-model="detailInfo.username" placeholder="请输入账号" />
           </p-item>
           <p-item class="item" label="密码">
@@ -25,24 +25,34 @@
         </div>
       </div>
       <div class="btn">
-        <el-button type="primary" @click="toSave">保存</el-button>
+        <el-button
+          type="primary"
+          :loading="saving"
+          :disabled="saving"
+          @click="toSave"
+        >
+          保存
+        </el-button>
       </div>
     </div>
   </div>
 </template>
-<script setup>
+<script setup lang="ts">
 import { ref, watch } from "vue";
-import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
 import request from "@Passets/utils/request";
 import useSharedStore from "@Passets/stores/shared";
 import { pTitle, pItem } from "@Pcomponents";
+import { logout } from "@/utils/auth";
 
 const sharedStore = useSharedStore();
-const detailInfo = ref({});
-const router = useRouter();
+const detailInfo = ref<Record<string, any>>({});
+const saving = ref(false);
 
 const toSave = () => {
+  // 防重复点击：保存中直接忽略后续点击
+  if (saving.value) return;
+  saving.value = true;
   request
     .post({
       url: "/main/updateMyInfo",
@@ -51,12 +61,13 @@ const toSave = () => {
     .then((res) => {
       if (res && res.code === 200) {
         ElMessage.success("修改成功，请重新登录");
-        localStorage.removeItem("p_token");
-        sharedStore.userInfo = null;
-        router.push({ path: "/login" });
+        logout();
       } else {
         ElMessage.error(res?.msg || "操作异常");
       }
+    })
+    .finally(() => {
+      saving.value = false;
     });
 };
 watch(
@@ -72,7 +83,7 @@ watch(
 <style lang="scss" scoped>
 .page {
   width: 100%;
-  padding: 0 10px;
+  padding: 0 10px 10px;
   background-color: var(--c-bg);
   .content {
     width: 100%;

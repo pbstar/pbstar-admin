@@ -2,46 +2,52 @@
 :root {
   /* 背景色 */
   --c-bg: #ffffff; /* 主背景 */
-  --c-bg-box: #edf3fa; /* 容器背景 */
-  --c-bg-theme: #3b82f6; /* 主题背景 */
-  --c-bg-theme-light: #b7cefd; /* 主题背景-浅 */
+  --c-bg-box: #f5f7fa; /* 容器/页面背景（极浅冷灰，衬托白卡片层次） */
+  --c-bg-theme: #2563eb; /* 主题/品牌色（企业蓝） */
+  --c-bg-theme-light: #dbe7fd; /* 主题背景-浅 */
+  --c-bg-theme-tint: rgba(37, 99, 235, 0.08); /* 主题背景-极浅（激活态底色） */
+  --c-bg-header: #093697; /* 顶部栏背景（深空蓝黑，与浅色工作区形成经典层次） */
 
   /* 文字色 */
   --c-text: #1e293b; /* 主文字 */
-  --c-text2: #4b5563; /* 次要文字 */
-  --c-text3: #0376fa; /* 重要文字 */
-  --c-text-theme: #ffffff; /* 主题文字 */
+  --c-text2: #64748b; /* 次要文字 */
+  --c-text3: #1d4ed8; /* 重要/强调文字（与主题色同色系，略深以保证对比度） */
+  --c-text-theme: #ffffff; /* 深色底上的文字（顶部栏/主题色按钮等） */
 
   /* 边框色 */
-  --c-border: #e2e8f0; /* 主边框 */
+  --c-border: #e5e9f0; /* 主边框 */
+  --c-border-light: #f1f5f9; /* 极浅分割线 */
+
+  /* 菜单态 */
+  --c-menu-active-bg: rgba(37, 99, 235, 0.08);
+  --c-menu-hover-bg: rgba(15, 23, 42, 0.04);
 
   /* 其他 */
-  --c-scrollbar-thumb: #a8c9ff; /* 滚动条 */
-  --c-scrollbar-track: #d9e1eb; /* 滚动条轨道 */
-  --c-menu-active-bg: rgba(59, 130, 246, 0.12);
-  --c-menu-hover-bg: rgba(59, 130, 246, 0.1);
-}
+  --c-scrollbar-thumb: #c4cdd9; /* 滚动条 */
+  --c-scrollbar-track: transparent; /* 滚动条轨道 */
 
-/* 暗黑主题颜色变量 */
-html[data-theme="dark"] {
-  /* 背景色 */
-  --c-bg: #1e293b; /* 主背景 */
-  --c-bg-box: #2c384d; /* 容器背景 */
-  --c-bg-theme: #0e2344; /* 主题背景 */
-  --c-bg-theme-light: #041938; /* 主题背景-浅 */
+  /* 布局尺寸 */
+  --sider-width: 200px; /* 侧边栏展开宽度 */
+  --sider-width-collapsed: 64px; /* 侧边栏折叠宽度 */
+  --header-height: 50px; /* 顶部栏高度 */
 
-  /* 文字色 */
-  --c-text: #f8fafc; /* 主文字 */
-  --c-text2: #9ca3af; /* 次要文字 */
-  --c-text3: #3292ff; /* 重要文字 */
-  --c-text-theme: #ffffff; /* 主题文字 */
+  /* 间距 */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
 
-  /* 边框色 */
-  --c-border: #374151; /* 主边框 */
+  /* 圆角（卡片化界面，比传统后台放宽一档） */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
 
-  /* 其他 */
-  --c-scrollbar-thumb: #56657d; /* 滚动条 */
-  --c-scrollbar-track: #8599b6; /* 滚动条轨道 */
-  --c-menu-active-bg: rgba(124, 136, 156, 0.12);
-  --c-menu-hover-bg: rgba(124, 136, 156, 0.1);
+  /* 字号 */
+  --font-size-xs: 12px;
+  --font-size-sm: 13px;
+  --font-size-md: 14px;
+  --font-size-lg: 16px;
+  --font-size-xl: 18px;
 }

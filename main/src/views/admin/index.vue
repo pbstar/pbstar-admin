@@ -1,29 +1,16 @@
 <template>
   <div class="pa_page">
-    <LayoutLoading v-if="!isMounted" type="main" isFixed />
+    <LayoutLoading v-if="!isMounted" :visible="true" isFixed />
     <template v-else>
-      <div class="top" v-show="!isFull">
-        <AdminTop v-show="!isMobile" />
-        <AdminTopMobile v-show="isMobile" />
+      <div class="top">
+        <AppHeader />
       </div>
       <div class="main">
-        <div class="mLeft" v-show="!isFull && !isMobile">
-          <AdminNav />
+        <div class="mLeft" :class="{ collapsed }">
+          <SideNav />
         </div>
-        <div
-          class="mRight"
-          :style="{
-            paddingLeft: isFull ? '0' : '10px',
-            paddingRight: isFull ? '0' : '10px',
-          }"
-        >
-          <history class="history" v-show="!isFull && !isMobile" />
-          <div style="height: 0; width: 100%" v-show="isFull">
-            <div class="unfull" @click="toUnFull">
-              <p-icon name="el-icon-close" />
-            </div>
-          </div>
-          <div style="width: 100%; height: 10px" v-show="isMobile"></div>
+        <div class="mRight">
+          <HistoryTabs class="history" />
           <div class="mApp">
             <RouterView />
           </div>
@@ -32,113 +19,50 @@
     </template>
   </div>
 </template>
-<script setup>
-import { ref, computed, onBeforeMount } from "vue";
-import { ElMessage } from "element-plus";
-import { RouterView, useRouter, useRoute } from "vue-router";
-import { pIcon } from "@Pcomponents";
-import AdminTop from "@/components/layout/top.vue";
-import AdminTopMobile from "@/components/layout/topMobile.vue";
-import AdminNav from "@/components/layout/nav.vue";
-import history from "@/components/layout/history.vue";
-import LayoutLoading from "@/components/layout/loading.vue";
-import useSharedStore from "@Passets/stores/shared";
+<script setup lang="ts">
+import { ref, onBeforeMount } from "vue";
+import { useRouter, useRoute, RouterView } from "vue-router";
+import AppHeader from "@/components/layout/AppHeader.vue";
+import SideNav from "@/components/layout/SideNav.vue";
+import HistoryTabs from "@/components/layout/HistoryTabs.vue";
+import LayoutLoading from "@/components/layout/LayoutLoading.vue";
+import { useSiderCollapse } from "@/components/layout/useLayoutState";
+import { isPublicPath, getUserInfo, logout } from "@/utils/auth";
 import { useAppsStore } from "@/stores/apps";
-import { bus } from "wujie";
-import request from "@Passets/utils/request";
+import useSharedStore from "@Passets/stores/shared";
+import { ElMessage } from "element-plus";
 
-const sharedStore = useSharedStore();
+const { collapsed } = useSiderCollapse();
 const appsStore = useAppsStore();
 const router = useRouter();
 const route = useRoute();
-// 开发环境免登录配置
-const isFreeLogin =
-  import.meta.env.DEV && import.meta.env.PUBLIC_FREE_LOGIN === "T";
-const isFull = computed(() => {
-  return sharedStore.isFull;
-});
-const isMobile = computed(() => {
-  return window.innerWidth <= 700;
-});
-// 路由白名单
-const whiteList = ["/login", "/404", "/403"];
+const sharedStore = useSharedStore();
 const isMounted = ref(false);
-onBeforeMount(async () => {
-  if (isFreeLogin || whiteList.includes(route.path)) {
+
+const init = async () => {
+  // 免登录或白名单直接放行（需提前置 isMounted，避免页面永久 loading）
+  if (isPublicPath(route.path)) {
+    isMounted.value = true;
     return;
   }
-  if (!localStorage.getItem("p_token")) {
-    return router.push({ path: "/login" });
+  if (!sharedStore.userInfo && !(await getUserInfo())) {
+    // 登录态失效，跳回登录页
+    logout();
+    return;
   }
-  if (!sharedStore.userInfo) {
-    await getUserInfo();
-  }
-  await getAppList();
+  // 前端硬编码应用清单 + 按 permissions 过滤，无需请求后端、也不会失败
+  await appsStore.setMyApps();
   if (route.meta?.appKey) {
-    const isOk = await appsStore.setAppId({ key: route.meta.appKey });
+    const isOk = await appsStore.setAppKey(route.meta.appKey as string);
     if (!isOk || !appsStore.hasAppNav(route.query)) {
       ElMessage.error("无权限访问");
-      return router.push({ path: "/403" });
+      router.push({ path: "/403" });
+      return;
     }
   }
   isMounted.value = true;
-});
-// 退出全屏
-const toUnFull = () => {
-  sharedStore.isFull = false;
-  bus.$emit("changeSharedPinia", { isFull: false });
 };
-// 获取用户信息
-const getUserInfo = async () => {
-  try {
-    const userRes = await request.post({
-      url: "/main/loginByToken",
-    });
-    if (userRes.code !== 200 || !userRes.data) {
-      ElMessage.error(userRes.msg || "获取用户信息失败");
-      localStorage.removeItem("p_token");
-      router.push({ path: "/login" });
-      return false;
-    }
-    localStorage.setItem("p_token", userRes.data.token);
-    sharedStore.userInfo = {
-      id: userRes.data.id,
-      name: userRes.data.name,
-      avatar: userRes.data.avatar,
-      username: userRes.data.username,
-      role: userRes.data.role,
-      btns: userRes.data.btns,
-    };
-  } catch (error) {
-    console.error(error);
-    router.push({ path: "/login" });
-    return false;
-  }
-};
-// 获取应用列表
-const getAppList = async () => {
-  const res = await request.get({
-    url: "/main/getMyAppList",
-  });
-  if (res.code !== 200 || !res.data) {
-    ElMessage.error(res.msg || "获取应用列表失败");
-    return false;
-  }
-  appsStore.setApps(res.data);
-};
-router.beforeEach((to, from, next) => {
-  if (isFreeLogin || whiteList.includes(to.path)) {
-    return next();
-  }
-  if (!localStorage.getItem("p_token")) {
-    return next({ path: "/login" });
-  }
-  if (to.meta?.appKey && !appsStore.hasAppNav(to.query)) {
-    ElMessage.error("无权限访问");
-    return next({ path: "/403" });
-  }
-  next();
-});
+onBeforeMount(init);
 </script>
 <style scoped lang="scss">
 .pa_page {
@@ -150,7 +74,7 @@ router.beforeEach((to, from, next) => {
   overflow: hidden;
 
   .top {
-    height: 50px;
+    height: var(--header-height);
     width: 100%;
     flex-shrink: 0;
   }
@@ -159,14 +83,22 @@ router.beforeEach((to, from, next) => {
     flex: 1;
     min-height: 0;
     display: flex;
+
     .mLeft {
-      width: 200px;
+      width: var(--sider-width);
       height: 100%;
       flex-shrink: 0;
+      border-right: 1px solid var(--c-border);
     }
+
+    .mLeft.collapsed {
+      width: var(--sider-width-collapsed);
+    }
+
     .mRight {
       height: 100%;
       flex: 1;
+      padding: var(--space-2) var(--space-3) var(--space-3);
       overflow: auto;
       display: flex;
       flex-direction: column;
@@ -176,46 +108,14 @@ router.beforeEach((to, from, next) => {
         height: 40px;
         flex-shrink: 0;
       }
+
       .mApp {
         flex: 1;
         overflow-y: auto;
         overflow-x: hidden;
-      }
-      .unfull {
-        position: fixed;
-        bottom: 100px;
-        right: 30px;
-        z-index: 2100;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        background-color: var(--c-bg-theme);
-        color: var(--c-text-theme);
-        cursor: pointer;
-        opacity: 0.8;
-        //上下跳动动画
-        animation: upDown 1s infinite;
+        border-radius: var(--radius-md);
       }
     }
-  }
-  @media screen and (max-width: 700px) {
-    .top {
-      height: 46px;
-    }
-  }
-}
-@keyframes upDown {
-  0% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-5px);
-  }
-  100% {
-    transform: translateY(0);
   }
 }
 </style>

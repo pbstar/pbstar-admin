@@ -1,0 +1,70 @@
+import { createRouter, createWebHistory } from "vue-router";
+import type { RouteRecordRaw } from "vue-router";
+import apps from "../../../apps/apps.json" with { type: "json" };
+import { setupRouterGuards } from "./permission";
+
+// 判断是否为开发环境
+const isDev = import.meta.env.DEV;
+
+// 动态生成子应用路由配置
+const appsRouter: RouteRecordRaw[] = apps.map((item) => {
+  return {
+    path: item.appKey,
+    name: "admin_" + item.appKey,
+    component: () => import(`@/views/admin/app.vue`),
+    meta: {
+      appKey: item.appKey,
+      appUrl: isDev ? `http://localhost:${item.devPort}/` : item.proUrl,
+    },
+  };
+});
+
+const router = createRouter({
+  history: createWebHistory(),
+  routes: [
+    {
+      path: "/",
+      name: "index",
+      redirect: "/admin",
+    },
+    {
+      path: "/login",
+      name: "login",
+      component: () => import("@/views/login/index.vue"),
+    },
+    {
+      path: "/admin",
+      name: "admin",
+      component: () => import("@/views/admin/index.vue"),
+      redirect: "/admin/pHome",
+      children: [
+        {
+          path: "pHome",
+          name: "admin_pHome",
+          component: () => import("@/views/admin/home.vue"),
+        },
+        {
+          path: "pUser",
+          name: "admin_pUser",
+          component: () => import("@/views/admin/user.vue"),
+        },
+        ...appsRouter,
+      ],
+    },
+    {
+      path: "/403",
+      name: "403",
+      component: () => import("@Pcomponents/page/error.vue"),
+      props: { code: "403" },
+    },
+    {
+      path: "/:pathMatch(.*)*",
+      name: "notFound",
+      component: () => import("@Pcomponents/page/error.vue"),
+    },
+  ],
+});
+
+setupRouterGuards(router);
+
+export default router;

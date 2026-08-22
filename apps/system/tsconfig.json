@@ -1,0 +1,20 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "paths": {
+      "@/*": ["./src/*"],
+      "@Pcomponents": ["../../components/index.ts"],
+      "@Pcomponents/*": ["../../components/*"],
+      "@Passets/*": ["../../assets/*"]
+    }
+  },
+  "include": [
+    "src/**/*",
+    "src/**/*.vue",
+    "../appInit.ts",
+    "../useMicroApp.ts",
+    "../../components/**/*",
+    "../../components/**/*.vue",
+    "../../assets/**/*"
+  ]
+}
