@@ -30,20 +30,19 @@ const getAppsGroup = (myApps: AppItem[]) => {
 
 onBeforeMount(() => {
   appsList.value = appsStore.getApps();
-  const appId = appsStore.appId;
+  const appKey = appsStore.appKey;
   appsTree.value = getAppsGroup(appsList.value);
-  if (appId) {
-    appActive.value = appsList.value.find((item) => item.id === appId) || null;
+  if (appKey) {
+    appActive.value =
+      appsList.value.find((item) => item.appKey === appKey) || null;
   }
 });
 
 // 切换应用
 const toApp = async (app: AppItem) => {
-  if (app.id === appActive.value?.id) return;
+  if (app.appKey === appActive.value?.appKey) return;
   isLoading.value = true;
-  const isOk = await appsStore.setAppId({
-    id: app.id,
-  });
+  const isOk = await appsStore.setAppKey(app.appKey);
   isLoading.value = false;
   if (!isOk) return;
   appActive.value = app;
@@ -58,10 +57,10 @@ const toApp = async (app: AppItem) => {
 };
 
 watch(
-  () => appsStore.appId,
+  () => appsStore.appKey,
   (newVal) => {
-    if (newVal && newVal !== appActive.value?.id) {
-      const newApp = appsList.value.find((item) => item.id === newVal);
+    if (newVal && newVal !== appActive.value?.appKey) {
+      const newApp = appsList.value.find((item) => item.appKey === newVal);
       appActive.value = newApp || null;
     } else {
       appActive.value = null;
@@ -93,7 +92,7 @@ watch(
           <div class="children" v-if="item.children">
             <div
               class="child"
-              :class="{ active: child.id === appActive?.id }"
+              :class="{ active: child.appKey === appActive?.appKey }"
               v-for="(child, indexs) in item.children"
               :key="indexs + 's'"
               @click="toApp(child)"
@@ -103,7 +102,7 @@ watch(
               </div>
               <span class="cName">{{ child.name }}</span>
               <p-icon
-                v-if="child.id === appActive?.id"
+                v-if="child.appKey === appActive?.appKey"
                 class="cCheck"
                 name="el-icon-CircleCheckFilled"
                 :size="16"
@@ -178,7 +177,9 @@ watch(
         background: var(--c-bg);
         color: var(--c-text);
         cursor: pointer;
-        transition: border-color 0.2s, transform 0.1s;
+        transition:
+          border-color 0.2s,
+          transform 0.1s;
         &:hover {
           border-color: var(--c-bg-theme-light);
         }

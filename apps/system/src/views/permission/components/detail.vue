@@ -13,14 +13,14 @@ const props = defineProps({
     type: [String, Number],
     default: "",
   },
-  appId: {
+  appKey: {
     type: [String, Number],
     default: "",
   },
 });
 const detailInfo = ref<Record<string, any>>({
   type: "menu",
-  appId: Number(props.appId),
+  appKey: props.appKey,
 });
 const detailType = ref("");
 const detailId = ref<string | number>("");
@@ -39,7 +39,7 @@ const getGroupList = () => {
   request
     .post({
       url: "/system/permission/getList",
-      data: { appId: detailInfo.value.appId, type: "group" },
+      data: { appKey: detailInfo.value.appKey, type: "group" },
     })
     .then((res) => {
       if (res.code === 200) {

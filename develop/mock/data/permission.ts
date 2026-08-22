@@ -1,4 +1,11 @@
-import { ok, fail, fuzzyFilter, removeByIdList, findById, nextId } from "../utils";
+import {
+  ok,
+  fail,
+  fuzzyFilter,
+  removeByIdList,
+  findById,
+  nextId,
+} from "../utils";
 
 /**
  * 权限记录：分组(group)/菜单(menu)/按钮(button) 统一存储，用 type 区分
@@ -9,7 +16,7 @@ import { ok, fail, fuzzyFilter, removeByIdList, findById, nextId } from "../util
  */
 export interface PermissionRecord {
   id: any;
-  appId: number;
+  appKey: string;
   type: "group" | "menu" | "button";
   groupId: any; // menu/button 归属的分组 id；group 类型本身留空 ""
   key: string; // 权限标识；group 不参与权限判断，留空
@@ -17,50 +24,236 @@ export interface PermissionRecord {
   remark: string;
 }
 
-/** 权限种子数据：system 应用（appId=1）+ example 应用（appId=2） */
+/** 权限种子数据：system 应用（appKey=system）+ example 应用（appKey=example） */
 export const permissions: PermissionRecord[] = [
   // ---- system 应用：分组 ----
-  { id: 1, appId: 1, type: "group", groupId: "", key: "", name: "用户管理", remark: "" },
-  { id: 2, appId: 1, type: "group", groupId: "", key: "", name: "角色管理", remark: "" },
-  { id: 3, appId: 1, type: "group", groupId: "", key: "", name: "权限管理", remark: "" },
+  {
+    id: 1,
+    appKey: "system",
+    type: "group",
+    groupId: "",
+    key: "",
+    name: "用户管理",
+    remark: "",
+  },
+  {
+    id: 2,
+    appKey: "system",
+    type: "group",
+    groupId: "",
+    key: "",
+    name: "角色管理",
+    remark: "",
+  },
+  {
+    id: 3,
+    appKey: "system",
+    type: "group",
+    groupId: "",
+    key: "",
+    name: "权限管理",
+    remark: "",
+  },
   // ---- 用户管理组 ----
-  { id: 6, appId: 1, type: "menu", groupId: 1, key: "system_user", name: "用户管理", remark: "" },
-  { id: 7, appId: 1, type: "button", groupId: 1, key: "user_add", name: "新增", remark: "" },
-  { id: 8, appId: 1, type: "button", groupId: 1, key: "user_edit", name: "编辑", remark: "" },
-  { id: 9, appId: 1, type: "button", groupId: 1, key: "user_view", name: "查看", remark: "" },
-  { id: 10, appId: 1, type: "button", groupId: 1, key: "user_delete", name: "删除", remark: "" },
+  {
+    id: 6,
+    appKey: "system",
+    type: "menu",
+    groupId: 1,
+    key: "system_user",
+    name: "用户管理",
+    remark: "",
+  },
+  {
+    id: 7,
+    appKey: "system",
+    type: "button",
+    groupId: 1,
+    key: "user_add",
+    name: "新增",
+    remark: "",
+  },
+  {
+    id: 8,
+    appKey: "system",
+    type: "button",
+    groupId: 1,
+    key: "user_edit",
+    name: "编辑",
+    remark: "",
+  },
+  {
+    id: 9,
+    appKey: "system",
+    type: "button",
+    groupId: 1,
+    key: "user_view",
+    name: "查看",
+    remark: "",
+  },
+  {
+    id: 10,
+    appKey: "system",
+    type: "button",
+    groupId: 1,
+    key: "user_delete",
+    name: "删除",
+    remark: "",
+  },
   // ---- 角色管理组 ----
-  { id: 11, appId: 1, type: "menu", groupId: 2, key: "system_role", name: "角色管理", remark: "" },
-  { id: 12, appId: 1, type: "button", groupId: 2, key: "role_add", name: "新增", remark: "" },
-  { id: 13, appId: 1, type: "button", groupId: 2, key: "role_edit", name: "编辑", remark: "" },
-  { id: 14, appId: 1, type: "button", groupId: 2, key: "role_delete", name: "删除", remark: "" },
+  {
+    id: 11,
+    appKey: "system",
+    type: "menu",
+    groupId: 2,
+    key: "system_role",
+    name: "角色管理",
+    remark: "",
+  },
+  {
+    id: 12,
+    appKey: "system",
+    type: "button",
+    groupId: 2,
+    key: "role_add",
+    name: "新增",
+    remark: "",
+  },
+  {
+    id: 13,
+    appKey: "system",
+    type: "button",
+    groupId: 2,
+    key: "role_edit",
+    name: "编辑",
+    remark: "",
+  },
+  {
+    id: 14,
+    appKey: "system",
+    type: "button",
+    groupId: 2,
+    key: "role_delete",
+    name: "删除",
+    remark: "",
+  },
   // ---- 权限管理组：暂无按钮 ----
-  { id: 15, appId: 1, type: "menu", groupId: 3, key: "system_permission", name: "权限管理", remark: "" },
+  {
+    id: 15,
+    appKey: "system",
+    type: "menu",
+    groupId: 3,
+    key: "system_permission",
+    name: "权限管理",
+    remark: "",
+  },
   // ---- example 应用：分组 ----
-  { id: 18, appId: 2, type: "group", groupId: "", key: "", name: "用户列表", remark: "" },
-  { id: 19, appId: 2, type: "group", groupId: "", key: "", name: "图表", remark: "" },
-  { id: 20, appId: 2, type: "group", groupId: "", key: "", name: "Markdown编辑器", remark: "" },
-  { id: 21, appId: 2, type: "group", groupId: "", key: "", name: "富文本编辑器", remark: "" },
-  { id: 22, appId: 2, type: "group", groupId: "", key: "", name: "数据大屏", remark: "" },
+  {
+    id: 18,
+    appKey: "example",
+    type: "group",
+    groupId: "",
+    key: "",
+    name: "用户列表",
+    remark: "",
+  },
+  {
+    id: 19,
+    appKey: "example",
+    type: "group",
+    groupId: "",
+    key: "",
+    name: "图表",
+    remark: "",
+  },
+  {
+    id: 20,
+    appKey: "example",
+    type: "group",
+    groupId: "",
+    key: "",
+    name: "Markdown编辑器",
+    remark: "",
+  },
+  {
+    id: 21,
+    appKey: "example",
+    type: "group",
+    groupId: "",
+    key: "",
+    name: "富文本编辑器",
+    remark: "",
+  },
+  {
+    id: 22,
+    appKey: "example",
+    type: "group",
+    groupId: "",
+    key: "",
+    name: "数据大屏",
+    remark: "",
+  },
   // ---- example 应用：菜单 ----
-  { id: 23, appId: 2, type: "menu", groupId: 18, key: "example_list", name: "用户列表", remark: "" },
-  { id: 24, appId: 2, type: "menu", groupId: 19, key: "example_echarts", name: "图表", remark: "" },
-  { id: 25, appId: 2, type: "menu", groupId: 20, key: "example_editorMd", name: "Markdown编辑器", remark: "" },
-  { id: 26, appId: 2, type: "menu", groupId: 21, key: "example_editorRt", name: "富文本编辑器", remark: "" },
-  { id: 27, appId: 2, type: "menu", groupId: 22, key: "example_bigScreen", name: "数据大屏", remark: "" },
+  {
+    id: 23,
+    appKey: "example",
+    type: "menu",
+    groupId: 18,
+    key: "example_list",
+    name: "用户列表",
+    remark: "",
+  },
+  {
+    id: 24,
+    appKey: "example",
+    type: "menu",
+    groupId: 19,
+    key: "example_echarts",
+    name: "图表",
+    remark: "",
+  },
+  {
+    id: 25,
+    appKey: "example",
+    type: "menu",
+    groupId: 20,
+    key: "example_editorMd",
+    name: "Markdown编辑器",
+    remark: "",
+  },
+  {
+    id: 26,
+    appKey: "example",
+    type: "menu",
+    groupId: 21,
+    key: "example_editorRt",
+    name: "富文本编辑器",
+    remark: "",
+  },
+  {
+    id: 27,
+    appKey: "example",
+    type: "menu",
+    groupId: 22,
+    key: "example_bigScreen",
+    name: "数据大屏",
+    remark: "",
+  },
 ];
 
 export function getList(data: any) {
-  const { appId, type, groupId, ...filters } = data || {};
+  const { appKey, type, groupId, ...filters } = data || {};
   let filtered = permissions;
-  if (appId !== undefined && appId !== "") {
-    filtered = filtered.filter((item) => String(item.appId) === String(appId));
+  if (appKey !== undefined && appKey !== "") {
+    filtered = filtered.filter((item) => item.appKey === appKey);
   }
   if (type !== undefined && type !== "") {
     filtered = filtered.filter((item) => item.type === type);
   }
   if (groupId !== undefined && groupId !== "") {
-    filtered = filtered.filter((item) => String(item.groupId) === String(groupId));
+    filtered = filtered.filter(
+      (item) => String(item.groupId) === String(groupId),
+    );
   }
   filtered = fuzzyFilter(filtered, filters);
   return ok(filtered);
@@ -75,10 +268,10 @@ export function getDetail(data: any) {
 export function create(data: any) {
   const permission: PermissionRecord = {
     id: nextId(permissions),
-    appId: data?.appId,
+    appKey: data?.appKey || "",
     type: data?.type || "menu",
     groupId: data?.type === "group" ? "" : (data?.groupId ?? ""),
-    key: data?.type === "group" ? "" : (data?.key || ""),
+    key: data?.type === "group" ? "" : data?.key || "",
     name: data?.name || "",
     remark: data?.remark || "",
   };
@@ -89,7 +282,7 @@ export function create(data: any) {
 export function update(data: any) {
   const permission = findById(permissions, data?.id);
   if (!permission) return fail("权限不存在");
-  permission.appId = data?.appId ?? permission.appId;
+  permission.appKey = data?.appKey ?? permission.appKey;
   permission.name = data?.name ?? permission.name;
   permission.remark = data?.remark ?? permission.remark;
   if (permission.type !== "group") {

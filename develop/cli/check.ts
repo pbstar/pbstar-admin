@@ -14,7 +14,7 @@ const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), "../../");
  */
 const targets = [
   "main/tsconfig.json",
-  ...apps.map((app) => `apps/${app.key}/tsconfig.json`),
+  ...apps.map((app) => `apps/${app.appKey}/tsconfig.json`),
 ].filter((tsconfig) => existsSync(path.join(ROOT, tsconfig)));
 
 targets.forEach((tsconfig) => {

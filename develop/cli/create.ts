@@ -29,17 +29,17 @@ program
         ],
       });
       const appKey = await input({
-        message: "子应用Key:",
+        message: "子应用appKey:",
         validate: (value) => {
           const blackList = ["main", "components"];
           if (value.trim() === "") {
-            return "请输入子应用Key";
+            return "请输入子应用appKey";
           }
           if (blackList.includes(value)) {
-            return "子应用Key不能为" + value;
+            return "子应用appKey不能为" + value;
           }
           if (!/^[a-z0-9-]+$/.test(value)) {
-            return "子应用Key只能包含小写字母、数字和连字符";
+            return "子应用appKey只能包含小写字母、数字和连字符";
           }
           return true;
         },
@@ -110,7 +110,7 @@ program
         const appsJson = fs.readJsonSync(appsJsonPath);
         // 检查子应用是否已存在
         const appIndex = appsJson.findIndex(
-          (item: { key: string }) => item.key === appKey,
+          (item: { appKey: string }) => item.appKey === appKey,
         );
         if (appIndex !== -1) {
           console.error(
@@ -135,7 +135,7 @@ program
           process.exit(1);
         }
         appsJson.push({
-          key: appKey,
+          appKey: appKey,
           appType,
           devPort: port,
           proUrl: "",

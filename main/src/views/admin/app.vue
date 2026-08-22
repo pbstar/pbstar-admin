@@ -13,7 +13,7 @@ const sharedStore = useSharedStore();
 // 当前应用容器
 const subappContainer = ref<HTMLElement | null>(null);
 
-// 当前子应用key
+// 当前子应用appKey
 const currentAppKey = ref("");
 
 // 子应用是否加载失败（组件化空态，替代直接操作 innerHTML）
@@ -40,7 +40,7 @@ const handleRouteChange = () => {
   if (appKey === currentAppKey.value) {
     // 通知子应用路由变化
     bus.$emit("subappRouteChange", {
-      key: appKey,
+      appKey,
       path: subPath,
     });
   } else {

@@ -11,7 +11,7 @@ const list = [
   "components",
   "develop",
   "main",
-  ...apps.map((item) => item.key),
+  ...apps.map((item) => item.appKey),
 ];
 
 /**
@@ -21,12 +21,16 @@ const list = [
 const handleDep = async (mode: "add" | "remove") => {
   const isAdd = mode === "add";
   try {
-    const appKey = await select({
-      message: isAdd ? "请选择要添加依赖包的工程:" : "请选择要移除依赖包的工程:",
-      choices: list.map((key) => ({ value: key, name: key })),
+    const currentValue = await select({
+      message: isAdd
+        ? "请选择要添加依赖包的工程:"
+        : "请选择要移除依赖包的工程:",
+      choices: list.map((value) => ({ value, name: value })),
     });
     const packageName = await input({
-      message: isAdd ? "请输入要添加的依赖包名称:" : "请输入要移除的依赖包名称:",
+      message: isAdd
+        ? "请输入要添加的依赖包名称:"
+        : "请输入要移除的依赖包名称:",
     });
     let packageType = "";
     if (isAdd) {
@@ -45,8 +49,8 @@ const handleDep = async (mode: "add" | "remove") => {
     }
     // 构建pnpm命令
     let command = `pnpm ${isAdd ? "add" : "remove"} ${packageName}`;
-    if (appKey !== "全局工程") {
-      command += ` --filter ${appKey}`;
+    if (currentValue !== "全局工程") {
+      command += ` --filter ${currentValue}`;
     } else if (isAdd) {
       command += " -w";
     }

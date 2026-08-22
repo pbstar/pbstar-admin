@@ -42,8 +42,8 @@ export function useMicroApp() {
     // 监听路由变更
     window.$wujie?.bus.$on(
       "subappRouteChange",
-      (obj: { key?: string; path?: string }) => {
-        if (obj && obj.path && obj.key === window.$wujie?.bus.id) {
+      (obj: { appKey?: string; path?: string }) => {
+        if (obj && obj.path && obj.appKey === window.$wujie?.bus.id) {
           router.push(obj.path);
         }
       },

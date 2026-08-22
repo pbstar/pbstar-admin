@@ -19,14 +19,14 @@ export function useNavMenu() {
   const appsStore = useAppsStore();
 
   // 菜单数据直接派生于应用的 navsTree：账号/权限切换触发 setMyApps/setAppNavs 重算时这里会同步刷新，
-  // 不再依赖 appId 变化触发快照更新（此前 appId 不变时侧边栏会滞留上一账号的菜单）
+  // 不再依赖 appKey 变化触发快照更新（此前 appKey 不变时侧边栏会滞留上一账号的菜单）
   const list = computed<NavItem[]>(() => {
-    if (!appsStore.appId) return HOME_NAV;
+    if (!appsStore.appKey) return HOME_NAV;
     const app = appsStore.getApp();
     return app ? app.navs : HOME_NAV;
   });
   const listTree = computed<NavItem[]>(() => {
-    if (!appsStore.appId) return HOME_NAV;
+    if (!appsStore.appKey) return HOME_NAV;
     const app = appsStore.getApp();
     return app ? app.navsTree : HOME_NAV;
   });
@@ -46,7 +46,6 @@ export function useNavMenu() {
     }
   };
 
-  // 仅监听路由变化更新选中项；菜单数据本身由 computed 派生，无需再监听 appId
   watch(
     () => route.fullPath,
     (newPath) => {

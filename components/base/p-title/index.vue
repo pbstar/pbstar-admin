@@ -1,15 +1,10 @@
 <template>
   <div class="p-title">
     <div class="tabs">
-      <div
-        v-for="(tab, i) in list"
-        :key="i"
-        :class="[
-          'tab',
-          { active: activeTab === i, disabled: list.length === 1 },
-        ]"
-        @click="selectTab(i)"
-      >
+      <div v-for="(tab, i) in list" :key="i" :class="[
+        'tab',
+        { active: activeTab === i, disabled: list.length === 1 },
+      ]" @click="selectTab(i)">
         {{ tab }}
       </div>
     </div>
@@ -77,6 +72,8 @@ const selectTab = (index: number) => {
       &.active {
         color: var(--c-text);
         font-weight: 600;
+        line-height: 34px;
+        border-top: 3px solid transparent;
         border-bottom: 3px solid var(--c-bg-theme);
       }
 

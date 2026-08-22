@@ -3,7 +3,7 @@
     <div
       class="tab home"
       :class="{ active: path === HOME_PATH }"
-      @click="toPath({ appId: 0, path: '/' })"
+      @click="toItem({ appKey: '', path: '/' })"
     >
       <p-icon name="el-icon-house" />
     </div>
@@ -13,7 +13,7 @@
         :key="index"
         class="tab"
         :class="{ active: item.path === path }"
-        @click="toPath(item)"
+        @click="toItem(item)"
       >
         <span class="name">{{ item.name }}</span>
         <p-icon
@@ -36,7 +36,7 @@ const router = useRouter();
 const route = useRoute();
 const appsStore = useAppsStore();
 const path = ref("");
-const list = ref<{ name: string; appId: number; path: string }[]>([]);
+const list = ref<{ name: string; appKey: string; path: string }[]>([]);
 const historyBox = ref<HTMLDivElement | null>(null);
 const listRef = ref<HTMLDivElement | null>(null);
 
@@ -52,7 +52,7 @@ const addItem = (fullPath: string) => {
   if (!nav) return;
   list.value.push({
     name: nav.name,
-    appId: appsStore.appId,
+    appKey: app.appKey,
     path: fullPath,
   });
   // 如果宽度超出，删除最前面的一条记录
@@ -78,12 +78,10 @@ const delItem = (url: string) => {
   }
 };
 // 跳转路径
-const toPath = async (item: { appId: number; path: string }) => {
+const toItem = async (item: { appKey: string; path: string }) => {
   if (item.path === path.value) return;
-  if (item.appId !== appsStore.appId) {
-    await appsStore.setAppId({
-      id: item.appId,
-    });
+  if (item.appKey !== appsStore.appKey) {
+    await appsStore.setAppKey(item.appKey);
   }
   router.push(item.path);
 };
@@ -101,7 +99,8 @@ watch(
   display: flex;
   align-items: center;
   gap: var(--space-2);
-}.historyBox .home {
+}
+.historyBox .home {
   flex-shrink: 0;
 }
 .historyBox .list {
@@ -128,7 +127,9 @@ watch(
   cursor: pointer;
   font-size: var(--font-size-sm);
   background: var(--c-bg);
-  transition: color 0.15s, border-color 0.15s;
+  transition:
+    color 0.15s,
+    border-color 0.15s;
 }
 .tab.active {
   color: var(--c-text3);

@@ -7,15 +7,15 @@ import chalk from "chalk";
 import apps from "../../apps/apps.json" with { type: "json" };
 
 // 可操作的应用模块列表
-const list = ["main", ...apps.map((item) => item.key)];
+const list = ["main", ...apps.map((item) => item.appKey)];
 
 /**
  * 检测外部子应用（git submodule）是否已初始化
  * 未执行 `git submodule update --init` 时目录为空，直接启动会报出不直观的构建错误
- * @param appKey 应用模块 key
+ * @param appKey 应用模块 appKey
  */
 const isUninitializedSubmodule = (appKey: string): boolean => {
-  const app = apps.find((item) => item.key === appKey);
+  const app = apps.find((item) => item.appKey === appKey);
   if (!app || app.appType !== "out") return false;
   const appPath = join("../apps", appKey);
   return !existsSync(appPath) || readdirSync(appPath).length === 0;
@@ -23,7 +23,7 @@ const isUninitializedSubmodule = (appKey: string): boolean => {
 
 /**
  * 根据应用模块生成启动/构建命令
- * @param appKey 应用模块 key
+ * @param appKey 应用模块 appKey
  * @param mode 操作类型
  * @param isSingle 是否单选（仅 dev 模式主应用据此决定是否自动打开浏览器）
  */
@@ -33,7 +33,7 @@ const buildCommand = (appKey: string, mode: "dev" | "build", isSingle: boolean):
       ? `rsbuild dev --environment main --port 8800${isSingle ? " --open" : ""}`
       : "rsbuild build --environment main";
   }
-  const app = apps.find((item) => item.key === appKey)!;
+  const app = apps.find((item) => item.appKey === appKey)!;
   return mode === "dev"
     ? `rsbuild dev --environment ${appKey} --port ${app.devPort}`
     : `rsbuild build --environment ${appKey}`;
@@ -92,11 +92,11 @@ const handleServe = async (mode: "dev" | "build") => {
         ? "请选择要启动的应用模块(空格多选):"
         : "请选择要构建的应用模块(空格多选):",
       // main 是唯一访问入口，子应用经 wujie 挂载，不支持单独运行，故锁定为必选
-      choices: list.map((key) => ({
-        value: key,
-        name: key,
-        checked: key === "main",
-        disabled: key === "main",
+      choices: list.map((value) => ({
+        value,
+        name: value,
+        checked: value === "main",
+        disabled: value === "main",
       })),
     });
 

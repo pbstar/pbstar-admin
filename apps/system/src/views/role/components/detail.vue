@@ -41,11 +41,11 @@ const getPermissionTree = () => {
     }
     const permissions = permissionRes.data;
     permissionTree.value = apps.map((app) => {
-      const appPermissions = permissions.filter((item: any) => item.appId === app.id);
+      const appPermissions = permissions.filter((item: any) => item.appKey === app.appKey);
       const groups = appPermissions.filter((item: any) => item.type === "group");
       return {
         label: app.name,
-        value: `__app_${app.id}`,
+        value: app.appKey,
         disabled: true,
         children: groups.map((group: any) => ({
           label: group.name,

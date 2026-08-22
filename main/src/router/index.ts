@@ -9,11 +9,11 @@ const isDev = import.meta.env.DEV;
 // 动态生成子应用路由配置
 const appsRouter: RouteRecordRaw[] = apps.map((item) => {
   return {
-    path: item.key,
-    name: "admin_" + item.key,
+    path: item.appKey,
+    name: "admin_" + item.appKey,
     component: () => import(`@/views/admin/app.vue`),
     meta: {
-      appKey: item.key,
+      appKey: item.appKey,
       appUrl: isDev ? `http://localhost:${item.devPort}/` : item.proUrl,
     },
   };

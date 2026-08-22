@@ -41,12 +41,12 @@ const initTree = () => {
     type: "group",
     children: group.apps.map((app) => {
       if (!currentNode.value) {
-        currentNode.value = app.id.toString();
+        currentNode.value = app.appKey;
         initTable();
       }
       return {
         label: app.name,
-        value: app.id.toString(),
+        value: app.appKey,
         type: "app",
         ...app,
       };
@@ -65,7 +65,7 @@ const initTable = () => {
     ...searchValue.value,
   };
   if (currentNode.value && !currentNode.value.startsWith("group")) {
-    params.appId = currentNode.value;
+    params.appKey = currentNode.value;
   }
   tableData.value = [];
   request
@@ -247,7 +247,7 @@ const handleNodeClick = (data: any) => {
         ref="detailRef"
         :type="detailType"
         :id="detailId"
-        :appId="currentNode"
+        :appKey="currentNode"
       ></Detail>
       <template #footer>
         <el-button type="primary" @click="handleSave()"> 保存 </el-button>

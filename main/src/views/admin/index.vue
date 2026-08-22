@@ -20,18 +20,69 @@
   </div>
 </template>
 <script setup lang="ts">
-import { onBeforeMount } from "vue";
-import { RouterView } from "vue-router";
+import { ref, onBeforeMount } from "vue";
+import { useRouter, useRoute, RouterView } from "vue-router";
 import AppHeader from "@/components/layout/AppHeader.vue";
 import SideNav from "@/components/layout/SideNav.vue";
 import HistoryTabs from "@/components/layout/HistoryTabs.vue";
 import LayoutLoading from "@/components/layout/LayoutLoading.vue";
-import { useAppInit } from "@/composables/useAppInit";
 import { useSiderCollapse } from "@/components/layout/useLayoutState";
+import { isPublicPath } from "@/utils/auth";
+import { logout } from "@/utils/logout";
+import { useAppsStore } from "@/stores/apps";
+import useSharedStore from "@Passets/stores/shared";
+import { ElMessage } from "element-plus";
+import request from "@Passets/utils/request";
 
-const { isMounted, init } = useAppInit();
 const { collapsed } = useSiderCollapse();
+const appsStore = useAppsStore();
+const router = useRouter();
+const route = useRoute();
+const sharedStore = useSharedStore();
+const isMounted = ref(false);
 
+// 获取用户信息
+const getUserInfo = async (): Promise<boolean> => {
+  try {
+    const userRes = await request.post({
+      url: "/main/loginByToken",
+    });
+    if (userRes.code !== 200 || !userRes.data) {
+      ElMessage.error(userRes.msg || "获取用户信息失败");
+      return false;
+    }
+    localStorage.setItem("p_token", userRes.data.token);
+    sharedStore.setUserInfo(userRes.data);
+    return true;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+};
+
+const init = async () => {
+  // 免登录或白名单直接放行（需提前置 isMounted，避免页面永久 loading）
+  if (isPublicPath(route.path)) {
+    isMounted.value = true;
+    return;
+  }
+  if (!sharedStore.userInfo && !(await getUserInfo())) {
+    // 登录态失效，跳回登录页
+    logout();
+    return;
+  }
+  // 前端硬编码应用清单 + 按 permissions 过滤，无需请求后端、也不会失败
+  await appsStore.setMyApps();
+  if (route.meta?.appKey) {
+    const isOk = await appsStore.setAppKey(route.meta.appKey as string);
+    if (!isOk || !appsStore.hasAppNav(route.query)) {
+      ElMessage.error("无权限访问");
+      router.push({ path: "/403" });
+      return;
+    }
+  }
+  isMounted.value = true;
+};
 onBeforeMount(init);
 </script>
 <style scoped lang="scss">
@@ -78,6 +129,7 @@ onBeforeMount(init);
         height: 40px;
         flex-shrink: 0;
       }
+
       .mApp {
         flex: 1;
         overflow-y: auto;

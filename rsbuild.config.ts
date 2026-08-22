@@ -10,14 +10,14 @@ const { rawPublicVars } = loadEnv();
 const PUBLIC_TITLE = rawPublicVars.PUBLIC_TITLE;
 const PUBLIC_API_BASE_URL = rawPublicVars.PUBLIC_API_BASE_URL;
 
-const createAppConfig = (app: { key: string }): EnvironmentConfig => {
-  const basePath = `./apps/${app.key}`;
+const createAppConfig = (app: { appKey: string }): EnvironmentConfig => {
+  const basePath = `./apps/${app.appKey}`;
   return {
     source: {
       entry: { index: `${basePath}/src/main.ts` },
     },
     output: {
-      distPath: { root: `./develop/dist/${app.key}` },
+      distPath: { root: `./develop/dist/${app.appKey}` },
     },
     resolve: {
       alias: {
@@ -69,6 +69,6 @@ export default defineConfig({
   },
   environments: {
     main: mainConfig,
-    ...Object.fromEntries(apps.map((app) => [app.key, createAppConfig(app)])),
+    ...Object.fromEntries(apps.map((app) => [app.appKey, createAppConfig(app)])),
   },
 });

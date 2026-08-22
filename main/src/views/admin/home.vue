@@ -34,7 +34,7 @@ const loadStats = async () => {
 
 // 跳转到指定应用的第一个可用导航
 const toApp = async (app: AppItem) => {
-  const isOk = await appsStore.setAppId({ id: app.id });
+  const isOk = await appsStore.setAppKey(app.appKey);
   if (!isOk) return;
   const current = appsStore.getApp();
   const firstNav = current?.navs?.find((item) => item.url);
@@ -69,7 +69,7 @@ onBeforeMount(() => {
           <div
             class="app-item"
             v-for="app in myApps"
-            :key="app.id"
+            :key="app.appKey"
             @click="toApp(app)"
           >
             <div class="iconBox">
