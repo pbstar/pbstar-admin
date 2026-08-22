@@ -61,11 +61,12 @@ pnpm run create
 
 ```
 ├── apps                        # 子应用
-│ ├── app-common                # 公共子应用模块
 │ ├── example                   # 示例应用
 │ ├── system                    # 系统应用
-│ ├── out-app                   # 外部子应用（独立git仓库）
-│ └── apps.json                 # 子应用配置
+│ ├── out-app                   # 外部子应用（git submodule，独立仓库）
+│ ├── appInit.ts                # 子应用公共初始化逻辑
+│ ├── useMicroApp.ts            # 微应用挂载公共逻辑
+│ └── apps.json                 # 子应用配置（唯一清单来源）
 ├── assets                      # 静态资源
 ├── components                  # 组件库
 ├── main                        # 主应用
