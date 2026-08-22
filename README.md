@@ -2,8 +2,8 @@
     <img src="https://github.com/pbstar/pbstar-admin/blob/main/main/src/assets/imgs/logo-w.png" height="80px" alt="PbstarAdmin Logo">
     <h1 style="margin-bottom:30px;margin-top:10px; font-weight: bold;">PbstarAdmin 微后台🎉</h1>
     <h4>
-        <div style="margin-bottom:5px;">基于 <strong>wujie微前端 + rsbuild高性能构建 + pnpm monorepo</strong> 的现代化架构</div>
-        <div style="margin-bottom:0;">集成 <strong>Vue3 + Pinia + Element Plus</strong> 主流技术体系，提供从开发到部署的完整解决方案</div>
+        <div style="margin-bottom:5px;">基于 <strong>wujie 微前端 + rsbuild 高性能构建 + pnpm monorepo</strong> 的现代化架构</div>
+        <div style="margin-bottom:0;">集成 <strong>Vue3 + TypeScript + Pinia + Element Plus</strong> 主流技术体系，提供从开发到部署的完整解决方案</div>
     </h4>
 </div>
 
@@ -21,11 +21,12 @@
 
 ## ✨ 项目特点
 
-- **🚀 微前端架构**: 基于腾讯wujie微前端框架，支持内外部子应用动态加载，实现真正的应用级微前端解耦
-- **📦 智能模块化**: pnpm monorepo工作区管理，支持内外部子应用（in/out类型），外部子应用可独立git仓库管理
-- **🧩 企业级组件化**: 共享组件库设计，@Pcomponents、@Passets统一别名引用，支持跨应用组件复用
-- **⚙️ 全链路工程化**: 完整的CLI工具链（create/dev/build/add/remove），自动化脚手架、依赖管理、打包部署
-- **⚡ 极致现代化**: 基于Rsbuild高性能构建系统，多环境配置，支持子应用独立开发、调试、打包
+- **🚀 微前端架构**: 基于腾讯 wujie 微前端框架，主子应用经共享 Pinia + wujie bus 同步状态，实现应用级解耦
+- **📦 智能模块化**: pnpm monorepo 工作区管理，支持内外部子应用（in/out类型），外部子应用可独立 git 仓库管理
+- **🧩 企业级组件化**: 共享组件库设计，@Pcomponents、@Passets 统一别名引用，支持跨应用组件复用
+- **🔐 统一权限模型**: 菜单与按钮合并为统一权限模型，后端权限 key 驱动菜单与按钮显隐
+- **⚙️ 全链路工程化**: 完整 CLI 工具链（create/dev/build/add/remove/check），自动化脚手架、依赖管理、打包部署
+- **⚡ 极致现代化**: 全量 TypeScript，基于 Rsbuild 高性能构建，多环境配置，支持子应用独立开发、调试、打包
 
 ## 📋 环境要求
 
@@ -45,6 +46,8 @@ git submodule update --init
 npm install -g pnpm
 # 安装依赖
 pnpm install
+# ts 检查
+pnpm run check
 # 启动项目
 pnpm run dev
 # 打包项目
@@ -61,18 +64,22 @@ pnpm run create
 
 ```
 ├── apps                        # 子应用
-│ ├── example                   # 示例应用
-│ ├── system                    # 系统应用
-│ ├── out-app                   # 外部子应用（git submodule，独立仓库）
+│ ├── example                   # 示例应用（内部，in）
+│ ├── system                    # 系统应用（内部，in）
+│ ├── out-app                   # 外部子应用（git submodule，独立仓库，out）
 │ ├── appInit.ts                # 子应用公共初始化逻辑
 │ ├── useMicroApp.ts            # 微应用挂载公共逻辑
-│ └── apps.json                 # 子应用配置（唯一清单来源）
-├── assets                      # 静态资源
-├── components                  # 组件库
-├── main                        # 主应用
-├── develop                     # 开发模块
+│ └── apps.json                 # 子应用构建/CLI 清单（appKey/appType/devPort/proUrl）
+├── assets                      # 共享模块（stores/utils/directives/constants/css/iconfont）
+├── components                  # 共享组件库（@Pcomponents）
+├── main                        # 主应用（wujie 容器）
+├── develop                     # 开发模块（CLI + 接口 mock）
+│ ├── cli                       # CLI：create/dev/build/add/remove/check
+│ └── mock                      # 接口 mock（可持久化到 localStorage）
+├── .env.example                # 环境变量模板（本地 .env 为 gitignore）
 ├── .gitignore                  # git忽略文件
 ├── .gitmodules                 # git子模块配置
+├── env.d.ts                    # 全局类型声明
 ├── package.json                # 依赖
 ├── tsconfig.base.json          # TypeScript 公共配置
 ├── pnpm-workspace.yaml         # 工作区配置
