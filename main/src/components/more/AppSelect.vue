@@ -47,8 +47,8 @@ const toApp = async (app: AppItem) => {
   if (!isOk) return;
   appActive.value = app;
   const newApp = appsStore.getApp();
-  if (newApp && newApp.navs) {
-    const firstNav = newApp.navs.find((e) => e.url);
+  if (newApp) {
+    const firstNav = newApp.navs.find((nav) => nav.url);
     if (firstNav?.url) {
       router.push(firstNav.url);
     }

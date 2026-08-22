@@ -18,12 +18,10 @@ export function structure<T extends Record<string, any>>(
   const nodeMap = new Map<any, TreeNode<T>>();
   const tree: TreeNode<T>[] = [];
 
-  // 创建节点映射
   arr.forEach((item) => {
     nodeMap.set(item[idKey], { ...item });
   });
 
-  // 构建树结构
   arr.forEach((item) => {
     const node = nodeMap.get(item[idKey]);
     const parentNode = nodeMap.get(item[pidKey]);

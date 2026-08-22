@@ -33,8 +33,8 @@ function flattenNavs(items: NavItem[]): NavItem[] {
 }
 
 export const useAppsStore = defineStore("apps", () => {
-  const myApps = ref<AppItem[]>([]); // 存储用户的应用
-  const appKey = ref(""); // 存储当前激活的应用
+  const myApps = ref<AppItem[]>([]);
+  const appKey = ref("");
 
   // 应用列表不再请求后端，改为前端硬编码清单 + 按 permissions 过滤：
   // 应用可见 ⇔ 该应用下至少存在一个当前用户可见的菜单（复用 filterMenuTree）
@@ -101,19 +101,11 @@ export const useAppsStore = defineStore("apps", () => {
     app.navs = flattenNavs(app.navsTree);
   };
 
-  // 检查应用是否有导航
   const hasAppNav = (query: LocationQuery) => {
-    let bool = false;
     const app = getApp();
-    if (app && query) {
-      const url = `/admin/${app.appKey}?${app.appKey}=${encodeURIComponent(query[app.appKey] as any)}`;
-      app.navs.forEach((e) => {
-        if (e.url === url) {
-          bool = true;
-        }
-      });
-    }
-    return bool;
+    if (!app || !query) return false;
+    const url = `/admin/${app.appKey}?${app.appKey}=${encodeURIComponent(query[app.appKey] as any)}`;
+    return app.navs.some((nav) => nav.url === url);
   };
 
   return {

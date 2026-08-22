@@ -2,12 +2,10 @@
 import { ref } from "vue";
 
 const props = defineProps({
-  // 标题
   title: {
     type: String,
     default: "查询条件",
   },
-  // 是否显示重置按钮
   showReset: {
     type: Boolean,
     default: true,
@@ -16,7 +14,6 @@ const props = defineProps({
 
 const emits = defineEmits(["search", "reset"]);
 
-// 是否展开搜索区域
 const showSearch = ref(true);
 </script>
 

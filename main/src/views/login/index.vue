@@ -101,33 +101,28 @@ const router = useRouter();
 const title = import.meta.env.PUBLIC_TITLE;
 const year = new Date().getFullYear();
 
-// 演示账号清单
 const demoUsers = [
   { label: "超管", username: "admin", password: "123456" },
   { label: "管理员", username: "common", password: "123456" },
   { label: "用户", username: "user", password: "123456" },
 ];
 
-// 验证码
 let code = "";
 const changeCode = (e: string) => {
   code = e;
 };
 
-// 登录表单
 const loginForm = ref({
   username: "",
   password: "",
   captcha: "",
 });
 
-// 点击演示账号自动填充
 const fillDemoUser = (item: { username: string; password: string }) => {
   loginForm.value.username = item.username;
   loginForm.value.password = item.password;
 };
 
-// 表单验证
 const validateForm = () => {
   if (!loginForm.value.username) {
     ElMessage.error("请输入账号");
@@ -148,11 +143,8 @@ const validateForm = () => {
   return true;
 };
 
-// 登录提交
 const handleSubmit = async () => {
-  if (!validateForm()) {
-    return;
-  }
+  if (!validateForm()) return;
   const res = await request.post({
     url: "/main/login",
     data: {

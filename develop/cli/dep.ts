@@ -4,8 +4,7 @@ import { program } from "commander";
 import chalk from "chalk";
 import apps from "../../apps/apps.json" with { type: "json" };
 
-// 可选择的工程列表
-const list = [
+const projects = [
   "全局工程",
   "assets",
   "components",
@@ -14,10 +13,6 @@ const list = [
   ...apps.map((item) => item.appKey),
 ];
 
-/**
- * 处理依赖包添加/移除
- * @param mode 操作类型
- */
 const handleDep = async (mode: "add" | "remove") => {
   const isAdd = mode === "add";
   try {
@@ -25,7 +20,7 @@ const handleDep = async (mode: "add" | "remove") => {
       message: isAdd
         ? "请选择要添加依赖包的工程:"
         : "请选择要移除依赖包的工程:",
-      choices: list.map((value) => ({ value, name: value })),
+      choices: projects.map((value) => ({ value, name: value })),
     });
     const packageName = await input({
       message: isAdd
@@ -42,19 +37,16 @@ const handleDep = async (mode: "add" | "remove") => {
         ],
       });
     }
-    // 验证依赖包名称
     if (!packageName) {
       console.error(chalk.red("Error: 依赖包名称不能为空"));
       process.exit(1);
     }
-    // 构建pnpm命令
     let command = `pnpm ${isAdd ? "add" : "remove"} ${packageName}`;
     if (currentValue !== "全局工程") {
       command += ` --filter ${currentValue}`;
     } else if (isAdd) {
       command += " -w";
     }
-    // 添加开发依赖标识
     if (isAdd && packageType === "devDependencies") {
       command += " -D";
     }

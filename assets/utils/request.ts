@@ -21,7 +21,6 @@ export interface RequestParams {
 // 独立axios实例，避免请求策略（超时/拦截器）相互干扰
 const service = axios.create({ timeout: 6000 });
 
-// 请求拦截器 - 添加token
 service.interceptors.request.use((config) => {
   const token = localStorage.getItem("p_token");
   if (token) {
@@ -30,7 +29,6 @@ service.interceptors.request.use((config) => {
   return config;
 });
 
-// 响应拦截器 - 错误处理
 service.interceptors.response.use(
   (response) => response,
   (error) => {
@@ -46,11 +44,6 @@ service.interceptors.response.use(
   },
 );
 
-/**
- * 基础请求方法
- * @param config 请求配置
- * @returns 后端响应（code/msg/data）
- */
 const request = async <T = any>(config: AxiosRequestConfig): Promise<Res<T>> => {
   const mockRes = isMockEnabled
     ? matchMock(config.method || "get", config.url || "", config.params ?? config.data)
@@ -66,11 +59,6 @@ const request = async <T = any>(config: AxiosRequestConfig): Promise<Res<T>> => 
   return response.data as Res<T>;
 };
 
-/**
- * GET请求
- * @param param0 请求参数
- * @returns 后端响应
- */
 const get = <T = any>({ url, data, config = {} }: RequestParams): Promise<Res<T>> => {
   return request<T>({
     method: "get",
@@ -80,11 +68,6 @@ const get = <T = any>({ url, data, config = {} }: RequestParams): Promise<Res<T>
   });
 };
 
-/**
- * POST请求
- * @param param0 请求参数
- * @returns 后端响应
- */
 const post = <T = any>({ url, data, config = {} }: RequestParams): Promise<Res<T>> => {
   return request<T>({
     method: "post",
@@ -94,18 +77,12 @@ const post = <T = any>({ url, data, config = {} }: RequestParams): Promise<Res<T
   });
 };
 
-/**
- * 文件下载
- * @param url 下载地址
- * @param fileName 文件名
- */
 const download = async (url: string, fileName: string): Promise<void> => {
   const isSameOrigin =
     url.startsWith("blob:") ||
     new URL(url, window.location.origin).origin === window.location.origin;
 
   if (isSameOrigin) {
-    // 同源下载
     const link = document.createElement("a");
     link.href = url;
     link.download = fileName;
@@ -113,7 +90,6 @@ const download = async (url: string, fileName: string): Promise<void> => {
     link.click();
     document.body.removeChild(link);
   } else {
-    // 跨域下载
     try {
       const response = await fetch(url, {
         method: "GET",

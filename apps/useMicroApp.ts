@@ -10,36 +10,30 @@ export function useMicroApp() {
   const sharedStore = useSharedStore();
   const router = useRouter();
 
-  // 处理共享状态变更
-  const handleSharedPinia = (e: Record<string, any>) => {
-    Object.keys(e).forEach((key) => {
+  const handleSharedPinia = (state: Record<string, any>) => {
+    Object.keys(state).forEach((key) => {
       // 只设置 store 中已存在的属性
       if (key in sharedStore) {
-        (sharedStore as Record<string, any>)[key] = e[key];
+        (sharedStore as Record<string, any>)[key] = state[key];
       }
     });
   };
 
-  // 处理路由跳转
   const handleRouteChange = () => {
     window.$wujie?.props.path && router.push(window.$wujie.props.path);
   };
 
-  // 处理共享状态
   const handleSharedState = () => {
     if (window.$wujie?.props.sharedPinia) {
       handleSharedPinia(window.$wujie.props.sharedPinia);
     }
   };
 
-  // 绑定事件监听器
   const bindEventListeners = () => {
-    // 监听共享状态变更
-    window.$wujie?.bus.$on("changeSharedPinia", (e: Record<string, any>) => {
-      handleSharedPinia(e);
+    window.$wujie?.bus.$on("changeSharedPinia", (state: Record<string, any>) => {
+      handleSharedPinia(state);
     });
 
-    // 监听路由变更
     window.$wujie?.bus.$on(
       "subappRouteChange",
       (obj: { appKey?: string; path?: string }) => {
@@ -50,7 +44,6 @@ export function useMicroApp() {
     );
   };
 
-  // 解绑事件监听器
   const unbindEventListeners = () => {
     window.$wujie?.bus.$off("changeSharedPinia");
     window.$wujie?.bus.$off("subappRouteChange");
@@ -64,7 +57,7 @@ export function useMicroApp() {
   });
 
   router.afterEach(() => {
-    // 延迟关闭loading,确保页面渲染完成
+    // 延迟关闭loading，确保页面渲染完成
     setTimeout(() => {
       window.$wujie?.bus.$emit("changeSharedPinia", {
         isAppRouteLoading: false,
@@ -72,12 +65,10 @@ export function useMicroApp() {
     }, 200);
   });
 
-  // 初始化微应用
   handleRouteChange();
   handleSharedState();
   bindEventListeners();
 
-  // 组件销毁时清理事件监听
   onUnmounted(() => {
     unbindEventListeners();
   });

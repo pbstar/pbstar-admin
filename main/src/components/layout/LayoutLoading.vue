@@ -1,5 +1,5 @@
 <template>
-  <div :class="['p-loading-mask', { fixed: isFixed }]" v-if="visible">
+  <div :class="['p-loading-mask', { fixed: isFixed }]" v-if="isVisible">
     <div class="p-loading-wrapper">
       <p-icon name="el-icon-Loading" size="24" />
       <span class="text">加载中...</span>
@@ -24,7 +24,7 @@ const props = defineProps({
     default: false,
   },
 });
-const visible = computed(() => {
+const isVisible = computed(() => {
   if (props.visible !== undefined) {
     return props.visible;
   }

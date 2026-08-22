@@ -2,7 +2,6 @@
  * 静态选项常量（替代原枚举能力，供下拉与label映射使用）
  */
 
-/** 下拉选项 */
 export interface OptionItem {
   label: string;
   value: string;
@@ -14,7 +13,6 @@ export const booleanOptions: OptionItem[] = [
   { label: "否", value: "否" },
 ];
 
-// 性别
 export const sexOptions: OptionItem[] = [
   { label: "男", value: "1" },
   { label: "女", value: "2" },

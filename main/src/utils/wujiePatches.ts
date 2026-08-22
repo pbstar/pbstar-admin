@@ -6,9 +6,6 @@
  * 这些异常可能来自主 window（Promise 拒绝 / 同步错误），也可能来自子应用的沙箱 iframe
  * window——后者不会冒泡到主 window，所以还要借助 wujie 的 plugin（windowPropertyOverride）
  * 把监听器挂到子应用的沙箱 window 上（见下方 wujieErrorPatchPlugin）。
- *
- * 注意：这里只做「降噪」；子应用切换竞态导致蒙层卡死的问题，
- * 由 shared store 里的 setRouteLoading 看门狗解决。
  */
 
 // 遮蔽无界嵌套引起的 vue 路由警告（仅执行一次的幂等补丁，防止重复包装叠加）

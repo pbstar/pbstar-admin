@@ -60,7 +60,6 @@
 import { ref, watch, computed, nextTick } from "vue";
 
 const props = defineProps({
-  // 表格数据
   data: {
     type: Array,
     default: () => [],
@@ -70,32 +69,26 @@ const props = defineProps({
     type: [String, Function],
     default: undefined,
   },
-  // 分页配置
   pagination: {
     type: Object,
     default: () => ({}),
   },
-  // 是否显示选择列
   showSelection: {
     type: Boolean,
     default: false,
   },
-  // 是否显示序号列
   showIndex: {
     type: Boolean,
     default: true,
   },
-  // 表格最大高度
   maxHeight: {
     type: [String, Number],
     default: "800",
   },
-  // 加载状态
   loading: {
     type: Boolean,
     default: false,
   },
-  // 每页条数可选项
   pageSizes: {
     type: Array,
     default: () => [10, 20, 50, 100],
@@ -108,12 +101,10 @@ const pageNumber = ref(1);
 const pageSize = ref(10);
 const total = ref(0);
 
-// 是否显示分页
 const hasPagination = computed(() => {
   return props.pagination && Object.keys(props.pagination).length > 0;
 });
 
-// 计算序号
 const getIndex = (index: number) => {
   return (pageNumber.value - 1) * pageSize.value + index + 1;
 };
@@ -133,12 +124,10 @@ const handlePaginationChange = () => {
     });
   });
 };
-// 选择项变化
 const handleSelectionChange = (val: any[]) => {
   emit("selectionChange", val);
 };
 
-// 监听分页信息变化
 watch(
   () => props.pagination,
   (val) => {

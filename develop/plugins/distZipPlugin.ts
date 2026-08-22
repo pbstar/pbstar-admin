@@ -4,9 +4,6 @@ import path from "path";
 import dayjs from "dayjs";
 import type { RsbuildPlugin } from "@rsbuild/core";
 
-/**
- * 构建后生成zip文件的插件
- */
 export const distZipPlugin = (): RsbuildPlugin => ({
   name: "dist-zip",
   setup(api) {
@@ -19,12 +16,10 @@ export const distZipPlugin = (): RsbuildPlugin => ({
         `${distName}${dayjs().format("YYYYMMDDHHmm")}.zip`,
       );
 
-      // 确保目录存在
       await fs.ensureDir(zipDir);
 
       const zip = new JSZip();
 
-      // 递归添加文件到zip
       const addFilesToZip = async (
         dirPath: string,
         zipFolder: JSZip,

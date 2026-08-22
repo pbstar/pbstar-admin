@@ -16,12 +16,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-  // text是否换行
   isTextWrap: {
     type: Boolean,
     default: false,
   },
-  // 标签宽度
   labelWidth: {
     type: String,
     default: "100px",

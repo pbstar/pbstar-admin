@@ -45,10 +45,7 @@ const routes: Record<string, MockHandler> = {
 const MOCK_DELAY = 200;
 
 /**
- * 尝试用 mock 数据响应请求
  * @param method 请求方法（大小写不敏感）
- * @param url 请求 url
- * @param data 请求参数
  * @returns 命中路由表时返回 Promise<Res>；未命中或 mock 未开启时返回 null，交由真实请求处理
  */
 export function matchMock(

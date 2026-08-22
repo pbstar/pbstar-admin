@@ -24,19 +24,17 @@
 import { onBeforeUnmount, ref, shallowRef } from "vue";
 import { Editor, Toolbar } from "@wangeditor-next/editor-for-vue";
 import type { IDomEditor } from "@wangeditor-next/editor";
-import "@wangeditor-next/editor/dist/css/style.css"; // 引入 css
+import "@wangeditor-next/editor/dist/css/style.css";
 import { pTitle } from "@Pcomponents";
 const editorRef = shallowRef<IDomEditor>();
 
 // 编辑器模式（default 富文本 / simple 简洁）
 const mode: "default" | "simple" = "default";
 
-// 内容 HTML
 const valueHtml = ref("<p>hello world</p>");
 const toolbarConfig = {};
 const editorConfig = {};
 
-// 组件销毁时，也及时销毁编辑器
 onBeforeUnmount(() => {
   const editor = editorRef.value;
   if (editor == null) return;
@@ -44,7 +42,7 @@ onBeforeUnmount(() => {
 });
 
 const handleCreated = (editor: IDomEditor) => {
-  editorRef.value = editor; // 记录 editor 实例，重要！
+  editorRef.value = editor;
 };
 </script>
 <style lang="scss" scoped>

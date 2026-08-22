@@ -30,7 +30,6 @@ function restore(data: Partial<MockData>) {
   replace(persons, data.persons);
 }
 
-/** 把当前内存数据全量写入 localStorage */
 export function persist() {
   if (!isMockEnabled) return;
   localStorage.setItem(

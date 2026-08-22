@@ -61,10 +61,8 @@ const props = defineProps({
 
 const emit = defineEmits(["update:modelValue"]);
 
-// 全屏状态
 const isFullscreen = ref(false);
 
-// 切换全屏
 const toggleFullscreen = () => {
   isFullscreen.value = !isFullscreen.value;
 };
@@ -79,12 +77,10 @@ watch(
   },
 );
 
-// 动态组件类型
 const componentType = computed(() => {
   return props.type === "box" ? ElDialog : ElDrawer;
 });
 
-// 动态组件属性
 const componentProps = computed(() => {
   const obj: Record<string, string | boolean> = {};
   if (props.type === "box") {

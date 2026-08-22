@@ -91,7 +91,7 @@
                   <el-dropdown-item @click="handleDelete(row)"
                     >删除
                   </el-dropdown-item>
-                  <el-dropdown-item @click="handleOther(row)"
+                  <el-dropdown-item @click="handleOther()"
                     >其他
                   </el-dropdown-item>
                 </el-dropdown-menu>
@@ -224,7 +224,7 @@ const handleDelete = (row: any) => {
       });
   });
 };
-const handleOther = (row: any) => {
+const handleOther = () => {
   ElMessage.success("其他");
 };
 const handleSave = () => {

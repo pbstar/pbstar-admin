@@ -5,22 +5,14 @@ export function nextId<T extends { id: any }>(list: T[]): number {
   return list.reduce((max, item) => Math.max(max, Number(item.id) || 0), 0) + 1;
 }
 
-/** 成功响应包装 */
 export function ok<T>(data: T, msg = "操作成功"): Res<T> {
   return { code: 200, msg, data };
 }
 
-/** 失败响应包装 */
 export function fail(msg: string): Res<null> {
   return { code: 500, msg, data: null };
 }
 
-/**
- * 按分页参数切片
- * @param list 全量数据
- * @param pageNumber 页码，默认 1
- * @param pageSize 每页条数，默认 10
- */
 export function paginate<T>(
   list: T[],
   pageNumber = 1,
@@ -35,7 +27,6 @@ export function paginate<T>(
 
 /**
  * 模糊过滤：字段值需存在且包含关键字（大小写不敏感）
- * @param list 全量数据
  * @param filters 字段 -> 关键字，空值/undefined 会被忽略
  */
 export function fuzzyFilter<T extends Record<string, any>>(
@@ -55,8 +46,6 @@ export function fuzzyFilter<T extends Record<string, any>>(
 
 /**
  * 按 idList 从数组中批量删除（原地修改）
- * @param list 数据数组（会被原地修改）
- * @param idList 待删除的 id 列表
  */
 export function removeByIdList<T extends { id: any }>(list: T[], idList: any[]): void {
   const idSet = new Set(idList.map(String));
@@ -64,9 +53,6 @@ export function removeByIdList<T extends { id: any }>(list: T[], idList: any[]):
   list.splice(0, list.length, ...keep);
 }
 
-/**
- * 按 id 查找单条记录
- */
 export function findById<T extends { id: any }>(list: T[], id: any): T | undefined {
   return list.find((item) => String(item.id) === String(id));
 }

@@ -9,11 +9,7 @@
     :collapse-transition="false"
     @select="handleSelect"
   >
-    <MenuTree
-      v-for="(item, index) in menuList"
-      :key="index"
-      :node="item"
-    />
+    <MenuTree v-for="(item, index) in menuList" :key="index" :node="item" />
   </el-menu>
   <!-- 子节点：有 children 递归展开 -->
   <el-sub-menu v-else-if="node.children" :index="String(node.id)">
@@ -21,11 +17,7 @@
       <p-icon v-if="node.icon" :name="node.icon" />
       <span>{{ node.name }}</span>
     </template>
-    <MenuTree
-      v-for="(child, i) in node.children"
-      :key="i"
-      :node="child"
-    />
+    <MenuTree v-for="(child, i) in node.children" :key="i" :node="child" />
   </el-sub-menu>
   <!-- 叶子节点 -->
   <el-menu-item v-else :index="String(node.id)">
@@ -36,25 +28,18 @@
 
 <script setup lang="ts">
 import { pIcon } from "@Pcomponents";
+import type { NavItem } from "@/stores/apps";
+import { PropType } from "vue";
 
 defineOptions({ name: "MenuTree" });
 
-const props = withDefaults(
-  defineProps<{
-    menuList?: any[];
-    activeIndex?: string;
-    isRoot?: boolean;
-    node?: any;
-    collapse?: boolean;
-  }>(),
-  {
-    menuList: () => [],
-    activeIndex: "",
-    isRoot: false,
-    node: () => ({}),
-    collapse: false,
-  },
-);
+defineProps({
+  menuList: { type: Array as PropType<NavItem[]>, default: () => [] },
+  activeIndex: { type: String, default: "" },
+  isRoot: { type: Boolean, default: false },
+  collapse: { type: Boolean, default: false },
+  node: { type: Object as PropType<NavItem>, default: () => ({}) },
+});
 
 const emit = defineEmits<{
   (e: "select", index: string): void;
@@ -85,7 +70,9 @@ const handleSelect = (index: string) => {
   border-radius: var(--radius-md);
   color: var(--c-text);
   padding: 0 12px !important;
-  transition: background-color 0.15s, color 0.15s;
+  transition:
+    background-color 0.15s,
+    color 0.15s;
 }
 
 /* 激活状态：浅色 tint 背景 + 左侧主色条 + 文字主题色 */
