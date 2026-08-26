@@ -49,14 +49,14 @@ export function useMicroApp() {
     window.$wujie?.bus.$off("subappRouteChange");
   };
 
-  // 路由守卫 - 控制loading状态
-  router.beforeEach(() => {
+  // 路由守卫 - 控制loading状态（保存解绑函数，防止 setup 重复执行时守卫叠加）
+  const removeBeforeEach = router.beforeEach(() => {
     // 通过bus向主应用同步loading状态
     window.$wujie?.bus.$emit("changeSharedPinia", { isAppRouteLoading: true });
     return true;
   });
 
-  router.afterEach(() => {
+  const removeAfterEach = router.afterEach(() => {
     // 延迟关闭loading，确保页面渲染完成
     setTimeout(() => {
       window.$wujie?.bus.$emit("changeSharedPinia", {
@@ -70,6 +70,8 @@ export function useMicroApp() {
   bindEventListeners();
 
   onUnmounted(() => {
+    removeBeforeEach();
+    removeAfterEach();
     unbindEventListeners();
   });
 
