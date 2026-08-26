@@ -25,6 +25,7 @@
     "../../apps/useMicroApp.ts",
     "../../components/**/*",
     "../../components/**/*.vue",
-    "../../assets/**/*"
+    "../../assets/**/*",
+    "../../env.d.ts"
   ]
 }

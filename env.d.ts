@@ -11,3 +11,15 @@ interface ImportMetaEnv {
   readonly PUBLIC_MOCK?: string;
   readonly PUBLIC_API_BASE_URL?: string;
 }
+
+/** 主应用/微前端运行时挂在 window 上的全局 */
+interface Window {
+  __warnPatched?: boolean;
+  $mainPinia?: import("pinia").Pinia;
+  // wujie 注入子应用的运行时对象，公开类型不完整（如 bus.id 为私有、props 值为 any），保留 any
+  $wujie?: any;
+  __POWERED_BY_WUJIE__?: boolean;
+  __WUJIE_MOUNT?: () => void;
+  __WUJIE_UNMOUNT?: () => void;
+}
+

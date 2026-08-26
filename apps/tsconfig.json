@@ -16,7 +16,7 @@
   "include": [
     "appInit.ts",
     "useMicroApp.ts",
-    "env.d.ts",
+    "../env.d.ts",
     "../components/**/*",
     "../components/**/*.vue",
     "../assets/**/*"

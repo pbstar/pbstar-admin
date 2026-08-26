@@ -8,5 +8,12 @@
       "@Passets/*": ["../assets/*"]
     }
   },
-  "include": ["src/**/*", "src/**/*.vue", "../components/**/*", "../components/**/*.vue", "../assets/**/*"]
+  "include": [
+    "src/**/*",
+    "src/**/*.vue",
+    "../components/**/*",
+    "../components/**/*.vue",
+    "../assets/**/*",
+    "../env.d.ts"
+  ]
 }
