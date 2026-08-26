@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onBeforeMount } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
-import request from "@Passets/utils/request";
+import { getPermissionList, deletePermissions, createPermission, updatePermission } from "@/api/permission";
 import {
   pTable,
   pSearch,
@@ -68,14 +68,10 @@ const initTable = () => {
     params.appKey = currentNode.value;
   }
   tableData.value = [];
-  request
-    .post({
-      url: "/system/permission/getList",
-      data: params,
-    })
+  getPermissionList(params)
     .then((res) => {
       if (res && res.code === 200) {
-        tableData.value = structure(res.data, "groupId");
+        tableData.value = structure(res.data as any, "groupId");
       } else {
         ElMessage.error(res?.msg || "操作异常");
       }
@@ -96,11 +92,7 @@ const handleDelete = (row: any) => {
     type: "warning",
   })
     .then(() => {
-      request
-        .post({
-          url: "/system/permission/delete",
-          data: { idList: [row.id] },
-        })
+      deletePermissions([row.id])
         .then((res) => {
           if (res && res.code === 200) {
             initTable();
@@ -123,14 +115,9 @@ const handleAdd = () => {
 };
 const handleSave = () => {
   const detailInfo = detailRef.value?.getFormValue();
-  const url =
-    detailType.value == "add" ? "/system/permission/create" : "/system/permission/update";
-  request
-    .post({
-      url,
-      data: detailInfo,
-    })
-    .then((res) => {
+  if (!detailInfo) return;
+  const save = detailType.value == "add" ? createPermission : updatePermission;
+  save(detailInfo).then((res) => {
       if (res && res.code === 200) {
         initTable();
         ElMessage.success("操作成功");

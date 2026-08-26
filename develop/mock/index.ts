@@ -1,4 +1,4 @@
-import type { Res } from "@Passets/utils/request";
+import type { Res } from "@Passets/request";
 import { persist } from "./persist";
 import * as mainMock from "./data/main";
 import * as userMock from "./data/user";

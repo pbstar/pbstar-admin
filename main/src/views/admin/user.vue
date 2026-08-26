@@ -40,7 +40,7 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
 import { ElMessage } from "element-plus";
-import request from "@Passets/utils/request";
+import { updateMyInfo } from "@/api";
 import useSharedStore from "@Passets/stores/shared";
 import { pTitle, pItem } from "@Pcomponents";
 import { logout } from "@/utils/auth";
@@ -53,11 +53,7 @@ const toSave = () => {
   // 防重复点击：保存中直接忽略后续点击
   if (saving.value) return;
   saving.value = true;
-  request
-    .post({
-      url: "/main/updateMyInfo",
-      data: detailInfo.value,
-    })
+  updateMyInfo(detailInfo.value)
     .then((res) => {
       if (res && res.code === 200) {
         ElMessage.success("修改成功，请重新登录");

@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { ref, onBeforeMount } from "vue";
 import { ElMessage } from "element-plus";
-import request from "@Passets/utils/request";
+import { getUserDetail } from "@/api/user";
+import { getAllRoles } from "@/api/role";
 import { pCollapse, pItem } from "@Pcomponents";
 
 const props = defineProps({
@@ -28,10 +29,7 @@ onBeforeMount(() => {
   }
 });
 const getRoleList = () => {
-  request
-    .get({
-      url: "/system/role/getAllList",
-    })
+  getAllRoles()
     .then((res) => {
       if (res.code === 200 && res.data) {
         roleList.value = res.data.map((item: any) => {
@@ -46,13 +44,7 @@ const getRoleList = () => {
     });
 };
 const getDetailInfo = () => {
-  request
-    .get({
-      url: "/system/user/getDetail",
-      data: {
-        id: detailId.value,
-      },
-    })
+  getUserDetail({ id: detailId.value })
     .then((res) => {
       if (res && res.code == 200) {
         detailInfo.value = res.data;

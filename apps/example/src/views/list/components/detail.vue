@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onBeforeMount } from "vue";
 import { ElMessage } from "element-plus";
-import request from "@Passets/utils/request";
+import { getPersonDetail } from "@/api/person";
 import { pCollapse, pItem } from "@Pcomponents";
 import { booleanOptions, ethnicOptions, sexOptions, getOptionLabel } from "@/constants/options";
 
@@ -28,13 +28,7 @@ onBeforeMount(() => {
 });
 
 const getDetailInfo = () => {
-  request
-    .get({
-      url: "/example/person/getDetail",
-      data: {
-        id: detailId.value,
-      },
-    })
+  getPersonDetail({ id: detailId.value })
     .then((res) => {
       if (res && res.code == 200) {
         detailInfo.value = res.data;

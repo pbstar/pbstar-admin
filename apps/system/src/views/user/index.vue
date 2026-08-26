@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { ref, onBeforeMount, onMounted } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
-import request from "@Passets/utils/request";
+import { getUserList, deleteUsers, createUser, updateUser } from "@/api/user";
+import { getAllRoles } from "@/api/role";
 import { pTable, pSearch, pTitle, pDialog, pItem } from "@Pcomponents";
 import Detail from "./components/detail.vue";
 
@@ -51,11 +52,7 @@ const initTable = () => {
     ...searchValue.value,
   };
   tableData.value = [];
-  request
-    .post({
-      url: "/system/user/getList",
-      data: params,
-    })
+  getUserList(params)
     .then((res) => {
       if (res && res.code === 200) {
         tableData.value = res.data.list;
@@ -66,10 +63,7 @@ const initTable = () => {
     });
 };
 const getRoleList = () => {
-  request
-    .get({
-      url: "/system/role/getAllList",
-    })
+  getAllRoles()
     .then((res) => {
       if (res.code === 200 && res.data) {
         roleOptions.value = res.data.map((item: any) => {
@@ -103,11 +97,7 @@ const handleDelete = (row: any) => {
     type: "warning",
   })
     .then(() => {
-      request
-        .post({
-          url: "/system/user/delete",
-          data: { idList: [row.id] },
-        })
+      deleteUsers([row.id])
         .then((res) => {
           if (res && res.code === 200) {
             initTable();
@@ -126,14 +116,9 @@ const handleAdd = () => {
 };
 const handleSave = () => {
   const detailInfo = detailRef.value?.getFormValue();
-  const url =
-    detailType.value == "add" ? "/system/user/create" : "/system/user/update";
-  request
-    .post({
-      url,
-      data: detailInfo,
-    })
-    .then((res) => {
+  if (!detailInfo) return;
+  const save = detailType.value == "add" ? createUser : updateUser;
+  save(detailInfo).then((res) => {
       if (res && res.code === 200) {
         initTable();
         ElMessage.success("操作成功");

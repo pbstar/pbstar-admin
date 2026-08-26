@@ -1,4 +1,4 @@
-import type { Res } from "@Passets/utils/request";
+import type { Res } from "@Passets/request";
 
 /** 生成自增 mock id：取数组当前最大 id + 1，避免与种子数据冲突，也无需维护额外状态 */
 export function nextId<T extends { id: any }>(list: T[]): number {

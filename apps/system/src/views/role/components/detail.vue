@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { ref, onBeforeMount } from "vue";
 import { ElMessage } from "element-plus";
-import request from "@Passets/utils/request";
+import { getPermissionList } from "@/api/permission";
+import { getRoleDetail } from "@/api/role";
 import { pCollapse, pItem } from "@Pcomponents";
 import appGroups from "@Passets/constants/apps";
 
@@ -34,7 +35,7 @@ onBeforeMount(() => {
 
 /** 组装 tree-select 数据：应用（虚拟根）-> 分组 -> 菜单/按钮叶子（可勾选，value 为其 key） */
 const getPermissionTree = () => {
-  request.post({ url: "/system/permission/getList" }).then((permissionRes) => {
+  getPermissionList().then((permissionRes) => {
     if (permissionRes.code !== 200) {
       ElMessage.error(permissionRes.msg || "获取权限数据失败");
       return;
@@ -61,13 +62,7 @@ const getPermissionTree = () => {
 };
 
 const getDetailInfo = () => {
-  request
-    .get({
-      url: "/system/role/getDetail",
-      data: {
-        id: detailId.value,
-      },
-    })
+  getRoleDetail({ id: detailId.value })
     .then((res) => {
       if (res && res.code == 200) {
         detailInfo.value = res.data;

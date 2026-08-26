@@ -11,12 +11,44 @@ export interface Res<T = any> {
   data: T;
 }
 
+/** 分页响应结构 */
+export interface PageResult<T> {
+  list: T[];
+  total: number;
+}
+
 /** 请求参数（url 必填，data/config 可选） */
 export interface RequestParams {
   url: string;
   data?: any;
   config?: AxiosRequestConfig;
 }
+
+/**
+ * 401 统一跳转处理器：由主应用注册（见 main/src/main.ts）；
+ * 子应用未注册时经 wujie bus 通知主应用统一跳登录页
+ */
+let unauthorizedHandler: (() => void) | null = null;
+export const setUnauthorizedHandler = (handler: () => void) => {
+  unauthorizedHandler = handler;
+};
+
+// 「跳转中」标志：并发请求同时 401 时只处理一次，防止重复弹错/重复跳转
+let isRedirecting = false;
+const handleUnauthorized = () => {
+  if (isRedirecting) return;
+  isRedirecting = true;
+  localStorage.removeItem("p_token");
+  ElMessage.error("登录已失效，请重新登录");
+  if (unauthorizedHandler) {
+    unauthorizedHandler();
+  } else {
+    window.$wujie?.bus.$emit("unauthorized");
+  }
+  setTimeout(() => {
+    isRedirecting = false;
+  }, 1500);
+};
 
 // 独立axios实例，避免请求策略（超时/拦截器）相互干扰
 const service = axios.create({ timeout: 6000 });
@@ -30,12 +62,28 @@ service.interceptors.request.use((config) => {
 });
 
 service.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    // 业务码层面的登录失效（token 过期），统一清 token 并跳登录页
+    if (response.data?.code === 401) {
+      handleUnauthorized();
+      return Promise.reject(new Error("unauthorized"));
+    }
+    return response;
+  },
   (error) => {
     console.error("请求错误:", error);
 
-    if (error.code === "ECONNABORTED" && error.message.includes("timeout")) {
+    const status = error.response?.status;
+    if (status === 401) {
+      handleUnauthorized();
+    } else if (error.code === "ECONNABORTED" && error.message.includes("timeout")) {
       ElMessage.error("请求超时！请稍后重试");
+    } else if (status === 403) {
+      ElMessage.error("无权限访问该资源");
+    } else if (status === 404) {
+      ElMessage.error("请求的资源不存在");
+    } else if (status && status >= 500) {
+      ElMessage.error("服务器异常，请稍后重试");
     } else {
       ElMessage.error("请求失败！请稍后重试");
     }

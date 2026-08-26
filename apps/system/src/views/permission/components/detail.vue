@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onBeforeMount } from "vue";
 import { ElMessage } from "element-plus";
-import request from "@Passets/utils/request";
+import { getPermissionList, getPermissionDetail } from "@/api/permission";
 import { pCollapse, pItem } from "@Pcomponents";
 
 const props = defineProps({
@@ -36,11 +36,7 @@ onBeforeMount(() => {
 });
 
 const getGroupList = () => {
-  request
-    .post({
-      url: "/system/permission/getList",
-      data: { appKey: detailInfo.value.appKey, type: "group" },
-    })
+  getPermissionList({ appKey: detailInfo.value.appKey, type: "group" })
     .then((res) => {
       if (res.code === 200) {
         groupList.value = res.data.map((item: any) => ({
@@ -54,13 +50,7 @@ const getGroupList = () => {
 };
 
 const getDetailInfo = () => {
-  request
-    .get({
-      url: "/system/permission/getDetail",
-      data: {
-        id: detailId.value,
-      },
-    })
+  getPermissionDetail({ id: detailId.value })
     .then((res) => {
       if (res && res.code == 200) {
         detailInfo.value = res.data;

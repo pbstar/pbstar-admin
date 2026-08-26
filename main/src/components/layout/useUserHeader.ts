@@ -1,7 +1,7 @@
 import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import useSharedStore from "@Passets/stores/shared";
-import request from "@Passets/utils/request";
+import { logout as logoutRequest } from "@/api";
 import { logout } from "@/utils/auth";
 
 /**
@@ -21,7 +21,7 @@ export function useUserHeader() {
   };
 
   const toLoginOut = () => {
-    request.post({ url: "/main/logout" }).then((res) => {
+    logoutRequest().then((res) => {
       if (res.code === 200) {
         logout();
       }

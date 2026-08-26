@@ -127,7 +127,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
-import request from "@Passets/utils/request";
+import { getPersonList, deletePersons, createPerson, updatePerson } from "@/api/person";
 import {
   pTable,
   pSearch,
@@ -174,11 +174,7 @@ const toPageChange = ({
   initTable();
 };
 const initTable = () => {
-  request
-    .post({
-      url: "/example/person/getList",
-      data: { ...searchValue.value, ...pagination.value },
-    })
+  getPersonList({ ...searchValue.value, ...pagination.value })
     .then((res) => {
       if (res && res.code == 200) {
         data.value = res.data.list;
@@ -207,13 +203,7 @@ const handleDelete = (row: any) => {
   ElMessageBox.confirm("确认删除吗?", "提示", {
     type: "warning",
   }).then(() => {
-    request
-      .post({
-        url: "/example/person/delete",
-        data: {
-          idList: [row.id],
-        },
-      })
+    deletePersons([row.id])
       .then((res) => {
         if (res && res.code == 200) {
           ElMessage.success("删除成功");
@@ -232,16 +222,8 @@ const handleSave = () => {
   if (!detailInfo) {
     return;
   }
-  const url =
-    detailType.value == "add"
-      ? "/example/person/create"
-      : "/example/person/update";
-  request
-    .post({
-      url,
-      data: detailInfo,
-    })
-    .then((res) => {
+  const save = detailType.value == "add" ? createPerson : updatePerson;
+  save(detailInfo).then((res) => {
       if (res && res.code == 200) {
         ElMessage.success("保存成功");
         isDetail.value = false;
