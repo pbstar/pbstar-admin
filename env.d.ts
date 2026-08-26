@@ -9,4 +9,5 @@ interface ImportMetaEnv {
   readonly PUBLIC_TITLE?: string;
   readonly PUBLIC_FREE_LOGIN?: string;
   readonly PUBLIC_MOCK?: string;
+  readonly PUBLIC_API_BASE_URL?: string;
 }
