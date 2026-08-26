@@ -3,12 +3,12 @@ import { defineStore } from "pinia";
 
 /** 用户信息（仅保留前端需要的字段） */
 export interface UserInfo {
-  id: any;
+  id: number | string;
   name: string;
   avatar: string;
   username: string;
-  role: any;
-  permissions: any;
+  role: string;
+  permissions: string;
 }
 
 export default defineStore("shared", () => {
