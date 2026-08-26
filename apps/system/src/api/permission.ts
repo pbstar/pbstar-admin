@@ -2,10 +2,10 @@ import request from "@Passets/request";
 
 /** 权限记录：分组/菜单/按钮统一存储，type 区分 */
 export interface PermissionItem {
-  id: number | string;
+  id: number;
   appKey: string;
   type: "group" | "menu" | "button";
-  groupId: string | number;
+  groupId: number;
   key: string;
   name: string;
   remark: string;
@@ -21,7 +21,7 @@ export interface PermissionListParams extends Record<string, any> {
 export const getPermissionList = (data?: PermissionListParams) =>
   request.post<PermissionItem[]>({ url: "/system/permission/getList", data });
 
-export const getPermissionDetail = (data: { id: string | number }) =>
+export const getPermissionDetail = (data: { id: number }) =>
   request.get<PermissionItem>({ url: "/system/permission/getDetail", data });
 
 export const createPermission = (data: Record<string, any>) =>

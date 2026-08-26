@@ -2,7 +2,7 @@ import { ok, fail, paginate, fuzzyFilter, removeByIdList, findById, nextId } fro
 
 /** 示例人员记录（example 应用） */
 export interface PersonRecord {
-  id: any;
+  id: number;
   name: string;
   age: number;
   sex: string;

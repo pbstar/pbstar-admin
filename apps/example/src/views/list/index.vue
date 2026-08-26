@@ -148,7 +148,7 @@ const pagination = ref({
 const searchValue = ref<Record<string, any>>({});
 const isDetail = ref(false);
 const detailType = ref("");
-const detailId = ref<string | number>("");
+const detailId = ref<number>(0);
 const detailRef = ref<InstanceType<typeof Detail> | null>(null);
 
 onMounted(() => {
@@ -186,7 +186,7 @@ const initTable = () => {
 };
 const handleAdd = () => {
   detailType.value = "add";
-  detailId.value = "";
+  detailId.value = 0;
   isDetail.value = true;
 };
 const handleView = (row: any) => {

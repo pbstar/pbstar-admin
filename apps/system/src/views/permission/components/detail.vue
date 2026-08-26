@@ -10,8 +10,8 @@ const props = defineProps({
     default: "",
   },
   id: {
-    type: [String, Number],
-    default: "",
+    type: Number,
+    default: 0,
   },
   appKey: {
     type: String,
@@ -23,7 +23,7 @@ const detailInfo = ref<Record<string, any>>({
   appKey: props.appKey,
 });
 const detailType = ref("");
-const detailId = ref<string | number>("");
+const detailId = ref<number>(0);
 const groupList = ref<any[]>([]); // 同应用下的分组列表（供 menu/button 选择归属）
 
 onBeforeMount(() => {

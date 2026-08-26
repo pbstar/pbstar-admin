@@ -11,13 +11,13 @@ const props = defineProps({
     default: "",
   },
   id: {
-    type: [String, Number],
-    default: "",
+    type: Number,
+    default: 0,
   },
 });
 const detailInfo = ref<Record<string, any>>({});
 const detailType = ref("");
-const detailId = ref<string | number>("");
+const detailId = ref<number>(0);
 const roleList = ref<{ label: string; value: string }[]>([]);
 
 onBeforeMount(() => {

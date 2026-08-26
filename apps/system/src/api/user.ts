@@ -3,7 +3,7 @@ import type { PageResult } from "@Passets/request";
 
 /** 用户记录（不含 password） */
 export interface UserItem {
-  id: number | string;
+  id: number;
   name: string;
   avatar: string;
   username: string;
@@ -19,7 +19,7 @@ export interface UserListParams extends Record<string, any> {
 export const getUserList = (data: UserListParams) =>
   request.post<PageResult<UserItem>>({ url: "/system/user/getList", data });
 
-export const getUserDetail = (data: { id: string | number }) =>
+export const getUserDetail = (data: { id: number }) =>
   request.get<UserItem>({ url: "/system/user/getDetail", data });
 
 export const createUser = (data: Record<string, any>) =>

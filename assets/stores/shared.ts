@@ -3,7 +3,7 @@ import { defineStore } from "pinia";
 
 /** 用户信息（仅保留前端需要的字段） */
 export interface UserInfo {
-  id: number | string;
+  id: number;
   name: string;
   avatar: string;
   username: string;

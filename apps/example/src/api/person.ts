@@ -3,7 +3,7 @@ import type { PageResult } from "@Passets/request";
 
 /** 示例人员记录 */
 export interface PersonItem {
-  id: number | string;
+  id: number;
   name: string;
   age: number;
   sex: string;
@@ -20,7 +20,7 @@ export interface PersonListParams extends Record<string, any> {
 export const getPersonList = (data: PersonListParams) =>
   request.post<PageResult<PersonItem>>({ url: "/example/person/getList", data });
 
-export const getPersonDetail = (data: { id: string | number }) =>
+export const getPersonDetail = (data: { id: number }) =>
   request.get<PersonItem>({ url: "/example/person/getDetail", data });
 
 export const createPerson = (data: Record<string, any>) =>

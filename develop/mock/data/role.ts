@@ -2,7 +2,7 @@ import { ok, fail, paginate, fuzzyFilter, removeByIdList, findById, nextId } fro
 
 /** 角色记录（permissions 为逗号分隔的权限 key 字符串，"all" 表示全量放行，与真实接口保持一致） */
 export interface RoleRecord {
-  id: any;
+  id: number;
   name: string;
   key: string;
   permissions: string;

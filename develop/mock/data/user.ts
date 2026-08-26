@@ -2,7 +2,7 @@ import { ok, fail, paginate, fuzzyFilter, removeByIdList, findById, nextId } fro
 
 /** 用户记录（password 仅用于登录校验，不会出现在任何响应里） */
 export interface UserRecord {
-  id: any;
+  id: number;
   name: string;
   avatar: string;
   username: string;

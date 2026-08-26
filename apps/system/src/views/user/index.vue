@@ -15,7 +15,7 @@ const pagination = ref({
   total: 0,
 });
 const detailType = ref("");
-const detailId = ref<string | number>("");
+const detailId = ref<number>(0);
 const isDetail = ref(false);
 const detailRef = ref<InstanceType<typeof Detail> | null>(null);
 
@@ -111,7 +111,7 @@ const handleDelete = (row: any) => {
 };
 const handleAdd = () => {
   detailType.value = "add";
-  detailId.value = "";
+  detailId.value = 0;
   isDetail.value = true;
 };
 const handleSave = () => {

@@ -24,7 +24,7 @@ const typeTagMap: Record<string, string> = { group: "info", menu: "primary", but
 const searchValue = ref<Record<string, any>>({});
 const tableData = ref<any[]>([]);
 const detailType = ref("");
-const detailId = ref<string | number>("");
+const detailId = ref<number>(0);
 const isDetail = ref(false);
 const detailRef = ref<InstanceType<typeof Detail> | null>(null);
 const currentNode = ref("");
@@ -110,7 +110,7 @@ const handleAdd = () => {
     return;
   }
   detailType.value = "add";
-  detailId.value = "";
+  detailId.value = 0;
   isDetail.value = true;
 };
 const handleSave = () => {
