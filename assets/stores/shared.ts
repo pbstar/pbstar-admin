@@ -11,6 +11,12 @@ export interface UserInfo {
   permissions: string;
 }
 
+/** 主/子应用经 wujie 同步的共享状态片段（字段可选，表示增量同步） */
+export interface SharedStateSync {
+  userInfo?: UserInfo | null;
+  isAppRouteLoading?: boolean;
+}
+
 export default defineStore("shared", () => {
   const userInfo = ref<UserInfo | null>(null);
   const isAppRouteLoading = ref(false);

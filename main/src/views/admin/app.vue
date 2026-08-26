@@ -3,6 +3,7 @@ import { ref, watch, onUnmounted, nextTick } from "vue";
 import { useRoute } from "vue-router";
 import { startApp, destroyApp, bus } from "wujie";
 import useSharedStore from "@Passets/stores/shared";
+import type { SharedStateSync } from "@Passets/stores/shared";
 import LayoutLoading from "@/components/layout/LayoutLoading.vue";
 import AppLoadError from "@/components/layout/AppLoadError.vue";
 import { wujieErrorPatchPlugin } from "@/utils/wujiePatches";
@@ -16,15 +17,14 @@ const currentAppKey = ref("");
 // 子应用加载失败空态（状态驱动，替代直接操作 innerHTML）
 const loadFailed = ref(false);
 
-const handleSharedPiniaChange = (data: Record<string, any>) => {
-  Object.keys(data).forEach((key) => {
-    if (key === "isAppRouteLoading") {
-      // 兜底：防止总线写入与 afterMount 竞态导致蒙层卡死
-      sharedStore.setRouteLoading(data[key]);
-    } else if (key in sharedStore) {
-      (sharedStore as Record<string, any>)[key] = data[key];
-    }
-  });
+const handleSharedPiniaChange = (data: SharedStateSync) => {
+  if (data.isAppRouteLoading !== undefined) {
+    // 兜底：防止总线写入与 afterMount 竞态导致蒙层卡死
+    sharedStore.setRouteLoading(data.isAppRouteLoading);
+  }
+  if (data.userInfo !== undefined) {
+    sharedStore.userInfo = data.userInfo;
+  }
 };
 
 const handleRouteChange = () => {

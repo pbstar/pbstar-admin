@@ -17,9 +17,19 @@ export interface RoleOption {
 }
 
 /** 角色列表查询参数：分页必填，其余为可选搜索条件 */
-export interface RoleListParams extends Record<string, any> {
+export interface RoleListParams {
   pageNumber: number;
   pageSize: number;
+  name?: string;
+  key?: string;
+}
+
+/** 角色新增/编辑入参 */
+export interface RolePayload {
+  id?: number;
+  name: string;
+  key: string;
+  permissions: string;
 }
 
 export const getRoleList = (data: RoleListParams) =>
@@ -31,11 +41,11 @@ export const getAllRoles = () =>
 export const getRoleDetail = (data: { id: number }) =>
   request.get<RoleItem>({ url: "/system/role/getDetail", data });
 
-export const createRole = (data: Record<string, any>) =>
+export const createRole = (data: RolePayload) =>
   request.post({ url: "/system/role/create", data });
 
-export const updateRole = (data: Record<string, any>) =>
+export const updateRole = (data: RolePayload) =>
   request.post({ url: "/system/role/update", data });
 
-export const deleteRoles = (idList: (string | number)[]) =>
+export const deleteRoles = (idList: number[]) =>
   request.post({ url: "/system/role/delete", data: { idList } });

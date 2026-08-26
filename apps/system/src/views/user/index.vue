@@ -2,12 +2,14 @@
 import { ref, onBeforeMount, onMounted } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { getUserList, deleteUsers, createUser, updateUser } from "@/api/user";
+import type { UserItem } from "@/api/user";
 import { getAllRoles } from "@/api/role";
+import type { RoleOption } from "@/api/role";
 import { pTable, pSearch, pTitle, pDialog, pItem } from "@Pcomponents";
 import Detail from "./components/detail.vue";
 
-const searchValue = ref<Record<string, any>>({});
-const tableData = ref<any[]>([]);
+const searchValue = ref<{ name?: string; username?: string; role?: string }>({});
+const tableData = ref<UserItem[]>([]);
 const roleOptions = ref<{ label: string; value: string }[]>([]);
 const pagination = ref({
   pageNumber: 1,
@@ -66,7 +68,7 @@ const getRoleList = () => {
   getAllRoles()
     .then((res) => {
       if (res.code === 200 && res.data) {
-        roleOptions.value = res.data.map((item: any) => {
+        roleOptions.value = res.data.map((item: RoleOption) => {
           return {
             label: item.name,
             value: item.role_key,
@@ -82,17 +84,17 @@ const getRoleLabel = (roleKey: string) => {
   const role = roleOptions.value.find((item) => item.value === roleKey);
   return role ? role.label : roleKey;
 };
-const handleView = (row: any) => {
+const handleView = (row: UserItem) => {
   detailType.value = "view";
   detailId.value = row.id;
   isDetail.value = true;
 };
-const handleEdit = (row: any) => {
+const handleEdit = (row: UserItem) => {
   detailType.value = "edit";
   detailId.value = row.id;
   isDetail.value = true;
 };
-const handleDelete = (row: any) => {
+const handleDelete = (row: UserItem) => {
   ElMessageBox.confirm("确认删除吗?", "提示", {
     type: "warning",
   })

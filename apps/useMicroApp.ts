@@ -1,6 +1,7 @@
 import { useRouter } from "vue-router";
 import { onUnmounted } from "vue";
 import useSharedStore from "@Passets/stores/shared";
+import type { SharedStateSync } from "@Passets/stores/shared";
 
 /**
  * 微前端子应用公共逻辑
@@ -10,13 +11,13 @@ export function useMicroApp() {
   const sharedStore = useSharedStore();
   const router = useRouter();
 
-  const handleSharedPinia = (state: Record<string, any>) => {
-    Object.keys(state).forEach((key) => {
-      // 只设置 store 中已存在的属性
-      if (key in sharedStore) {
-        (sharedStore as Record<string, any>)[key] = state[key];
-      }
-    });
+  const handleSharedPinia = (state: SharedStateSync) => {
+    if (state.userInfo !== undefined) {
+      sharedStore.userInfo = state.userInfo;
+    }
+    if (state.isAppRouteLoading !== undefined) {
+      sharedStore.setRouteLoading(state.isAppRouteLoading);
+    }
   };
 
   const handleRouteChange = () => {
@@ -30,7 +31,7 @@ export function useMicroApp() {
   };
 
   const bindEventListeners = () => {
-    window.$wujie?.bus.$on("changeSharedPinia", (state: Record<string, any>) => {
+    window.$wujie?.bus.$on("changeSharedPinia", (state: SharedStateSync) => {
       handleSharedPinia(state);
     });
 

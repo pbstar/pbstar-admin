@@ -41,12 +41,13 @@
 import { ref, watch } from "vue";
 import { ElMessage } from "element-plus";
 import { updateMyInfo } from "@/api";
+import type { UpdateMyInfoPayload } from "@/api";
 import useSharedStore from "@Passets/stores/shared";
 import { pTitle, pItem } from "@Pcomponents";
 import { logout } from "@/utils/auth";
 
 const sharedStore = useSharedStore();
-const detailInfo = ref<Record<string, any>>({});
+const detailInfo = ref<UpdateMyInfoPayload>({ name: "", avatar: "", username: "", password: "" });
 const saving = ref(false);
 
 const toSave = () => {
@@ -68,9 +69,14 @@ const toSave = () => {
 };
 watch(
   () => sharedStore.userInfo,
-  (newVal, oldVal) => {
+  (newVal) => {
     if (newVal) {
-      detailInfo.value = { ...newVal };
+      detailInfo.value = {
+        name: newVal.name ?? "",
+        avatar: newVal.avatar ?? "",
+        username: newVal.username ?? "",
+        password: "",
+      };
     }
   },
   { deep: true, immediate: true },

@@ -11,9 +11,22 @@ export interface UserItem {
 }
 
 /** 用户列表查询参数：分页必填，其余为可选搜索条件 */
-export interface UserListParams extends Record<string, any> {
+export interface UserListParams {
   pageNumber: number;
   pageSize: number;
+  name?: string;
+  username?: string;
+  role?: string;
+}
+
+/** 用户新增/编辑入参（password 仅新增或重置密码时提交） */
+export interface UserPayload {
+  id?: number;
+  name: string;
+  avatar: string;
+  username: string;
+  password?: string;
+  role: string;
 }
 
 export const getUserList = (data: UserListParams) =>
@@ -22,11 +35,11 @@ export const getUserList = (data: UserListParams) =>
 export const getUserDetail = (data: { id: number }) =>
   request.get<UserItem>({ url: "/system/user/getDetail", data });
 
-export const createUser = (data: Record<string, any>) =>
+export const createUser = (data: UserPayload) =>
   request.post({ url: "/system/user/create", data });
 
-export const updateUser = (data: Record<string, any>) =>
+export const updateUser = (data: UserPayload) =>
   request.post({ url: "/system/user/update", data });
 
-export const deleteUsers = (idList: (string | number)[]) =>
+export const deleteUsers = (idList: number[]) =>
   request.post({ url: "/system/user/delete", data: { idList } });

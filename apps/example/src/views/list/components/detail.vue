@@ -2,6 +2,7 @@
 import { ref, onBeforeMount } from "vue";
 import { ElMessage } from "element-plus";
 import { getPersonDetail } from "@/api/person";
+import type { PersonPayload } from "@/api/person";
 import { pCollapse, pItem } from "@Pcomponents";
 import { booleanOptions, ethnicOptions, sexOptions, getOptionLabel } from "@/constants/options";
 
@@ -15,7 +16,7 @@ const props = defineProps({
     default: 0,
   },
 });
-const detailInfo = ref<Record<string, any>>({});
+const detailInfo = ref<PersonPayload>({ name: "", age: 0, sex: "", ethnic: "", isHealthy: "" });
 const detailType = ref("");
 const detailId = ref<number>(0);
 

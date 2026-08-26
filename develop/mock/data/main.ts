@@ -4,10 +4,10 @@ import { roles } from "./role";
 
 /** 当前登录用户 id：从 localStorage 的 token 还原（token 即 mock-token-<id>，前端存于 p_token，刷新后据此还原登录态） */
 const getCurrentUserId = () =>
-  (localStorage.getItem("p_token") || "").replace("mock-token-", "");
+  Number((localStorage.getItem("p_token") || "").replace("mock-token-", ""));
 
-function buildUserInfo(userId: any) {
-  const user = users.find((u) => String(u.id) === String(userId));
+function buildUserInfo(userId: number) {
+  const user = users.find((u) => u.id === userId);
   if (!user) return null;
   const role = roles.find((r) => r.key === user.role);
   return {
@@ -21,7 +21,7 @@ function buildUserInfo(userId: any) {
   };
 }
 
-export function login(data: any) {
+export function login(data: { username?: string; password?: string }) {
   const user = users.find(
     (u) => u.username === data?.username && u.password === data?.password,
   );
@@ -41,9 +41,9 @@ export function logout() {
   return ok(null);
 }
 
-export function updateMyInfo(data: any) {
+export function updateMyInfo(data: { name?: string; avatar?: string; username?: string; password?: string }) {
   const currentUserId = getCurrentUserId();
-  const user = users.find((u) => String(u.id) === String(currentUserId));
+  const user = users.find((u) => u.id === currentUserId);
   if (!user) return fail("登录已失效，请重新登录");
   user.name = data?.name ?? user.name;
   user.avatar = data?.avatar ?? user.avatar;

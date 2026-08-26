@@ -2,11 +2,12 @@
 import { ref, onBeforeMount } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { getRoleList, deleteRoles, createRole, updateRole } from "@/api/role";
+import type { RoleItem } from "@/api/role";
 import { pTable, pSearch, pTitle, pDialog, pItem } from "@Pcomponents";
 import Detail from "./components/detail.vue";
 
-const searchValue = ref<Record<string, any>>({});
-const tableData = ref<any[]>([]);
+const searchValue = ref<{ name?: string; key?: string }>({});
+const tableData = ref<RoleItem[]>([]);
 const pagination = ref({
   pageNumber: 1,
   pageSize: 10,
@@ -57,17 +58,17 @@ const initTable = () => {
       }
     });
 };
-const handleView = (row: any) => {
+const handleView = (row: RoleItem) => {
   detailType.value = "view";
   detailId.value = row.id;
   isDetail.value = true;
 };
-const handleEdit = (row: any) => {
+const handleEdit = (row: RoleItem) => {
   detailType.value = "edit";
   detailId.value = row.id;
   isDetail.value = true;
 };
-const handleDelete = (row: any) => {
+const handleDelete = (row: RoleItem) => {
   ElMessageBox.confirm("确认删除吗?", "提示", {
     type: "warning",
   })

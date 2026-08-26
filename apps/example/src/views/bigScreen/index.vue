@@ -35,7 +35,12 @@ const echarts1Ref = ref<HTMLDivElement | null>(null);
 const echarts2Ref = ref<HTMLDivElement | null>(null);
 const echarts3Ref = ref<HTMLDivElement | null>(null);
 const echarts4Ref = ref<HTMLDivElement | null>(null);
-const fv = ref<any>(null);
+
+/** fitview 无类型声明，仅声明用到的接口 */
+interface FitviewInstance {
+  api: { destroyResize: () => void };
+}
+const fv = ref<FitviewInstance | null>(null);
 
 onMounted(() => {
   fv.value = new fitview({ el: fitviewRef.value });

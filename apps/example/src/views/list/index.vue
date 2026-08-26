@@ -128,6 +128,7 @@
 import { ref, onMounted } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { getPersonList, deletePersons, createPerson, updatePerson } from "@/api/person";
+import type { PersonItem } from "@/api/person";
 import {
   pTable,
   pSearch,
@@ -138,14 +139,14 @@ import {
 } from "@Pcomponents";
 import { booleanOptions, ethnicOptions, sexOptions, getOptionLabel } from "@/constants/options";
 import Detail from "./components/detail.vue";
-const data = ref<any[]>([]);
+const data = ref<PersonItem[]>([]);
 
 const pagination = ref({
   pageNumber: 1,
   pageSize: 10,
   total: 0,
 });
-const searchValue = ref<Record<string, any>>({});
+const searchValue = ref<{ name?: string; age?: number; sex?: string; isHealthy?: string }>({});
 const isDetail = ref(false);
 const detailType = ref("");
 const detailId = ref<number>(0);
@@ -189,17 +190,17 @@ const handleAdd = () => {
   detailId.value = 0;
   isDetail.value = true;
 };
-const handleView = (row: any) => {
+const handleView = (row: PersonItem) => {
   detailType.value = "view";
   detailId.value = row.id;
   isDetail.value = true;
 };
-const handleEdit = (row: any) => {
+const handleEdit = (row: PersonItem) => {
   detailType.value = "edit";
   detailId.value = row.id;
   isDetail.value = true;
 };
-const handleDelete = (row: any) => {
+const handleDelete = (row: PersonItem) => {
   ElMessageBox.confirm("确认删除吗?", "提示", {
     type: "warning",
   }).then(() => {

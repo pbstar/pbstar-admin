@@ -2,7 +2,9 @@
 import { ref, onBeforeMount } from "vue";
 import { ElMessage } from "element-plus";
 import { getUserDetail } from "@/api/user";
+import type { UserPayload } from "@/api/user";
 import { getAllRoles } from "@/api/role";
+import type { RoleOption } from "@/api/role";
 import { pCollapse, pItem } from "@Pcomponents";
 
 const props = defineProps({
@@ -15,7 +17,7 @@ const props = defineProps({
     default: 0,
   },
 });
-const detailInfo = ref<Record<string, any>>({});
+const detailInfo = ref<UserPayload>({ name: "", avatar: "", username: "", role: "" });
 const detailType = ref("");
 const detailId = ref<number>(0);
 const roleList = ref<{ label: string; value: string }[]>([]);
@@ -32,7 +34,7 @@ const getRoleList = () => {
   getAllRoles()
     .then((res) => {
       if (res.code === 200 && res.data) {
-        roleList.value = res.data.map((item: any) => {
+        roleList.value = res.data.map((item: RoleOption) => {
           return {
             label: item.name,
             value: item.role_key,
@@ -91,7 +93,7 @@ defineExpose({
           <el-input
             v-model="detailInfo.username"
             placeholder="请输入账号"
-            :disabled="detailInfo.id == '1'"
+            :disabled="detailInfo.id === 1"
           />
         </p-item>
         <p-item class="dtItem" v-show="detailType == 'add'" label="密码">
@@ -109,7 +111,7 @@ defineExpose({
           <el-select
             v-model="detailInfo.role"
             placeholder="请选择角色"
-            :disabled="detailInfo.id == '1'"
+            :disabled="detailInfo.id === 1"
           >
             <el-option
               v-for="item in roleList"

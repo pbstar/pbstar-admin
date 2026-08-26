@@ -5,7 +5,7 @@ import { isMockEnabled } from "../../develop/mock/persist";
 import { matchMock } from "../../develop/mock";
 
 /** 后端统一响应结构 */
-export interface Res<T = any> {
+export interface Res<T = unknown> {
   code: number;
   msg: string;
   data: T;
@@ -20,7 +20,7 @@ export interface PageResult<T> {
 /** 请求参数（url 必填，data/config 可选） */
 export interface RequestParams {
   url: string;
-  data?: any;
+  data?: unknown;
   config?: AxiosRequestConfig;
 }
 
@@ -92,7 +92,7 @@ service.interceptors.response.use(
   },
 );
 
-const request = async <T = any>(config: AxiosRequestConfig): Promise<Res<T>> => {
+const request = async <T = unknown>(config: AxiosRequestConfig): Promise<Res<T>> => {
   const mockRes = isMockEnabled
     ? matchMock(config.method || "get", config.url || "", config.params ?? config.data)
     : null;
@@ -107,7 +107,7 @@ const request = async <T = any>(config: AxiosRequestConfig): Promise<Res<T>> => 
   return response.data as Res<T>;
 };
 
-const get = <T = any>({ url, data, config = {} }: RequestParams): Promise<Res<T>> => {
+const get = <T = unknown>({ url, data, config = {} }: RequestParams): Promise<Res<T>> => {
   return request<T>({
     method: "get",
     url,
@@ -116,7 +116,7 @@ const get = <T = any>({ url, data, config = {} }: RequestParams): Promise<Res<T>
   });
 };
 
-const post = <T = any>({ url, data, config = {} }: RequestParams): Promise<Res<T>> => {
+const post = <T = unknown>({ url, data, config = {} }: RequestParams): Promise<Res<T>> => {
   return request<T>({
     method: "post",
     url,
