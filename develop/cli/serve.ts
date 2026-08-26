@@ -1,11 +1,15 @@
 import { existsSync, readdirSync } from "fs";
-import { join } from "path";
+import { join, dirname } from "path";
+import { fileURLToPath } from "url";
 import { execSync, spawn, spawnSync } from "child_process";
 import { checkbox } from "@inquirer/prompts";
 import { program } from "commander";
 import chalk from "chalk";
 import apps from "../../apps/apps.json" with { type: "json" };
 import { banner, divider, ok, warn, fail, urlRow, padRight } from "./ui";
+
+// 仓库根目录：由 import.meta.url 推导，避免依赖进程 cwd（参照 check.ts）
+const ROOT = join(dirname(fileURLToPath(import.meta.url)), "../../");
 
 const allAppKeys = ["main", ...apps.map((item) => item.appKey)];
 
@@ -15,7 +19,7 @@ const allAppKeys = ["main", ...apps.map((item) => item.appKey)];
 const isUninitializedSubmodule = (appKey: string): boolean => {
   const app = apps.find((item) => item.appKey === appKey);
   if (!app || app.appType !== "out") return false;
-  const appPath = join("../apps", appKey);
+  const appPath = join(ROOT, "apps", appKey);
   return !existsSync(appPath) || readdirSync(appPath).length === 0;
 };
 
@@ -39,7 +43,7 @@ const startDevServers = (commands: string[]): void => {
   const isWin = process.platform === "win32";
   const children = commands.map((command) => {
     const [cmd, ...args] = command.split(" ");
-    return spawn(cmd, args, { stdio: "inherit", cwd: "../", shell: isWin });
+    return spawn(cmd, args, { stdio: "inherit", cwd: ROOT, shell: isWin });
   });
 
   // Ctrl+C / kill 时一并结束所有 dev 服务，避免残留进程
@@ -131,7 +135,7 @@ const handleServe = async (mode: "dev" | "build") => {
     } else {
       // build 模式：串行构建，输出清晰、资源占用平稳
       commands.forEach((command) =>
-        execSync(command, { stdio: "inherit", cwd: "../" }),
+        execSync(command, { stdio: "inherit", cwd: ROOT }),
       );
       ok("构建完成");
     }
