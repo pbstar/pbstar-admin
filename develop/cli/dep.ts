@@ -51,7 +51,7 @@ const handleDep = async (mode: "add" | "remove") => {
     let command = `pnpm ${isAdd ? "add" : "remove"} ${packageName}`;
     if (currentValue !== "全局工程") {
       command += ` --filter ${currentValue}`;
-    } else if (isAdd) {
+    } else {
       command += " -w";
     }
     if (isAdd && packageType === "devDependencies") {
