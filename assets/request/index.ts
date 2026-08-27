@@ -1,6 +1,7 @@
 import axios from "axios";
 import type { AxiosRequestConfig } from "axios";
 import { ElMessage } from "element-plus";
+import { BUS_EVENTS } from "../stores/shared";
 import { isMockEnabled } from "../../develop/mock/persist";
 import { matchMock } from "../../develop/mock";
 
@@ -43,7 +44,7 @@ const handleUnauthorized = () => {
   if (unauthorizedHandler) {
     unauthorizedHandler();
   } else {
-    window.$wujie?.bus.$emit("unauthorized");
+    window.$wujie?.bus.$emit(BUS_EVENTS.UNAUTHORIZED);
   }
   setTimeout(() => {
     isRedirecting = false;

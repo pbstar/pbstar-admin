@@ -9,6 +9,7 @@ import { bus } from "wujie";
 import App from "./App.vue";
 import router from "./router";
 import { permission } from "@Passets/directives/permission";
+import { BUS_EVENTS } from "@Passets/stores/shared";
 import { setUnauthorizedHandler } from "@Passets/request";
 import { applyWujiePatches } from "@/utils/wujiePatches";
 import { logout } from "@/utils/auth";
@@ -18,11 +19,10 @@ applyWujiePatches();
 
 // 登录失效统一处理：主应用自身请求 401 直接走 logout；子应用经 bus 上报时同样兜底跳登录页
 setUnauthorizedHandler(logout);
-bus.$on("unauthorized", logout);
+bus.$on(BUS_EVENTS.UNAUTHORIZED, logout);
 
 const app = createApp(App);
 const mainPinia = createPinia();
-window.$mainPinia = mainPinia;
 app.use(ElementPlus, { locale: zhCn });
 app.use(mainPinia);
 app.use(router);

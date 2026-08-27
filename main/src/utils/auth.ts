@@ -1,7 +1,7 @@
 import { ElMessage } from "element-plus";
 import { bus } from "wujie";
 import router from "@/router";
-import useSharedStore from "@Passets/stores/shared";
+import useSharedStore, { BUS_EVENTS } from "@Passets/stores/shared";
 import { useAppsStore } from "@/stores/apps";
 import { loginByToken } from "@/api";
 
@@ -41,8 +41,8 @@ export const getUserInfo = async (): Promise<boolean> => {
  */
 export function logout() {
   localStorage.removeItem("p_token");
-  useSharedStore().userInfo = null;
+  useSharedStore().setUserInfo(null);
   useAppsStore().setAppKey();
-  bus.$emit("changeSharedPinia", { userInfo: null });
+  bus.$emit(BUS_EVENTS.SHARED_STATE_SYNC, { userInfo: null });
   router.push({ path: "/login" });
 }

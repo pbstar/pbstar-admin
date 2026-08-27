@@ -2,7 +2,7 @@
 import { ref, watch, onUnmounted, nextTick } from "vue";
 import { useRoute } from "vue-router";
 import { startApp, destroyApp, bus } from "wujie";
-import useSharedStore from "@Passets/stores/shared";
+import useSharedStore, { BUS_EVENTS } from "@Passets/stores/shared";
 import type { SharedStateSync } from "@Passets/stores/shared";
 import LayoutLoading from "@/components/layout/LayoutLoading.vue";
 import AppLoadError from "@/components/layout/AppLoadError.vue";
@@ -17,14 +17,9 @@ const currentAppKey = ref("");
 // 子应用加载失败空态（状态驱动，替代直接操作 innerHTML）
 const loadFailed = ref(false);
 
+// 共享状态经 bus 广播到达后，统一走 store 的 patchSharedState 落库
 const handleSharedPiniaChange = (data: SharedStateSync) => {
-  if (data.isAppRouteLoading !== undefined) {
-    // 兜底：防止总线写入与 afterMount 竞态导致蒙层卡死
-    sharedStore.setRouteLoading(data.isAppRouteLoading);
-  }
-  if (data.userInfo !== undefined) {
-    sharedStore.userInfo = data.userInfo;
-  }
+  sharedStore.patchSharedState(data);
 };
 
 const handleRouteChange = () => {
@@ -33,7 +28,7 @@ const handleRouteChange = () => {
   const subPath = (route.query[appKey as string] ?? "") as string;
 
   if (appKey === currentAppKey.value) {
-    bus.$emit("subappRouteChange", { appKey, path: subPath });
+    bus.$emit(BUS_EVENTS.SUBAPP_ROUTE_CHANGE, { appKey, path: subPath });
   } else {
     if (currentAppKey.value) {
       destroyApp(currentAppKey.value);
@@ -45,7 +40,7 @@ const handleRouteChange = () => {
 
 const startSubApp = (appKey: string, appUrl: string, subPath: string) => {
   loadFailed.value = false;
-  sharedStore.setRouteLoading(true);
+  sharedStore.patchSharedState({ isAppRouteLoading: true });
 
   nextTick(() => {
     startApp({
@@ -59,16 +54,16 @@ const startSubApp = (appKey: string, appUrl: string, subPath: string) => {
         sharedPinia: sharedStore,
       },
       beforeLoad: () => {
-        sharedStore.setRouteLoading(true);
+        sharedStore.patchSharedState({ isAppRouteLoading: true });
       },
       afterMount: () => {
         // 延迟关闭 loading，确保子应用渲染完成
         setTimeout(() => {
-          sharedStore.setRouteLoading(false);
+          sharedStore.patchSharedState({ isAppRouteLoading: false });
         }, 200);
       },
       loadError: (url, err) => {
-        sharedStore.setRouteLoading(false);
+        sharedStore.patchSharedState({ isAppRouteLoading: false });
         console.error(`子应用【${appKey}】的资源 ${url} 加载失败:`, err);
         loadFailed.value = true;
       },
@@ -89,7 +84,7 @@ const handleRetry = () => {
   startSubApp(appKey as string, appUrl as string, subPath);
 };
 
-bus.$on("changeSharedPinia", handleSharedPiniaChange);
+bus.$on(BUS_EVENTS.SHARED_STATE_SYNC, handleSharedPiniaChange);
 watch(() => route.fullPath, handleRouteChange, { immediate: true });
 
 onUnmounted(() => {
@@ -97,7 +92,7 @@ onUnmounted(() => {
     destroyApp(currentAppKey.value);
   }
   currentAppKey.value = "";
-  bus.$off("changeSharedPinia", handleSharedPiniaChange);
+  bus.$off(BUS_EVENTS.SHARED_STATE_SYNC, handleSharedPiniaChange);
 });
 </script>
 
