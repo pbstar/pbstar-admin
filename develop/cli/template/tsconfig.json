@@ -1,16 +1,6 @@
 {
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "target": "ES2022",
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
-    "strict": true,
-    "jsx": "preserve",
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "noEmit": true,
-    "types": ["@rsbuild/core/types"],
     "paths": {
       "@/*": ["./src/*"],
       "@Pcomponents": ["../../components/index.ts"],
@@ -21,8 +11,8 @@
   "include": [
     "src/**/*",
     "src/**/*.vue",
-    "../../apps/appInit.ts",
-    "../../apps/useMicroApp.ts",
+    "../appInit.ts",
+    "../useMicroApp.ts",
     "../../components/**/*",
     "../../components/**/*.vue",
     "../../assets/**/*",

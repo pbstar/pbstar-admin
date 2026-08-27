@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { RouterView } from "vue-router";
-import { useMicroApp } from "../../../apps/useMicroApp";
+import { useMicroApp } from "../../useMicroApp";
 
 useMicroApp();
 </script>
