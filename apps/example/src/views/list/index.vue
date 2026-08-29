@@ -127,7 +127,8 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
-import request from "@Passets/utils/request";
+import { getPersonList, deletePersons, createPerson, updatePerson } from "@/api/person";
+import type { PersonItem } from "@/api/person";
 import {
   pTable,
   pSearch,
@@ -138,17 +139,17 @@ import {
 } from "@Pcomponents";
 import { booleanOptions, ethnicOptions, sexOptions, getOptionLabel } from "@/constants/options";
 import Detail from "./components/detail.vue";
-const data = ref<any[]>([]);
+const data = ref<PersonItem[]>([]);
 
 const pagination = ref({
   pageNumber: 1,
   pageSize: 10,
   total: 0,
 });
-const searchValue = ref<Record<string, any>>({});
+const searchValue = ref<{ name?: string; age?: number; sex?: string; isHealthy?: string }>({});
 const isDetail = ref(false);
 const detailType = ref("");
-const detailId = ref<string | number>("");
+const detailId = ref<number>(0);
 const detailRef = ref<InstanceType<typeof Detail> | null>(null);
 
 onMounted(() => {
@@ -174,11 +175,7 @@ const toPageChange = ({
   initTable();
 };
 const initTable = () => {
-  request
-    .post({
-      url: "/example/person/getList",
-      data: { ...searchValue.value, ...pagination.value },
-    })
+  getPersonList({ ...searchValue.value, ...pagination.value })
     .then((res) => {
       if (res && res.code == 200) {
         data.value = res.data.list;
@@ -190,30 +187,24 @@ const initTable = () => {
 };
 const handleAdd = () => {
   detailType.value = "add";
-  detailId.value = "";
+  detailId.value = 0;
   isDetail.value = true;
 };
-const handleView = (row: any) => {
+const handleView = (row: PersonItem) => {
   detailType.value = "view";
   detailId.value = row.id;
   isDetail.value = true;
 };
-const handleEdit = (row: any) => {
+const handleEdit = (row: PersonItem) => {
   detailType.value = "edit";
   detailId.value = row.id;
   isDetail.value = true;
 };
-const handleDelete = (row: any) => {
+const handleDelete = (row: PersonItem) => {
   ElMessageBox.confirm("确认删除吗?", "提示", {
     type: "warning",
   }).then(() => {
-    request
-      .post({
-        url: "/example/person/delete",
-        data: {
-          idList: [row.id],
-        },
-      })
+    deletePersons([row.id])
       .then((res) => {
         if (res && res.code == 200) {
           ElMessage.success("删除成功");
@@ -232,16 +223,8 @@ const handleSave = () => {
   if (!detailInfo) {
     return;
   }
-  const url =
-    detailType.value == "add"
-      ? "/example/person/create"
-      : "/example/person/update";
-  request
-    .post({
-      url,
-      data: detailInfo,
-    })
-    .then((res) => {
+  const save = detailType.value == "add" ? createPerson : updatePerson;
+  save(detailInfo).then((res) => {
       if (res && res.code == 200) {
         ElMessage.success("保存成功");
         isDetail.value = false;

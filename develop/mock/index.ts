@@ -1,4 +1,4 @@
-import type { Res } from "@Passets/utils/request";
+import type { Res } from "@Passets/request";
 import { persist } from "./persist";
 import * as mainMock from "./data/main";
 import * as userMock from "./data/user";
@@ -6,7 +6,8 @@ import * as roleMock from "./data/role";
 import * as permissionMock from "./data/permission";
 import * as personMock from "./data/person";
 
-type MockHandler = (data: any) => Res<any>;
+/** 各 mock 处理函数入参不同，此处分发层无法静态确定请求体形状，故 data 用 any（唯一动态边界） */
+type MockHandler = (data: any) => Res<unknown>;
 /** method:url -> handler 路由表 */
 const routes: Record<string, MockHandler> = {
   "post:/main/login": mainMock.login,
@@ -51,8 +52,8 @@ const MOCK_DELAY = 200;
 export function matchMock(
   method: string,
   url: string,
-  data: any,
-): Promise<Res<any>> | null {
+  data: unknown,
+): Promise<Res<unknown>> | null {
   const handler = routes[`${method.toLowerCase()}:${url}`];
   if (!handler) {
     console.warn(

@@ -15,10 +15,10 @@ import {
  * 本表只承载"权限点清单"，与真实菜单结构解耦
  */
 export interface PermissionRecord {
-  id: any;
+  id: number;
   appKey: string;
   type: "group" | "menu" | "button";
-  groupId: any; // menu/button 归属的分组 id；group 类型本身留空 ""
+  groupId: number; // menu/button 归属的分组 id；group 类型本身为 0（无归属）
   key: string; // 权限标识；group 不参与权限判断，留空
   name: string;
   remark: string;
@@ -31,7 +31,7 @@ export const permissions: PermissionRecord[] = [
     id: 1,
     appKey: "system",
     type: "group",
-    groupId: "",
+    groupId: 0,
     key: "",
     name: "用户管理",
     remark: "",
@@ -40,7 +40,7 @@ export const permissions: PermissionRecord[] = [
     id: 2,
     appKey: "system",
     type: "group",
-    groupId: "",
+    groupId: 0,
     key: "",
     name: "角色管理",
     remark: "",
@@ -49,7 +49,7 @@ export const permissions: PermissionRecord[] = [
     id: 3,
     appKey: "system",
     type: "group",
-    groupId: "",
+    groupId: 0,
     key: "",
     name: "权限管理",
     remark: "",
@@ -152,7 +152,7 @@ export const permissions: PermissionRecord[] = [
     id: 18,
     appKey: "example",
     type: "group",
-    groupId: "",
+    groupId: 0,
     key: "",
     name: "用户列表",
     remark: "",
@@ -161,7 +161,7 @@ export const permissions: PermissionRecord[] = [
     id: 19,
     appKey: "example",
     type: "group",
-    groupId: "",
+    groupId: 0,
     key: "",
     name: "图表",
     remark: "",
@@ -170,7 +170,7 @@ export const permissions: PermissionRecord[] = [
     id: 20,
     appKey: "example",
     type: "group",
-    groupId: "",
+    groupId: 0,
     key: "",
     name: "Markdown编辑器",
     remark: "",
@@ -179,7 +179,7 @@ export const permissions: PermissionRecord[] = [
     id: 21,
     appKey: "example",
     type: "group",
-    groupId: "",
+    groupId: 0,
     key: "",
     name: "富文本编辑器",
     remark: "",
@@ -188,7 +188,7 @@ export const permissions: PermissionRecord[] = [
     id: 22,
     appKey: "example",
     type: "group",
-    groupId: "",
+    groupId: 0,
     key: "",
     name: "数据大屏",
     remark: "",
@@ -241,8 +241,28 @@ export const permissions: PermissionRecord[] = [
   },
 ];
 
-export function getList(data: any) {
-  const { appKey, type, groupId, ...filters } = data || {};
+/** 权限列表查询参数（appKey/type/groupId 精确过滤 + name/remark 模糊搜索） */
+export interface PermissionListQuery {
+  appKey?: string;
+  type?: string;
+  groupId?: number;
+  name?: string;
+  remark?: string;
+}
+
+/** 权限新增/更新入参 */
+export interface PermissionPayload {
+  id?: number;
+  appKey?: string;
+  type?: "group" | "menu" | "button";
+  groupId?: number;
+  key?: string;
+  name?: string;
+  remark?: string;
+}
+
+export function getList(data: PermissionListQuery = {}) {
+  const { appKey, type, groupId, name, remark } = data;
   let filtered = permissions;
   if (appKey !== undefined && appKey !== "") {
     filtered = filtered.filter((item) => item.appKey === appKey);
@@ -250,27 +270,26 @@ export function getList(data: any) {
   if (type !== undefined && type !== "") {
     filtered = filtered.filter((item) => item.type === type);
   }
-  if (groupId !== undefined && groupId !== "") {
-    filtered = filtered.filter(
-      (item) => String(item.groupId) === String(groupId),
-    );
+  if (groupId !== undefined) {
+    filtered = filtered.filter((item) => item.groupId === groupId);
   }
+  const filters: Record<string, unknown> = { name, remark };
   filtered = fuzzyFilter(filtered, filters);
   return ok(filtered);
 }
 
-export function getDetail(data: any) {
+export function getDetail(data: { id: number }) {
   const permission = findById(permissions, data?.id);
   if (!permission) return fail("权限不存在");
   return ok(permission);
 }
 
-export function create(data: any) {
+export function create(data: PermissionPayload) {
   const permission: PermissionRecord = {
     id: nextId(permissions),
     appKey: data?.appKey || "",
     type: data?.type || "menu",
-    groupId: data?.type === "group" ? "" : (data?.groupId ?? ""),
+    groupId: data?.type === "group" ? 0 : (data?.groupId ?? 0),
     key: data?.type === "group" ? "" : data?.key || "",
     name: data?.name || "",
     remark: data?.remark || "",
@@ -279,8 +298,9 @@ export function create(data: any) {
   return ok(null);
 }
 
-export function update(data: any) {
-  const permission = findById(permissions, data?.id);
+export function update(data: PermissionPayload) {
+  if (!data.id) return fail("权限不存在");
+  const permission = findById(permissions, data.id);
   if (!permission) return fail("权限不存在");
   permission.appKey = data?.appKey ?? permission.appKey;
   permission.name = data?.name ?? permission.name;
@@ -292,7 +312,7 @@ export function update(data: any) {
   return ok(null);
 }
 
-export function deletePermissions(data: any) {
+export function deletePermissions(data: { idList?: number[] }) {
   removeByIdList(permissions, data?.idList || []);
   return ok(null);
 }

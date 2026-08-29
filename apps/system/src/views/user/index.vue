@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import { ref, onBeforeMount, onMounted } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
-import request from "@Passets/utils/request";
+import { getUserList, deleteUsers, createUser, updateUser } from "@/api/user";
+import type { UserItem } from "@/api/user";
+import { getAllRoles } from "@/api/role";
+import type { RoleOption } from "@/api/role";
 import { pTable, pSearch, pTitle, pDialog, pItem } from "@Pcomponents";
 import Detail from "./components/detail.vue";
 
-const searchValue = ref<Record<string, any>>({});
-const tableData = ref<any[]>([]);
+const searchValue = ref<{ name?: string; username?: string; role?: string }>({});
+const tableData = ref<UserItem[]>([]);
 const roleOptions = ref<{ label: string; value: string }[]>([]);
 const pagination = ref({
   pageNumber: 1,
@@ -14,7 +17,7 @@ const pagination = ref({
   total: 0,
 });
 const detailType = ref("");
-const detailId = ref<string | number>("");
+const detailId = ref<number>(0);
 const isDetail = ref(false);
 const detailRef = ref<InstanceType<typeof Detail> | null>(null);
 
@@ -51,11 +54,7 @@ const initTable = () => {
     ...searchValue.value,
   };
   tableData.value = [];
-  request
-    .post({
-      url: "/system/user/getList",
-      data: params,
-    })
+  getUserList(params)
     .then((res) => {
       if (res && res.code === 200) {
         tableData.value = res.data.list;
@@ -66,13 +65,10 @@ const initTable = () => {
     });
 };
 const getRoleList = () => {
-  request
-    .get({
-      url: "/system/role/getAllList",
-    })
+  getAllRoles()
     .then((res) => {
       if (res.code === 200 && res.data) {
-        roleOptions.value = res.data.map((item: any) => {
+        roleOptions.value = res.data.map((item: RoleOption) => {
           return {
             label: item.name,
             value: item.role_key,
@@ -88,26 +84,22 @@ const getRoleLabel = (roleKey: string) => {
   const role = roleOptions.value.find((item) => item.value === roleKey);
   return role ? role.label : roleKey;
 };
-const handleView = (row: any) => {
+const handleView = (row: UserItem) => {
   detailType.value = "view";
   detailId.value = row.id;
   isDetail.value = true;
 };
-const handleEdit = (row: any) => {
+const handleEdit = (row: UserItem) => {
   detailType.value = "edit";
   detailId.value = row.id;
   isDetail.value = true;
 };
-const handleDelete = (row: any) => {
+const handleDelete = (row: UserItem) => {
   ElMessageBox.confirm("确认删除吗?", "提示", {
     type: "warning",
   })
     .then(() => {
-      request
-        .post({
-          url: "/system/user/delete",
-          data: { idList: [row.id] },
-        })
+      deleteUsers([row.id])
         .then((res) => {
           if (res && res.code === 200) {
             initTable();
@@ -121,19 +113,14 @@ const handleDelete = (row: any) => {
 };
 const handleAdd = () => {
   detailType.value = "add";
-  detailId.value = "";
+  detailId.value = 0;
   isDetail.value = true;
 };
 const handleSave = () => {
   const detailInfo = detailRef.value?.getFormValue();
-  const url =
-    detailType.value == "add" ? "/system/user/create" : "/system/user/update";
-  request
-    .post({
-      url,
-      data: detailInfo,
-    })
-    .then((res) => {
+  if (!detailInfo) return;
+  const save = detailType.value == "add" ? createUser : updateUser;
+  save(detailInfo).then((res) => {
       if (res && res.code === 200) {
         initTable();
         ElMessage.success("操作成功");

@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { ref, onBeforeMount } from "vue";
 import { ElMessage } from "element-plus";
-import request from "@Passets/utils/request";
+import { getPermissionList, getPermissionDetail } from "@/api/permission";
+import type { PermissionItem, PermissionPayload } from "@/api/permission";
 import { pCollapse, pItem } from "@Pcomponents";
 
 const props = defineProps({
@@ -10,21 +11,25 @@ const props = defineProps({
     default: "",
   },
   id: {
-    type: [String, Number],
-    default: "",
+    type: Number,
+    default: 0,
   },
   appKey: {
     type: String,
     default: "",
   },
 });
-const detailInfo = ref<Record<string, any>>({
+const detailInfo = ref<PermissionPayload>({
   type: "menu",
   appKey: props.appKey,
+  key: "",
+  name: "",
+  remark: "",
+  groupId: 0,
 });
 const detailType = ref("");
-const detailId = ref<string | number>("");
-const groupList = ref<any[]>([]); // 同应用下的分组列表（供 menu/button 选择归属）
+const detailId = ref<number>(0);
+const groupList = ref<{ label: string; value: number }[]>([]); // 同应用下的分组列表（供 menu/button 选择归属）
 
 onBeforeMount(() => {
   detailType.value = props.type;
@@ -36,14 +41,10 @@ onBeforeMount(() => {
 });
 
 const getGroupList = () => {
-  request
-    .post({
-      url: "/system/permission/getList",
-      data: { appKey: detailInfo.value.appKey, type: "group" },
-    })
+  getPermissionList({ appKey: detailInfo.value.appKey, type: "group" })
     .then((res) => {
       if (res.code === 200) {
-        groupList.value = res.data.map((item: any) => ({
+        groupList.value = res.data.map((item: PermissionItem) => ({
           label: item.name,
           value: item.id,
         }));
@@ -54,13 +55,7 @@ const getGroupList = () => {
 };
 
 const getDetailInfo = () => {
-  request
-    .get({
-      url: "/system/permission/getDetail",
-      data: {
-        id: detailId.value,
-      },
-    })
+  getPermissionDetail({ id: detailId.value })
     .then((res) => {
       if (res && res.code == 200) {
         detailInfo.value = res.data;
@@ -86,7 +81,7 @@ defineExpose({
           class="dtItem"
           label="类型"
           :showText="detailType === 'view'"
-          :text="({ group: '分组', menu: '菜单', button: '按钮' } as Record<string, string>)[detailInfo.type]"
+          :text="({ group: '分组', menu: '菜单', button: '按钮' } as Record<string, string>)[detailInfo.type!]"
         >
           <el-radio-group v-model="detailInfo.type" :disabled="detailType === 'edit'">
             <el-radio value="group">分组</el-radio>

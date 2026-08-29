@@ -1,9 +1,9 @@
 import { ElMessage } from "element-plus";
 import { bus } from "wujie";
 import router from "@/router";
-import useSharedStore from "@Passets/stores/shared";
+import useSharedStore, { BUS_EVENTS } from "@Passets/stores/shared";
 import { useAppsStore } from "@/stores/apps";
-import request from "@Passets/utils/request";
+import { loginByToken } from "@/api";
 
 // 路由白名单（/404 由 catch-all 兜底，无需白名单）
 export const whiteList = ["/login", "/403"];
@@ -21,7 +21,7 @@ export const isPublicPath = (path: string) =>
  */
 export const getUserInfo = async (): Promise<boolean> => {
   try {
-    const userRes = await request.post({ url: "/main/loginByToken" });
+    const userRes = await loginByToken();
     if (userRes.code !== 200 || !userRes.data) {
       ElMessage.error(userRes.msg || "获取用户信息失败");
       return false;
@@ -41,8 +41,8 @@ export const getUserInfo = async (): Promise<boolean> => {
  */
 export function logout() {
   localStorage.removeItem("p_token");
-  useSharedStore().userInfo = null;
+  useSharedStore().setUserInfo(null);
   useAppsStore().setAppKey();
-  bus.$emit("changeSharedPinia", { userInfo: null });
+  bus.$emit(BUS_EVENTS.SHARED_STATE_SYNC, { userInfo: null });
   router.push({ path: "/login" });
 }

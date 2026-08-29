@@ -17,7 +17,7 @@ type MockData = {
 };
 
 /** 用目标数组原地替换内存数组，保持引用一致（其它模块按引用读取同一份数据） */
-function replace<T extends any[]>(target: T, source?: T) {
+function replace<T>(target: T[], source?: T[]) {
   if (!Array.isArray(source)) return;
   target.splice(0, target.length, ...source);
 }

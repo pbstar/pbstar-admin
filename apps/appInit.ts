@@ -9,12 +9,14 @@ import { permission } from "@Passets/directives/permission";
 
 /**
  * 创建微应用实例的通用方法
+ * 每个子应用持有独立 Pinia 实例（wujie 沙箱间不共享）；
+ * 跨应用共享状态的初始值经 props.sharedPinia 首次水合，
+ * 后续变更统一经 wujie bus 广播同步（事件契约见 @Passets/stores/shared）
  * @param App 根组件
  * @param useList 配置选项
  */
 export function createMicroApp(App: Component, useList: Plugin[] = []) {
   let instance: ReturnType<typeof createApp> | null = null;
-  const mainPinia = window.parent?.$mainPinia;
 
   const render = () => {
     const app = createApp(App);
@@ -23,10 +25,6 @@ export function createMicroApp(App: Component, useList: Plugin[] = []) {
     app.use(ElementPlus, {
       locale: zhCn,
     });
-
-    if (mainPinia) {
-      app.use(mainPinia);
-    }
 
     const appPinia = createPinia();
     app.use(appPinia);

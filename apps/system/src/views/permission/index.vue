@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { ref, onBeforeMount } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
-import request from "@Passets/utils/request";
+import { getPermissionList, deletePermissions, createPermission, updatePermission } from "@/api/permission";
+import type { PermissionItem, PermissionListParams } from "@/api/permission";
 import {
   pTable,
   pSearch,
@@ -11,6 +12,7 @@ import {
 } from "@Pcomponents";
 import Detail from "./components/detail.vue";
 import { structure } from "@Passets/utils/array";
+import type { TreeNode } from "@Passets/utils/array";
 import appGroups from "@Passets/constants/apps";
 
 const typeOptions = [
@@ -21,25 +23,36 @@ const typeOptions = [
 const typeLabelMap: Record<string, string> = { group: "分组", menu: "菜单", button: "按钮" };
 const typeTagMap: Record<string, string> = { group: "info", menu: "primary", button: "warning" };
 
-const searchValue = ref<Record<string, any>>({});
-const tableData = ref<any[]>([]);
+/** 权限管理左侧应用树节点（group 层仅作分组，app 层附带应用信息） */
+interface AppTreeNode {
+  label: string;
+  value: string;
+  type: "group" | "app";
+  children?: AppTreeNode[];
+  name?: string;
+  appKey?: string;
+  icon?: string;
+}
+
+const searchValue = ref<{ name?: string; type?: string }>({});
+const tableData = ref<TreeNode<PermissionItem>[]>([]);
 const detailType = ref("");
-const detailId = ref<string | number>("");
+const detailId = ref<number>(0);
 const isDetail = ref(false);
 const detailRef = ref<InstanceType<typeof Detail> | null>(null);
 const currentNode = ref("");
-const data = ref<any[]>([]);
+const data = ref<AppTreeNode[]>([]);
 
 onBeforeMount(() => {
   initTree();
 });
 const initTree = () => {
   // 应用列表已改为前端常量维护，按分组转换为树形数组
-  data.value = appGroups.map((group) => ({
+  data.value = appGroups.map<AppTreeNode>((group) => ({
     label: group.group,
     value: `group_${group.group}`,
     type: "group",
-    children: group.apps.map((app) => {
+    children: group.apps.map<AppTreeNode>((app) => {
       if (!currentNode.value) {
         currentNode.value = app.appKey;
         initTable();
@@ -61,18 +74,14 @@ const toReset = () => {
   toSearch();
 };
 const initTable = () => {
-  const params: Record<string, any> = {
+  const params: PermissionListParams = {
     ...searchValue.value,
   };
   if (currentNode.value && !currentNode.value.startsWith("group")) {
     params.appKey = currentNode.value;
   }
   tableData.value = [];
-  request
-    .post({
-      url: "/system/permission/getList",
-      data: params,
-    })
+  getPermissionList(params)
     .then((res) => {
       if (res && res.code === 200) {
         tableData.value = structure(res.data, "groupId");
@@ -81,26 +90,22 @@ const initTable = () => {
       }
     });
 };
-const handleView = (row: any) => {
+const handleView = (row: PermissionItem) => {
   detailType.value = "view";
   detailId.value = row.id;
   isDetail.value = true;
 };
-const handleEdit = (row: any) => {
+const handleEdit = (row: PermissionItem) => {
   detailType.value = "edit";
   detailId.value = row.id;
   isDetail.value = true;
 };
-const handleDelete = (row: any) => {
+const handleDelete = (row: PermissionItem) => {
   ElMessageBox.confirm("确认删除吗?", "提示", {
     type: "warning",
   })
     .then(() => {
-      request
-        .post({
-          url: "/system/permission/delete",
-          data: { idList: [row.id] },
-        })
+      deletePermissions([row.id])
         .then((res) => {
           if (res && res.code === 200) {
             initTable();
@@ -118,19 +123,14 @@ const handleAdd = () => {
     return;
   }
   detailType.value = "add";
-  detailId.value = "";
+  detailId.value = 0;
   isDetail.value = true;
 };
 const handleSave = () => {
   const detailInfo = detailRef.value?.getFormValue();
-  const url =
-    detailType.value == "add" ? "/system/permission/create" : "/system/permission/update";
-  request
-    .post({
-      url,
-      data: detailInfo,
-    })
-    .then((res) => {
+  if (!detailInfo) return;
+  const save = detailType.value == "add" ? createPermission : updatePermission;
+  save(detailInfo).then((res) => {
       if (res && res.code === 200) {
         initTable();
         ElMessage.success("操作成功");
@@ -143,7 +143,7 @@ const handleSave = () => {
 const handleBack = () => {
   isDetail.value = false;
 };
-const handleNodeClick = (data: any) => {
+const handleNodeClick = (data: AppTreeNode) => {
   currentNode.value = data.value;
   if (data.type == "app") {
     initTable();

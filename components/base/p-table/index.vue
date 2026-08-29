@@ -124,7 +124,7 @@ const handlePaginationChange = () => {
     });
   });
 };
-const handleSelectionChange = (val: any[]) => {
+const handleSelectionChange = (val: unknown[]) => {
   emit("selectionChange", val);
 };
 

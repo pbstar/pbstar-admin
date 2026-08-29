@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { ref, onBeforeMount } from "vue";
 import { ElMessage } from "element-plus";
-import request from "@Passets/utils/request";
+import { getPersonDetail } from "@/api/person";
+import type { PersonPayload } from "@/api/person";
 import { pCollapse, pItem } from "@Pcomponents";
 import { booleanOptions, ethnicOptions, sexOptions, getOptionLabel } from "@/constants/options";
 
@@ -11,13 +12,13 @@ const props = defineProps({
     default: "",
   },
   id: {
-    type: [String, Number],
-    default: "",
+    type: Number,
+    default: 0,
   },
 });
-const detailInfo = ref<Record<string, any>>({});
+const detailInfo = ref<PersonPayload>({ name: "", age: 0, sex: "", ethnic: "", isHealthy: "" });
 const detailType = ref("");
-const detailId = ref<string | number>("");
+const detailId = ref<number>(0);
 
 onBeforeMount(() => {
   detailType.value = props.type;
@@ -28,13 +29,7 @@ onBeforeMount(() => {
 });
 
 const getDetailInfo = () => {
-  request
-    .get({
-      url: "/example/person/getDetail",
-      data: {
-        id: detailId.value,
-      },
-    })
+  getPersonDetail({ id: detailId.value })
     .then((res) => {
       if (res && res.code == 200) {
         detailInfo.value = res.data;

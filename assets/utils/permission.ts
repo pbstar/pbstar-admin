@@ -9,6 +9,9 @@ export interface MenuItem {
   children?: MenuItem[];
 }
 
+/** permissions 字符串 -> 已授权 key 集合缓存（登出换账号后 key 不同自然失效） */
+const keySetCache = new Map<string, Set<string>>();
+
 /**
  * 判断权限 key 是否命中已授权集合
  * @param key 待判断的权限标识，为空视为无需校验，直接放行
@@ -21,12 +24,16 @@ export function hasPermission(
   if (!key) return true;
   if (permissions === "all") return true;
   if (!permissions) return false;
-  const keySet = new Set(
-    permissions
-      .split(",")
-      .map((k) => k.trim())
-      .filter(Boolean),
-  );
+  let keySet = keySetCache.get(permissions);
+  if (!keySet) {
+    keySet = new Set(
+      permissions
+        .split(",")
+        .map((k) => k.trim())
+        .filter(Boolean),
+    );
+    keySetCache.set(permissions, keySet);
+  }
   return keySet.has(key);
 }
 

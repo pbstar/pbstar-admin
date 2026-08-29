@@ -2,7 +2,7 @@ import { ok, fail, paginate, fuzzyFilter, removeByIdList, findById, nextId } fro
 
 /** 角色记录（permissions 为逗号分隔的权限 key 字符串，"all" 表示全量放行，与真实接口保持一致） */
 export interface RoleRecord {
-  id: any;
+  id: number;
   name: string;
   key: string;
   permissions: string;
@@ -31,8 +31,25 @@ export const roles: RoleRecord[] = [
   },
 ];
 
-export function getList(data: any) {
-  const { pageNumber, pageSize, ...filters } = data || {};
+/** 角色列表查询参数（分页 + 可选搜索条件） */
+export interface RoleListQuery {
+  pageNumber?: number;
+  pageSize?: number;
+  name?: string;
+  key?: string;
+}
+
+/** 角色新增/更新入参 */
+export interface RolePayload {
+  id?: number;
+  name?: string;
+  key?: string;
+  permissions?: string;
+}
+
+export function getList(data: RoleListQuery = {}) {
+  const { pageNumber, pageSize, name, key } = data;
+  const filters: Record<string, unknown> = { name, key };
   const filtered = fuzzyFilter(roles, filters);
   const { list, total } = paginate(filtered, pageNumber, pageSize);
   return ok({ list, total });
@@ -43,13 +60,13 @@ export function getAllList() {
   return ok(roles.map((r) => ({ id: r.id, name: r.name, role_key: r.key })));
 }
 
-export function getDetail(data: any) {
+export function getDetail(data: { id: number }) {
   const role = findById(roles, data?.id);
   if (!role) return fail("角色不存在");
   return ok(role);
 }
 
-export function create(data: any) {
+export function create(data: RolePayload) {
   const role: RoleRecord = {
     id: nextId(roles),
     name: data?.name || "",
@@ -60,8 +77,9 @@ export function create(data: any) {
   return ok(null);
 }
 
-export function update(data: any) {
-  const role = findById(roles, data?.id);
+export function update(data: RolePayload) {
+  if (!data.id) return fail("角色不存在");
+  const role = findById(roles, data.id);
   if (!role) return fail("角色不存在");
   role.name = data?.name ?? role.name;
   role.key = data?.key ?? role.key;
@@ -69,7 +87,7 @@ export function update(data: any) {
   return ok(null);
 }
 
-export function deleteRoles(data: any) {
+export function deleteRoles(data: { idList?: number[] }) {
   removeByIdList(roles, data?.idList || []);
   return ok(null);
 }

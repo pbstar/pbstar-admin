@@ -1,19 +1,20 @@
 <script setup lang="ts">
 import { ref, onBeforeMount } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
-import request from "@Passets/utils/request";
+import { getRoleList, deleteRoles, createRole, updateRole } from "@/api/role";
+import type { RoleItem } from "@/api/role";
 import { pTable, pSearch, pTitle, pDialog, pItem } from "@Pcomponents";
 import Detail from "./components/detail.vue";
 
-const searchValue = ref<Record<string, any>>({});
-const tableData = ref<any[]>([]);
+const searchValue = ref<{ name?: string; key?: string }>({});
+const tableData = ref<RoleItem[]>([]);
 const pagination = ref({
   pageNumber: 1,
   pageSize: 10,
   total: 0,
 });
 const detailType = ref("");
-const detailId = ref<string | number>("");
+const detailId = ref<number>(0);
 const isDetail = ref(false);
 const detailRef = ref<InstanceType<typeof Detail> | null>(null);
 
@@ -47,11 +48,7 @@ const initTable = () => {
     ...searchValue.value,
   };
   tableData.value = [];
-  request
-    .post({
-      url: "/system/role/getList",
-      data: params,
-    })
+  getRoleList(params)
     .then((res) => {
       if (res && res.code === 200) {
         tableData.value = res.data.list;
@@ -61,26 +58,22 @@ const initTable = () => {
       }
     });
 };
-const handleView = (row: any) => {
+const handleView = (row: RoleItem) => {
   detailType.value = "view";
   detailId.value = row.id;
   isDetail.value = true;
 };
-const handleEdit = (row: any) => {
+const handleEdit = (row: RoleItem) => {
   detailType.value = "edit";
   detailId.value = row.id;
   isDetail.value = true;
 };
-const handleDelete = (row: any) => {
+const handleDelete = (row: RoleItem) => {
   ElMessageBox.confirm("确认删除吗?", "提示", {
     type: "warning",
   })
     .then(() => {
-      request
-        .post({
-          url: "/system/role/delete",
-          data: { idList: [row.id] },
-        })
+      deleteRoles([row.id])
         .then((res) => {
           if (res && res.code === 200) {
             initTable();
@@ -94,19 +87,14 @@ const handleDelete = (row: any) => {
 };
 const handleAdd = () => {
   detailType.value = "add";
-  detailId.value = "";
+  detailId.value = 0;
   isDetail.value = true;
 };
 const handleSave = () => {
   const detailInfo = detailRef.value?.getFormValue();
-  const url =
-    detailType.value == "add" ? "/system/role/create" : "/system/role/update";
-  request
-    .post({
-      url,
-      data: detailInfo,
-    })
-    .then((res) => {
+  if (!detailInfo) return;
+  const save = detailType.value == "add" ? createRole : updateRole;
+  save(detailInfo).then((res) => {
       if (res && res.code === 200) {
         initTable();
         ElMessage.success("操作成功");

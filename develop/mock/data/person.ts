@@ -2,7 +2,7 @@ import { ok, fail, paginate, fuzzyFilter, removeByIdList, findById, nextId } fro
 
 /** 示例人员记录（example 应用） */
 export interface PersonRecord {
-  id: any;
+  id: number;
   name: string;
   age: number;
   sex: string;
@@ -17,20 +17,42 @@ export const persons: PersonRecord[] = [
   { id: 4, name: "赵敏", age: 42, sex: "2", ethnic: "蒙古族", isHealthy: "是" },
 ];
 
-export function getList(data: any) {
-  const { pageNumber, pageSize, total, ...filters } = data || {};
+/** 人员列表查询参数（分页 + 可选搜索条件） */
+export interface PersonListQuery {
+  pageNumber?: number;
+  pageSize?: number;
+  name?: string;
+  age?: number;
+  sex?: string;
+  ethnic?: string;
+  isHealthy?: string;
+}
+
+/** 人员新增/更新入参 */
+export interface PersonPayload {
+  id?: number;
+  name?: string;
+  age?: number;
+  sex?: string;
+  ethnic?: string;
+  isHealthy?: string;
+}
+
+export function getList(data: PersonListQuery = {}) {
+  const { pageNumber, pageSize, name, age, sex, ethnic, isHealthy } = data;
+  const filters: Record<string, unknown> = { name, age, sex, ethnic, isHealthy };
   const filtered = fuzzyFilter(persons, filters);
   const { list, total: count } = paginate(filtered, pageNumber, pageSize);
   return ok({ list, total: count });
 }
 
-export function getDetail(data: any) {
+export function getDetail(data: { id: number }) {
   const person = findById(persons, data?.id);
   if (!person) return fail("人员不存在");
   return ok(person);
 }
 
-export function create(data: any) {
+export function create(data: PersonPayload) {
   const person: PersonRecord = {
     id: nextId(persons),
     name: data?.name || "",
@@ -43,8 +65,9 @@ export function create(data: any) {
   return ok(null);
 }
 
-export function update(data: any) {
-  const person = findById(persons, data?.id);
+export function update(data: PersonPayload) {
+  if (!data.id) return fail("人员不存在");
+  const person = findById(persons, data.id);
   if (!person) return fail("人员不存在");
   person.name = data?.name ?? person.name;
   person.age = data?.age ?? person.age;
@@ -54,7 +77,7 @@ export function update(data: any) {
   return ok(null);
 }
 
-export function deletePersons(data: any) {
+export function deletePersons(data: { idList?: number[] }) {
   removeByIdList(persons, data?.idList || []);
   return ok(null);
 }

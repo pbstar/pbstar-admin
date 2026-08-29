@@ -40,24 +40,21 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
 import { ElMessage } from "element-plus";
-import request from "@Passets/utils/request";
+import { updateMyInfo } from "@/api";
+import type { UpdateMyInfoPayload } from "@/api";
 import useSharedStore from "@Passets/stores/shared";
 import { pTitle, pItem } from "@Pcomponents";
 import { logout } from "@/utils/auth";
 
 const sharedStore = useSharedStore();
-const detailInfo = ref<Record<string, any>>({});
+const detailInfo = ref<UpdateMyInfoPayload>({ name: "", avatar: "", username: "", password: "" });
 const saving = ref(false);
 
 const toSave = () => {
   // 防重复点击：保存中直接忽略后续点击
   if (saving.value) return;
   saving.value = true;
-  request
-    .post({
-      url: "/main/updateMyInfo",
-      data: detailInfo.value,
-    })
+  updateMyInfo(detailInfo.value)
     .then((res) => {
       if (res && res.code === 200) {
         ElMessage.success("修改成功，请重新登录");
@@ -72,9 +69,14 @@ const toSave = () => {
 };
 watch(
   () => sharedStore.userInfo,
-  (newVal, oldVal) => {
+  (newVal) => {
     if (newVal) {
-      detailInfo.value = { ...newVal };
+      detailInfo.value = {
+        name: newVal.name ?? "",
+        avatar: newVal.avatar ?? "",
+        username: newVal.username ?? "",
+        password: "",
+      };
     }
   },
   { deep: true, immediate: true },

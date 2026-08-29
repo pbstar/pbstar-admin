@@ -1,12 +1,31 @@
 <script setup lang="ts">
 import { ref, onBeforeMount } from "vue";
 import { ElMessage } from "element-plus";
-import request from "@Passets/utils/request";
+import { getPermissionList } from "@/api/permission";
+import type { PermissionItem } from "@/api/permission";
+import { getRoleDetail } from "@/api/role";
+import type { RolePayload } from "@/api/role";
 import { pCollapse, pItem } from "@Pcomponents";
 import appGroups from "@Passets/constants/apps";
 
 /** 应用列表已改为按分组维护的二级数组，这里展平供权限树逐个应用挂靠 */
 const apps = appGroups.flatMap((group) => group.apps);
+
+/** 权限树节点（tree-select 数据，value 为权限 key） */
+interface PermissionTreeNode {
+  label: string;
+  value: string;
+  disabled?: boolean;
+  children?: PermissionTreeNode[];
+}
+
+/** 角色表单：permissions 在表单内为勾选的 key 数组，保存时 join 成逗号字符串 */
+interface RoleForm {
+  id: number;
+  name: string;
+  key: string;
+  permissions: string[];
+}
 
 const props = defineProps({
   type: {
@@ -14,14 +33,14 @@ const props = defineProps({
     default: "",
   },
   id: {
-    type: [String, Number],
-    default: "",
+    type: Number,
+    default: 0,
   },
 });
-const detailInfo = ref<Record<string, any>>({});
+const detailInfo = ref<RoleForm>({ id: 0, name: "", key: "", permissions: [] });
 const detailType = ref("");
-const detailId = ref<string | number>("");
-const permissionTree = ref<any[]>([]);
+const detailId = ref<number>(0);
+const permissionTree = ref<PermissionTreeNode[]>([]);
 
 onBeforeMount(() => {
   detailType.value = props.type;
@@ -34,26 +53,26 @@ onBeforeMount(() => {
 
 /** 组装 tree-select 数据：应用（虚拟根）-> 分组 -> 菜单/按钮叶子（可勾选，value 为其 key） */
 const getPermissionTree = () => {
-  request.post({ url: "/system/permission/getList" }).then((permissionRes) => {
+  getPermissionList().then((permissionRes) => {
     if (permissionRes.code !== 200) {
       ElMessage.error(permissionRes.msg || "获取权限数据失败");
       return;
     }
     const permissions = permissionRes.data;
-    permissionTree.value = apps.map((app) => {
-      const appPermissions = permissions.filter((item: any) => item.appKey === app.appKey);
-      const groups = appPermissions.filter((item: any) => item.type === "group");
+    permissionTree.value = apps.map<PermissionTreeNode>((app) => {
+      const appPermissions = permissions.filter((item: PermissionItem) => item.appKey === app.appKey);
+      const groups = appPermissions.filter((item: PermissionItem) => item.type === "group");
       return {
         label: app.name,
         value: `__app_${app.appKey}`,
         disabled: true,
-        children: groups.map((group: any) => ({
+        children: groups.map<PermissionTreeNode>((group) => ({
           label: group.name,
           value: `__group_${group.id}`,
           disabled: true,
           children: appPermissions
-            .filter((item: any) => item.groupId === group.id)
-            .map((item: any) => ({ label: item.name, value: item.key })),
+            .filter((item: PermissionItem) => item.groupId === group.id)
+            .map((item: PermissionItem) => ({ label: item.name, value: item.key })),
         })),
       };
     });
@@ -61,33 +80,24 @@ const getPermissionTree = () => {
 };
 
 const getDetailInfo = () => {
-  request
-    .get({
-      url: "/system/role/getDetail",
-      data: {
-        id: detailId.value,
-      },
-    })
+  getRoleDetail({ id: detailId.value })
     .then((res) => {
       if (res && res.code == 200) {
-        detailInfo.value = res.data;
-        if (detailInfo.value.permissions) {
-          detailInfo.value.permissions = detailInfo.value.permissions.split(",");
-        }
+        detailInfo.value = {
+          ...res.data,
+          permissions: res.data.permissions ? res.data.permissions.split(",") : [],
+        };
       } else {
         ElMessage.error(res.msg || "操作异常");
       }
     });
 };
-const getFormValue = () => {
-  const info = { ...detailInfo.value };
-  if (Array.isArray(info.permissions)) {
+const getFormValue = (): RolePayload => {
+  const permissions = detailInfo.value.permissions
     // 防御性过滤虚拟应用/分组节点（disabled 节点正常不会进入勾选值）
-    info.permissions = info.permissions
-      .filter((v: string) => !v.startsWith("__app_") && !v.startsWith("__group_"))
-      .join(",");
-  }
-  return info;
+    .filter((v: string) => !v.startsWith("__app_") && !v.startsWith("__group_"))
+    .join(",");
+  return { ...detailInfo.value, permissions };
 };
 
 defineExpose({
@@ -116,14 +126,14 @@ defineExpose({
           <el-input
             v-model="detailInfo.key"
             placeholder="请输入角色Key"
-            :disabled="detailInfo.id == '1'"
+            :disabled="detailInfo.id === 1"
           />
         </p-item>
         <p-item
           class="dtItem"
           label="权限"
           :showText="detailType === 'view'"
-          :text="detailInfo.permissions"
+          :text="detailInfo.permissions.join(',')"
         >
           <el-tree-select
             v-model="detailInfo.permissions"
@@ -132,7 +142,7 @@ defineExpose({
             multiple
             :check-strictly="false"
             placeholder="请选择权限"
-            :disabled="detailInfo.id == '1'"
+            :disabled="detailInfo.id === 1"
           />
         </p-item>
       </div>

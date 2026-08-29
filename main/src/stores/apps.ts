@@ -104,7 +104,7 @@ export const useAppsStore = defineStore("apps", () => {
   const hasAppNav = (query: LocationQuery) => {
     const app = getApp();
     if (!app || !query) return false;
-    const url = `/admin/${app.appKey}?${app.appKey}=${encodeURIComponent(query[app.appKey] as any)}`;
+    const url = `/admin/${app.appKey}?${app.appKey}=${encodeURIComponent(String(query[app.appKey] ?? ""))}`;
     return app.navs.some((nav) => nav.url === url);
   };
 

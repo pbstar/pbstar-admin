@@ -1,8 +1,8 @@
-import type { Res } from "@Passets/utils/request";
+import type { Res } from "@Passets/request";
 
 /** 生成自增 mock id：取数组当前最大 id + 1，避免与种子数据冲突，也无需维护额外状态 */
-export function nextId<T extends { id: any }>(list: T[]): number {
-  return list.reduce((max, item) => Math.max(max, Number(item.id) || 0), 0) + 1;
+export function nextId(list: { id: number }[]): number {
+  return list.reduce((max, item) => Math.max(max, item.id || 0), 0) + 1;
 }
 
 export function ok<T>(data: T, msg = "操作成功"): Res<T> {
@@ -29,15 +29,16 @@ export function paginate<T>(
  * 模糊过滤：字段值需存在且包含关键字（大小写不敏感）
  * @param filters 字段 -> 关键字，空值/undefined 会被忽略
  */
-export function fuzzyFilter<T extends Record<string, any>>(
+export function fuzzyFilter<T>(
   list: T[],
-  filters: Record<string, any>,
+  filters: Record<string, unknown>,
 ): T[] {
   const entries = Object.entries(filters).filter(([, v]) => v !== undefined && v !== "" && v !== null);
   if (!entries.length) return list;
   return list.filter((item) =>
     entries.every(([key, val]) => {
-      const itemVal = item[key];
+      // 泛型 T 无索引签名，按记录读取字段值（搜索字段为动态键名）
+      const itemVal = (item as Record<string, unknown>)[key];
       if (itemVal === undefined || itemVal === null) return false;
       return String(itemVal).toLowerCase().includes(String(val).toLowerCase());
     }),
@@ -47,14 +48,14 @@ export function fuzzyFilter<T extends Record<string, any>>(
 /**
  * 按 idList 从数组中批量删除（原地修改）
  */
-export function removeByIdList<T extends { id: any }>(list: T[], idList: any[]): void {
-  const idSet = new Set(idList.map(String));
-  const keep = list.filter((item) => !idSet.has(String(item.id)));
+export function removeByIdList(list: { id: number }[], idList: number[]): void {
+  const idSet = new Set(idList);
+  const keep = list.filter((item) => !idSet.has(item.id));
   list.splice(0, list.length, ...keep);
 }
 
-export function findById<T extends { id: any }>(list: T[], id: any): T | undefined {
-  return list.find((item) => String(item.id) === String(id));
+export function findById<T extends { id: number }>(list: T[], id: number): T | undefined {
+  return list.find((item) => item.id === id);
 }
 
 /**

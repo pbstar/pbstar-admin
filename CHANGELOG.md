@@ -1,5 +1,15 @@
 # 更新日志
 
+## v0.5.1 2026-08-29
+
+- 迁移请求层至 assets/request，建立类型化 API 层
+- 收紧权限与用户信息类型，缓存权限集合
+- 共享状态机制定案与收敛
+- CLI 支持双清单校验、绝对路径推导与并行类型检查，支持 CI（--apps 参数）与进程监控
+- 修复微前端路由守卫重复注册问题
+- 全面收紧 TS 类型：消除业务 any、统一 id/groupId 为 number，合并重复的 env.d.ts
+- 升级 rsbuild 至 2.2.1
+
 ## v0.5.0 2026-08-22
 
 - 全量 TypeScript 化，升级 rsbuild 至 2.x、wujie 至 2.1.0、vue-router 5、pinia 4 等核心依赖

@@ -2,15 +2,9 @@
 import { ref, onBeforeMount } from "vue";
 import { useRouter } from "vue-router";
 import { pIcon, pTitle } from "@Pcomponents";
-import request from "@Passets/utils/request";
+import { getDashboardStats } from "@/api";
 import { useAppsStore } from "@/stores/apps";
 import type { AppItem } from "@/stores/apps";
-
-interface DashboardStats {
-  userCount: number;
-  appCount: number;
-  roleCount: number;
-}
 
 const router = useRouter();
 const appsStore = useAppsStore();
@@ -20,9 +14,7 @@ const myApps = ref<AppItem[]>([]);
 
 // 拉取仪表盘概览数据（用户/应用/角色）
 const loadStats = async () => {
-  const res = await request.get<DashboardStats>({
-    url: "/main/getDashboardStats",
-  });
+  const res = await getDashboardStats();
   if (res.code !== 200 || !res.data) return;
   const data = res.data;
   stats.value = [
