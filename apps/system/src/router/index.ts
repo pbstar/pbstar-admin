@@ -19,6 +19,11 @@ const router = createRouter({
       component: () => import("@/views/role/index.vue"),
     },
     {
+      path: "/notice",
+      name: "notice",
+      component: () => import("@/views/notice/index.vue"),
+    },
+    {
       path: "/:pathMatch(.*)*",
       name: "notFound",
       component: () => import("@Pcomponents/page/error.vue"),

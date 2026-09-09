@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { pIcon } from "@Pcomponents";
 import AppSelect from "../more/AppSelect.vue";
+import NotificationBell from "./NotificationBell.vue";
 import { useUserHeader } from "./useUserHeader";
 
 const { title, userName, userImg, toUserInfo, toLoginOut } = useUserHeader();
@@ -15,6 +16,7 @@ const { title, userName, userImg, toUserInfo, toLoginOut } = useUserHeader();
       <AppSelect class="appSelect" />
     </div>
     <div class="right">
+      <NotificationBell />
       <div class="user">
         <el-dropdown trigger="click">
           <div class="userBox">
@@ -78,6 +80,7 @@ const { title, userName, userImg, toUserInfo, toLoginOut } = useUserHeader();
     .user {
       display: flex;
       align-items: center;
+      margin-left: var(--space-3);
       .userBox {
         display: flex;
         align-items: center;

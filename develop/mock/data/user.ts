@@ -76,6 +76,11 @@ export function getDetail(data: { id: number }) {
   return ok(toPublicUser(user));
 }
 
+/** 供下拉选项使用（如通知接收人选择），只返回 id/name */
+export function getAllList() {
+  return ok(users.map((u) => ({ id: u.id, name: u.name })));
+}
+
 export function create(data: UserPayload) {
   const user: UserRecord = {
     id: nextId(users),

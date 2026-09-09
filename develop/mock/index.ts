@@ -5,6 +5,7 @@ import * as userMock from "./data/user";
 import * as roleMock from "./data/role";
 import * as permissionMock from "./data/permission";
 import * as personMock from "./data/person";
+import * as noticeMock from "./data/notice";
 
 /** 各 mock 处理函数入参不同，此处分发层无法静态确定请求体形状，故 data 用 any（唯一动态边界） */
 type MockHandler = (data: any) => Res<unknown>;
@@ -16,7 +17,13 @@ const routes: Record<string, MockHandler> = {
   "post:/main/updateMyInfo": mainMock.updateMyInfo,
   "get:/main/getDashboardStats": mainMock.getDashboardStats,
 
+  "get:/main/notice/getUnreadCount": noticeMock.getUnreadCount,
+  "get:/main/notice/getMyList": noticeMock.getMyList,
+  "post:/main/notice/markRead": noticeMock.markRead,
+  "post:/main/notice/markAllRead": noticeMock.markAllRead,
+
   "post:/system/user/getList": userMock.getList,
+  "get:/system/user/getAllList": userMock.getAllList,
   "get:/system/user/getDetail": userMock.getDetail,
   "post:/system/user/create": userMock.create,
   "post:/system/user/update": userMock.update,
@@ -34,6 +41,12 @@ const routes: Record<string, MockHandler> = {
   "post:/system/permission/create": permissionMock.create,
   "post:/system/permission/update": permissionMock.update,
   "post:/system/permission/delete": permissionMock.deletePermissions,
+
+  "post:/system/notice/getList": noticeMock.getList,
+  "get:/system/notice/getDetail": noticeMock.getDetail,
+  "post:/system/notice/create": noticeMock.create,
+  "post:/system/notice/update": noticeMock.update,
+  "post:/system/notice/delete": noticeMock.deleteNotices,
 
   "post:/example/person/getList": personMock.getList,
   "get:/example/person/getDetail": personMock.getDetail,

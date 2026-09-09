@@ -25,3 +25,9 @@ export interface UserPayload {
   password?: string;
   role: string;
 }
+
+/** 用户下拉选项（如通知接收人选择），只取 id/name */
+export interface UserOption {
+  id: number;
+  name: string;
+}

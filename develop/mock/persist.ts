@@ -2,6 +2,7 @@ import { users } from "./data/user";
 import { roles } from "./data/role";
 import { permissions } from "./data/permission";
 import { persons } from "./data/person";
+import { notices, noticeReads } from "./data/notice";
 
 /** mock 总开关：仅开发环境 + PUBLIC_MOCK=T 时生效，生产环境永久关闭 */
 export const isMockEnabled = import.meta.env.DEV && import.meta.env.PUBLIC_MOCK === "T";
@@ -14,6 +15,8 @@ type MockData = {
   roles: typeof roles;
   permissions: typeof permissions;
   persons: typeof persons;
+  notices: typeof notices;
+  noticeReads: typeof noticeReads;
 };
 
 /** 用目标数组原地替换内存数组，保持引用一致（其它模块按引用读取同一份数据） */
@@ -28,13 +31,15 @@ function restore(data: Partial<MockData>) {
   replace(roles, data.roles);
   replace(permissions, data.permissions);
   replace(persons, data.persons);
+  replace(notices, data.notices);
+  replace(noticeReads, data.noticeReads);
 }
 
 export function persist() {
   if (!isMockEnabled) return;
   localStorage.setItem(
     STORAGE_KEY,
-    JSON.stringify({ users, roles, permissions, persons }),
+    JSON.stringify({ users, roles, permissions, persons, notices, noticeReads }),
   );
 }
 

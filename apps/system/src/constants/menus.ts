@@ -15,6 +15,12 @@ const menus: MenuItem[] = [
     url: "/permission",
     icon: "el-icon-menu",
   },
+  {
+    key: "system_notice",
+    name: "通知管理",
+    url: "/notice",
+    icon: "el-icon-bell",
+  },
 ];
 
 export default menus;
