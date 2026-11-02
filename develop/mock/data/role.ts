@@ -21,7 +21,7 @@ export const roles: RoleRecord[] = [
     name: "普通管理员",
     key: "common",
     permissions:
-      "system_user,user_add,user_edit,user_view,system_role,example_list,example_echarts,example_editorMd",
+      "system_user,user_add,user_edit,user_view,system_role,example_list,example_echarts,example_editorMd,system_notice,notice_add,notice_edit,notice_view,notice_delete",
   },
   {
     id: 3,

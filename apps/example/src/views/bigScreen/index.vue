@@ -27,7 +27,8 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount } from "vue";
-import fitview from "fitview";
+import { createFitView } from "fitview";
+import type { FitViewController } from "fitview";
 import * as echarts from "echarts";
 
 const fitviewRef = ref<HTMLElement | null>(null);
@@ -36,18 +37,14 @@ const echarts2Ref = ref<HTMLDivElement | null>(null);
 const echarts3Ref = ref<HTMLDivElement | null>(null);
 const echarts4Ref = ref<HTMLDivElement | null>(null);
 
-/** fitview 无类型声明，仅声明用到的接口 */
-interface FitviewInstance {
-  api: { destroyResize: () => void };
-}
-const fv = ref<FitviewInstance | null>(null);
+const fv = ref<FitViewController | null>(null);
 
 onMounted(() => {
-  fv.value = new fitview({ el: fitviewRef.value });
+  fv.value = createFitView({ el: fitviewRef.value! });
   initEcharts();
 });
 onBeforeUnmount(() => {
-  fv.value && fv.value.api.destroyResize();
+  fv.value && fv.value.destroy();
 });
 
 function initEcharts() {

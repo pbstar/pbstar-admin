@@ -26,4 +26,5 @@ pnpm run check             # 跑 vue-tsc 类型检查
 - **微前端挂载**：[main/src/views/admin/app.vue](main/src/views/admin/app.vue) 用 wujie 的 `startApp`/`destroyApp` 按路由启停子应用；主/子应用各自持有独立 Pinia 实例（共享结构定义在 `assets/stores/shared.ts`），跨应用状态经 wujie `bus` 事件广播同步。
 - **权限模型**（菜单+按钮已合并为统一模型）：各子应用在自己的 `src/constants/menus.ts` 维护硬编码菜单树（`export default`），main 侧的 [main/src/utils/appMenus.ts](main/src/utils/appMenus.ts) 按 `apps.json` 的 appKey 动态 `import()` 聚合，新增子应用无需手动改 main 代码。后端返回逗号分隔的权限 key 字符串；[assets/utils/permission.ts](assets/utils/permission.ts) 的 `hasPermission`/`filterMenuTree` 是唯一判断逻辑，按钮权限用 `v-permission="'key'"` 指令。新增菜单/按钮只需加一条菜单项 + 保证后端权限里有对应 key。
 - **路径别名**：`@` 指向当前应用自己的 `src`；`@Pcomponents` 指向根目录 `components/`（共享组件库）；`@Passets` 指向根目录 `assets/`（共享 stores/utils/directives）。
+- **请求层**：[assets/request/index.ts](assets/request/index.ts) 是主/子应用共用的 axios 封装（`get`/`post`/`download`），统一处理 token、401 跳转与错误提示；传入 `config: { silent: true }` 可让该请求失败时不弹提示（轮询/探活类接口用，见 [main/src/components/layout/NotificationBell.vue](main/src/components/layout/NotificationBell.vue)）。
 - **环境变量**：`.env.development`/`.env.production`（gitignore，本地维护，`.env.example` 是提交的模板），变量统一 `PUBLIC_` 前缀。

@@ -5,6 +5,13 @@ import { BUS_EVENTS } from "../stores/shared";
 import { isMockEnabled } from "../../develop/mock/persist";
 import { matchMock } from "../../develop/mock";
 
+declare module "axios" {
+  export interface AxiosRequestConfig {
+    /** 静默请求：失败时不弹 ElMessage（轮询类接口用，避免定时请求反复骚扰用户） */
+    silent?: boolean;
+  }
+}
+
 /** 后端统一响应结构 */
 export interface Res<T = unknown> {
   code: number;
@@ -77,7 +84,13 @@ service.interceptors.response.use(
     const status = error.response?.status;
     if (status === 401) {
       handleUnauthorized();
-    } else if (error.code === "ECONNABORTED" && error.message.includes("timeout")) {
+      return Promise.reject(error);
+    }
+    // 静默请求（如轮询）失败不弹提示，交由调用方自行兜底
+    if (error.config?.silent) {
+      return Promise.reject(error);
+    }
+    if (error.code === "ECONNABORTED" && error.message.includes("timeout")) {
       ElMessage.error("请求超时！请稍后重试");
     } else if (status === 403) {
       ElMessage.error("无权限访问该资源");

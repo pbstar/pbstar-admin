@@ -3,7 +3,7 @@ import { users } from "./user";
 import { roles } from "./role";
 
 /** 当前登录用户 id：从 localStorage 的 token 还原（token 即 mock-token-<id>，前端存于 p_token，刷新后据此还原登录态） */
-const getCurrentUserId = () =>
+export const getCurrentUserId = () =>
   Number((localStorage.getItem("p_token") || "").replace("mock-token-", ""));
 
 function buildUserInfo(userId: number) {
